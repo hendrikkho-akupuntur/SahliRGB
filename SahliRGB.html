@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Hemoglobin dari Nilai RGB</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f9f7fe 0%, #e8f4f8 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+        
+        .header-section {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .logo-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            border-radius: 10px;
+        }
+        
+        .logo-placeholder {
+            width: 120px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            border: 2px dashed #ddd;
+            color: #999;
+            font-size: 0.8rem;
+            text-align: center;
+            padding: 10px;
+        }
+        
+        .logo-text {
+            font-weight: bold;
+            text-align: center;
+            color: #2c3e50;
+            line-height: 1.2;
+            font-size: 0.9rem;
+        }
+        
+        .logo-fk {
+            color: #003366;
+        }
+        
+        .logo-ppds {
+            color: #990000;
+        }
+        
+        .title-container {
+            flex: 2;
+            min-width: 300px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        h1 i {
+            color: #e74c3c;
+        }
+        
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .presented-by {
+            background-color: #003366;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin: 15px auto;
+            font-weight: 600;
+            text-align: center;
+            max-width: 700px;
+            font-size: 1.1rem;
+        }
+        
+        .equation {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #2c3e50;
+            max-width: 700px;
+            border-left: 4px solid #3498db;
+            display: none; /* Sembunyikan persamaan sesuai permintaan */
+        }
+        
+        .calculator-card {
+            background-color: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        
+        .input-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .color-input {
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .color-input:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .red { background-color: #ffeaea; border-top: 5px solid #e74c3c; }
+        .green { background-color: #eaffea; border-top: 5px solid #2ecc71; }
+        .blue { background-color: #eaefff; border-top: 5px solid #3498db; }
+        
+        .color-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .color-title i {
+            font-size: 1.5rem;
+        }
+        
+        .red .color-title i { color: #e74c3c; }
+        .green .color-title i { color: #2ecc71; }
+        .blue .color-title i { color: #3498db; }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        label {
+            font-weight: 500;
+            color: #555;
+        }
+        
+        input {
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        .slider-container {
+            margin-top: 15px;
+        }
+        
+        .slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: #e0e0e0;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        .red .slider::-webkit-slider-thumb { background: #e74c3c; }
+        .green .slider::-webkit-slider-thumb { background: #2ecc71; }
+        .blue .slider::-webkit-slider-thumb { background: #3498db; }
+        
+        .value-display {
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-top: 5px;
+            color: #333;
+        }
+        
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        button {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        #calculateBtn {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        #calculateBtn:hover {
+            background-color: #2980b9;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        #resetBtn {
+            background-color: #f8f9fa;
+            color: #555;
+            border: 2px solid #e0e0e0;
+        }
+        
+        #resetBtn:hover {
+            background-color: #e9ecef;
+            transform: translateY(-3px);
+        }
+        
+        .result-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin-top: 20px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .result-title {
+            font-size: 1.3rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        #result {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 10px 0;
+        }
+        
+        .unit {
+            font-size: 1.5rem;
+            color: #7f8c8d;
+            margin-left: 5px;
+        }
+        
+        .interpretation {
+            font-size: 1.1rem;
+            color: #555;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: white;
+            max-width: 500px;
+            margin: 20px auto 0;
+        }
+        
+        .info-section {
+            background-color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .info-title {
+            font-size: 1.3rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .info-content {
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .info-content p {
+            margin-bottom: 15px;
+        }
+        
+        .highlight {
+            background-color: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .header-section {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+            
+            .logo-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .calculator-card {
+                padding: 20px;
+            }
+            
+            .buttons {
+                flex-direction: column;
+            }
+            
+            #result {
+                font-size: 2.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-section">
+            <div class="logo-container">
+                <div class="logo-wrapper">
+                    <!-- Logo FK UPH -->
+                    <img src="fkuph.jpg" alt="Logo FK UPH" class="logo" id="fkLogo">
+                    <div class="logo-text logo-fk">Fakultas Kedokteran<br>Universitas Pelita Harapan</div>
+                </div>
+                
+                <div class="logo-wrapper">
+                    <!-- Logo KKLP -->
+                    <img src="KKLP.jpg" alt="Logo KKLP" class="logo" id="kklpLogo">
+                    <div class="logo-text logo-ppds">Program Pendidikan Dokter Spesialis<br>Kedokteran Keluarga Layanan Primer</div>
+                </div>
+            </div>
+            
+            <div class="title-container">
+                <h1><i class="fas fa-tint"></i> Kalkulator Hemoglobin</h1>
+                <p class="subtitle">Alat untuk menghitung nilai hemoglobin dari ekstraksi nilai Red, Green, Blue (RGB) menggunakan teknik Hb Sahli</p>
+            </div>
+        </div>
+        
+        <div class="presented-by">
+            Program ini dipersembahkan oleh Prodi Spesialis Kedokteran Keluarga Layanan Primer FK UPH
+        </div>
+        
+        <main>
+            <div class="calculator-card">
+                <div class="input-section">
+                    <div class="color-input red">
+                        <div class="color-title">
+                            <i class="fas fa-square"></i> Nilai RED
+                        </div>
+                        <div class="input-group">
+                            <label for="redValue">Masukkan nilai RED (0-255):</label>
+                            <input type="number" id="redValue" min="0" max="255" value="120" step="1">
+                        </div>
+                        <div class="slider-container">
+                            <input type="range" id="redSlider" class="slider" min="0" max="255" value="120" step="1">
+                        </div>
+                        <div class="value-display" id="redDisplay">120</div>
+                    </div>
+                    
+                    <div class="color-input green">
+                        <div class="color-title">
+                            <i class="fas fa-square"></i> Nilai GREEN
+                        </div>
+                        <div class="input-group">
+                            <label for="greenValue">Masukkan nilai GREEN (0-255):</label>
+                            <input type="number" id="greenValue" min="0" max="255" value="80" step="1">
+                        </div>
+                        <div class="slider-container">
+                            <input type="range" id="greenSlider" class="slider" min="0" max="255" value="80" step="1">
+                        </div>
+                        <div class="value-display" id="greenDisplay">80</div>
+                    </div>
+                    
+                    <div class="color-input blue">
+                        <div class="color-title">
+                            <i class="fas fa-square"></i> Nilai BLUE
+                        </div>
+                        <div class="input-group">
+                            <label for="blueValue">Masukkan nilai BLUE (0-255):</label>
+                            <input type="number" id="blueValue" min="0" max="255" value="60" step="1">
+                        </div>
+                        <div class="slider-container">
+                            <input type="range" id="blueSlider" class="slider" min="0" max="255" value="60" step="1">
+                        </div>
+                        <div class="value-display" id="blueDisplay">60</div>
+                    </div>
+                </div>
+                
+                <div class="buttons">
+                    <button id="calculateBtn">
+                        <i class="fas fa-calculator"></i> Hitung Hemoglobin
+                    </button>
+                    <button id="resetBtn">
+                        <i class="fas fa-redo"></i> Reset Nilai
+                    </button>
+                </div>
+                
+                <div class="result-section">
+                    <div class="result-title">
+                        <i class="fas fa-heartbeat"></i> Hasil Perhitungan Hemoglobin
+                    </div>
+                    <div id="result">--</div>
+                    <div class="interpretation" id="interpretation">
+                        Masukkan nilai RGB dan klik "Hitung Hemoglobin" untuk melihat hasil
+                    </div>
+                </div>
+            </div>
+            
+            <div class="info-section">
+                <div class="info-title">
+                    <i class="fas fa-info-circle"></i> Informasi Penting
+                </div>
+                <div class="info-content">
+                    <p>Kalkulator ini menggunakan persamaan regresi untuk mengestimasi nilai hemoglobin dari nilai RGB hasil ekstraksi menggunakan teknik <span class="highlight">Hb Sahli</span>.</p>
+                    <p>Persamaan yang digunakan: <strong>Hb = 19.9810419682248 + (-0.018171709319968 × RED) + (-0.0575018090319132 × GREEN) + (-0.000218039589785796 × BLUE)</strong></p>
+                    <p>Nilai RGB dapat diperoleh dari hasil ekstraksi citra darah menggunakan teknik pengolahan citra digital. Masukkan nilai RGB antara 0-255 untuk mendapatkan estimasi hemoglobin.</p>
+                    <p><strong>Interpretasi hasil hemoglobin (g/dL):</strong></p>
+                    <ul style="padding-left: 20px; margin-top: 10px;">
+                        <li>< 13.5 (pria) / < 12.0 (wanita): Anemia</li>
+                        <li>13.5-17.5 (pria) / 12.0-15.5 (wanita): Normal</li>
+                        <li>> 17.5 (pria) / > 15.5 (wanita): Tinggi</li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <p>Kalkulator Hemoglobin dari Nilai RGB | Teknik Hb Sahli | © 2023 - Prodi Spesialis Kedokteran Keluarga Layanan Primer FK UPH</p>
+        </footer>
+    </div>
+
+    <script>
+        // Mendapatkan elemen-elemen DOM
+        const redValue = document.getElementById('redValue');
+        const redSlider = document.getElementById('redSlider');
+        const redDisplay = document.getElementById('redDisplay');
+        
+        const greenValue = document.getElementById('greenValue');
+        const greenSlider = document.getElementById('greenSlider');
+        const greenDisplay = document.getElementById('greenDisplay');
+        
+        const blueValue = document.getElementById('blueValue');
+        const blueSlider = document.getElementById('blueSlider');
+        const blueDisplay = document.getElementById('blueDisplay');
+        
+        const calculateBtn = document.getElementById('calculateBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        
+        const resultElement = document.getElementById('result');
+        const interpretationElement = document.getElementById('interpretation');
+        
+        // Fungsi untuk memperbarui slider berdasarkan input angka
+        function updateSlider(inputElement, sliderElement, displayElement) {
+            const value = parseInt(inputElement.value);
+            if (value < 0) inputElement.value = 0;
+            if (value > 255) inputElement.value = 255;
+            
+            sliderElement.value = inputElement.value;
+            displayElement.textContent = inputElement.value;
+            
+            // Hitung ulang hemoglobin ketika nilai diubah
+            calculateHemoglobin();
+        }
+        
+        // Fungsi untuk memperbarui input angka berdasarkan slider
+        function updateInput(sliderElement, inputElement, displayElement) {
+            inputElement.value = sliderElement.value;
+            displayElement.textContent = sliderElement.value;
+            
+            // Hitung ulang hemoglobin ketika nilai diubah
+            calculateHemoglobin();
+        }
+        
+        // Event listeners untuk RED
+        redValue.addEventListener('input', () => updateSlider(redValue, redSlider, redDisplay));
+        redSlider.addEventListener('input', () => updateInput(redSlider, redValue, redDisplay));
+        
+        // Event listeners untuk GREEN
+        greenValue.addEventListener('input', () => updateSlider(greenValue, greenSlider, greenDisplay));
+        greenSlider.addEventListener('input', () => updateInput(greenSlider, greenValue, greenDisplay));
+        
+        // Event listeners untuk BLUE
+        blueValue.addEventListener('input', () => updateSlider(blueValue, blueSlider, blueDisplay));
+        blueSlider.addEventListener('input', () => updateInput(blueSlider, blueValue, blueDisplay));
+        
+        // Fungsi untuk menghitung hemoglobin berdasarkan persamaan
+        function calculateHemoglobin() {
+            const R = parseFloat(redValue.value);
+            const G = parseFloat(greenValue.value);
+            const B = parseFloat(blueValue.value);
+            
+            // Persamaan: Hb = 19.9810419682248 + (-0.018171709319968 * RED) + (-0.0575018090319132 * GREEN) + (-0.000218039589785796 * BLUE)
+            const Hb = 19.9810419682248 + (-0.018171709319968 * R) + (-0.0575018090319132 * G) + (-0.000218039589785796 * B);
+            
+            // Membulatkan hasil menjadi 2 angka desimal
+            const roundedHb = Math.round(Hb * 100) / 100;
+            
+            // Menampilkan hasil
+            resultElement.innerHTML = `${roundedHb}<span class="unit">g/dL</span>`;
+            
+            // Memberikan interpretasi hasil
+            let interpretation = "";
+            let interpretationClass = "";
+            
+            if (roundedHb < 12.0) {
+                interpretation = "Nilai hemoglobin rendah (anemia). Disarankan untuk berkonsultasi dengan dokter.";
+                interpretationClass = "low";
+            } else if (roundedHb >= 12.0 && roundedHb <= 15.5) {
+                interpretation = "Nilai hemoglobin normal untuk wanita. Untuk pria, nilai normal adalah 13.5-17.5 g/dL.";
+                interpretationClass = "normal";
+            } else if (roundedHb > 15.5 && roundedHb <= 17.5) {
+                interpretation = "Nilai hemoglobin normal untuk pria. Untuk wanita, nilai normal adalah 12.0-15.5 g/dL.";
+                interpretationClass = "normal";
+            } else {
+                interpretation = "Nilai hemoglobin tinggi. Disarankan untuk berkonsultasi dengan dokter.";
+                interpretationClass = "high";
+            }
+            
+            interpretationElement.textContent = interpretation;
+            interpretationElement.style.backgroundColor = interpretationClass === "low" ? "#ffeaea" : 
+                                                       interpretationClass === "normal" ? "#eaffea" : "#eaefff";
+            interpretationElement.style.color = interpretationClass === "low" ? "#c0392b" : 
+                                               interpretationClass === "normal" ? "#27ae60" : "#2980b9";
+        }
+        
+        // Fungsi untuk mereset semua nilai ke 0 (sesuai permintaan revisi)
+        function resetValues() {
+            redValue.value = 0;
+            greenValue.value = 0;
+            blueValue.value = 0;
+            
+            redSlider.value = 0;
+            greenSlider.value = 0;
+            blueSlider.value = 0;
+            
+            redDisplay.textContent = "0";
+            greenDisplay.textContent = "0";
+            blueDisplay.textContent = "0";
+            
+            resultElement.innerHTML = "--";
+            interpretationElement.textContent = "Masukkan nilai RGB dan klik 'Hitung Hemoglobin' untuk melihat hasil";
+            interpretationElement.style.backgroundColor = "white";
+            interpretationElement.style.color = "#555";
+            
+            // Hitung hemoglobin setelah reset
+            calculateHemoglobin();
+        }
+        
+        // Event listener untuk tombol hitung
+        calculateBtn.addEventListener('click', calculateHemoglobin);
+        
+        // Event listener untuk tombol reset
+        resetBtn.addEventListener('click', resetValues);
+        
+        // Menghitung hemoglobin saat halaman pertama kali dimuat
+        window.addEventListener('load', calculateHemoglobin);
+        
+        // Fungsi untuk menangani jika gambar logo tidak ditemukan
+        document.addEventListener('DOMContentLoaded', function() {
+            const fkLogo = document.getElementById('fkLogo');
+            const kklpLogo = document.getElementById('kklpLogo');
+            
+            // Jika gambar FK UPH tidak ditemukan, tampilkan placeholder
+            fkLogo.onerror = function() {
+                this.style.display = 'none';
+                const placeholder = document.createElement('div');
+                placeholder.className = 'logo-placeholder';
+                placeholder.innerHTML = 'fkuph.jpg<br>tidak ditemukan';
+                this.parentNode.insertBefore(placeholder, this);
+            };
+            
+            // Jika gambar KKLP tidak ditemukan, tampilkan placeholder
+            kklpLogo.onerror = function() {
+                this.style.display = 'none';
+                const placeholder = document.createElement('div');
+                placeholder.className = 'logo-placeholder';
+                placeholder.innerHTML = 'KKLP.jpg<br>tidak ditemukan';
+                this.parentNode.insertBefore(placeholder, this);
+            };
+        });
+    </script>
+</body>
+</html>
