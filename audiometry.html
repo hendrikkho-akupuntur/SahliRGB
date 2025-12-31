@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skrining Audiometri Mobile - KKLP FK UPH</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(to right, #4a6fa5, #3a5980);
+            color: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .logo {
+            height: 60px;
+            width: auto;
+            object-fit: contain;
+            border-radius: 5px;
+            background: white;
+            padding: 5px;
+        }
+        
+        .logo-kklp {
+            background: #f8f9fa;
+        }
+        
+        .title-container {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        
+        .content {
+            padding: 25px;
+        }
+        
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-bottom: 25px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .warning-box::before {
+            content: "⚠️";
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .mode-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        
+        .mode-btn {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #ddd;
+            background: #f8f9fa;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .mode-btn.active {
+            background: #4a6fa5;
+            color: white;
+            border-color: #4a6fa5;
+        }
+        
+        .frequency-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        @media (min-width: 768px) {
+            .frequency-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        .frequency-btn {
+            padding: 20px 10px;
+            background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .frequency-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .frequency-btn.playing {
+            background: linear-gradient(to bottom, #d4edda, #c3e6cb);
+            border-color: #28a745;
+            color: #155724;
+        }
+        
+        .control-panel {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .slider-container {
+            margin-bottom: 20px;
+        }
+        
+        .slider-container label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        .slider-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .slider-value {
+            min-width: 40px;
+            font-weight: bold;
+            color: #4a6fa5;
+        }
+        
+        input[type="range"] {
+            flex: 1;
+            height: 8px;
+            -webkit-appearance: none;
+            background: #dee2e6;
+            border-radius: 4px;
+            outline: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 25px;
+            height: 25px;
+            background: #4a6fa5;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        .results-section {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+        
+        @media (min-width: 992px) {
+            .results-section {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        .results-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+        }
+        
+        .results-card h3 {
+            margin-bottom: 15px;
+            color: #495057;
+            border-bottom: 2px solid #dee2e6;
+            padding-bottom: 10px;
+        }
+        
+        .conclusion-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #4a6fa5;
+            margin-top: 15px;
+        }
+        
+        .conclusion-title {
+            font-weight: bold;
+            color: #4a6fa5;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .conclusion-text {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #495057;
+        }
+        
+        .audiogram-container {
+            position: relative;
+            height: 300px;
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 15px;
+            overflow: hidden;
+        }
+        
+        .audiogram-canvas {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .result-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #dee2e6;
+            text-align: center;
+        }
+        
+        .result-freq {
+            font-weight: bold;
+            color: #4a6fa5;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .result-value {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #28a745;
+        }
+        
+        .result-value.fail {
+            color: #dc3545;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            flex: 1;
+            min-width: 150px;
+            padding: 18px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, #4a6fa5, #3a5980);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .instructions {
+            margin-top: 25px;
+            padding: 20px;
+            background: #e9f7fe;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        
+        .instructions h4 {
+            color: #31708f;
+            margin-bottom: 10px;
+        }
+        
+        .instructions ul {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            padding: 20px;
+            text-align: center;
+            background: #f8f9fa;
+            border-radius: 15px;
+            color: #6c757d;
+            font-size: 0.9rem;
+            border-top: 1px solid #dee2e6;
+        }
+        
+        .footer p {
+            margin: 5px 0;
+        }
+        
+        .copyright {
+            font-style: italic;
+            color: #4a6fa5;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-container">
+                <img src="fkuph.jpg" alt="FK UPH" class="logo" id="fkLogo">
+                <img src="KKLP.jpg" alt="KKLP" class="logo logo-kklp" id="kklpLogo">
+            </div>
+            <div class="title-container">
+                <h1>Skrining Audiometri Mobile</h1>
+                <p>Alat bantu skrining pendengaran - Prodi Spesialis KLLP FK UPH</p>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="warning-box">
+                <strong>Peringatan:</strong> Alat ini hanya untuk skrining awal. Hasil tidak menggantikan diagnosis medis oleh Spesialis kedokteran Keluarga Anda
+            </div>
+            
+            <div class="mode-selector">
+                <button class="mode-btn active" id="airBtn">
+                    🎧 Air Conduction<br>
+                    <small>Headset Biasa</small>
+                </button>
+                <button class="mode-btn" id="boneBtn">
+                    🦴 Bone Conduction<br>
+                    <small>Headset Bone Conduction</small>
+                </button>
+            </div>
+            
+            <div class="control-panel">
+                <div class="slider-container">
+                    <label>Volume (dB): <span id="volumeValue">50</span> dB</label>
+                    <div class="slider-wrapper">
+                        <input type="range" id="volumeSlider" min="0" max="100" value="50" step="1">
+                    </div>
+                </div>
+                
+                <div class="slider-container">
+                    <label>Durasi (detik): <span id="durationValue">3</span> detik</label>
+                    <div class="slider-wrapper">
+                        <input type="range" id="durationSlider" min="1" max="10" value="3" step="1">
+                    </div>
+                </div>
+            </div>
+            
+            <h3 style="margin-bottom: 15px; color: #495057;">Pilih Frekuensi untuk Diuji:</h3>
+            <div class="frequency-grid" id="frequencyGrid">
+                <!-- Frekuensi akan di-generate oleh JavaScript -->
+            </div>
+            
+            <div class="results-section">
+                <div class="results-card">
+                    <h3>Hasil Skrining</h3>
+                    <div class="result-grid" id="resultGrid">
+                        <!-- Hasil akan di-generate oleh JavaScript -->
+                    </div>
+                    
+                    <div class="conclusion-box" id="conclusionBox">
+                        <div class="conclusion-title">Kesimpulan Sementara:</div>
+                        <div class="conclusion-text" id="conclusionText">
+                            Belum ada data. Silakan lakukan tes terlebih dahulu.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="results-card">
+                    <h3>Audiogram</h3>
+                    <div class="audiogram-container">
+                        <canvas id="audiogramCanvas" class="audiogram-canvas"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="btn btn-danger" id="stopBtn">⏹️ Stop Semua Suara</button>
+                <button class="btn btn-primary" id="testAllBtn">▶️ Test Semua Frekuensi</button>
+                <button class="btn btn-secondary" id="resetBtn">🔄 Reset Hasil</button>
+                <button class="btn btn-primary" id="saveBtn">💾 Simpan Hasil</button>
+            </div>
+            
+            <div class="instructions">
+                <h4>Petunjuk Penggunaan:</h4>
+                <ul>
+                    <li>Pastikan menggunakan headset yang berkualitas baik</li>
+                    <li>Pilih mode sesuai dengan headset yang digunakan</li>
+                    <li>Atur volume awal ke level yang nyaman</li>
+                    <li>Klik frekuensi yang ingin diuji atau gunakan "Test Semua Frekuensi"</li>
+                    <li>Catat pada intensitas berapa Anda mulai mendengar suara</li>
+                    <li>Hasil normal: mampu mendengar ≤25 dB untuk setiap frekuensi</li>
+                    <li>Hasil akan ditampilkan dalam bentuk audiogram dan kesimpulan</li>
+                </ul>
+            </div>
+            
+            <div class="footer">
+                <p><strong>Prodi Spesialis Kedokteran Keluarga Layanan Primer (KLLP)</strong></p>
+                <p>Fakultas Kedokteran - Universitas Pelita Harapan</p>
+                <p class="copyright">© PPDS KKLP FK UPH - dr. Hendrik</p>
+                <p>Versi 1.0 - 2024</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class AudiometryScreening {
+            constructor() {
+                this.audioContext = null;
+                this.oscillator = null;
+                this.gainNode = null;
+                this.currentMode = 'air';
+                this.thresholds = {};
+                this.isPlaying = false;
+                
+                // Frekuensi standar untuk skrining audiometri
+                this.frequencies = [250, 500, 1000, 2000, 4000, 8000];
+                
+                this.initAudioContext();
+                this.initDOM();
+                this.bindEvents();
+                this.generateFrequencyButtons();
+                this.generateResultGrid();
+                this.initAudiogram();
+                
+                // Fallback untuk logo jika tidak ditemukan
+                this.setupLogoFallback();
+            }
+            
+            setupLogoFallback() {
+                // Fallback text jika logo tidak ditemukan
+                const fkLogo = document.getElementById('fkLogo');
+                const kklpLogo = document.getElementById('kklpLogo');
+                
+                fkLogo.onerror = function() {
+                    this.style.display = 'none';
+                    const parent = this.parentElement;
+                    const fallback = document.createElement('div');
+                    fallback.textContent = 'FK UPH';
+                    fallback.style.background = '#4a6fa5';
+                    fallback.style.color = 'white';
+                    fallback.style.padding = '10px';
+                    fallback.style.borderRadius = '5px';
+                    fallback.style.fontWeight = 'bold';
+                    parent.appendChild(fallback);
+                };
+                
+                kklpLogo.onerror = function() {
+                    this.style.display = 'none';
+                    const parent = this.parentElement;
+                    const fallback = document.createElement('div');
+                    fallback.textContent = 'KKLP';
+                    fallback.style.background = '#f8f9fa';
+                    fallback.style.color = '#333';
+                    fallback.style.padding = '10px';
+                    fallback.style.borderRadius = '5px';
+                    fallback.style.fontWeight = 'bold';
+                    parent.appendChild(fallback);
+                };
+            }
+            
+            initAudioContext() {
+                try {
+                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    console.log('AudioContext berhasil diinisialisasi');
+                } catch (error) {
+                    console.error('AudioContext tidak didukung:', error);
+                    alert('Browser Anda tidak mendukung fitur audio yang diperlukan. Silakan gunakan browser terbaru seperti Chrome atau Firefox.');
+                }
+            }
+            
+            initDOM() {
+                this.volumeSlider = document.getElementById('volumeSlider');
+                this.durationSlider = document.getElementById('durationSlider');
+                this.volumeValue = document.getElementById('volumeValue');
+                this.durationValue = document.getElementById('durationValue');
+                this.airBtn = document.getElementById('airBtn');
+                this.boneBtn = document.getElementById('boneBtn');
+                this.stopBtn = document.getElementById('stopBtn');
+                this.testAllBtn = document.getElementById('testAllBtn');
+                this.resetBtn = document.getElementById('resetBtn');
+                this.saveBtn = document.getElementById('saveBtn');
+                this.frequencyGrid = document.getElementById('frequencyGrid');
+                this.resultGrid = document.getElementById('resultGrid');
+                this.conclusionText = document.getElementById('conclusionText');
+                this.canvas = document.getElementById('audiogramCanvas');
+                this.ctx = this.canvas.getContext('2d');
+            }
+            
+            bindEvents() {
+                this.volumeSlider.addEventListener('input', (e) => {
+                    this.volumeValue.textContent = e.target.value;
+                });
+                
+                this.durationSlider.addEventListener('input', (e) => {
+                    this.durationValue.textContent = e.target.value;
+                });
+                
+                this.airBtn.addEventListener('click', () => this.setMode('air'));
+                this.boneBtn.addEventListener('click', () => this.setMode('bone'));
+                this.stopBtn.addEventListener('click', () => this.stopAllSounds());
+                this.testAllBtn.addEventListener('click', () => this.testAllFrequencies());
+                this.resetBtn.addEventListener('click', () => this.resetResults());
+                this.saveBtn.addEventListener('click', () => this.saveResults());
+                
+                // Atur ukuran canvas saat window resize
+                window.addEventListener('resize', () => {
+                    this.resizeCanvas();
+                    this.drawAudiogram();
+                });
+                
+                this.resizeCanvas();
+            }
+            
+            resizeCanvas() {
+                const container = this.canvas.parentElement;
+                this.canvas.width = container.clientWidth;
+                this.canvas.height = container.clientHeight;
+            }
+            
+            initAudiogram() {
+                this.drawAudiogram();
+            }
+            
+            drawAudiogram() {
+                const width = this.canvas.width;
+                const height = this.canvas.height;
+                const ctx = this.ctx;
+                
+                // Clear canvas
+                ctx.clearRect(0, 0, width, height);
+                
+                // Draw grid
+                ctx.strokeStyle = '#e0e0e0';
+                ctx.lineWidth = 1;
+                
+                // Vertical lines (frequencies)
+                for (let i = 0; i <= 10; i++) {
+                    const x = (i / 10) * width;
+                    ctx.beginPath();
+                    ctx.moveTo(x, 0);
+                    ctx.lineTo(x, height);
+                    ctx.stroke();
+                }
+                
+                // Horizontal lines (dB levels)
+                for (let i = 0; i <= 10; i++) {
+                    const y = (i / 10) * height;
+                    ctx.beginPath();
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(width, y);
+                    ctx.stroke();
+                }
+                
+                // Draw axes
+                ctx.strokeStyle = '#333';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(50, 20);
+                ctx.lineTo(50, height - 30);
+                ctx.lineTo(width - 20, height - 30);
+                ctx.stroke();
+                
+                // Draw labels
+                ctx.fillStyle = '#333';
+                ctx.font = '12px Arial';
+                ctx.textAlign = 'center';
+                
+                // Frequency labels (Hz)
+                const freqLabels = ['125', '250', '500', '1k', '2k', '4k', '8k'];
+                for (let i = 0; i < freqLabels.length; i++) {
+                    const x = 50 + (i / (freqLabels.length - 1)) * (width - 70);
+                    ctx.fillText(freqLabels[i], x, height - 10);
+                }
+                
+                // dB labels
+                ctx.textAlign = 'right';
+                const dbLabels = ['0', '20', '40', '60', '80', '100'];
+                for (let i = 0; i < dbLabels.length; i++) {
+                    const y = 20 + (i / (dbLabels.length - 1)) * (height - 50);
+                    ctx.fillText(dbLabels[i] + ' dB', 45, y + 4);
+                }
+                
+                // Draw title
+                ctx.textAlign = 'center';
+                ctx.font = 'bold 14px Arial';
+                ctx.fillText('Audiogram - ' + (this.currentMode === 'air' ? 'Air Conduction' : 'Bone Conduction'), width / 2, 15);
+                
+                // Draw normal hearing area (0-25 dB)
+                ctx.fillStyle = 'rgba(144, 238, 144, 0.3)';
+                const normalY1 = 20;
+                const normalY2 = 20 + (25 / 100) * (height - 50);
+                ctx.fillRect(50, normalY1, width - 70, normalY2 - normalY1);
+                
+                // Draw thresholds if available
+                if (Object.keys(this.thresholds).length > 0) {
+                    this.plotThresholds();
+                }
+            }
+            
+            plotThresholds() {
+                const width = this.canvas.width;
+                const height = this.canvas.height;
+                const ctx = this.ctx;
+                
+                const frequencies = [250, 500, 1000, 2000, 4000, 8000];
+                const points = [];
+                
+                // Collect points
+                frequencies.forEach(freq => {
+                    if (this.thresholds[freq] !== undefined) {
+                        const db = this.thresholds[freq];
+                        // Convert freq to x position (log scale approximation)
+                        const freqIndex = Math.log2(freq/125) / Math.log2(8000/125);
+                        const x = 50 + freqIndex * (width - 70);
+                        
+                        // Convert dB to y position (0-100 dB)
+                        const y = 20 + (db / 100) * (height - 50);
+                        
+                        points.push({ x, y, freq, db });
+                    }
+                });
+                
+                if (points.length < 2) return;
+                
+                // Draw line connecting points
+                ctx.strokeStyle = '#ff5722';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(points[0].x, points[0].y);
+                
+                for (let i = 1; i < points.length; i++) {
+                    ctx.lineTo(points[i].x, points[i].y);
+                }
+                ctx.stroke();
+                
+                // Draw points
+                points.forEach(point => {
+                    ctx.fillStyle = point.db <= 25 ? '#4CAF50' : '#ff5722';
+                    ctx.beginPath();
+                    ctx.arc(point.x, point.y, 6, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.strokeStyle = '#333';
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                });
+            }
+            
+            generateFrequencyButtons() {
+                this.frequencyGrid.innerHTML = '';
+                this.frequencies.forEach(freq => {
+                    const button = document.createElement('button');
+                    button.className = 'frequency-btn';
+                    button.innerHTML = `${freq} Hz<br><small>Klik untuk test</small>`;
+                    button.dataset.frequency = freq;
+                    
+                    button.addEventListener('click', () => {
+                        this.playFrequency(freq);
+                        this.updateButtonState(button);
+                    });
+                    
+                    this.frequencyGrid.appendChild(button);
+                });
+            }
+            
+            generateResultGrid() {
+                this.resultGrid.innerHTML = '';
+                this.frequencies.forEach(freq => {
+                    const resultItem = document.createElement('div');
+                    resultItem.className = 'result-item';
+                    resultItem.innerHTML = `
+                        <div class="result-freq">${freq} Hz</div>
+                        <div class="result-value" id="result-${freq}">- dB</div>
+                    `;
+                    this.resultGrid.appendChild(resultItem);
+                });
+            }
+            
+            setMode(mode) {
+                this.currentMode = mode;
+                
+                if (mode === 'air') {
+                    this.airBtn.classList.add('active');
+                    this.boneBtn.classList.remove('active');
+                } else {
+                    this.airBtn.classList.remove('active');
+                    this.boneBtn.classList.add('active');
+                }
+                
+                this.drawAudiogram();
+                this.updateConclusion();
+            }
+            
+            playFrequency(frequency) {
+                if (!this.audioContext) {
+                    this.initAudioContext();
+                    if (!this.audioContext) return;
+                }
+                
+                this.stopSound();
+                
+                const volume = parseInt(this.volumeSlider.value);
+                const duration = parseInt(this.durationSlider.value);
+                const gainValue = volume / 100;
+                const dbLevel = Math.round((volume / 100) * 100);
+                
+                this.oscillator = this.audioContext.createOscillator();
+                this.gainNode = this.audioContext.createGain();
+                
+                this.oscillator.type = 'sine';
+                this.oscillator.frequency.value = frequency;
+                
+                const currentTime = this.audioContext.currentTime;
+                this.gainNode.gain.setValueAtTime(0, currentTime);
+                this.gainNode.gain.linearRampToValueAtTime(gainValue, currentTime + 0.1);
+                this.gainNode.gain.setValueAtTime(gainValue, currentTime + duration - 0.1);
+                this.gainNode.gain.linearRampToValueAtTime(0, currentTime + duration);
+                
+                this.oscillator.connect(this.gainNode);
+                this.gainNode.connect(this.audioContext.destination);
+                
+                this.oscillator.start();
+                this.oscillator.stop(currentTime + duration);
+                
+                this.isPlaying = true;
+                
+                if (!this.thresholds[frequency] || dbLevel < this.thresholds[frequency]) {
+                    this.thresholds[frequency] = dbLevel;
+                    this.updateResult(frequency, dbLevel);
+                    this.updateConclusion();
+                    this.drawAudiogram();
+                }
+                
+                setTimeout(() => {
+                    this.isPlaying = false;
+                    this.resetButtonStates();
+                }, duration * 1000);
+            }
+            
+            updateButtonState(button) {
+                this.resetButtonStates();
+                button.classList.add('playing');
+            }
+            
+            resetButtonStates() {
+                document.querySelectorAll('.frequency-btn').forEach(btn => {
+                    btn.classList.remove('playing');
+                });
+            }
+            
+            stopSound() {
+                if (this.oscillator) {
+                    this.oscillator.stop();
+                    this.oscillator.disconnect();
+                    this.isPlaying = false;
+                    this.resetButtonStates();
+                }
+            }
+            
+            stopAllSounds() {
+                this.stopSound();
+            }
+            
+            testAllFrequencies() {
+                const duration = parseInt(this.durationSlider.value);
+                const pauseBetween = 1000;
+                
+                this.frequencies.forEach((freq, index) => {
+                    setTimeout(() => {
+                        this.playFrequency(freq);
+                        const buttons = document.querySelectorAll('.frequency-btn');
+                        if (buttons[index]) {
+                            this.updateButtonState(buttons[index]);
+                        }
+                    }, index * (duration * 1000 + pauseBetween));
+                });
+            }
+            
+            updateResult(frequency, dbLevel) {
+                const resultElement = document.getElementById(`result-${frequency}`);
+                if (resultElement) {
+                    resultElement.textContent = `${dbLevel} dB`;
+                    
+                    if (dbLevel > 25) {
+                        resultElement.classList.add('fail');
+                    } else {
+                        resultElement.classList.remove('fail');
+                    }
+                }
+            }
+            
+            updateConclusion() {
+                const thresholds = Object.values(this.thresholds);
+                
+                if (thresholds.length === 0) {
+                    this.conclusionText.textContent = "Belum ada data. Silakan lakukan tes terlebih dahulu.";
+                    return;
+                }
+                
+                const averageThreshold = thresholds.reduce((a, b) => a + b, 0) / thresholds.length;
+                const maxThreshold = Math.max(...thresholds);
+                const abnormalCount = thresholds.filter(t => t > 25).length;
+                
+                let conclusion = "";
+                
+                if (abnormalCount === 0) {
+                    conclusion = "Hasil skrining menunjukkan pendengaran dalam batas normal (semua frekuensi ≤25 dB).";
+                } else if (abnormalCount <= 2) {
+                    conclusion = "Hasil skrining menunjukkan kemungkinan gangguan pendengaran ringan pada beberapa frekuensi.";
+                } else if (abnormalCount <= 4) {
+                    conclusion = "Hasil skrining menunjukkan kemungkinan gangguan pendengaran sedang pada beberapa frekuensi.";
+                } else {
+                    conclusion = "Hasil skrining menunjukkan kemungkinan gangguan pendengaran signifikan pada banyak frekuensi.";
+                }
+                
+                conclusion += ` Rata-rata threshold: ${averageThreshold.toFixed(1)} dB. `;
+                conclusion += `Disarankan konsultasi dengan Spesialis Kedokteran Keluarga untuk evaluasi lebih lanjut.`;
+                
+                this.conclusionText.textContent = conclusion;
+            }
+            
+            resetResults() {
+                this.thresholds = {};
+                this.frequencies.forEach(freq => {
+                    const resultElement = document.getElementById(`result-${freq}`);
+                    if (resultElement) {
+                        resultElement.textContent = '- dB';
+                        resultElement.classList.remove('fail');
+                    }
+                });
+                this.updateConclusion();
+                this.drawAudiogram();
+            }
+            
+            saveResults() {
+                const results = {
+                    mode: this.currentMode,
+                    date: new Date().toLocaleString('id-ID'),
+                    thresholds: this.thresholds,
+                    conclusion: this.conclusionText.textContent
+                };
+                
+                // Simpan ke localStorage
+                localStorage.setItem('audiometryResults', JSON.stringify(results));
+                
+                // Buat data untuk download
+                const dataStr = JSON.stringify(results, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                
+                // Buat link download
+                const downloadLink = document.createElement('a');
+                downloadLink.href = URL.createObjectURL(dataBlob);
+                downloadLink.download = `hasil-audiometri-${new Date().toISOString().slice(0,10)}.json`;
+                downloadLink.click();
+                
+                alert('Hasil telah disimpan dan didownload sebagai file JSON.');
+            }
+            
+            loadResults() {
+                const saved = localStorage.getItem('audiometryResults');
+                if (saved) {
+                    try {
+                        const results = JSON.parse(saved);
+                        this.thresholds = results.thresholds || {};
+                        
+                        Object.keys(this.thresholds).forEach(freq => {
+                            this.updateResult(parseInt(freq), this.thresholds[freq]);
+                        });
+                        
+                        this.updateConclusion();
+                        this.drawAudiogram();
+                    } catch (e) {
+                        console.error('Error loading saved results:', e);
+                    }
+                }
+            }
+        }
+        
+        // Inisialisasi aplikasi
+        document.addEventListener('DOMContentLoaded', () => {
+            const audiometryApp = new AudiometryScreening();
+            
+            // Auto-load saved results
+            audiometryApp.loadResults();
+            
+            // Auto-save saat keluar
+            window.addEventListener('beforeunload', () => {
+                localStorage.setItem('audiometryResults', JSON.stringify({
+                    mode: audiometryApp.currentMode,
+                    date: new Date().toLocaleString('id-ID'),
+                    thresholds: audiometryApp.thresholds,
+                    conclusion: audiometryApp.conclusionText.textContent
+                }));
+            });
+        });
+    </script>
+</body>
+</html>
