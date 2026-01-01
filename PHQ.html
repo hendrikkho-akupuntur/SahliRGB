@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Alat Skrining Kesehatan Mental - PHQ-9</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 15px;
+            max-width: 1200px;
+            margin: 0 auto;
+            overflow-x: hidden;
+            -webkit-text-size-adjust: 100%;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
+            color: white;
+            padding: 20px 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .logo {
+            height: 60px;
+            width: auto;
+            border-radius: 6px;
+            object-fit: contain;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 3px;
+            max-width: 100%;
+        }
+        
+        .title-container {
+            width: 100%;
+        }
+        
+        h1 {
+            font-size: 22px;
+            margin-bottom: 5px;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+        
+        .subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        .instructions {
+            background-color: #f0f7ff;
+            padding: 15px;
+            border-left: 4px solid #4b6cb7;
+            margin: 15px;
+            border-radius: 6px;
+            font-size: 15px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+        
+        .instructions i {
+            color: #4b6cb7;
+            margin-right: 8px;
+        }
+        
+        .questionnaire {
+            padding: 15px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        /* TABEL YANG LEBIH RESPONSIF */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            margin: 20px 0;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 700px; /* Minimum width untuk menjaga struktur */
+        }
+        
+        th, td {
+            padding: 12px 8px;
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 14px;
+        }
+        
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #2c3e50;
+            white-space: nowrap;
+            padding: 12px 5px;
+        }
+        
+        .question-row {
+            text-align: left;
+            font-weight: 500;
+            color: #34495e;
+            font-size: 14px;
+            line-height: 1.4;
+            padding-right: 5px;
+        }
+        
+        /* Header kolom dengan line break untuk mobile */
+        .column-header {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 60px;
+            line-height: 1.3;
+        }
+        
+        .column-score {
+            font-size: 11px;
+            opacity: 0.8;
+            margin-top: 3px;
+        }
+        
+        input[type="radio"] {
+            transform: scale(1.2);
+            cursor: pointer;
+        }
+        
+        .difficulty-section {
+            background-color: #f9f9f9;
+            padding: 20px 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .difficulty-section h3 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+        
+        .difficulty-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .difficulty-option {
+            padding: 12px;
+            background-color: white;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .difficulty-option:hover, .difficulty-option:active {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        }
+        
+        .difficulty-option label {
+            display: block;
+            font-size: 15px;
+            cursor: pointer;
+            padding: 5px 0;
+        }
+        
+        .difficulty-option input {
+            margin-bottom: 8px;
+        }
+        
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 25px 0;
+        }
+        
+        button {
+            padding: 16px 20px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        #calculate-btn {
+            background: linear-gradient(to right, #4b6cb7, #182848);
+            color: white;
+        }
+        
+        #reset-btn {
+            background-color: #f8f9fa;
+            color: #495057;
+            border: 2px solid #dee2e6;
+        }
+        
+        button:active {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Hasil Skor - Responsif */
+        .result-container {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 20px 15px;
+            border-radius: 12px;
+            margin-top: 30px;
+            display: none;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .result-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px dashed #d0d0d0;
+        }
+        
+        .result-title {
+            font-size: 20px;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .score-display-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+        }
+        
+        .score-circle {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
+            transition: all 0.3s ease;
+        }
+        
+        .score-value {
+            font-size: 36px;
+            font-weight: 800;
+            line-height: 1;
+        }
+        
+        .score-max {
+            font-size: 18px;
+            font-weight: 600;
+            opacity: 0.7;
+        }
+        
+        .score-label {
+            font-size: 14px;
+            margin-top: 6px;
+            font-weight: 500;
+        }
+        
+        .severity-indicator {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: white;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+        }
+        
+        .severity-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #2c3e50;
+        }
+        
+        .severity-badge {
+            display: inline-block;
+            padding: 10px 25px;
+            font-size: 20px;
+            font-weight: 700;
+            border-radius: 50px;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .severity-description {
+            font-size: 15px;
+            color: #495057;
+            line-height: 1.5;
+        }
+        
+        .severity-scale {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 20px 0;
+            background-color: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .scale-item {
+            text-align: center;
+            padding: 12px 8px;
+            border-radius: 8px;
+            transition: transform 0.3s;
+        }
+        
+        .scale-range {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        
+        .scale-label {
+            font-size: 13px;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+        
+        .recommendation-box {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 4px solid #4b6cb7;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .recommendation-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .recommendation-content {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #2c3e50;
+        }
+        
+        .warning-box {
+            background: linear-gradient(to right, #fff3cd, #ffeaa7);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 4px solid #ffc107;
+            box-shadow: 0 3px 10px rgba(255, 193, 7, 0.15);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 3px 10px rgba(255, 193, 7, 0.15); }
+            50% { box-shadow: 0 3px 15px rgba(255, 193, 7, 0.25); }
+            100% { box-shadow: 0 3px 10px rgba(255, 193, 7, 0.15); }
+        }
+        
+        .warning-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #856404;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .warning-content {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #856404;
+        }
+        
+        .warning-content ul {
+            margin-top: 8px;
+            margin-left: 20px;
+        }
+        
+        /* Promotion Section */
+        .promotion {
+            background: linear-gradient(to right, #f8f9fa, #e9ecef);
+            padding: 20px 15px;
+            border-radius: 12px;
+            margin: 30px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 20px;
+        }
+        
+        .promotion-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .promotion-content {
+            width: 100%;
+        }
+        
+        .promotion-title {
+            font-size: 20px;
+            color: #2c3e50;
+            margin-bottom: 12px;
+        }
+        
+        .promotion-description {
+            font-size: 15px;
+            color: #495057;
+            margin-bottom: 18px;
+            line-height: 1.5;
+        }
+        
+        .promotion-btn {
+            display: inline-block;
+            background: linear-gradient(to right, #28a745, #20c997);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 15px;
+        }
+        
+        .promotion-btn:active {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(40, 167, 69, 0.3);
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 20px 15px;
+            color: #6c757d;
+            font-size: 14px;
+            border-top: 1px solid #e9ecef;
+            margin-top: 20px;
+        }
+        
+        .footer-logo {
+            height: 35px;
+            margin: 8px;
+            vertical-align: middle;
+        }
+        
+        /* Warna untuk setiap tingkat keparahan */
+        .minimal-bg { background-color: #e8f5e9; }
+        .mild-bg { background-color: #fff3e0; }
+        .moderate-bg { background-color: #fff8e1; }
+        .moderately-severe-bg { background-color: #ffebee; }
+        .severe-bg { background-color: #fce4ec; }
+        
+        .minimal-color { color: #2e7d32; }
+        .mild-color { color: #ef6c00; }
+        .moderate-color { color: #f57c00; }
+        .moderately-severe-color { color: #d32f2f; }
+        .severe-color { color: #c2185b; }
+        
+        .minimal-badge { background-color: #2e7d32; color: white; }
+        .mild-badge { background-color: #ef6c00; color: white; }
+        .moderate-badge { background-color: #f57c00; color: white; }
+        .moderately-severe-badge { background-color: #d32f2f; color: white; }
+        .severe-badge { background-color: #c2185b; color: white; }
+        
+        /* Media query untuk tablet dan desktop */
+        @media (min-width: 768px) {
+            body {
+                padding: 20px;
+            }
+            
+            .header {
+                padding: 30px;
+                flex-direction: row;
+                justify-content: space-between;
+                text-align: left;
+            }
+            
+            .logo-container {
+                margin-bottom: 0;
+                justify-content: flex-start;
+            }
+            
+            .title-container {
+                flex-grow: 1;
+                padding-left: 20px;
+            }
+            
+            h1 {
+                font-size: 28px;
+            }
+            
+            .subtitle {
+                font-size: 16px;
+            }
+            
+            .instructions {
+                padding: 20px 30px;
+                margin: 20px 30px;
+                font-size: 17px;
+            }
+            
+            .questionnaire {
+                padding: 20px 30px;
+            }
+            
+            table {
+                min-width: 800px;
+            }
+            
+            th, td {
+                padding: 15px 10px;
+                font-size: 15px;
+            }
+            
+            .question-row {
+                font-size: 15px;
+            }
+            
+            .difficulty-options {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+            
+            .difficulty-option {
+                flex: 1;
+                min-width: 180px;
+                margin: 5px;
+            }
+            
+            .buttons {
+                flex-direction: row;
+                justify-content: center;
+            }
+            
+            button {
+                width: auto;
+                padding: 15px 40px;
+            }
+            
+            .severity-scale {
+                flex-direction: row;
+            }
+            
+            .scale-item {
+                margin: 0 5px;
+            }
+            
+            .promotion {
+                flex-direction: row;
+                text-align: left;
+                padding: 30px;
+            }
+            
+            .promotion-image {
+                width: 200px;
+                height: 200px;
+            }
+            
+            .promotion-title {
+                font-size: 24px;
+            }
+            
+            .promotion-description {
+                font-size: 17px;
+            }
+        }
+        
+        /* Media query untuk HP dengan layar sangat kecil */
+        @media (max-width: 360px) {
+            h1 {
+                font-size: 20px;
+            }
+            
+            .logo {
+                height: 50px;
+            }
+            
+            .score-circle {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .score-value {
+                font-size: 32px;
+            }
+            
+            .column-header {
+                min-height: 70px;
+            }
+            
+            th {
+                font-size: 12px;
+                padding: 10px 4px;
+            }
+            
+            .question-row {
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-container">
+                <img src="KKLP.jpg" alt="Logo KKLP" class="logo">
+                <img src="fkuph.jpg" alt="Logo FK UPH" class="logo">
+            </div>
+            <div class="title-container">
+                <h1>Kuesioner Kesehatan Pasien - 9 (PHQ-9)</h1>
+                <p class="subtitle">Alat Skrining untuk Menilai Gejala Depresi</p>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <p><i class="fas fa-info-circle"></i> Selama 2 minggu terakhir, seberapa sering Anda terganggu oleh masalah-masalah berikut? (Gunakan tanda centang untuk menunjukkan jawaban Anda)</p>
+        </div>
+        
+        <div class="questionnaire">
+            <form id="phq9-form">
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Pertanyaan</th>
+                                <th>
+                                    <div class="column-header">
+                                        Tidak sama sekali
+                                        <span class="column-score">(0)</span>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="column-header">
+                                        Beberapa hari
+                                        <span class="column-score">(1)</span>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="column-header">
+                                        Lebih dari separuh hari
+                                        <span class="column-score">(2)</span>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="column-header">
+                                        Hampir setiap hari
+                                        <span class="column-score">(3)</span>
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="question-row">1. Kurang tertarik atau kurang senang dalam melakukan berbagai hal</td>
+                                <td><input type="radio" name="q1" value="0" required></td>
+                                <td><input type="radio" name="q1" value="1"></td>
+                                <td><input type="radio" name="q1" value="2"></td>
+                                <td><input type="radio" name="q1" value="3"></td>
+                            </tr>
+                            <tr>
+                                <td class="question-row">2. Merasa murung, tertekan, atau putus asa</td>
+                                <td><input type="radio" name="q2" value="0" required></td>
+                                <td><input type="radio" name="q2" value="1"></td>
+                                <td><input type="radio" name="q2" value="2"></td>
+                                <td><input type="radio" name="q2" value="3"></td>
+                            </tr>
+                            <tr>
+                                <td class="question-row">3. Sulit tidur atau tetap tertidur, atau terlalu banyak tidur</td>
+                                <td><input type="radio" name="q3" value="0" required></td>
+                                <td><input type="radio" name="q3" value="1"></td>
+                                <td><input type="radio" name="q3" value="2"></td>
+                                <td><input type="radio" name="q3" value="3"></td>
+                            </tr>
+                            <tr>
+                                <td class="question-row">4. Merasa lelah atau kurang energi</td>
+                                <td><input type="radio" name="q4" value="0" required></td>
+                                <td><input type="radio" name="q4" value="1"></td>
+                                <td><input type="radio" name="q4" value="2"></td>
+                                <td><input type="radio" name="q4" value="3"></td>
+                            </tr>
+                            <tr>
+                                <td class="question-row">5. Nafsu makan buruk atau makan berlebihan</td>
+                                <td><input type="radio" name="q5" value="0" required></td>
+                                <td><input type="radio" name="q5" value="1"></td>
+                                <td><input type="radio" name="q5" value="2"></td>
+                                <td><input type="radio" name="q5" value="3"></td>
+                            </tr>
+                            <tr>
+                                <td class="question-row">6. Merasa buruk tentang diri sendiri - atau bahwa Anda adalah orang yang gagal atau telah mengecewakan diri sendiri atau keluarga</td>
+                                <td><input type="radio" name="q6" value="0" required></td>
+                                <td><input type="radio" name="q6" value="1"></td>
+                                <td><input type="radio" name="q6" value="2"></td>
+                                <td><input type="radio" name="q6" value="3"></td>
+                            </tr>
+                            <tr>
+                                <td class="question-row">7. Sulit berkonsentrasi pada sesuatu, seperti membaca koran atau menonton televisi</td>
+                                <td><input type="radio" name="q7" value="0" required></td>
+                                <td><input type="radio" name="q7" value="1"></td>
+                                <td><input type="radio" name="q7" value="2"></td>
+                                <td><input type="radio" name="q7" value="3"></td>
+                            </tr>
+                            <tr>
+                                <td class="question-row">8. Bergerak atau berbicara sangat lambat sehingga orang lain memperhatikan? Atau sebaliknya - sangat gelisah atau resah sehingga Anda bergerak jauh lebih banyak dari biasanya</td>
+                                <td><input type="radio" name="q8" value="0" required></td>
+                                <td><input type="radio" name="q8" value="1"></td>
+                                <td><input type="radio" name="q8" value="2"></td>
+                                <td><input type="radio" name="q8" value="3"></td>
+                            </tr>
+                            <tr>
+                                <td class="question-row">9. Pikiran bahwa lebih baik mati atau menyakiti diri sendiri dengan cara tertentu</td>
+                                <td><input type="radio" name="q9" value="0" required></td>
+                                <td><input type="radio" name="q9" value="1"></td>
+                                <td><input type="radio" name="q9" value="2"></td>
+                                <td><input type="radio" name="q9" value="3"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="difficulty-section">
+                    <h3>Jika Anda mengalami salah satu masalah di atas, seberapa sulit masalah ini membuat Anda melakukan pekerjaan, mengurus urusan di rumah, atau bergaul dengan orang lain?</h3>
+                    <div class="difficulty-options">
+                        <div class="difficulty-option">
+                            <input type="radio" name="difficulty" id="diff1" value="0" required>
+                            <label for="diff1">Tidak sulit sama sekali</label>
+                        </div>
+                        <div class="difficulty-option">
+                            <input type="radio" name="difficulty" id="diff2" value="1">
+                            <label for="diff2">Agak sulit</label>
+                        </div>
+                        <div class="difficulty-option">
+                            <input type="radio" name="difficulty" id="diff3" value="2">
+                            <label for="diff3">Sangat sulit</label>
+                        </div>
+                        <div class="difficulty-option">
+                            <input type="radio" name="difficulty" id="diff4" value="3">
+                            <label for="diff4">Sangat amat sulit</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="buttons">
+                    <button type="button" id="calculate-btn"><i class="fas fa-calculator"></i> Hitung Skor</button>
+                    <button type="button" id="reset-btn"><i class="fas fa-redo"></i> Reset Formulir</button>
+                </div>
+                
+                <!-- Bagian hasil skor -->
+                <div class="result-container" id="result-container">
+                    <div class="result-header">
+                        <h2 class="result-title"><i class="fas fa-chart-line"></i> Hasil Skrining Anda</h2>
+                        <p>Skor Anda telah dianalisis berdasarkan kuesioner PHQ-9</p>
+                    </div>
+                    
+                    <div class="score-display-container">
+                        <div class="score-circle" id="score-circle">
+                            <div class="score-value" id="score-value">0</div>
+                            <div class="score-max">dari 27</div>
+                            <div class="score-label">Total Skor</div>
+                        </div>
+                    </div>
+                    
+                    <div class="severity-indicator">
+                        <div class="severity-title">Tingkat Keparahan Gejala</div>
+                        <div class="severity-badge" id="severity-badge">Minimal</div>
+                        <div class="severity-description" id="severity-description">
+                            Skor Anda menunjukkan gejala depresi minimal atau tidak ada.
+                        </div>
+                    </div>
+                    
+                    <div class="severity-scale">
+                        <div class="scale-item minimal-bg">
+                            <div class="scale-range minimal-color">0-4</div>
+                            <div class="scale-label minimal-badge">Minimal</div>
+                        </div>
+                        <div class="scale-item mild-bg">
+                            <div class="scale-range mild-color">5-9</div>
+                            <div class="scale-label mild-badge">Ringan</div>
+                        </div>
+                        <div class="scale-item moderate-bg">
+                            <div class="scale-range moderate-color">10-14</div>
+                            <div class="scale-label moderate-badge">Sedang</div>
+                        </div>
+                        <div class="scale-item moderately-severe-bg">
+                            <div class="scale-range moderately-severe-color">15-19</div>
+                            <div class="scale-label moderately-severe-badge">Cukup Berat</div>
+                        </div>
+                        <div class="scale-item severe-bg">
+                            <div class="scale-range severe-color">20-27</div>
+                            <div class="scale-label severe-badge">Berat</div>
+                        </div>
+                    </div>
+                    
+                    <div class="recommendation-box">
+                        <div class="recommendation-title"><i class="fas fa-comment-medical"></i> Rekomendasi</div>
+                        <div class="recommendation-content" id="recommendation-content">
+                            Rekomendasi akan muncul di sini setelah Anda menghitung skor.
+                        </div>
+                    </div>
+                    
+                    <div class="warning-box" id="warning-box" style="display: none;">
+                        <div class="warning-title"><i class="fas fa-exclamation-triangle"></i> Perhatian Penting!</div>
+                        <div class="warning-content">
+                            <strong>Anda memberikan respons positif pada pertanyaan tentang pikiran untuk menyakiti diri sendiri atau bunuh diri.</strong> Terlepas dari skor total Anda, sangat penting untuk segera mencari bantuan profesional. Silakan hubungi:
+                            <ul>
+                                <li>Layanan kesehatan mental terdekat</li>
+                                <li>Profesional medis (psikiater/psikolog)</li>
+                                <li>Konselor atau hotline kesehatan mental</li>
+                                <li>Rumah sakit untuk evaluasi lebih lanjut</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div class="promotion">
+        <img src="Hendrik.jpg" alt="dr. Hendrik" class="promotion-image">
+        <div class="promotion-content">
+            <h3 class="promotion-title">Mengalami Nyeri Punggung atau Kebas Saraf?</h3>
+            <p class="promotion-description">
+                Konsultasikan dengan dr. Hendrik, spesialis akupuntur dengan pengalaman luas dalam menangani berbagai keluhan nyeri dan masalah saraf. Dapatkan perawatan yang holistik dan personalized untuk meningkatkan kualitas hidup Anda.
+            </p>
+            <a href="https://hendrikkho-akupuntur.github.io/profile/profile%20dr%20Hendrik%20akupuntur.html" target="_blank" class="promotion-btn">
+                <i class="fas fa-user-md"></i> Profil dr. Hendrik
+            </a>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>
+            <img src="KKLP.jpg" alt="Logo KKLP" class="footer-logo">
+            <img src="fkuph.jpg" alt="Logo FK UPH" class="footer-logo">
+        </p>
+        <p><strong>Alat Skrining Kesehatan Mental - Dikembangkan Oleh Prodi PPDS KKLP FK UPH - dr. Hendrik</strong></p>
+        <p>© 2025 - Program Studi Spesialis Kedokteran Primer FK UPH</p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('phq9-form');
+            const calculateBtn = document.getElementById('calculate-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            const resultContainer = document.getElementById('result-container');
+            const scoreValueElement = document.getElementById('score-value');
+            const scoreCircleElement = document.getElementById('score-circle');
+            const severityBadgeElement = document.getElementById('severity-badge');
+            const severityDescriptionElement = document.getElementById('severity-description');
+            const recommendationContentElement = document.getElementById('recommendation-content');
+            const warningBox = document.getElementById('warning-box');
+            
+            // Data interpretasi skor dengan warna yang sesuai
+            const scoreInterpretations = [
+                {
+                    min: 0,
+                    max: 4,
+                    level: "Minimal",
+                    badgeClass: "minimal-badge",
+                    circleColor: "#2e7d32",
+                    bgColor: "#e8f5e9",
+                    description: "Skor Anda menunjukkan gejala depresi minimal atau tidak ada.",
+                    recommendation: "Tetap jaga kesehatan mental dengan pola hidup sehat, aktivitas fisik teratur, tidur yang cukup, dan menjaga hubungan sosial yang positif. Jika Anda merasa mengalami gejala tertentu, jangan ragu untuk berkonsultasi dengan tenaga kesehatan profesional untuk evaluasi lebih lanjut."
+                },
+                {
+                    min: 5,
+                    max: 9,
+                    level: "Ringan",
+                    badgeClass: "mild-badge",
+                    circleColor: "#ef6c00",
+                    bgColor: "#fff3e0",
+                    description: "Skor Anda menunjukkan gejala depresi ringan.",
+                    recommendation: "Pertimbangkan untuk berbicara dengan tenaga kesehatan tentang perasaan Anda. Strategi swabantu seperti olahraga teratur, teknik relaksasi, menjaga rutinitas yang teratur, dan berbicara dengan orang terpercaya dapat membantu. Jika gejala menetap atau memburuk dalam 2 minggu, konsultasikan dengan profesional kesehatan mental."
+                },
+                {
+                    min: 10,
+                    max: 14,
+                    level: "Sedang",
+                    badgeClass: "moderate-badge",
+                    circleColor: "#f57c00",
+                    bgColor: "#fff8e1",
+                    description: "Skor Anda menunjukkan gejala depresi sedang.",
+                    recommendation: "Dianjurkan untuk berkonsultasi dengan tenaga kesehatan profesional (dokter, psikolog, atau psikiater) untuk evaluasi lebih lanjut. Perawatan seperti psikoterapi dan/atau pengobatan mungkin diperlukan. Jangan ragu untuk mencari dukungan dari orang terdekat dan pertimbangkan untuk mengurangi stresor dalam hidup Anda."
+                },
+                {
+                    min: 15,
+                    max: 19,
+                    level: "Cukup Berat",
+                    badgeClass: "moderately-severe-badge",
+                    circleColor: "#d32f2f",
+                    bgColor: "#ffebee",
+                    description: "Skor Anda menunjukkan gejala depresi cukup berat.",
+                    recommendation: "Sangat disarankan untuk segera berkonsultasi dengan profesional kesehatan mental (psikolog atau psikiater). Perawatan yang tepat waktu dapat membantu mencegah gejala memburuk. Pertimbangkan untuk memberitahu orang terdekat tentang kondisi Anda untuk mendapatkan dukungan. Jangan menunda untuk mencari bantuan profesional."
+                },
+                {
+                    min: 20,
+                    max: 27,
+                    level: "Berat",
+                    badgeClass: "severe-badge",
+                    circleColor: "#c2185b",
+                    bgColor: "#fce4ec",
+                    description: "Skor Anda menunjukkan gejala depresi berat.",
+                    recommendation: "Sangat penting untuk segera mencari bantuan profesional dari psikiater atau layanan kesehatan mental. Perawatan intensif mungkin diperlukan. Jika Anda memiliki pikiran untuk menyakiti diri sendiri atau bunuh diri, segera hubungi layanan darurat atau rumah sakit terdekat. Jangan mencoba mengatasi kondisi ini sendirian."
+                }
+            ];
+            
+            // Fungsi untuk menghitung skor
+            function calculateScore() {
+                let totalScore = 0;
+                let hasSuicidalThoughts = false;
+                
+                // Hitung skor untuk pertanyaan 1-9
+                for (let i = 1; i <= 9; i++) {
+                    const selectedOption = form.querySelector(`input[name="q${i}"]:checked`);
+                    if (selectedOption) {
+                        const value = parseInt(selectedOption.value);
+                        totalScore += value;
+                        
+                        // Periksa pertanyaan 9 (pikiran bunuh diri)
+                        if (i === 9 && value > 0) {
+                            hasSuicidalThoughts = true;
+                        }
+                    }
+                }
+                
+                // Jika ada pertanyaan yang belum dijawab
+                if (totalScore === 0 && !form.querySelector('input[name="q1"]:checked')) {
+                    alert("Silakan jawab semua pertanyaan sebelum menghitung skor.");
+                    return;
+                }
+                
+                // Tampilkan hasil
+                resultContainer.style.display = 'block';
+                scoreValueElement.textContent = totalScore;
+                
+                // Tentukan tingkat keparahan
+                let interpretation = scoreInterpretations[0];
+                for (let i = 0; i < scoreInterpretations.length; i++) {
+                    if (totalScore >= scoreInterpretations[i].min && totalScore <= scoreInterpretations[i].max) {
+                        interpretation = scoreInterpretations[i];
+                        break;
+                    }
+                }
+                
+                // Update tampilan dengan interpretasi
+                severityBadgeElement.textContent = interpretation.level;
+                severityBadgeElement.className = `severity-badge ${interpretation.badgeClass}`;
+                severityDescriptionElement.textContent = interpretation.description;
+                recommendationContentElement.textContent = interpretation.recommendation;
+                
+                // Update lingkaran skor dengan warna yang sesuai
+                scoreCircleElement.style.background = `radial-gradient(circle at 30% 30%, ${interpretation.circleColor}20, ${interpretation.bgColor})`;
+                scoreCircleElement.style.border = `5px solid ${interpretation.circleColor}`;
+                scoreValueElement.style.color = interpretation.circleColor;
+                
+                // Tampilkan peringatan jika ada pikiran bunuh diri
+                if (hasSuicidalThoughts) {
+                    warningBox.style.display = 'block';
+                } else {
+                    warningBox.style.display = 'none';
+                }
+                
+                // Highlight skala sesuai dengan skor
+                highlightSeverityScale(interpretation.level);
+                
+                // Scroll ke hasil
+                setTimeout(() => {
+                    resultContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            }
+            
+            // Fungsi untuk highlight skala keparahan
+            function highlightSeverityScale(level) {
+                const scaleItems = document.querySelectorAll('.scale-item');
+                scaleItems.forEach(item => {
+                    item.style.transform = 'translateY(0)';
+                    item.style.boxShadow = 'none';
+                });
+                
+                // Berikan efek highlight pada item yang sesuai
+                let targetClass = "";
+                switch(level) {
+                    case "Minimal": targetClass = "minimal-badge"; break;
+                    case "Ringan": targetClass = "mild-badge"; break;
+                    case "Sedang": targetClass = "moderate-badge"; break;
+                    case "Cukup Berat": targetClass = "moderately-severe-badge"; break;
+                    case "Berat": targetClass = "severe-badge"; break;
+                }
+                
+                const targetItem = document.querySelector(`.scale-label.${targetClass}`);
+                if (targetItem) {
+                    const parentItem = targetItem.closest('.scale-item');
+                    parentItem.style.transform = 'translateY(-5px)';
+                    parentItem.style.boxShadow = '0 5px 12px rgba(0,0,0,0.1)';
+                }
+            }
+            
+            // Fungsi untuk mereset formulir
+            function resetForm() {
+                form.reset();
+                resultContainer.style.display = 'none';
+                warningBox.style.display = 'none';
+                
+                // Reset highlight skala
+                const scaleItems = document.querySelectorAll('.scale-item');
+                scaleItems.forEach(item => {
+                    item.style.transform = 'translateY(0)';
+                    item.style.boxShadow = 'none';
+                });
+                
+                // Scroll ke atas
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            
+            // Event listeners
+            calculateBtn.addEventListener('click', calculateScore);
+            calculateBtn.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                calculateScore();
+            });
+            
+            resetBtn.addEventListener('click', resetForm);
+            resetBtn.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                resetForm();
+            });
+            
+            // Validasi form saat tombol enter ditekan
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                calculateScore();
+            });
+            
+            // Tambahkan efek visual pada pilihan radio
+            const radioInputs = document.querySelectorAll('input[type="radio"]');
+            radioInputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    // Hapus kelas aktif dari semua radio dalam grup yang sama
+                    const groupName = this.name;
+                    document.querySelectorAll(`input[name="${groupName}"]`).forEach(radio => {
+                        radio.closest('td')?.classList.remove('selected');
+                        radio.closest('.difficulty-option')?.classList.remove('selected');
+                    });
+                    
+                    // Tambahkan kelas aktif ke radio yang dipilih
+                    this.closest('td')?.classList.add('selected');
+                    this.closest('.difficulty-option')?.classList.add('selected');
+                });
+                
+                // Tambahkan event untuk touch devices
+                input.addEventListener('touchstart', function(e) {
+                    e.stopPropagation();
+                });
+            });
+            
+            // Optimasi untuk touch devices
+            document.addEventListener('touchmove', function(e) {
+                if (e.scale !== 1) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+        });
+    </script>
+</body>
+</html>
