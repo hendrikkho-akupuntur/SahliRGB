@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algoritma Pemakaian Insulin - Pedoman PERKENI 2021</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c7873;
+            --secondary: #6fb3b8;
+            --accent: #ff9a3c;
+            --light: #f7f9f9;
+            --dark: #2d4059;
+            --danger: #e74c3c;
+            --success: #27ae60;
+            --warning: #f39c12;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 25px 0;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-icon {
+            font-size: 2.5rem;
+        }
+        
+        .header-text h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+        
+        .header-text p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+        
+        .disclaimer {
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 0.85rem;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .card-icon {
+            background-color: var(--primary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-right: 15px;
+        }
+        
+        .card-title {
+            font-size: 1.4rem;
+            color: var(--dark);
+        }
+        
+        .algorithm-section {
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+            padding-left: 10px;
+            border-left: 4px solid var(--accent);
+        }
+        
+        .step {
+            background-color: var(--light);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--secondary);
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .step-number {
+            background-color: var(--secondary);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+        
+        .insulin-type {
+            background-color: #e8f4f8;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .insulin-type h4 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        th {
+            background-color: var(--primary);
+            color: white;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        tr:hover {
+            background-color: #f0f7f7;
+        }
+        
+        .highlight {
+            background-color: #fff9e6;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--warning);
+            margin: 15px 0;
+        }
+        
+        .alert {
+            background-color: #ffeaea;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--danger);
+            margin: 15px 0;
+        }
+        
+        .success {
+            background-color: #eaffea;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--success);
+            margin: 15px 0;
+        }
+        
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 6px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .btn-accent {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        
+        .algorithm-flow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 30px 0;
+        }
+        
+        .flow-step {
+            background-color: white;
+            border: 2px solid var(--secondary);
+            border-radius: 10px;
+            padding: 20px;
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .flow-step:not(:last-child):after {
+            content: "";
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 20px;
+            background-color: var(--secondary);
+        }
+        
+        .flow-title {
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            text-align: center;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .references {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        
+        .references h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        @media (min-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .full-width {
+                grid-column: 1 / -1;
+            }
+            
+            .header-text h1 {
+                font-size: 2.2rem;
+            }
+        }
+        
+        @media (max-width: 767px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .logo-container {
+                justify-content: center;
+                margin-bottom: 15px;
+            }
+            
+            .card {
+                padding: 20px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-container">
+                    <div class="logo-icon">
+                        <i class="fas fa-syringe"></i>
+                    </div>
+                    <div class="header-text">
+                        <h1>Algoritma Pemakaian Insulin</h1>
+                        <p>Berdasarkan Pedoman PERKENI 2021 - Perkumpulan Endokrinologi Indonesia</p>
+                    </div>
+                </div>
+                <div class="disclaimer">
+                    <i class="fas fa-exclamation-triangle"></i> Informasi ini adalah ringkasan pedoman klinis. Selalu konsultasikan dengan dokter untuk penanganan yang tepat.
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="main-content">
+            <!-- Card 1: Algoritma Umum -->
+            <div class="card full-width">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-project-diagram"></i>
+                    </div>
+                    <h2 class="card-title">Algoritma Umum Terapi Insulin Rawat Jalan</h2>
+                </div>
+                
+                <div class="algorithm-section">
+                    <h3 class="section-title">Tahapan Terapi Insulin</h3>
+                    
+                    <div class="algorithm-flow">
+                        <div class="flow-step">
+                            <div class="flow-title">
+                                <i class="fas fa-play-circle"></i> Langkah 1: Insulin Basal
+                            </div>
+                            <p>Mulai dengan <strong>insulin basal</strong> dosis 5-10 unit/hari atau 0.2 unit/kgBB/hari.</p>
+                            <p>Dapat dikombinasikan dengan OHO (Obat Hipoglikemik Oral) seperti metformin.</p>
+                            <div class="insulin-type">
+                                <h4>Pilihan Insulin Basal:</h4>
+                                <ul>
+                                    <li>Human Insulin (NPH): 1-2 kali sehari</li>
+                                    <li>Insulin analog kerja panjang (Glargine, Detemir): 1 kali sehari</li>
+                                    <li>Insulin analog kerja ultra-panjang (Degludec): 1 kali sehari</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="flow-step">
+                            <div class="flow-title">
+                                <i class="fas fa-plus-circle"></i> Langkah 2: Tambah 1 Injeksi Insulin Kerja Cepat
+                            </div>
+                            <p>Jika target glikemik belum tercapai dengan insulin basal saja, tambahkan <strong>1 injeksi insulin kerja cepat</strong> sebelum makan terbesar.</p>
+                            <p>Dosis awal: 4 unit atau 0.1 unit/kgBB atau 10% dari dosis basal.</p>
+                            <div class="insulin-type">
+                                <h4>Pilihan Insulin Kerja Cepat:</h4>
+                                <ul>
+                                    <li>Insulin analog kerja cepat (Lispro, Aspart, Glulisine)</li>
+                                    <li>Human Insulin kerja pendek (Regular)</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="flow-step">
+                            <div class="flow-title">
+                                <i class="fas fa-expand-arrows-alt"></i> Langkah 3: Basal-Bolus (Multiple Daily Injection)
+                            </div>
+                            <p>Jika target glikemik masih belum tercapai, tambahkan injeksi insulin kerja cepat sebelum makan lainnya.</p>
+                            <p>Regimen <strong>basal-bolus</strong>: insulin basal 1-2 kali sehari + insulin kerja cepat sebelum setiap makan utama.</p>
+                            <div class="highlight">
+                                <i class="fas fa-lightbulb"></i> <strong>Tips:</strong> Regimen basal-bolus memberikan fleksibilitas terbaik dalam penyesuaian dosis.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="alert">
+                    <i class="fas fa-exclamation-circle"></i> <strong>Perhatian:</strong> Jika terjadi hipoglikemia, tentukan dan atasi penyebabnya, lalu turunkan dosis insulin 2-4 unit atau 10-20%.
+                </div>
+            </div>
+            
+            <!-- Card 2: Inisiasi dan Intensifikasi -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h2 class="card-title">Inisiasi dan Intensifikasi Terapi</h2>
+                </div>
+                
+                <div class="algorithm-section">
+                    <h3 class="section-title">Pasien DM Lama dengan OHO</h3>
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <div class="step-title">HbA1c ≥7.5% - <9% dengan kombinasi OHO</div>
+                            <p>Pilihan inisiasi:
+                                <ul>
+                                    <li>Insulin basal ± OHO</li>
+                                    <li>Co-formulation (IDegAsp) atau premixed 1x/hari</li>
+                                    <li>Fixed ratio combination (insulin basal + GLP-1 RA)</li>
+                                </ul>
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <div class="step-title">Intensifikasi jika target belum tercapai</div>
+                            <p>• Insulin basal: tambah insulin prandial 1x → 2x → 3x</p>
+                            <p>• Co-formulation: tingkatkan dari 1x menjadi 2x sehari</p>
+                            <p>• Premixed: tingkatkan dari 1x → 2x → 3x sehari</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="algorithm-section">
+                    <h3 class="section-title">Pasien DM Baru dengan Dekompensasi Metabolik</h3>
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <div class="step-title">HbA1c >9% atau GDP ≥250 mg/dL</div>
+                            <p>Pilihan inisiasi:
+                                <ul>
+                                    <li>Co-formulation atau premixed</li>
+                                    <li>Fixed ratio combination</li>
+                                    <li>Basal plus (basal + 1 prandial)</li>
+                                    <li>Basal bolus langsung</li>
+                                </ul>
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="success">
+                        <i class="fas fa-check-circle"></i> <strong>De-eskalasi:</strong> Pada pasien baru dengan dekompensasi metabolik, setelah kondisi terkontrol dapat dilakukan de-eskalasi terapi.
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card 3: Terapi Khusus -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <h2 class="card-title">Terapi pada Kondisi Khusus</h2>
+                </div>
+                
+                <div class="algorithm-section">
+                    <h3 class="section-title">Terapi Steroid</h3>
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <div class="step-title">Pasien dengan terapi steroid 1x sehari</div>
+                            <p>• Berikan Human Insulin basal (NPH) pagi hari</p>
+                            <p>• Dosis awal: 10 unit, ditingkatkan 10-20% sesuai kebutuhan</p>
+                            <p>• Insulin analog basal jika hiperglikemia sepanjang hari</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <div class="step-title">Pasien dengan dosis multipel steroid</div>
+                            <p>• Insulin basal atau regimen injeksi multipel harian</p>
+                            <p>• Insulin campuran 2x sehari atau basal bolus jika perlu</p>
+                            <p>• Monitor glukosa darah ketat</p>
+                        </div>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button class="btn btn-accent" id="showSteroidTable">
+                            <i class="fas fa-table"></i> Lihat Tabel Dosis Steroid
+                        </button>
+                    </div>
+                    
+                    <div id="steroidTable" style="display: none; margin-top: 15px;">
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Jenis & Dosis Steroid</th>
+                                        <th>Tanpa Riwayat DM</th>
+                                        <th>Dengan Riwayat DM</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Prednison 10-39 mg</td>
+                                        <td>5 unit NPH</td>
+                                        <td>10 unit NPH</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Prednison ≥40 mg</td>
+                                        <td>10 unit NPH</td>
+                                        <td>20 unit NPH</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Dekzametason 1.5-5.9 mg/hari</td>
+                                        <td>5 unit NPH</td>
+                                        <td>10 unit NPH</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Dekzametason ≥6 mg/hari</td>
+                                        <td>10 unit NPH</td>
+                                        <td>20 unit NPH</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="highlight" style="margin-top: 10px;">
+                            <i class="fas fa-info-circle"></i> NPH diberikan pada waktu yang sama dengan pemberian steroid.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="algorithm-section">
+                    <h3 class="section-title">Perioperatif</h3>
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <div class="step-title">Pre-operatif</div>
+                            <p>• Insulin basal: 0.1-0.2 unit/kgBB</p>
+                            <p>• Kurangi 25% dosis insulin jika puasa</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <div class="step-title">Intraoperatif</div>
+                            <p>• Bedah minor: lanjutkan prosedur preoperatif</p>
+                            <p>• Bedah mayor: infus insulin IV kontinyu</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card 4: Rawat Inap & Krisis -->
+            <div class="card full-width">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-hospital"></i>
+                    </div>
+                    <h2 class="card-title">Terapi Insulin Rawat Inap & Krisis Hiperglikemia</h2>
+                </div>
+                
+                <div class="algorithm-section">
+                    <h3 class="section-title">Pasien Rawat Inap</h3>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Kondisi Pasien</th>
+                                    <th>Sasaran Glikemik</th>
+                                    <th>Regimen Insulin</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Penyakit Kritis (ICU)</td>
+                                    <td>140-200 mg/dL</td>
+                                    <td>Infus insulin IV kontinyu</td>
+                                </tr>
+                                <tr>
+                                    <td>Penyakit Non-Kritis</td>
+                                    <td>Sebelum makan: 100-140 mg/dL<br>Acak: &lt;180 mg/dL</td>
+                                    <td>Insulin SK dosis terbagi atau koreksional</td>
+                                </tr>
+                                <tr>
+                                    <td>Dengan Nutrisi Tidak Teratur</td>
+                                    <td>100-180 mg/dL</td>
+                                    <td>Insulin basal + koreksional sesuai kebutuhan</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <div class="step-title">Infus Insulin IV Kontinyu</div>
+                            <p>• Dosis awal: 0.5-1 unit/jam</p>
+                            <p>• Monitor glukosa darah setiap jam (awal)</p>
+                            <p>• Sesuaikan dosis berdasarkan respon glukosa</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <div class="step-title">Transisi IV ke Subkutan</div>
+                            <p>• Dosis SK = 75-80% dari dosis IV total</p>
+                            <p>• Berikan insulin SK 2 jam sebelum hentikan infus IV</p>
+                            <p>• Bagian proporsional: 50% basal + 50% prandial</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="algorithm-section">
+                    <h3 class="section-title">Krisis Hiperglikemia (KAD/SHH)</h3>
+                    
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <div class="step-title">Resusitasi Awal</div>
+                            <p>• Cairan NaCl 0.9%: 1L/jam (15-20 mL/kgBB/jam) jam pertama</p>
+                            <p>• Koreksi kalium jika &lt;3.3 mEq/L sebelum insulin</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <div class="step-title">Terapi Insulin</div>
+                            <p>• Bolus: 0.05-0.1 unit/kgBB IV</p>
+                            <p>• Infus kontinyu: 0.1 unit/kgBB/jam</p>
+                            <p>• Turunkan dosis 50% jika glukosa &lt;250 mg/dL</p>
+                        </div>
+                    </div>
+                    
+                    <div class="alert">
+                        <i class="fas fa-exclamation-triangle"></i> <strong>Indikasi Perawatan Intensif:</strong> pH &lt;7.0, bikarbonat &lt;5 mmol/L, penurunan kesadaran (GCS &lt;12), hipokalemia &lt;2.5 mmol/L.
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card 5: Jenis Insulin & Sasaran -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-vial"></i>
+                    </div>
+                    <h2 class="card-title">Jenis Insulin & Sasaran Glikemik</h2>
+                </div>
+                
+                <div class="algorithm-section">
+                    <h3 class="section-title">Klasifikasi Insulin</h3>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Jenis Insulin</th>
+                                    <th>Contoh</th>
+                                    <th>Onset</th>
+                                    <th>Durasi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Kerja Cepat (Analog)</td>
+                                    <td>Lispro, Aspart, Glulisine</td>
+                                    <td>5-15 menit</td>
+                                    <td>4-6 jam</td>
+                                </tr>
+                                <tr>
+                                    <td>Kerja Pendek (Regular)</td>
+                                    <td>Human Insulin Regular</td>
+                                    <td>30-45 menit</td>
+                                    <td>6-8 jam</td>
+                                </tr>
+                                <tr>
+                                    <td>Kerja Menengah (NPH)</td>
+                                    <td>NPH, Insulatard</td>
+                                    <td>1.5-4 jam</td>
+                                    <td>12-20 jam</td>
+                                </tr>
+                                <tr>
+                                    <td>Kerja Panjang (Analog)</td>
+                                    <td>Glargine, Detemir</td>
+                                    <td>1-3 jam</td>
+                                    <td>24 jam</td>
+                                </tr>
+                                <tr>
+                                    <td>Kerja Ultra Panjang</td>
+                                    <td>Degludec</td>
+                                    <td>30-60 menit</td>
+                                    <td>≥42 jam</td>
+                                </tr>
+                                <tr>
+                                    <td>Premixed</td>
+                                    <td>70/30, 75/25, Ryzodeg</td>
+                                    <td>15-30 menit</td>
+                                    <td>12-24 jam</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="algorithm-section">
+                    <h3 class="section-title">Sasaran Glikemik</h3>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Parameter</th>
+                                    <th>PERKENI</th>
+                                    <th>ADA</th>
+                                    <th>IDF</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>HbA1c</td>
+                                    <td>&lt;7.0%</td>
+                                    <td>&lt;7.0%</td>
+                                    <td>6.2-7.5%</td>
+                                </tr>
+                                <tr>
+                                    <td>GDP (mg/dL)</td>
+                                    <td>80-110</td>
+                                    <td>80-130</td>
+                                    <td>91-120</td>
+                                </tr>
+                                <tr>
+                                    <td>GD 2 jam PP (mg/dL)</td>
+                                    <td>&lt;180</td>
+                                    <td>&lt;180</td>
+                                    <td>136-160</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="highlight">
+                        <i class="fas fa-user-circle"></i> <strong>Individualisasi:</strong> Sasaran dapat disesuaikan berdasarkan usia, komorbiditas, dan risiko hipoglikemia (lebih longgar pada lansia dan risiko hipoglikemia tinggi).
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card 6: Keamanan & Efek Samping -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h2 class="card-title">Keamanan & Efek Samping</h2>
+                </div>
+                
+                <div class="algorithm-section">
+                    <h3 class="section-title">Hipoglikemia</h3>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Level</th>
+                                    <th>Glukosa Darah</th>
+                                    <th>Tindakan</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Level 1 (Peringatan)</td>
+                                    <td>≤70 mg/dL</td>
+                                    <td>Konsumsi 15g karbohidrat sederhana</td>
+                                </tr>
+                                <tr>
+                                    <td>Level 2 (Signifikan)</td>
+                                    <td>&lt;54 mg/dL</td>
+                                    <td>Segera konsumsi 15-20g karbohidrat, monitor ketat</td>
+                                </tr>
+                                <tr>
+                                    <td>Level 3 (Berat)</td>
+                                    <td>-</td>
+                                    <td>Bantuan orang lain, glukagon IV/IM, bantuan medis</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="alert">
+                        <i class="fas fa-female"></i> <strong>Kehamilan:</strong> Human Insulin aman. Insulin analog kerja cepat (lispro, aspart) dapat dipertimbangkan. Glargine kategori C, detemir kategori B.
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">!</div>
+                        <div class="step-content">
+                            <div class="step-title">Efek Samping Lain</div>
+                            <p>• <strong>Kenaikan berat badan:</strong> Monitor asupan makan, aktivitas fisik</p>
+                            <p>• <strong>Edema insulin:</strong> Sementara, hilang spontan dalam beberapa hari</p>
+                            <p>• <strong>Lipodistrofi:</strong> Rotasi lokasi injeksi, gunakan jarum baru setiap kali</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="button-group">
+                    <button class="btn btn-primary" id="printGuide">
+                        <i class="fas fa-print"></i> Cetak Panduan
+                    </button>
+                    <button class="btn btn-secondary" id="showReferences">
+                        <i class="fas fa-book"></i> Referensi
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="references" id="referencesSection" style="display: none;">
+            <h3><i class="fas fa-book-open"></i> Referensi</h3>
+            <p>Pedoman ini disusun berdasarkan:</p>
+            <ol>
+                <li>PERKENI. (2021). Pedoman Petunjuk Praktis Terapi Insulin pada Pasien Diabetes Melitus.</li>
+                <li>International Diabetes Federation. (2017). IDF Diabetes Atlas 8th ed.</li>
+                <li>American Diabetes Association. (2019). Standards of Medical Care in Diabetes.</li>
+                <li>Joint British Diabetes Societies for Inpatient Care. (2014). Management of hyperglycemia and steroid therapy.</li>
+                <li>Konsensus Nasional Pengelolaan Diabetes Mellitus Tipe 1. (2015). IDAI.</li>
+            </ol>
+            <p><strong>Tim Penyusun PERKENI 2021:</strong> Dr. dr. Sony Wibisono (Ketua), Prof. dr. Djoko Wahono Soetmadji, Prof. Dr. dr. Agung Pranoto, dan tim.</p>
+        </div>
+        
+        <footer>
+            <p>© 2026 - Algoritma Terapi Insulin berdasarkan Pedoman PERKENI 2021</p>
+            <p><i class="fas fa-exclamation-triangle"></i> <strong>Peringatan:</strong> Situs ini hanya untuk tujuan edukasi. Konsultasikan dengan dokter untuk diagnosis dan pengobatan.</p>
+            <p>Dirancang oleh PPDS KKLP FKUPH BERDASARKAN Pedoman Petunjuk Praktis Terapi Insulin pada Pasien Diabetes Melitus - PERKENI 2021</p>
+        </footer>
+    </div>
+
+    <script>
+        // Toggle untuk tabel steroid
+        document.getElementById('showSteroidTable').addEventListener('click', function() {
+            const table = document.getElementById('steroidTable');
+            if (table.style.display === 'none') {
+                table.style.display = 'block';
+                this.innerHTML = '<i class="fas fa-times"></i> Tutup Tabel Dosis Steroid';
+            } else {
+                table.style.display = 'none';
+                this.innerHTML = '<i class="fas fa-table"></i> Lihat Tabel Dosis Steroid';
+            }
+        });
+        
+        // Toggle untuk referensi
+        document.getElementById('showReferences').addEventListener('click', function() {
+            const refSection = document.getElementById('referencesSection');
+            if (refSection.style.display === 'none') {
+                refSection.style.display = 'block';
+                this.innerHTML = '<i class="fas fa-times"></i> Tutup Referensi';
+            } else {
+                refSection.style.display = 'none';
+                this.innerHTML = '<i class="fas fa-book"></i> Referensi';
+            }
+        });
+        
+        // Fungsi print
+        document.getElementById('printGuide').addEventListener('click', function() {
+            window.print();
+        });
+        
+        // Efek hover untuk semua card
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+        
+        // Alert untuk pengunjung
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                alert("Selamat datang di Algoritma Pemakaian Insulin berdasarkan Pedoman PERKENI 2021. Informasi ini adalah ringkasan edukasional, selalu konsultasikan dengan dokter untuk penanganan medis.");
+            }, 500);
+        });
+    </script>
+</body>
+</html>
