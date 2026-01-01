@@ -643,7 +643,7 @@
             </div>
             <div class="header-text">
                 <h1>Skrining Buta Warna Ishihara</h1>
-                <p class="subtitle">Alat skrining gangguan penglihatan warna untuk layanan primer dengan tampilan yang lebih lembut</p>
+                <p class="subtitle">Alat skrining gangguan penglihatan warna untuk layanan primer </p>
             </div>
         </header>
         
@@ -659,7 +659,7 @@
                         <li>Anda memiliki maksimal 5 detik untuk setiap gambar</li>
                         <li>Gunakan pencahayaan yang cukup dan jaga jarak sekitar 75 cm dari layar</li>
                     </ol>
-                    <p><strong>Catatan:</strong> Tes ini hanya untuk skrining awal. Konsultasi ke dokter mata diperlukan untuk diagnosis pasti.</p>
+                    <p><strong>Catatan:</strong> Tes ini hanya untuk skrining awal. Konsultasi ke dokter Keluarga diperlukan untuk diagnosis pasti.</p>
                 </div>
                 
                 <div class="progress-container">
@@ -964,25 +964,25 @@
             let monochromatResult = "";
             
             if (percentage >= 90) {
-                interpretation = "Hasil skrining menunjukkan kemungkinan <strong>penglihatan warna normal (Normalsia)</strong>. Namun, tes ini hanya skrining awal dan tidak menggantikan pemeriksaan dokter spesialis mata.";
+                interpretation = "Hasil skrining menunjukkan kemungkinan <strong>penglihatan warna normal (Normalsia)</strong>. Namun, tes ini hanya skrining awal dan tidak menggantikan pemeriksaan dokter spesialis Keluarga.";
                 normalResult = "<span style='color:#27ae60; font-weight:600;'>Tinggi</span> (sesuai dengan penglihatan warna normal)";
                 protanResult = "<span style='color:#e74c3c;'>Rendah</span>";
                 deutanResult = "<span style='color:#e74c3c;'>Rendah</span>";
                 monochromatResult = "<span style='color:#e74c3c;'>Sangat rendah</span>";
             } else if (percentage >= 70) {
-                interpretation = "Hasil skrining menunjukkan kemungkinan <strong>gangguan penglihatan warna ringan (mungkin Protanomaly atau Deuteranomaly)</strong>. Disarankan untuk berkonsultasi ke dokter spesialis mata untuk pemeriksaan lebih lanjut.";
+                interpretation = "Hasil skrining menunjukkan kemungkinan <strong>gangguan penglihatan warna ringan (mungkin Protanomaly atau Deuteranomaly)</strong>. Disarankan untuk berkonsultasi ke dokter spesialis Keluarga untuk pemeriksaan lebih lanjut.";
                 normalResult = "<span style='color:#f39c12;'>Sedang</span>";
                 protanResult = "<span style='color:#f39c12;'>Sedang</span> (mungkin Protanomaly)";
                 deutanResult = "<span style='color:#f39c12;'>Sedang</span> (mungkin Deuteranomaly)";
                 monochromatResult = "<span style='color:#e74c3c;'>Rendah</span>";
             } else if (percentage >= 40) {
-                interpretation = "Hasil skrining menunjukkan kemungkinan <strong>buta warna parsial (mungkin Protanopia atau Deuteranopia)</strong>. Sangat disarankan untuk berkonsultasi ke dokter spesialis mata untuk diagnosis dan penanganan lebih lanjut.";
+                interpretation = "Hasil skrining menunjukkan kemungkinan <strong>buta warna parsial (mungkin Protanopia atau Deuteranopia)</strong>. Sangat disarankan untuk berkonsultasi ke dokter spesialis Keluarga untuk diagnosis dan penanganan lebih lanjut.";
                 normalResult = "<span style='color:#e74c3c;'>Rendah</span>";
                 protanResult = "<span style='color:#27ae60; font-weight:600;'>Tinggi</span> (mungkin Protanopia)";
                 deutanResult = "<span style='color:#27ae60; font-weight:600;'>Tinggi</span> (mungkin Deuteranopia)";
                 monochromatResult = "<span style='color:#e74c3c;'>Rendah</span>";
             } else {
-                interpretation = "Hasil skrining menunjukkan kemungkinan <strong>buta warna total atau gangguan penglihatan warna yang signifikan</strong>. Sangat disarankan untuk segera berkonsultasi ke dokter spesialis mata untuk pemeriksaan komprehensif.";
+                interpretation = "Hasil skrining menunjukkan kemungkinan <strong>buta warna total atau gangguan penglihatan warna yang signifikan</strong>. Sangat disarankan untuk segera berkonsultasi ke dokter spesialis Keluarga untuk pemeriksaan komprehensif.";
                 normalResult = "<span style='color:#e74c3c;'>Sangat rendah</span>";
                 protanResult = "<span style='color:#27ae60; font-weight:600;'>Tinggi</span>";
                 deutanResult = "<span style='color:#27ae60; font-weight:600;'>Tinggi</span>";
