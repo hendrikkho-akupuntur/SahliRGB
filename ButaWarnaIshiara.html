@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skrining Buta Warna Ishihara - KKLP FK UPH</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            color: #4a5568;
+            line-height: 1.7;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 25px 30px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            margin-bottom: 35px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            flex-wrap: wrap;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #3498db, #2ecc71, #9b59b6);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .logo-container img {
+            height: 75px;
+            width: auto;
+            max-width: 160px;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+        
+        .logo-container img:hover {
+            transform: translateY(-3px);
+        }
+        
+        .header-text {
+            flex-grow: 1;
+            text-align: center;
+            padding: 0 20px;
+        }
+        
+        h1 {
+            color: #2d3748;
+            font-size: 1.9rem;
+            margin-bottom: 8px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        
+        .subtitle {
+            color: #718096;
+            font-size: 1.05rem;
+            font-weight: 400;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .test-container {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 18px;
+            padding: 35px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            margin-bottom: 35px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            position: relative;
+        }
+        
+        .test-info {
+            text-align: center;
+            margin-bottom: 30px;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .test-info h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+        
+        .instructions {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 5px solid #3498db;
+            margin-bottom: 20px;
+            text-align: left;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+        }
+        
+        .instructions p {
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+        
+        .instructions ol {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+            padding-left: 5px;
+        }
+        
+        .color-plate-container {
+            margin: 30px 0;
+            position: relative;
+            max-width: 550px;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            background: #f8fafc;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.03);
+        }
+        
+        #color-plate {
+            width: 100%;
+            max-width: 450px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            margin: 0 auto;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+        
+        #color-plate:hover {
+            transform: scale(1.01);
+        }
+        
+        .answer-options {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 35px;
+            flex-wrap: wrap;
+        }
+        
+        .answer-btn {
+            padding: 16px 28px;
+            font-size: 1.25rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #edf2f7 0%, #e2e8f0 100%);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 90px;
+            color: #4a5568;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .answer-btn:hover {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(52, 152, 219, 0.2);
+        }
+        
+        .answer-btn.selected {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            color: white;
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(46, 204, 113, 0.3);
+        }
+        
+        .answer-btn.no-number {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+        }
+        
+        .answer-btn.no-number:hover {
+            background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+            box-shadow: 0 6px 12px rgba(231, 76, 60, 0.2);
+        }
+        
+        .test-controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 35px;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .control-btn {
+            padding: 14px 32px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
+        }
+        
+        #next-btn {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+        }
+        
+        #next-btn:hover {
+            background: linear-gradient(135deg, #2980b9 0%, #1f639b 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(52, 152, 219, 0.25);
+        }
+        
+        #finish-btn {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            color: white;
+        }
+        
+        #finish-btn:hover {
+            background: linear-gradient(135deg, #27ae60 0%, #219653 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(46, 204, 113, 0.25);
+        }
+        
+        #finish-btn:disabled {
+            background: linear-gradient(135deg, #a0aec0 0%, #718096 100%);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        #results-container {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 18px;
+            padding: 35px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            margin-bottom: 35px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            display: none;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        #results-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #9b59b6, #2ecc71, #3498db);
+        }
+        
+        .results-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .results-header h2 {
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .results-header p {
+            color: #718096;
+            font-size: 1.1rem;
+        }
+        
+        .result-card {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-left: 5px solid #3498db;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.03);
+        }
+        
+        .result-card h3 {
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+        
+        .result-card p {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .result-card p strong {
+            color: #4a5568;
+        }
+        
+        .interpretation {
+            margin-top: 30px;
+            background: linear-gradient(135deg, #fef9e7 0%, #fcf3cf 100%);
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid #f39c12;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.03);
+        }
+        
+        .interpretation h3 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+        
+        .interpretation-item {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .interpretation-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .interpretation-item h4 {
+            color: #2d3748;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        
+        .promotion-section {
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 18px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            margin-bottom: 35px;
+            gap: 30px;
+            flex-wrap: wrap;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+        
+        .promotion-image {
+            flex: 0 0 160px;
+        }
+        
+        .promotion-image img {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 6px solid #f1f5f9;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .promotion-image img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .promotion-text {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .promotion-text h3 {
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .promotion-text p {
+            margin-bottom: 15px;
+            color: #4a5568;
+        }
+        
+        .promotion-btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(231, 76, 60, 0.2);
+        }
+        
+        .promotion-btn:hover {
+            background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(231, 76, 60, 0.3);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 25px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            color: #718096;
+            font-size: 0.95rem;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+        
+        .footer-text {
+            margin-bottom: 12px;
+            color: #2d3748;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        
+        .copyright {
+            margin-top: 12px;
+            font-size: 0.9rem;
+            color: #a0aec0;
+        }
+        
+        .progress-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto 25px;
+        }
+        
+        .progress-text {
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #4a5568;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: linear-gradient(135deg, #edf2f7 0%, #e2e8f0 100%);
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            width: 0%;
+            transition: width 0.7s ease;
+            border-radius: 5px;
+        }
+        
+        /* PERBAIKAN KHUSUS: Alignment untuk teks penting di hasil */
+        .recommendation-box {
+            margin-top: 25px;
+            background: linear-gradient(135deg, #e8f4fc 0%, #d4e7fa 100%);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.03);
+            border-left: 5px solid #3498db;
+        }
+        
+        .recommendation-box h3 {
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+        
+        .recommendation-box p {
+            margin-bottom: 15px;
+            color: #4a5568;
+            line-height: 1.6;
+            text-align: justify;
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+        
+        .important-note {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            font-size: 0.95rem;
+            color: #4a5568;
+            line-height: 1.6;
+            text-align: justify;
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+        
+        .important-note strong {
+            color: #2d3748;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+            
+            .logo-container {
+                justify-content: center;
+            }
+            
+            .answer-options {
+                gap: 10px;
+            }
+            
+            .answer-btn {
+                padding: 14px 20px;
+                font-size: 1.1rem;
+                min-width: 80px;
+            }
+            
+            .promotion-section {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .promotion-text {
+                min-width: auto;
+            }
+            
+            h1 {
+                font-size: 1.6rem;
+            }
+            
+            .test-container, #results-container, .promotion-section, footer {
+                padding: 25px 20px;
+            }
+            
+            /* Perbaikan alignment untuk mobile */
+            .recommendation-box, .important-note {
+                padding: 20px;
+                text-align: left;
+            }
+            
+            .important-note {
+                font-size: 0.92rem;
+                line-height: 1.7;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .answer-options {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .answer-btn {
+                width: 200px;
+                max-width: 100%;
+            }
+            
+            .test-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .control-btn {
+                width: 200px;
+                max-width: 100%;
+            }
+            
+            /* Perbaikan alignment untuk hp kecil */
+            .recommendation-box, .important-note {
+                padding: 18px;
+            }
+            
+            .important-note {
+                font-size: 0.9rem;
+                line-height: 1.8;
+            }
+        }
+        
+        /* Untuk mencegah teks terlalu ke kanan di HP */
+        @media (max-width: 360px) {
+            .test-container, #results-container, .promotion-section, footer {
+                padding: 20px 15px;
+            }
+            
+            .recommendation-box, .important-note {
+                padding: 15px;
+            }
+            
+            .important-note {
+                font-size: 0.88rem;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <img src="KKLP.jpg" alt="Logo KKLP" id="logo-kklp">
+                <img src="fkuph.jpg" alt="Logo FK UPH" id="logo-fkuph">
+            </div>
+            <div class="header-text">
+                <h1>Skrining Buta Warna Ishihara</h1>
+                <p class="subtitle">Alat skrining gangguan penglihatan warna untuk layanan primer dengan tampilan yang lebih lembut</p>
+            </div>
+        </header>
+        
+        <div class="test-container">
+            <div class="test-info">
+                <h2>Tes Skrining Buta Warna</h2>
+                <div class="instructions">
+                    <p><strong>Instruksi Penggunaan:</strong></p>
+                    <ol>
+                        <li>Lihat gambar lingkaran titik-titik berwarna (color plate) di bawah</li>
+                        <li>Pilih salah satu dari tiga angka yang menurut Anda terlihat di dalam lingkaran</li>
+                        <li>Jika tidak melihat angka apapun, pilih "Tidak ada angka"</li>
+                        <li>Anda memiliki maksimal 5 detik untuk setiap gambar</li>
+                        <li>Gunakan pencahayaan yang cukup dan jaga jarak sekitar 75 cm dari layar</li>
+                    </ol>
+                    <p><strong>Catatan:</strong> Tes ini hanya untuk skrining awal. Konsultasi ke dokter mata diperlukan untuk diagnosis pasti.</p>
+                </div>
+                
+                <div class="progress-container">
+                    <div class="progress-text">
+                        <span>Tes: <span id="current-plate">1</span> dari <span id="total-plates">13</span></span>
+                        <span><span id="progress-percentage">0%</span></span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress" id="test-progress"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="color-plate-container">
+                <img id="color-plate" src="" alt="Color Plate Ishihara">
+            </div>
+            
+            <div class="answer-options">
+                <!-- Tombol jawaban akan diisi oleh JavaScript -->
+                <button class="answer-btn" id="answer-1">?</button>
+                <button class="answer-btn" id="answer-2">?</button>
+                <button class="answer-btn" id="answer-3">?</button>
+                <button class="answer-btn no-number" id="answer-none">Tidak ada angka</button>
+            </div>
+            
+            <div class="test-controls">
+                <button class="control-btn" id="next-btn">Selanjutnya</button>
+                <button class="control-btn" id="finish-btn" disabled>Selesaikan Tes</button>
+            </div>
+        </div>
+        
+        <div id="results-container">
+            <div class="results-header">
+                <h2>Hasil Skrining Buta Warna</h2>
+                <p>Berikut adalah hasil skrining yang Anda lakukan:</p>
+            </div>
+            
+            <div class="result-card">
+                <h3>Ringkasan Hasil</h3>
+                <p><strong>Jumlah soal:</strong> <span id="summary-total">0</span></p>
+                <p><strong>Jawaban benar:</strong> <span id="summary-correct">0</span></p>
+                <p><strong>Jawaban salah:</strong> <span id="summary-wrong">0</span></p>
+                <p><strong>Tidak melihat angka:</strong> <span id="summary-none">0</span></p>
+                <p><strong>Persentase benar:</strong> <span id="summary-percentage">0%</span></p>
+            </div>
+            
+            <div class="interpretation">
+                <h3>Interpretasi Hasil Skrining</h3>
+                
+                <div class="interpretation-item">
+                    <h4>Normalsia (Penglihatan Warna Normal)</h4>
+                    <p>Dapat membaca dengan benar sebagian besar atau semua plat. Hasil Anda: <span id="result-normal">-</span></p>
+                </div>
+                
+                <div class="interpretation-item">
+                    <h4>Protanopia/Protanomaly (Lemah Merah)</h4>
+                    <p>Kesulitan melihat warna merah. Cenderung salah di plat yang mengandung unsur merah. Hasil Anda: <span id="result-protan">-</span></p>
+                </div>
+                
+                <div class="interpretation-item">
+                    <h4>Deuteranopia/Deuteranomaly (Lemah Hijau)</h4>
+                    <p>Kesulitan melihat warna hijau. Pola kesalahan sedikit berbeda dengan protan. Hasil Anda: <span id="result-deutan">-</span></p>
+                </div>
+                
+                <div class="interpretation-item">
+                    <h4>Buta Warna Total (Monokromat)</h4>
+                    <p>Hanya akan melihat plat demonstrasi. Semua plat lainnya tidak terbaca atau salah total. Hasil Anda: <span id="result-monochromat">-</span></p>
+                </div>
+                
+                <!-- REVISI: Kotak rekomendasi dengan alignment yang diperbaiki -->
+                <div class="recommendation-box">
+                    <h3>Rekomendasi</h3>
+                    <p id="recommendation-text">Hasil tes akan muncul di sini setelah Anda menyelesaikan tes.</p>
+                    
+                    <div class="important-note">
+                        <strong>Penting:</strong> Tes ini hanya untuk skrining awal dan tidak dapat menggantikan diagnosis dari dokter spesialis Kedokteran Keluarga Layanan Primer anda. Jika hasil menunjukkan kemungkinan gangguan penglihatan warna, disarankan untuk berkonsultasi ke dokter keluarga untuk pemeriksaan lebih lanjut.
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="promotion-section">
+            <div class="promotion-image">
+                <img src="Hendrik.jpg" alt="dr. Hendrik">
+            </div>
+            <div class="promotion-text">
+                <h3>Mengalami Nyeri Punggung atau Kebas Saraf?</h3>
+                <p>dr. Hendrik, spesialis akupunktur medis, siap membantu Anda mengatasi masalah nyeri punggung, kebas saraf, dan berbagai keluhan kesehatan lainnya dengan pendekatan terintegrasi antara pengobatan modern dan akupunktur.</p>
+                <p>Pengalaman lebih dari 10 tahun dalam praktik akupunktur medis dengan hasil yang terukur dan pendekatan holistik.</p>
+                <a href="https://hendrikkho-akupuntur.github.io/profile/profile%20dr%20Hendrik%20akupuntur.html" class="promotion-btn" target="_blank">Kunjungi Profil dr. Hendrik</a>
+            </div>
+        </div>
+        
+        <footer>
+            <p class="footer-text">Alat Skrining Buta Warna Ishihara</p>
+            <p>Dikembangkan Oleh Prodi PPDS KKLP FK UPH - dr. Hendrik</p>
+            <p class="copyright">© 2025 - Program Studi Spesialis Kedokteran Primer FK UPH</p>
+        </footer>
+    </div>
+
+    <script>
+        // Data plat Ishihara dengan jawaban yang benar
+        const plates = [
+            { image: "3.jpg", correctAnswer: "3" },
+            { image: "42.jpg", correctAnswer: "42" },
+            { image: "8.jpg", correctAnswer: "8" },
+            { image: "97.jpg", correctAnswer: "97" },
+            { image: "5.jpg", correctAnswer: "5" },
+            { image: "45.jpg", correctAnswer: "45" },
+            { image: "7.jpg", correctAnswer: "7" },
+            { image: "29.jpg", correctAnswer: "29" },
+            { image: "2.jpg", correctAnswer: "2" },
+            { image: "16.jpg", correctAnswer: "16" },
+            { image: "6.jpg", correctAnswer: "6" },
+            { image: "74.jpg", correctAnswer: "74" },
+            { image: "12.jpg", correctAnswer: "12" }
+        ];
+        
+        // Angka-angka yang mungkin muncul sebagai pilihan jawaban
+        const possibleAnswers = [
+            "3", "5", "6", "7", "8", "12", "15", "16", "20", "21", "24", "26", 
+            "29", "35", "42", "45", "57", "64", "74", "78", "84", "97", "99"
+        ];
+        
+        // Acak urutan plat
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+        
+        // Generate pilihan jawaban acak (3 pilihan + jawaban benar)
+        function generateAnswerOptions(correctAnswer) {
+            // Buat array untuk pilihan jawaban
+            let options = [correctAnswer];
+            
+            // Tambahkan 2 angka acak yang berbeda dari jawaban benar
+            while (options.length < 3) {
+                const randomAnswer = possibleAnswers[Math.floor(Math.random() * possibleAnswers.length)];
+                if (!options.includes(randomAnswer)) {
+                    options.push(randomAnswer);
+                }
+            }
+            
+            // Acak urutan pilihan jawaban
+            return shuffleArray([...options]);
+        }
+        
+        // Inisialisasi variabel
+        let shuffledPlates = shuffleArray([...plates]);
+        let currentPlateIndex = 0;
+        let userAnswers = [];
+        let selectedAnswer = null;
+        
+        // Elemen DOM
+        const colorPlateEl = document.getElementById('color-plate');
+        const answerBtn1 = document.getElementById('answer-1');
+        const answerBtn2 = document.getElementById('answer-2');
+        const answerBtn3 = document.getElementById('answer-3');
+        const answerBtnNone = document.getElementById('answer-none');
+        const nextBtn = document.getElementById('next-btn');
+        const finishBtn = document.getElementById('finish-btn');
+        const resultsContainer = document.getElementById('results-container');
+        const currentPlateEl = document.getElementById('current-plate');
+        const totalPlatesEl = document.getElementById('total-plates');
+        const progressBar = document.getElementById('test-progress');
+        const progressPercentageEl = document.getElementById('progress-percentage');
+        
+        // Update tampilan jumlah plat
+        totalPlatesEl.textContent = plates.length;
+        
+        // Tampilkan plat pertama
+        showPlate(currentPlateIndex);
+        
+        // Fungsi untuk menampilkan plat
+        function showPlate(index) {
+            const plate = shuffledPlates[index];
+            colorPlateEl.src = plate.image;
+            colorPlateEl.alt = `Color Plate Ishihara ${plate.correctAnswer}`;
+            
+            // Reset pilihan jawaban
+            selectedAnswer = null;
+            const answerButtons = [answerBtn1, answerBtn2, answerBtn3, answerBtnNone];
+            answerButtons.forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            // Generate pilihan jawaban acak
+            const answerOptions = generateAnswerOptions(plate.correctAnswer);
+            
+            // Set teks pada tombol jawaban
+            answerBtn1.textContent = answerOptions[0];
+            answerBtn2.textContent = answerOptions[1];
+            answerBtn3.textContent = answerOptions[2];
+            answerBtnNone.textContent = "Tidak ada angka";
+            
+            // Set data-answer attribute
+            answerBtn1.setAttribute('data-answer', answerOptions[0]);
+            answerBtn2.setAttribute('data-answer', answerOptions[1]);
+            answerBtn3.setAttribute('data-answer', answerOptions[2]);
+            answerBtnNone.setAttribute('data-answer', 'none');
+            
+            // Update progress
+            currentPlateEl.textContent = index + 1;
+            const progressPercentage = ((index + 1) / plates.length) * 100;
+            progressBar.style.width = `${progressPercentage}%`;
+            progressPercentageEl.textContent = `${Math.round(progressPercentage)}%`;
+            
+            // Aktifkan/tidak aktifkan tombol
+            finishBtn.disabled = userAnswers.length < plates.length;
+        }
+        
+        // Event listener untuk tombol jawaban
+        function handleAnswerClick(event) {
+            // Hapus seleksi dari semua tombol
+            [answerBtn1, answerBtn2, answerBtn3, answerBtnNone].forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            // Tandai tombol yang dipilih
+            event.target.classList.add('selected');
+            selectedAnswer = event.target.getAttribute('data-answer');
+            
+            // Simpan jawaban pengguna
+            userAnswers[currentPlateIndex] = {
+                plate: shuffledPlates[currentPlateIndex],
+                userAnswer: selectedAnswer,
+                isCorrect: selectedAnswer === shuffledPlates[currentPlateIndex].correctAnswer
+            };
+        }
+        
+        answerBtn1.addEventListener('click', handleAnswerClick);
+        answerBtn2.addEventListener('click', handleAnswerClick);
+        answerBtn3.addEventListener('click', handleAnswerClick);
+        answerBtnNone.addEventListener('click', handleAnswerClick);
+        
+        // Event listener untuk tombol selanjutnya
+        nextBtn.addEventListener('click', function() {
+            if (selectedAnswer === null && userAnswers[currentPlateIndex] === undefined) {
+                alert('Silakan pilih jawaban terlebih dahulu!');
+                return;
+            }
+            
+            // Simpan jawaban jika belum disimpan
+            if (userAnswers[currentPlateIndex] === undefined) {
+                userAnswers[currentPlateIndex] = {
+                    plate: shuffledPlates[currentPlateIndex],
+                    userAnswer: selectedAnswer,
+                    isCorrect: selectedAnswer === shuffledPlates[currentPlateIndex].correctAnswer
+                };
+            }
+            
+            // Lanjut ke plat berikutnya atau tampilkan hasil
+            if (currentPlateIndex < plates.length - 1) {
+                currentPlateIndex++;
+                showPlate(currentPlateIndex);
+            } else {
+                // Jika sudah plat terakhir, aktifkan tombol selesaikan
+                finishBtn.disabled = false;
+                alert('Anda telah menyelesaikan semua plat. Silakan klik "Selesaikan Tes" untuk melihat hasil.');
+            }
+        });
+        
+        // Event listener untuk tombol selesaikan tes
+        finishBtn.addEventListener('click', function() {
+            // Pastikan jawaban untuk plat terakhir telah disimpan
+            if (userAnswers[currentPlateIndex] === undefined && selectedAnswer !== null) {
+                userAnswers[currentPlateIndex] = {
+                    plate: shuffledPlates[currentPlateIndex],
+                    userAnswer: selectedAnswer,
+                    isCorrect: selectedAnswer === shuffledPlates[currentPlateIndex].correctAnswer
+                };
+            }
+            
+            // Tampilkan hasil
+            showResults();
+        });
+        
+        // Fungsi untuk menampilkan hasil
+        function showResults() {
+            // Hitung statistik
+            const total = userAnswers.length;
+            const correct = userAnswers.filter(answer => answer.isCorrect).length;
+            const wrong = userAnswers.filter(answer => !answer.isCorrect && answer.userAnswer !== "none").length;
+            const none = userAnswers.filter(answer => answer.userAnswer === "none").length;
+            const percentage = total > 0 ? Math.round((correct / total) * 100) : 0;
+            
+            // Tampilkan ringkasan
+            document.getElementById('summary-total').textContent = total;
+            document.getElementById('summary-correct').textContent = correct;
+            document.getElementById('summary-wrong').textContent = wrong;
+            document.getElementById('summary-none').textContent = none;
+            document.getElementById('summary-percentage').textContent = `${percentage}%`;
+            
+            // Tentukan interpretasi
+            let interpretation = "";
+            let normalResult = "";
+            let protanResult = "";
+            let deutanResult = "";
+            let monochromatResult = "";
+            
+            if (percentage >= 90) {
+                interpretation = "Hasil skrining menunjukkan kemungkinan <strong>penglihatan warna normal (Normalsia)</strong>. Namun, tes ini hanya skrining awal dan tidak menggantikan pemeriksaan dokter spesialis mata.";
+                normalResult = "<span style='color:#27ae60; font-weight:600;'>Tinggi</span> (sesuai dengan penglihatan warna normal)";
+                protanResult = "<span style='color:#e74c3c;'>Rendah</span>";
+                deutanResult = "<span style='color:#e74c3c;'>Rendah</span>";
+                monochromatResult = "<span style='color:#e74c3c;'>Sangat rendah</span>";
+            } else if (percentage >= 70) {
+                interpretation = "Hasil skrining menunjukkan kemungkinan <strong>gangguan penglihatan warna ringan (mungkin Protanomaly atau Deuteranomaly)</strong>. Disarankan untuk berkonsultasi ke dokter spesialis mata untuk pemeriksaan lebih lanjut.";
+                normalResult = "<span style='color:#f39c12;'>Sedang</span>";
+                protanResult = "<span style='color:#f39c12;'>Sedang</span> (mungkin Protanomaly)";
+                deutanResult = "<span style='color:#f39c12;'>Sedang</span> (mungkin Deuteranomaly)";
+                monochromatResult = "<span style='color:#e74c3c;'>Rendah</span>";
+            } else if (percentage >= 40) {
+                interpretation = "Hasil skrining menunjukkan kemungkinan <strong>buta warna parsial (mungkin Protanopia atau Deuteranopia)</strong>. Sangat disarankan untuk berkonsultasi ke dokter spesialis mata untuk diagnosis dan penanganan lebih lanjut.";
+                normalResult = "<span style='color:#e74c3c;'>Rendah</span>";
+                protanResult = "<span style='color:#27ae60; font-weight:600;'>Tinggi</span> (mungkin Protanopia)";
+                deutanResult = "<span style='color:#27ae60; font-weight:600;'>Tinggi</span> (mungkin Deuteranopia)";
+                monochromatResult = "<span style='color:#e74c3c;'>Rendah</span>";
+            } else {
+                interpretation = "Hasil skrining menunjukkan kemungkinan <strong>buta warna total atau gangguan penglihatan warna yang signifikan</strong>. Sangat disarankan untuk segera berkonsultasi ke dokter spesialis mata untuk pemeriksaan komprehensif.";
+                normalResult = "<span style='color:#e74c3c;'>Sangat rendah</span>";
+                protanResult = "<span style='color:#27ae60; font-weight:600;'>Tinggi</span>";
+                deutanResult = "<span style='color:#27ae60; font-weight:600;'>Tinggi</span>";
+                monochromatResult = "<span style='color:#27ae60; font-weight:600;'>Tinggi</span> (mungkin Monokromat)";
+            }
+            
+            // Tampilkan interpretasi
+            document.getElementById('result-normal').innerHTML = normalResult;
+            document.getElementById('result-protan').innerHTML = protanResult;
+            document.getElementById('result-deutan').innerHTML = deutanResult;
+            document.getElementById('result-monochromat').innerHTML = monochromatResult;
+            document.getElementById('recommendation-text').innerHTML = interpretation;
+            
+            // Sembunyikan kontainer tes dan tampilkan hasil
+            document.querySelector('.test-container').style.display = 'none';
+            resultsContainer.style.display = 'block';
+            
+            // Scroll ke hasil
+            resultsContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Handle jika gambar tidak ditemukan
+        colorPlateEl.onerror = function() {
+            console.error(`Gambar ${this.src} tidak ditemukan. Pastikan file gambar ada di folder yang sama dengan file HTML.`);
+            this.alt = "Gambar tidak ditemukan. Pastikan file gambar ada di folder yang sama.";
+            this.style.border = "2px dashed #e74c3c";
+        };
+        
+        // Handle jika logo tidak ditemukan
+        document.getElementById('logo-kklp').onerror = function() {
+            console.error("Logo KKLP.jpg tidak ditemukan");
+            this.alt = "Logo KKLP tidak ditemukan";
+            this.style.border = "1px dashed #ccc";
+        };
+        
+        document.getElementById('logo-fkuph').onerror = function() {
+            console.error("Logo fkuph.jpg tidak ditemukan");
+            this.alt = "Logo FK UPH tidak ditemukan";
+            this.style.border = "1px dashed #ccc";
+        };
+        
+        // Handle jika foto Hendrik tidak ditemukan
+        document.querySelector('.promotion-image img').onerror = function() {
+            console.error("Foto Hendrik.jpg tidak ditemukan");
+            this.alt = "Foto dr. Hendrik tidak ditemukan";
+            this.style.border = "1px dashed #ccc";
+        };
+    </script>
+</body>
+</html>
