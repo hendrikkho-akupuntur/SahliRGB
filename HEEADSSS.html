@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alat Skrining HEEADSSS - Kesehatan Remaja</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4a90e2;
+            --primary-light: #e3f2fd;
+            --secondary: #6c757d;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --border-radius: 10px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, #2c6db5 100%);
+            color: white;
+            padding: 25px 0;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            height: 80px;
+            width: auto;
+            object-fit: contain;
+            border-radius: 8px;
+            background-color: white;
+            padding: 5px;
+        }
+
+        .header-text {
+            max-width: 600px;
+        }
+
+        .header-text h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .header-text p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        /* Main Content */
+        .content-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .form-section {
+            flex: 3;
+            min-width: 300px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 30px;
+        }
+
+        .info-section {
+            flex: 2;
+            min-width: 300px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 30px;
+        }
+
+        .section-title {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: var(--primary);
+        }
+
+        /* Form Styles */
+        .question-group {
+            margin-bottom: 25px;
+        }
+
+        .question-group h3 {
+            color: var(--dark);
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .question-group h3 i {
+            color: var(--primary);
+        }
+
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .option {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .option input {
+            display: none;
+        }
+
+        .option label {
+            display: block;
+            padding: 12px 15px;
+            background-color: var(--light);
+            border: 2px solid #e0e0e0;
+            border-radius: var(--border-radius);
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .option input:checked + label {
+            background-color: var(--primary-light);
+            border-color: var(--primary);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .option label:hover {
+            background-color: #e9ecef;
+        }
+
+        /* Button Styles */
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            flex: 2;
+        }
+
+        .btn-primary:hover {
+            background-color: #3a7bc8;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(58, 123, 200, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+            flex: 1;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        /* Result Section */
+        .result-section {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 30px;
+            margin-top: 30px;
+            display: none;
+        }
+
+        .score-display {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .score-card {
+            flex: 1;
+            min-width: 200px;
+            background-color: var(--light);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .score-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .score-label {
+            font-size: 1rem;
+            color: var(--secondary);
+        }
+
+        .recommendation {
+            background-color: var(--primary-light);
+            border-left: 4px solid var(--primary);
+            padding: 20px;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            margin-top: 20px;
+        }
+
+        .recommendation h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .recommendation ul {
+            margin-left: 20px;
+        }
+
+        .recommendation li {
+            margin-bottom: 8px;
+        }
+
+        /* Promotion Section */
+        .promotion-section {
+            background: linear-gradient(to right, #f8f9fa, #e9ecef);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 25px;
+            margin: 40px 0;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .promotion-image {
+            flex: 1;
+            min-width: 200px;
+            text-align: center;
+        }
+
+        .promotion-image img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .promotion-content {
+            flex: 3;
+            min-width: 300px;
+        }
+
+        .promotion-content h3 {
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .promotion-content p {
+            color: var(--secondary);
+            margin-bottom: 15px;
+        }
+
+        .btn-promotion {
+            display: inline-block;
+            background-color: var(--danger);
+            color: white;
+            padding: 12px 25px;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .btn-promotion:hover {
+            background-color: #c82333;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(220, 53, 69, 0.3);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 25px 0;
+            border-radius: var(--border-radius);
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+
+        .footer-links a {
+            color: #adb5bd;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .copyright {
+            color: #adb5bd;
+            font-size: 0.9rem;
+            margin-top: 15px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+            
+            .logo-section {
+                justify-content: center;
+            }
+            
+            .content-wrapper {
+                flex-direction: column;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .promotion-section {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="logo-section">
+                    <img src="KKLP.jpg" alt="Logo KKLP" class="logo">
+                    <img src="fkuph.jpg" alt="Logo FK UPH" class="logo">
+                </div>
+                <div class="header-text">
+                    <h1><i class="fas fa-heartbeat"></i> Alat Skrining HEEADSSS</h1>
+                    <p>Alat penilaian kesehatan holistik untuk remaja dan dewasa muda. Identifikasi area yang memerlukan perhatian khusus dengan pendekatan yang ramah dan tidak mengancam.</p>
+                </div>
+            </div>
+        </header>
+
+        <div class="content-wrapper">
+            <section class="form-section">
+                <h2 class="section-title"><i class="fas fa-clipboard-check"></i> Skrining Kesehatan</h2>
+                <p>Silakan jawab setiap pertanyaan berikut dengan jujur sesuai dengan kondisi Anda saat ini. Jawaban akan digunakan untuk memberikan rekomendasi yang sesuai.</p>
+                
+                <form id="screeningForm">
+                    <!-- Home (Lingkungan) -->
+                    <div class="question-group">
+                        <h3><i class="fas fa-home"></i> H - Home (Lingkungan Rumah)</h3>
+                        <p>Bagaimana kondisi lingkungan rumah dan hubungan dengan keluarga?</p>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="home1" name="home" value="0">
+                                <label for="home1">Stabil & mendukung</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="home2" name="home" value="1">
+                                <label for="home2">Ada masalah kecil</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="home3" name="home" value="2">
+                                <label for="home3">Masalah sedang</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="home4" name="home" value="3">
+                                <label for="home4">Tidak stabil/bermasalah</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Education & Employment -->
+                    <div class="question-group">
+                        <h3><i class="fas fa-graduation-cap"></i> E - Education & Employment (Pendidikan & Pekerjaan)</h3>
+                        <p>Bagaimana dengan pendidikan, pekerjaan, atau aktivitas sehari-hari?</p>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="edu1" name="education" value="0">
+                                <label for="edu1">Baik, teratur</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="edu2" name="education" value="1">
+                                <label for="edu2">Ada masalah kecil</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="edu3" name="education" value="2">
+                                <label for="edu3">Masalah sedang</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="edu4" name="education" value="3">
+                                <label for="edu4">Tidak sekolah/kerja, masalah serius</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Eating -->
+                    <div class="question-group">
+                        <h3><i class="fas fa-utensils"></i> E - Eating (Pola Makan)</h3>
+                        <p>Bagaimana dengan pola makan, pola diet, atau persepsi terhadap tubuh?</p>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="eat1" name="eating" value="0">
+                                <label for="eat1">Sehat & positif</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="eat2" name="eating" value="1">
+                                <label for="eat2">Ada kekhawatiran kecil</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="eat3" name="eating" value="2">
+                                <label for="eat3">Gangguan sedang</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="eat4" name="eating" value="3">
+                                <label for="eat4">Gangguan makan serius</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Activities -->
+                    <div class="question-group">
+                        <h3><i class="fas fa-running"></i> A - Activities (Aktivitas)</h3>
+                        <p>Bagaimana dengan aktivitas fisik, hobi, dan hubungan dengan teman sebaya?</p>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="act1" name="activities" value="0">
+                                <label for="act1">Aktif & sosial</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="act2" name="activities" value="1">
+                                <label for="act2">Agak terbatas</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="act3" name="activities" value="2">
+                                <label for="act3">Terisolasi/rendah</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="act4" name="activities" value="3">
+                                <label for="act4">Sangat terisolasi/tidak ada</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Drugs -->
+                    <div class="question-group">
+                        <h3><i class="fas fa-smoking-ban"></i> D - Drugs (Penggunaan Zat)</h3>
+                        <p>Apakah ada penggunaan zat seperti alkohol, rokok, atau narkoba?</p>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="drug1" name="drugs" value="0">
+                                <label for="drug1">Tidak pernah</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="drug2" name="drugs" value="1">
+                                <label for="drug2">Pernah coba</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="drug3" name="drugs" value="2">
+                                <label for="drug3">Penggunaan berkala</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="drug4" name="drugs" value="3">
+                                <label for="drug4">Ketergantungan/penyalahgunaan</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Sexuality -->
+                    <div class="question-group">
+                        <h3><i class="fas fa-heart"></i> S - Sexuality (Seksualitas)</h3>
+                        <p>Bagaimana dengan aktivitas seksual, identitas gender, atau hubungan romantis?</p>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="sex1" name="sexuality" value="0">
+                                <label for="sex1">Tidak aktif/aman</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="sex2" name="sexuality" value="1">
+                                <label for="sex2">Aktif, perlindungan kadang</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="sex3" name="sexuality" value="2">
+                                <label for="sex3">Berisiko sedang</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="sex4" name="sexuality" value="3">
+                                <label for="sex4">Berisiko tinggi/tidak aman</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Suicide & Depression -->
+                    <div class="question-group">
+                        <h3><i class="fas fa-brain"></i> S - Suicide & Depression (Depresi & Pikiran Bunuh Diri)</h3>
+                        <p>Bagaimana perasaan Anda akhir-akhir ini? Apakah ada pikiran sedih atau putus asa?</p>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="sui1" name="suicide" value="0">
+                                <label for="sui1">Tidak ada gejala</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="sui2" name="suicide" value="1">
+                                <label for="sui2">Gejala ringan</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="sui3" name="suicide" value="2">
+                                <label for="sui3">Gejala sedang</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="sui4" name="suicide" value="3">
+                                <label for="sui4">Gejala berat/pikiran bunuh diri</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Safety -->
+                    <div class="question-group">
+                        <h3><i class="fas fa-shield-alt"></i> S - Safety (Keamanan)</h3>
+                        <p>Apakah Anda merasa aman? Apakah ada kekerasan atau pelecehan yang dialami?</p>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="safe1" name="safety" value="0">
+                                <label for="safe1">Sangat aman</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="safe2" name="safety" value="1">
+                                <label for="safe2">Cukup aman</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="safe3" name="safety" value="2">
+                                <label for="safe3">Kadang tidak aman</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="safe4" name="safety" value="3">
+                                <label for="safe4">Tidak aman/kekerasan</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button type="button" id="calculateBtn" class="btn btn-primary">
+                            <i class="fas fa-calculator"></i> Hitung Skor & Interpretasi
+                        </button>
+                        <button type="reset" id="resetBtn" class="btn btn-secondary">
+                            <i class="fas fa-redo"></i> Reset Form
+                        </button>
+                    </div>
+                </form>
+            </section>
+            
+            <section class="info-section">
+                <h2 class="section-title"><i class="fas fa-info-circle"></i> Tentang HEEADSSS</h2>
+                <p><strong>HEEADSSS</strong> adalah kerangka penilaian psikososial yang digunakan untuk mengevaluasi kesehatan remaja dan dewasa muda secara holistik.</p>
+                
+                <div style="margin-top: 20px;">
+                    <h3><i class="fas fa-list-ol"></i> Komponen Penilaian:</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>H</strong> - Home (Lingkungan rumah)</li>
+                        <li><strong>E</strong> - Education/Employment (Pendidikan/Pekerjaan)</li>
+                        <li><strong>E</strong> - Eating (Pola makan)</li>
+                        <li><strong>A</strong> - Activities (Aktivitas)</li>
+                        <li><strong>D</strong> - Drugs (Penggunaan zat)</li>
+                        <li><strong>S</strong> - Sexuality (Seksualitas)</li>
+                        <li><strong>S</strong> - Suicide/Depression (Depresi & pikiran bunuh diri)</li>
+                        <li><strong>S</strong> - Safety (Keamanan)</li>
+                    </ul>
+                </div>
+                
+                <div style="margin-top: 25px; background-color: var(--primary-light); padding: 20px; border-radius: var(--border-radius);">
+                    <h3><i class="fas fa-lightbulb"></i> Panduan Penggunaan:</h3>
+                    <p>Jawab setiap pertanyaan dengan jujur sesuai kondisi Anda. Hasil skrining ini hanya sebagai panduan awal dan tidak menggantikan konsultasi dengan tenaga kesehatan profesional.</p>
+                </div>
+                
+                <div style="margin-top: 25px;">
+                    <h3><i class="fas fa-history"></i> Sejarah HEEADSSS:</h3>
+                    <p>Metode HEEADSSS dikembangkan sebagai alat skrining untuk membantu tenaga kesehatan memahami tantangan yang dihadapi remaja secara komprehensif dan tidak mengancam.</p>
+                </div>
+            </section>
+        </div>
+        
+        <!-- Results Section -->
+        <section class="result-section" id="resultSection">
+            <h2 class="section-title"><i class="fas fa-chart-bar"></i> Hasil Skrining Anda</h2>
+            
+            <div class="score-display">
+                <div class="score-card">
+                    <div class="score-value" id="totalScore">0</div>
+                    <div class="score-label">Total Skor</div>
+                </div>
+                <div class="score-card">
+                    <div class="score-value" id="riskLevel">Rendah</div>
+                    <div class="score-label">Tingkat Risiko</div>
+                </div>
+                <div class="score-card">
+                    <div class="score-value" id="areasCount">0</div>
+                    <div class="score-label">Area Perhatian</div>
+                </div>
+            </div>
+            
+            <div class="recommendation">
+                <h3><i class="fas fa-comment-medical"></i> Rekomendasi:</h3>
+                <p id="recommendationText">Silakan lengkapi semua pertanyaan untuk mendapatkan rekomendasi.</p>
+                <ul id="recommendationList">
+                    <!-- Recommendations will be added here dynamically -->
+                </ul>
+            </div>
+            
+            <div style="margin-top: 25px; padding: 15px; background-color: #fff3cd; border-radius: var(--border-radius); border-left: 4px solid #ffc107;">
+                <h4><i class="fas fa-exclamation-triangle"></i> Penting:</h4>
+                <p>Alat ini hanya untuk skrining awal. Jika Anda mengalami krisis atau pikiran untuk menyakiti diri sendiri, segera hubungi layanan darurat atau tenaga kesehatan mental profesional.</p>
+            </div>
+        </section>
+        
+        <!-- Promotion Section -->
+        <section class="promotion-section">
+            <div class="promotion-image">
+                <img src="Hendrik.jpg" alt="dr. Hendrik - Spesialis Akupuntur">
+            </div>
+            <div class="promotion-content">
+                <h3>Mengalami Nyeri Punggung atau Kebas Saraf?</h3>
+                <p>Jangan biarkan rasa sakit mengganggu aktivitas sehari-hari Anda. dr. Hendrik, spesialis akupuntur dari Prodi PPDS KKLP FK UPH, siap membantu mengatasi masalah nyeri dan gangguan saraf dengan pendekatan holistik.</p>
+                <a href="https://hendrikkho-akupuntur.github.io/profile/profile%20dr%20Hendrik%20akupuntur.html" class="btn-promotion" target="_blank">
+                    <i class="fas fa-user-md"></i> Konsultasi dengan dr. Hendrik
+                </a>
+            </div>
+        </section>
+        
+        <!-- Footer -->
+        <footer>
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="#"><i class="fas fa-tools"></i> Alat Buta Warna</a>
+                    <a href="#"><i class="fas fa-user-graduate"></i> Prodi PPDS KKLP FK UPH</a>
+                    <a href="#"><i class="fas fa-envelope"></i> Kontak Kami</a>
+                </div>
+                <p>Dikembangkan Oleh Prodi PPDS KKLP FK UPH - dr. Hendrik</p>
+                <p class="copyright">© 2025 - Program Studi Spesialis Kedokteran Primer FK UPH</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const calculateBtn = document.getElementById('calculateBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const resultSection = document.getElementById('resultSection');
+            const totalScoreEl = document.getElementById('totalScore');
+            const riskLevelEl = document.getElementById('riskLevel');
+            const areasCountEl = document.getElementById('areasCount');
+            const recommendationTextEl = document.getElementById('recommendationText');
+            const recommendationListEl = document.getElementById('recommendationList');
+            
+            // Calculate score when button is clicked
+            calculateBtn.addEventListener('click', function() {
+                // Get all selected values
+                const homeValue = getSelectedValue('home');
+                const educationValue = getSelectedValue('education');
+                const eatingValue = getSelectedValue('eating');
+                const activitiesValue = getSelectedValue('activities');
+                const drugsValue = getSelectedValue('drugs');
+                const sexualityValue = getSelectedValue('sexuality');
+                const suicideValue = getSelectedValue('suicide');
+                const safetyValue = getSelectedValue('safety');
+                
+                // Check if all questions are answered
+                if ([homeValue, educationValue, eatingValue, activitiesValue, drugsValue, sexualityValue, suicideValue, safetyValue].includes(-1)) {
+                    alert('Silakan jawab semua pertanyaan sebelum menghitung skor.');
+                    return;
+                }
+                
+                // Calculate total score
+                const totalScore = homeValue + educationValue + eatingValue + activitiesValue + 
+                                  drugsValue + sexualityValue + suicideValue + safetyValue;
+                
+                // Determine risk level and recommendations
+                let riskLevel = '';
+                let recommendationText = '';
+                let recommendations = [];
+                let areasOfConcern = 0;
+                
+                // Count areas with score >= 2 (moderate to high concern)
+                const scores = [homeValue, educationValue, eatingValue, activitiesValue, drugsValue, sexualityValue, suicideValue, safetyValue];
+                scores.forEach(score => {
+                    if (score >= 2) areasOfConcern++;
+                });
+                
+                // Determine risk level based on total score
+                if (totalScore <= 5) {
+                    riskLevel = 'Rendah';
+                    recommendationText = 'Kondisi kesehatan psikososial Anda secara umum baik. Pertahankan gaya hidup sehat dan hubungan sosial yang positif.';
+                    
+                    // Add general recommendations for low risk
+                    recommendations.push('Pertahankan komunikasi terbuka dengan keluarga dan teman');
+                    recommendations.push('Teruskan aktivitas fisik dan hobi yang sehat');
+                    recommendations.push('Lakukan check-up kesehatan rutin');
+                } else if (totalScore <= 12) {
+                    riskLevel = 'Sedang';
+                    recommendationText = 'Ada beberapa area yang memerlukan perhatian. Pertimbangkan untuk berkonsultasi dengan tenaga kesehatan untuk evaluasi lebih lanjut.';
+                    
+                    // Identify specific areas of concern
+                    if (homeValue >= 2) recommendations.push('Pertimbangkan konseling keluarga untuk meningkatkan dukungan lingkungan rumah');
+                    if (educationValue >= 2) recommendations.push('Cari bantuan untuk masalah pendidikan/pekerjaan dari konselor atau mentor');
+                    if (eatingValue >= 2) recommendations.push('Konsultasi dengan ahli gizi atau dokter mengenai pola makan');
+                    if (activitiesValue >= 2) recommendations.push('Cobalah untuk terlibat dalam aktivitas sosial atau komunitas yang positif');
+                    if (drugsValue >= 2) recommendations.push('Pertimbangkan konsultasi tentang penggunaan zat dengan profesional');
+                    if (sexualityValue >= 2) recommendations.push('Diskusikan kesehatan seksual dengan tenaga kesehatan');
+                    if (suicideValue >= 2) recommendations.push('Penting untuk berkonsultasi dengan profesional kesehatan mental');
+                    if (safetyValue >= 2) recommendations.push('Cari dukungan untuk masalah keamanan dari pihak yang dapat dipercaya');
+                } else {
+                    riskLevel = 'Tinggi';
+                    recommendationText = 'Skor menunjukkan adanya beberapa area yang memerlukan perhatian segera. Sangat disarankan untuk segera berkonsultasi dengan tenaga kesehatan profesional.';
+                    
+                    // Strong recommendations for high risk
+                    recommendations.push('Segera cari bantuan dari tenaga kesehatan mental profesional');
+                    recommendations.push('Bicaralah dengan seseorang yang Anda percayai tentang kondisi Anda');
+                    recommendations.push('Jika ada pikiran untuk menyakiti diri sendiri, segera hubungi layanan darurat');
+                    recommendations.push('Pertimbangkan untuk berkonsultasi dengan dokter atau psikolog');
+                    
+                    // Add specific recommendations based on high risk areas
+                    if (suicideValue >= 3) {
+                        recommendations.unshift('SEGERA cari bantuan profesional atau hubungi layanan krisis');
+                    }
+                }
+                
+                // If no specific recommendations were added, add general ones
+                if (recommendations.length === 0) {
+                    recommendations.push('Pertahankan gaya hidup sehat dengan diet seimbang dan olahraga teratur');
+                    recommendations.push('Jaga komunikasi terbuka dengan keluarga dan teman dekat');
+                    recommendations.push('Lakukan kegiatan yang Anda nikmati untuk mengurangi stres');
+                }
+                
+                // Update the UI with results
+                totalScoreEl.textContent = totalScore;
+                riskLevelEl.textContent = riskLevel;
+                areasCountEl.textContent = areasOfConcern;
+                recommendationTextEl.textContent = recommendationText;
+                
+                // Set color based on risk level
+                if (riskLevel === 'Rendah') {
+                    riskLevelEl.style.color = 'var(--success)';
+                } else if (riskLevel === 'Sedang') {
+                    riskLevelEl.style.color = 'var(--warning)';
+                } else {
+                    riskLevelEl.style.color = 'var(--danger)';
+                }
+                
+                // Update recommendations list
+                recommendationListEl.innerHTML = '';
+                recommendations.forEach(rec => {
+                    const li = document.createElement('li');
+                    li.textContent = rec;
+                    recommendationListEl.appendChild(li);
+                });
+                
+                // Show the result section
+                resultSection.style.display = 'block';
+                resultSection.scrollIntoView({ behavior: 'smooth' });
+            });
+            
+            // Reset form
+            resetBtn.addEventListener('click', function() {
+                resultSection.style.display = 'none';
+            });
+            
+            // Helper function to get selected radio button value
+            function getSelectedValue(name) {
+                const selected = document.querySelector(`input[name="${name}"]:checked`);
+                return selected ? parseInt(selected.value) : -1;
+            }
+            
+            // Add some sample data for demonstration (optional - remove in production)
+            // This pre-selects some answers to demonstrate functionality
+            setTimeout(() => {
+                // Only pre-select if no answers have been selected yet
+                if (getSelectedValue('home') === -1) {
+                    document.getElementById('home1').checked = true;
+                    document.getElementById('edu1').checked = true;
+                    document.getElementById('eat2').checked = true;
+                    document.getElementById('act1').checked = true;
+                    document.getElementById('drug1').checked = true;
+                    document.getElementById('sex1').checked = true;
+                    document.getElementById('sui1').checked = true;
+                    document.getElementById('safe1').checked = true;
+                }
+            }, 500);
+        });
+    </script>
+</body>
+</html>
