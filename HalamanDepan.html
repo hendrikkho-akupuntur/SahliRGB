@@ -14,6 +14,7 @@
             --dark: #212529;
             --gray: #6c757d;
             --light-gray: #e9ecef;
+            --insulin-color: #8a2be2;
         }
         
         * {
@@ -190,6 +191,20 @@
             background-color: #005086;
         }
         
+        /* Styling khusus untuk kartu Panduan Insulin */
+        .insulin-card .tool-icon {
+            background-color: #f5f0ff;
+            color: var(--insulin-color);
+        }
+        
+        .insulin-card .tool-link {
+            background-color: var(--insulin-color);
+        }
+        
+        .insulin-card .tool-link:hover {
+            background-color: #7b1fa2;
+        }
+        
         /* Footer */
         footer {
             background-color: var(--dark);
@@ -310,7 +325,7 @@
                         <div class="tool-content">
                             <h3>Screening Buta Warna</h3>
                             <p>Alat untuk mendeteksi gangguan penglihatan warna dengan menggunakan metode Ishihara atau tes lainnya.</p>
-                            <a href="https://hendrikkho-akupuntur.github.io/SahliRGB/ButaWarnaIshiara.html" target="_blank" class="tool-link">Akses Alat</a>
+                            <a href="https://hendrikkho-akupuntur.github.io/SahliRGB/ButaWarna.html" target="_blank" class="tool-link">Akses Alat</a>
                         </div>
                     </div>
                     
@@ -385,6 +400,18 @@
                             <a href="https://hendrikkho-akupuntur.github.io/SahliRGB/audiometry.html" target="_blank" class="tool-link">Akses Alat</a>
                         </div>
                     </div>
+                    
+                    <!-- Alat 8: Panduan Penggunaan Insulin (BARU) -->
+                    <div class="tool-card insulin-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-syringe"></i>
+                        </div>
+                        <div class="tool-content">
+                            <h3>Panduan Penggunaan Insulin</h3>
+                            <p>Panduan lengkap untuk penggunaan insulin, termasuk jenis-jenis insulin, teknik penyuntikan, dosis, dan manajemen terapi insulin.</p>
+                            <a href="https://hendrikkho-akupuntur.github.io/SahliRGB/PanduanInsulin.html" target="_blank" class="tool-link">Akses Panduan</a>
+                        </div>
+                    </div>
                 </div>
             </section>
         </div>
@@ -427,7 +454,28 @@
             const yearElement = document.querySelector('.copyright p');
             const currentYear = new Date().getFullYear();
             yearElement.innerHTML = yearElement.innerHTML.replace('2025', currentYear);
+            
+            // Tambahkan animasi khusus untuk kartu insulin
+            const insulinCard = document.querySelector('.insulin-card');
+            insulinCard.addEventListener('mouseenter', function() {
+                const icon = this.querySelector('.tool-icon i');
+                icon.style.animation = 'pulse 1s infinite';
+            });
+            
+            insulinCard.addEventListener('mouseleave', function() {
+                const icon = this.querySelector('.tool-icon i');
+                icon.style.animation = 'none';
+            });
         });
     </script>
+    
+    <style>
+        /* Animasi khusus untuk ikon insulin */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+    </style>
 </body>
 </html>
