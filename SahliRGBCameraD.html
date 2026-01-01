@@ -1,0 +1,1552 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Hemoglobin dengan Kamera</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f9f7fe 0%, #e8f4f8 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+        
+        .header-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+        }
+        
+        .logo-title-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex: 1;
+        }
+        
+        .logos-container {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .logo-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .logo {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+        
+        .logo-text {
+            font-weight: bold;
+            text-align: center;
+            color: #2c3e50;
+            line-height: 1.1;
+            font-size: 0.7rem;
+            max-width: 100px;
+        }
+        
+        .logo-fk {
+            color: #003366;
+        }
+        
+        .logo-ppds {
+            color: #990000;
+        }
+        
+        .title-container {
+            flex: 2;
+            text-align: left;
+            padding-left: 20px;
+            border-left: 2px solid #eaeaea;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            font-size: 2rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        h1 i {
+            color: #e74c3c;
+        }
+        
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1rem;
+            line-height: 1.4;
+        }
+        
+        .presented-by {
+            background-color: #003366;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            margin: 15px auto;
+            font-weight: 600;
+            text-align: center;
+            max-width: 700px;
+            font-size: 1rem;
+        }
+        
+        .calculator-card {
+            background-color: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        
+        .tab-container {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #eaeaea;
+        }
+        
+        .tab-button {
+            padding: 15px 30px;
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #7f8c8d;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .tab-button.active {
+            color: #3498db;
+            border-bottom: 3px solid #3498db;
+        }
+        
+        .tab-button:hover {
+            color: #3498db;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Camera Tab Styles */
+        .camera-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .camera-container {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .video-container {
+            width: 100%;
+            height: 350px;
+            border-radius: 15px;
+            overflow: hidden;
+            background-color: #000;
+            position: relative;
+            margin-bottom: 15px;
+            border: 3px solid #e0e0e0;
+            touch-action: manipulation;
+        }
+        
+        #cameraVideo, #capturedImage {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .zoom-controls {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            display: flex;
+            gap: 10px;
+            z-index: 20;
+        }
+        
+        .zoom-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            border: none;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .zoom-btn:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+            transform: scale(1.1);
+        }
+        
+        /* Styling untuk titik indikator */
+        .selection-point {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 3px solid white;
+            background-color: rgba(255, 0, 0, 0.7);
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 10;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            animation: pulse 2s infinite;
+        }
+        
+        .selection-point::after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 0, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
+        }
+        
+        .coordinates-display {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            z-index: 10;
+            pointer-events: none;
+        }
+        
+        .camera-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .camera-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn-secondary {
+            background-color: #f8f9fa;
+            color: #555;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e9ecef;
+            transform: translateY(-3px);
+        }
+        
+        .btn-warning {
+            background-color: #f39c12;
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background-color: #d68910;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.3);
+        }
+        
+        .color-preview {
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .color-sample {
+            width: 100%;
+            height: 100px;
+            border-radius: 15px;
+            border: 3px solid #e0e0e0;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .color-sample::after {
+            content: 'Warna yang dipilih';
+            position: absolute;
+            bottom: 5px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: white;
+            font-size: 0.9rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 3px;
+        }
+        
+        .color-values {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        .color-value-display {
+            display: flex;
+            justify-content: space-around;
+            margin: 15px 0;
+        }
+        
+        .color-value {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .color-label {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+        
+        .color-number {
+            font-size: 2rem;
+            font-weight: 700;
+            padding: 5px 15px;
+            border-radius: 10px;
+            background-color: white;
+            min-width: 80px;
+        }
+        
+        .red-number { color: #e74c3c; }
+        .green-number { color: #2ecc71; }
+        .blue-number { color: #3498db; }
+        
+        /* Manual Input Tab Styles */
+        .input-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .color-input {
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .color-input:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .red { background-color: #ffeaea; border-top: 5px solid #e74c3c; }
+        .green { background-color: #eaffea; border-top: 5px solid #2ecc71; }
+        .blue { background-color: #eaefff; border-top: 5px solid #3498db; }
+        
+        .color-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .color-title i {
+            font-size: 1.5rem;
+        }
+        
+        .red .color-title i { color: #e74c3c; }
+        .green .color-title i { color: #2ecc71; }
+        .blue .color-title i { color: #3498db; }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        label {
+            font-weight: 500;
+            color: #555;
+        }
+        
+        input {
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        .slider-container {
+            margin-top: 15px;
+        }
+        
+        .slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: #e0e0e0;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        .red .slider::-webkit-slider-thumb { background: #e74c3c; }
+        .green .slider::-webkit-slider-thumb { background: #2ecc71; }
+        .blue .slider::-webkit-slider-thumb { background: #3498db; }
+        
+        .value-display {
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-top: 5px;
+            color: #333;
+        }
+        
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        button {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        #calculateBtn {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        #calculateBtn:hover {
+            background-color: #2980b9;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        #resetBtn {
+            background-color: #f8f9fa;
+            color: #555;
+            border: 2px solid #e0e0e0;
+        }
+        
+        #resetBtn:hover {
+            background-color: #e9ecef;
+            transform: translateY(-3px);
+        }
+        
+        .result-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin-top: 20px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .result-title {
+            font-size: 1.3rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        #result {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 10px 0;
+        }
+        
+        .unit {
+            font-size: 1.5rem;
+            color: #7f8c8d;
+            margin-left: 5px;
+        }
+        
+        .interpretation {
+            font-size: 1.1rem;
+            color: #555;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: white;
+            max-width: 500px;
+            margin: 20px auto 0;
+        }
+        
+        .info-section {
+            background-color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .info-title {
+            font-size: 1.3rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .info-content {
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .info-content p {
+            margin-bottom: 15px;
+        }
+        
+        .highlight {
+            background-color: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+        
+        .instructions {
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .instructions h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .instructions ol {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .flash-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #f39c12;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            animation: flashIndicator 2s infinite;
+        }
+        
+        @keyframes flashIndicator {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .header-section {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+            
+            .logo-title-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .title-container {
+                text-align: center;
+                padding-left: 0;
+                border-left: none;
+                border-top: 2px solid #eaeaea;
+                padding-top: 20px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+                justify-content: center;
+            }
+            
+            .calculator-card {
+                padding: 20px;
+            }
+            
+            .buttons, .camera-controls {
+                flex-direction: column;
+            }
+            
+            #result {
+                font-size: 2.8rem;
+            }
+            
+            .camera-section {
+                flex-direction: column;
+            }
+            
+            .zoom-controls {
+                bottom: 5px;
+                right: 5px;
+            }
+            
+            .zoom-btn {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        .pinch-zoom-message {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            z-index: 10;
+            pointer-events: none;
+        }
+        
+        .flash-active {
+            background-color: #f39c12 !important;
+            color: white !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-section">
+            <div class="logo-title-container">
+                <div class="logos-container">
+                    <div class="logo-wrapper">
+                        <!-- Logo FK UPH -->
+                        <img src="fkuph.jpg" alt="Logo FK UPH" class="logo" id="fkLogo">
+                        <div class="logo-text logo-fk">FK UPH</div>
+                    </div>
+                    
+                    <div class="logo-wrapper">
+                        <!-- Logo KKLP -->
+                        <img src="KKLP.jpg" alt="Logo KKLP" class="logo" id="kklpLogo">
+                        <div class="logo-text logo-ppds">PPDS KKLP</div>
+                    </div>
+                </div>
+                
+                <div class="title-container">
+                    <h1><i class="fas fa-tint"></i> Kalkulator Hemoglobin dengan Kamera</h1>
+                    <p class="subtitle">Alat untuk menghitung nilai hemoglobin dari ekstraksi nilai RGB menggunakan teknik Hb Sahli</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="presented-by">
+            Program ini dipersembahkan oleh Prodi Spesialis Kedokteran Keluarga Layanan Primer FK UPH
+        </div>
+        
+        <main>
+            <div class="calculator-card">
+                <!-- Tab Navigation -->
+                <div class="tab-container">
+                    <button class="tab-button active" data-tab="camera-tab">
+                        <i class="fas fa-camera"></i> Deteksi Kamera
+                    </button>
+                    <button class="tab-button" data-tab="manual-tab">
+                        <i class="fas fa-keyboard"></i> Input Manual
+                    </button>
+                </div>
+                
+                <!-- Camera Tab -->
+                <div id="camera-tab" class="tab-content active">
+                    <div class="camera-section">
+                        <div class="camera-container">
+                            <div class="video-container">
+                                <video id="cameraVideo" autoplay playsinline></video>
+                                <canvas id="canvas" class="hidden"></canvas>
+                                <img id="capturedImage" class="hidden" alt="Gambar yang ditangkap">
+                                <!-- Titik indikator akan ditambahkan di sini secara dinamis -->
+                                <div class="coordinates-display" id="coordsDisplay">Klik pada gambar</div>
+                                <div class="pinch-zoom-message" id="zoomMessage">Gunakan pinch gesture untuk zoom</div>
+                                <div class="flash-indicator hidden" id="flashIndicator">
+                                    <i class="fas fa-bolt"></i> FLASH ON
+                                </div>
+                                <div class="zoom-controls">
+                                    <button class="zoom-btn" id="zoomInBtn">+</button>
+                                    <button class="zoom-btn" id="zoomOutBtn">-</button>
+                                    <button class="zoom-btn" id="resetZoomBtn">
+                                        <i class="fas fa-sync-alt"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="camera-controls">
+                                <button id="startCameraBtn" class="camera-btn btn-primary">
+                                    <i class="fas fa-video"></i> Aktifkan Kamera
+                                </button>
+                                <button id="flashToggleBtn" class="camera-btn btn-warning hidden">
+                                    <i class="fas fa-bolt"></i> Flash: OFF
+                                </button>
+                                <button id="captureBtn" class="camera-btn btn-secondary" disabled>
+                                    <i class="fas fa-camera"></i> Tangkap Gambar
+                                </button>
+                                <button id="resetCameraBtn" class="camera-btn btn-secondary">
+                                    <i class="fas fa-redo"></i> Ulangi
+                                </button>
+                            </div>
+                            
+                            <div class="instructions">
+                                <h3><i class="fas fa-info-circle"></i> Petunjuk Penggunaan Kamera:</h3>
+                                <ol>
+                                    <li>Klik "Aktifkan Kamera" untuk mengakses kamera perangkat</li>
+                                    <li>Aktifkan flash jika perlu dengan tombol "Flash: OFF"</li>
+                                    <li>Zoom in/out dengan pinch gesture atau tombol zoom</li>
+                                    <li>Arahkan kamera ke sampel darah (teknik Hb Sahli)</li>
+                                    <li>Klik "Tangkap Gambar" untuk mengambil gambar</li>
+                                    <li><strong>Klik area pada gambar untuk mengambil sampel warna</strong> - titik merah akan muncul menunjukkan area yang dipilih</li>
+                                    <li>Hasil RGB akan otomatis dikonversi ke nilai hemoglobin</li>
+                                </ol>
+                            </div>
+                        </div>
+                        
+                        <div class="color-preview">
+                            <div class="color-sample" id="colorSample"></div>
+                            
+                            <div class="color-values">
+                                <h3>Nilai RGB Terdeteksi</h3>
+                                <p>Klik pada gambar yang ditangkap untuk mengambil sampel warna</p>
+                                
+                                <div class="color-value-display">
+                                    <div class="color-value">
+                                        <div class="color-label">RED</div>
+                                        <div class="color-number red-number" id="detectedRed">0</div>
+                                    </div>
+                                    <div class="color-value">
+                                        <div class="color-label">GREEN</div>
+                                        <div class="color-number green-number" id="detectedGreen">0</div>
+                                    </div>
+                                    <div class="color-value">
+                                        <div class="color-label">BLUE</div>
+                                        <div class="color-number blue-number" id="detectedBlue">0</div>
+                                    </div>
+                                </div>
+                                
+                                <p><strong>Koordinat:</strong> <span id="coordinates">Klik pada gambar</span></p>
+                                <p><small>Titik merah menunjukkan area yang dipilih untuk sampling warna</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Manual Input Tab -->
+                <div id="manual-tab" class="tab-content">
+                    <div class="input-section">
+                        <div class="color-input red">
+                            <div class="color-title">
+                                <i class="fas fa-square"></i> Nilai RED
+                            </div>
+                            <div class="input-group">
+                                <label for="redValue">Masukkan nilai RED (0-255):</label>
+                                <input type="number" id="redValue" min="0" max="255" value="120" step="1">
+                            </div>
+                            <div class="slider-container">
+                                <input type="range" id="redSlider" class="slider" min="0" max="255" value="120" step="1">
+                            </div>
+                            <div class="value-display" id="redDisplay">120</div>
+                        </div>
+                        
+                        <div class="color-input green">
+                            <div class="color-title">
+                                <i class="fas fa-square"></i> Nilai GREEN
+                            </div>
+                            <div class="input-group">
+                                <label for="greenValue">Masukkan nilai GREEN (0-255):</label>
+                                <input type="number" id="greenValue" min="0" max="255" value="80" step="1">
+                            </div>
+                            <div class="slider-container">
+                                <input type="range" id="greenSlider" class="slider" min="0" max="255" value="80" step="1">
+                            </div>
+                            <div class="value-display" id="greenDisplay">80</div>
+                        </div>
+                        
+                        <div class="color-input blue">
+                            <div class="color-title">
+                                <i class="fas fa-square"></i> Nilai BLUE
+                            </div>
+                            <div class="input-group">
+                                <label for="blueValue">Masukkan nilai BLUE (0-255):</label>
+                                <input type="number" id="blueValue" min="0" max="255" value="60" step="1">
+                            </div>
+                            <div class="slider-container">
+                                <input type="range" id="blueSlider" class="slider" min="0" max="255" value="60" step="1">
+                            </div>
+                            <div class="value-display" id="blueDisplay">60</div>
+                        </div>
+                    </div>
+                    
+                    <div class="buttons">
+                        <button id="calculateBtn">
+                            <i class="fas fa-calculator"></i> Hitung Hemoglobin
+                        </button>
+                        <button id="resetBtn">
+                            <i class="fas fa-redo"></i> Reset Nilai
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Result Section (Shared by both tabs) -->
+                <div class="result-section">
+                    <div class="result-title">
+                        <i class="fas fa-heartbeat"></i> Hasil Perhitungan Hemoglobin
+                    </div>
+                    <div id="result">--</div>
+                    <div class="interpretation" id="interpretation">
+                        Masukkan nilai RGB dan klik "Hitung Hemoglobin" untuk melihat hasil
+                    </div>
+                </div>
+            </div>
+            
+            <div class="info-section">
+                <div class="info-title">
+                    <i class="fas fa-info-circle"></i> Informasi Penting
+                </div>
+                <div class="info-content">
+                    <p>Kalkulator ini menggunakan persamaan regresi untuk mengestimasi nilai hemoglobin dari nilai RGB hasil ekstraksi menggunakan teknik <span class="highlight">Hb Sahli</span>.</p>
+                    <p><strong>Persamaan yang digunakan:</strong> <span class="highlight">Dikembangkan oleh Prodi Spesialis PPDS KKLP FK UPH</span></p>
+                    <p>Nilai RGB dapat diperoleh dari hasil ekstraksi citra darah menggunakan teknik pengolahan citra digital. Masukkan nilai RGB antara 0-255 untuk mendapatkan estimasi hemoglobin.</p>
+                    <p><strong>Interpretasi hasil hemoglobin (g/dL):</strong></p>
+                    <ul style="padding-left: 20px; margin-top: 10px;">
+                        <li>< 13.5 (pria) / < 12.0 (wanita): Anemia</li>
+                        <li>13.5-17.5 (pria) / 12.0-15.5 (wanita): Normal</li>
+                        <li>> 17.5 (pria) / > 15.5 (wanita): Tinggi</li>
+                    </ul>
+                    <div class="instructions">
+                        <h3><i class="fas fa-lightbulb"></i> Cara Kerja Deteksi Warna:</h3>
+                        <p>Sistem akan mengambil gambar sampel darah menggunakan kamera perangkat. Setelah gambar ditangkap, <strong>klik pada area gambar untuk mengambil sampel warna</strong>. <strong>Titik merah berdenyut</strong> akan muncul menunjukkan area yang dipilih. Sistem akan membaca nilai RGB dari piksel yang diklik dan langsung mengkonversinya ke nilai hemoglobin menggunakan persamaan regresi.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <p>Kalkulator Hemoglobin dengan Kamera | Teknik Hb Sahli | © 2023 - Prodi Spesialis Kedokteran Keluarga Layanan Primer FK UPH</p>
+        </footer>
+    </div>
+
+    <script>
+        // Mendapatkan elemen-elemen DOM
+        // Camera elements
+        const cameraVideo = document.getElementById('cameraVideo');
+        const canvas = document.getElementById('canvas');
+        const capturedImage = document.getElementById('capturedImage');
+        const startCameraBtn = document.getElementById('startCameraBtn');
+        const flashToggleBtn = document.getElementById('flashToggleBtn');
+        const captureBtn = document.getElementById('captureBtn');
+        const resetCameraBtn = document.getElementById('resetCameraBtn');
+        const colorSample = document.getElementById('colorSample');
+        const detectedRed = document.getElementById('detectedRed');
+        const detectedGreen = document.getElementById('detectedGreen');
+        const detectedBlue = document.getElementById('detectedBlue');
+        const coordinatesSpan = document.getElementById('coordinates');
+        const coordsDisplay = document.getElementById('coordsDisplay');
+        const flashIndicator = document.getElementById('flashIndicator');
+        const zoomMessage = document.getElementById('zoomMessage');
+        const zoomInBtn = document.getElementById('zoomInBtn');
+        const zoomOutBtn = document.getElementById('zoomOutBtn');
+        const resetZoomBtn = document.getElementById('resetZoomBtn');
+        
+        // Manual input elements
+        const redValue = document.getElementById('redValue');
+        const redSlider = document.getElementById('redSlider');
+        const redDisplay = document.getElementById('redDisplay');
+        
+        const greenValue = document.getElementById('greenValue');
+        const greenSlider = document.getElementById('greenSlider');
+        const greenDisplay = document.getElementById('greenDisplay');
+        
+        const blueValue = document.getElementById('blueValue');
+        const blueSlider = document.getElementById('blueSlider');
+        const blueDisplay = document.getElementById('blueDisplay');
+        
+        const calculateBtn = document.getElementById('calculateBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        
+        // Result elements
+        const resultElement = document.getElementById('result');
+        const interpretationElement = document.getElementById('interpretation');
+        
+        // Tab elements
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        // Variables for camera
+        let stream = null;
+        let isCameraActive = false;
+        let imageCaptured = false;
+        let selectionPoint = null;
+        let currentCoords = { x: 0, y: 0 };
+        let isFlashOn = false;
+        let zoomLevel = 1;
+        let isZoomEnabled = true;
+        let initialTouchDistance = null;
+        let initialZoomLevel = 1;
+        
+        // Fungsi untuk mengganti tab
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const tabId = button.getAttribute('data-tab');
+                
+                // Remove active class from all tabs
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabContents.forEach(content => content.classList.remove('active'));
+                
+                // Add active class to clicked tab
+                button.classList.add('active');
+                document.getElementById(tabId).classList.add('active');
+                
+                // Stop camera if switching away from camera tab
+                if (tabId !== 'camera-tab' && isCameraActive) {
+                    stopCamera();
+                }
+            });
+        });
+        
+        // ================ CAMERA FUNCTIONS ================
+        
+        // Fungsi untuk mengaktifkan kamera dengan flash
+        async function startCamera() {
+            try {
+                // Cek apakah perangkat mendukung flash/torch
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                const videoDevices = devices.filter(device => device.kind === 'videoinput');
+                
+                // Konfigurasi kamera dengan flash/torch jika didukung
+                const constraints = { 
+                    video: { 
+                        facingMode: 'environment',
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    },
+                    audio: false 
+                };
+                
+                // Meminta akses ke kamera
+                stream = await navigator.mediaDevices.getUserMedia(constraints);
+                
+                // Menampilkan stream video ke elemen video
+                cameraVideo.srcObject = stream;
+                isCameraActive = true;
+                startCameraBtn.disabled = true;
+                captureBtn.disabled = false;
+                flashToggleBtn.classList.remove('hidden');
+                startCameraBtn.innerHTML = '<i class="fas fa-video-slash"></i> Kamera Aktif';
+                
+                // Aktifkan flash secara otomatis
+                setTimeout(() => {
+                    toggleFlash();
+                }, 500);
+                
+                console.log('Kamera berhasil diaktifkan');
+            } catch (error) {
+                console.error('Error mengakses kamera:', error);
+                alert('Tidak dapat mengakses kamera. Pastikan Anda memberikan izin akses kamera.');
+            }
+        }
+        
+        // Fungsi untuk menghentikan kamera
+        function stopCamera() {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                cameraVideo.srcObject = null;
+                stream = null;
+                isCameraActive = false;
+                startCameraBtn.disabled = false;
+                captureBtn.disabled = true;
+                flashToggleBtn.classList.add('hidden');
+                flashIndicator.classList.add('hidden');
+                startCameraBtn.innerHTML = '<i class="fas fa-video"></i> Aktifkan Kamera';
+                
+                // Reset zoom
+                resetZoom();
+            }
+        }
+        
+        // Fungsi untuk toggle flash
+        function toggleFlash() {
+            if (!stream) return;
+            
+            // Cari track video
+            const videoTrack = stream.getVideoTracks()[0];
+            
+            if (videoTrack && typeof videoTrack.applyConstraints === 'function') {
+                isFlashOn = !isFlashOn;
+                
+                // Coba atur torch/flash mode
+                const constraints = {
+                    advanced: [{ torch: isFlashOn }]
+                };
+                
+                videoTrack.applyConstraints(constraints)
+                    .then(() => {
+                        console.log(`Flash ${isFlashOn ? 'ON' : 'OFF'}`);
+                        flashToggleBtn.innerHTML = `<i class="fas fa-bolt"></i> Flash: ${isFlashOn ? 'ON' : 'OFF'}`;
+                        
+                        if (isFlashOn) {
+                            flashIndicator.classList.remove('hidden');
+                            flashToggleBtn.classList.add('flash-active');
+                        } else {
+                            flashIndicator.classList.add('hidden');
+                            flashToggleBtn.classList.remove('flash-active');
+                        }
+                    })
+                    .catch(error => {
+                        console.warn('Flash tidak didukung:', error);
+                        // Fallback: ubah tombol untuk menunjukkan flash tidak didukung
+                        flashToggleBtn.innerHTML = '<i class="fas fa-bolt"></i> Flash: N/A';
+                        flashToggleBtn.disabled = true;
+                    });
+            }
+        }
+        
+        // Fungsi untuk mengatur zoom
+        function setZoom(level) {
+            if (!isCameraActive || !isZoomEnabled) return;
+            
+            // Batasi zoom antara 1x dan 5x
+            zoomLevel = Math.max(1, Math.min(5, level));
+            
+            // Atur transform scale pada video
+            cameraVideo.style.transform = `scale(${zoomLevel})`;
+            
+            // Atur transform origin ke tengah
+            cameraVideo.style.transformOrigin = 'center';
+            
+            console.log(`Zoom level: ${zoomLevel}x`);
+        }
+        
+        // Fungsi untuk reset zoom
+        function resetZoom() {
+            zoomLevel = 1;
+            cameraVideo.style.transform = 'scale(1)';
+            cameraVideo.style.transformOrigin = 'center';
+            isZoomEnabled = true;
+            zoomMessage.classList.remove('hidden');
+        }
+        
+        // Fungsi untuk menangkap gambar dari kamera
+        function captureImage() {
+            if (!isCameraActive) return;
+            
+            // Matikan flash setelah mengambil gambar
+            if (isFlashOn) {
+                toggleFlash();
+            }
+            
+            // Nonaktifkan zoom setelah gambar diambil
+            isZoomEnabled = false;
+            zoomMessage.classList.add('hidden');
+            
+            // Set ukuran canvas sama dengan video
+            canvas.width = cameraVideo.videoWidth;
+            canvas.height = cameraVideo.videoHeight;
+            
+            // Gambar frame video ke canvas
+            const ctx = canvas.getContext('2d');
+            
+            // Kompensasi zoom pada gambar yang diambil
+            if (zoomLevel > 1) {
+                const scaledWidth = canvas.width / zoomLevel;
+                const scaledHeight = canvas.height / zoomLevel;
+                const offsetX = (canvas.width - scaledWidth) / 2;
+                const offsetY = (canvas.height - scaledHeight) / 2;
+                
+                ctx.drawImage(cameraVideo, offsetX, offsetY, scaledWidth, scaledHeight);
+            } else {
+                ctx.drawImage(cameraVideo, 0, 0, canvas.width, canvas.height);
+            }
+            
+            // Konversi canvas ke data URL dan tampilkan di elemen img
+            const imageDataUrl = canvas.toDataURL('image/png');
+            capturedImage.src = imageDataUrl;
+            
+            // Tampilkan gambar yang ditangkap dan sembunyikan video
+            cameraVideo.classList.add('hidden');
+            capturedImage.classList.remove('hidden');
+            
+            // Hapus titik seleksi lama jika ada
+            removeSelectionPoint();
+            
+            imageCaptured = true;
+            captureBtn.disabled = true;
+            
+            console.log('Gambar berhasil ditangkap, flash dimatikan');
+        }
+        
+        // Fungsi untuk membuat titik indikator
+        function createSelectionPoint(x, y) {
+            // Hapus titik lama jika ada
+            removeSelectionPoint();
+            
+            // Buat elemen titik baru
+            selectionPoint = document.createElement('div');
+            selectionPoint.className = 'selection-point';
+            
+            // Atur posisi titik
+            selectionPoint.style.left = x + 'px';
+            selectionPoint.style.top = y + 'px';
+            
+            // Tambahkan ke container video
+            document.querySelector('.video-container').appendChild(selectionPoint);
+        }
+        
+        // Fungsi untuk menghapus titik indikator
+        function removeSelectionPoint() {
+            if (selectionPoint) {
+                selectionPoint.remove();
+                selectionPoint = null;
+            }
+        }
+        
+        // Fungsi untuk mendeteksi warna dari gambar yang ditangkap
+        function detectColorFromImage(event) {
+            if (!imageCaptured) return;
+            
+            // Dapatkan koordinat klik relatif terhadap gambar
+            const rect = capturedImage.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            
+            // Pastikan klik berada dalam batas gambar
+            if (x < 0 || y < 0 || x > rect.width || y > rect.height) return;
+            
+            // Simpan koordinat saat ini
+            currentCoords = { x, y };
+            
+            // Buat titik indikator pada posisi klik
+            createSelectionPoint(x, y);
+            
+            // Hitung koordinat piksel pada gambar asli
+            const scaleX = capturedImage.naturalWidth / rect.width;
+            const scaleY = capturedImage.naturalHeight / rect.height;
+            const pixelX = Math.floor(x * scaleX);
+            const pixelY = Math.floor(y * scaleY);
+            
+            // Dapatkan konteks canvas dan ambil data warna piksel
+            const ctx = canvas.getContext('2d');
+            const pixelData = ctx.getImageData(pixelX, pixelY, 1, 1).data;
+            
+            // Ekstrak nilai RGB
+            const r = pixelData[0];
+            const g = pixelData[1];
+            const b = pixelData[2];
+            
+            // Tampilkan nilai RGB
+            detectedRed.textContent = r;
+            detectedGreen.textContent = g;
+            detectedBlue.textContent = b;
+            
+            // Tampilkan koordinat
+            coordinatesSpan.textContent = `X: ${pixelX}, Y: ${pixelY}`;
+            coordsDisplay.textContent = `X: ${pixelX}, Y: ${pixelY}`;
+            
+            // Tampilkan sampel warna
+            colorSample.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+            
+            // Update nilai manual input (untuk sinkronisasi)
+            redValue.value = r;
+            redSlider.value = r;
+            redDisplay.textContent = r;
+            
+            greenValue.value = g;
+            greenSlider.value = g;
+            greenDisplay.textContent = g;
+            
+            blueValue.value = b;
+            blueSlider.value = b;
+            blueDisplay.textContent = b;
+            
+            // Hitung hemoglobin secara otomatis
+            calculateHemoglobin();
+        }
+        
+        // Fungsi untuk mereset kamera
+        function resetCamera() {
+            // Tampilkan video dan sembunyikan gambar
+            capturedImage.classList.add('hidden');
+            cameraVideo.classList.remove('hidden');
+            
+            // Hapus titik seleksi
+            removeSelectionPoint();
+            
+            // Aktifkan kembali zoom
+            isZoomEnabled = true;
+            zoomMessage.classList.remove('hidden');
+            
+            // Reset nilai
+            detectedRed.textContent = '0';
+            detectedGreen.textContent = '0';
+            detectedBlue.textContent = '0';
+            coordinatesSpan.textContent = 'Klik pada gambar';
+            coordsDisplay.textContent = 'Klik pada gambar';
+            colorSample.style.backgroundColor = '#f8f9fa';
+            
+            // Reset nilai manual input
+            redValue.value = 0;
+            redSlider.value = 0;
+            redDisplay.textContent = '0';
+            
+            greenValue.value = 0;
+            greenSlider.value = 0;
+            greenDisplay.textContent = '0';
+            
+            blueValue.value = 0;
+            blueSlider.value = 0;
+            blueDisplay.textContent = '0';
+            
+            imageCaptured = false;
+            captureBtn.disabled = !isCameraActive;
+            
+            // Reset hasil
+            resultElement.innerHTML = '--';
+            interpretationElement.textContent = 'Masukkan nilai RGB dan klik "Hitung Hemoglobin" untuk melihat hasil';
+            interpretationElement.style.backgroundColor = 'white';
+            interpretationElement.style.color = '#555';
+            
+            // Reset zoom
+            resetZoom();
+        }
+        
+        // ================ MANUAL INPUT FUNCTIONS ================
+        
+        // Fungsi untuk memperbarui slider berdasarkan input angka
+        function updateSlider(inputElement, sliderElement, displayElement) {
+            const value = parseInt(inputElement.value);
+            if (value < 0) inputElement.value = 0;
+            if (value > 255) inputElement.value = 255;
+            
+            sliderElement.value = inputElement.value;
+            displayElement.textContent = inputElement.value;
+            
+            // Hitung ulang hemoglobin ketika nilai diubah
+            calculateHemoglobin();
+        }
+        
+        // Fungsi untuk memperbarui input angka berdasarkan slider
+        function updateInput(sliderElement, inputElement, displayElement) {
+            inputElement.value = sliderElement.value;
+            displayElement.textContent = sliderElement.value;
+            
+            // Hitung ulang hemoglobin ketika nilai diubah
+            calculateHemoglobin();
+        }
+        
+        // ================ HEMOGLOBIN CALCULATION ================
+        
+        // Fungsi untuk menghitung hemoglobin berdasarkan persamaan
+        function calculateHemoglobin() {
+            let R, G, B;
+            
+            // Tentukan sumber nilai RGB berdasarkan tab aktif
+            if (document.getElementById('camera-tab').classList.contains('active')) {
+                // Gunakan nilai dari deteksi kamera
+                R = parseInt(detectedRed.textContent);
+                G = parseInt(detectedGreen.textContent);
+                B = parseInt(detectedBlue.textContent);
+            } else {
+                // Gunakan nilai dari input manual
+                R = parseFloat(redValue.value);
+                G = parseFloat(greenValue.value);
+                B = parseFloat(blueValue.value);
+            }
+            
+            // Persamaan: Hb = 19.9810419682248 + (-0.018171709319968 * RED) + (-0.0575018090319132 * GREEN) + (-0.000218039589785796 * BLUE)
+            const Hb = 19.9810419682248 + (-0.018171709319968 * R) + (-0.0575018090319132 * G) + (-0.000218039589785796 * B);
+            
+            // Membulatkan hasil menjadi 2 angka desimal
+            const roundedHb = Math.round(Hb * 100) / 100;
+            
+            // Menampilkan hasil
+            resultElement.innerHTML = `${roundedHb}<span class="unit">g/dL</span>`;
+            
+            // Memberikan interpretasi hasil
+            let interpretation = "";
+            let interpretationClass = "";
+            
+            if (roundedHb < 12.0) {
+                interpretation = "Nilai hemoglobin rendah (anemia). Disarankan untuk berkonsultasi dengan dokter.";
+                interpretationClass = "low";
+            } else if (roundedHb >= 12.0 && roundedHb <= 15.5) {
+                interpretation = "Nilai hemoglobin normal untuk wanita. Untuk pria, nilai normal adalah 13.5-17.5 g/dL.";
+                interpretationClass = "normal";
+            } else if (roundedHb > 15.5 && roundedHb <= 17.5) {
+                interpretation = "Nilai hemoglobin normal untuk pria. Untuk wanita, nilai normal adalah 12.0-15.5 g/dL.";
+                interpretationClass = "normal";
+            } else {
+                interpretation = "Nilai hemoglobin tinggi. Disarankan untuk berkonsultasi dengan dokter.";
+                interpretationClass = "high";
+            }
+            
+            interpretationElement.textContent = interpretation;
+            interpretationElement.style.backgroundColor = interpretationClass === "low" ? "#ffeaea" : 
+                                                       interpretationClass === "normal" ? "#eaffea" : "#eaefff";
+            interpretationElement.style.color = interpretationClass === "low" ? "#c0392b" : 
+                                               interpretationClass === "normal" ? "#27ae60" : "#2980b9";
+        }
+        
+        // Fungsi untuk mereset semua nilai manual ke 0
+        function resetManualValues() {
+            redValue.value = 0;
+            greenValue.value = 0;
+            blueValue.value = 0;
+            
+            redSlider.value = 0;
+            greenSlider.value = 0;
+            blueSlider.value = 0;
+            
+            redDisplay.textContent = "0";
+            greenDisplay.textContent = "0";
+            blueDisplay.textContent = "0";
+            
+            // Hitung hemoglobin setelah reset
+            calculateHemoglobin();
+        }
+        
+        // ================ EVENT LISTENERS ================
+        
+        // Camera event listeners
+        startCameraBtn.addEventListener('click', startCamera);
+        flashToggleBtn.addEventListener('click', toggleFlash);
+        captureBtn.addEventListener('click', captureImage);
+        resetCameraBtn.addEventListener('click', resetCamera);
+        capturedImage.addEventListener('click', detectColorFromImage);
+        
+        // Zoom controls
+        zoomInBtn.addEventListener('click', () => setZoom(zoomLevel + 0.5));
+        zoomOutBtn.addEventListener('click', () => setZoom(zoomLevel - 0.5));
+        resetZoomBtn.addEventListener('click', resetZoom);
+        
+        // Manual input event listeners
+        redValue.addEventListener('input', () => updateSlider(redValue, redSlider, redDisplay));
+        redSlider.addEventListener('input', () => updateInput(redSlider, redValue, redDisplay));
+        
+        greenValue.addEventListener('input', () => updateSlider(greenValue, greenSlider, greenDisplay));
+        greenSlider.addEventListener('input', () => updateInput(greenSlider, greenValue, greenDisplay));
+        
+        blueValue.addEventListener('input', () => updateSlider(blueValue, blueSlider, blueDisplay));
+        blueSlider.addEventListener('input', () => updateInput(blueSlider, blueValue, blueDisplay));
+        
+        calculateBtn.addEventListener('click', calculateHemoglobin);
+        resetBtn.addEventListener('click', resetManualValues);
+        
+        // Hitung hemoglobin saat halaman pertama kali dimuat
+        window.addEventListener('load', calculateHemoglobin);
+        
+        // Fungsi untuk menangani jika gambar logo tidak ditemukan
+        document.addEventListener('DOMContentLoaded', function() {
+            const fkLogo = document.getElementById('fkLogo');
+            const kklpLogo = document.getElementById('kklpLogo');
+            
+            // Jika gambar FK UPH tidak ditemukan, tampilkan placeholder
+            fkLogo.onerror = function() {
+                this.style.display = 'none';
+                const placeholder = document.createElement('div');
+                placeholder.className = 'logo-placeholder';
+                placeholder.innerHTML = 'FK UPH';
+                this.parentNode.insertBefore(placeholder, this);
+            };
+            
+            // Jika gambar KKLP tidak ditemukan, tampilkan placeholder
+            kklpLogo.onerror = function() {
+                this.style.display = 'none';
+                const placeholder = document.createElement('div');
+                placeholder.className = 'logo-placeholder';
+                placeholder.innerHTML = 'KKLP';
+                this.parentNode.insertBefore(placeholder, this);
+            };
+        });
+        
+        // Touch events untuk pinch zoom
+        cameraVideo.addEventListener('touchstart', function(e) {
+            if (!isCameraActive || !isZoomEnabled || e.touches.length !== 2) return;
+            
+            // Dapatkan jarak antara dua jari
+            const touch1 = e.touches[0];
+            const touch2 = e.touches[1];
+            initialTouchDistance = Math.hypot(
+                touch2.clientX - touch1.clientX,
+                touch2.clientY - touch1.clientY
+            );
+            initialZoomLevel = zoomLevel;
+            
+            e.preventDefault();
+        });
+        
+        cameraVideo.addEventListener('touchmove', function(e) {
+            if (!isCameraActive || !isZoomEnabled || !initialTouchDistance || e.touches.length !== 2) return;
+            
+            // Hitung jarak baru antara dua jari
+            const touch1 = e.touches[0];
+            const touch2 = e.touches[1];
+            const currentTouchDistance = Math.hypot(
+                touch2.clientX - touch1.clientX,
+                touch2.clientY - touch1.clientY
+            );
+            
+            // Hitung faktor zoom berdasarkan perubahan jarak
+            const zoomFactor = currentTouchDistance / initialTouchDistance;
+            const newZoomLevel = initialZoomLevel * zoomFactor;
+            
+            // Terapkan zoom
+            setZoom(newZoomLevel);
+            
+            e.preventDefault();
+        });
+        
+        cameraVideo.addEventListener('touchend', function() {
+            initialTouchDistance = null;
+        });
+        
+        // Hentikan kamera saat halaman ditutup
+        window.addEventListener('beforeunload', stopCamera);
+    </script>
+</body>
+</html>
