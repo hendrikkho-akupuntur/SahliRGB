@@ -180,8 +180,8 @@
             background-color: #e8f5e9;
         }
         
-        .bp-elevated {
-            color: #ff9800;
+        .bp-prehypertension {
+            color: #ffb300;
             background-color: #fff3e0;
         }
         
@@ -365,7 +365,7 @@
             background-color: #e8f5e9;
         }
         
-        .bp-category-table .bp-elevated td {
+        .bp-category-table .bp-prehypertension td {
             background-color: #fff3e0;
         }
         
@@ -533,7 +533,7 @@
     <div class="container">
         <header>
             <h1>Kalkulator IMT & Analisis Tekanan Darah</h1>
-            <p class="subtitle">Alat skrining kesehatan berdasarkan Panduan JNC 8</p>
+            <p class="subtitle">Alat skrining kesehatan </p>
             <p class="subtitle">Memeriksa status gizi dan rekomendasi tekanan darah</p>
         </header>
         
@@ -624,7 +624,7 @@
                 </div>
             </div>
             
-            <div class="section-title">2. Analisis Tekanan Darah (JNC 8)</div>
+            <div class="section-title">2. Analisis Tekanan Darah </div>
             <div id="bp-value" class="imt-value">-/- mmHg</div>
             <div id="bp-category" class="blood-pressure-category">-</div>
             
@@ -643,20 +643,20 @@
                         <td>&lt; 120</td>
                         <td>&lt; 80</td>
                     </tr>
-                    <tr class="bp-elevated">
-                        <td>Tinggi</td>
-                        <td>120-129</td>
-                        <td>&lt; 80</td>
+                    <tr class="bp-prehypertension">
+                        <td>Prehipertensi</td>
+                        <td>120-139</td>
+                        <td>80-89</td>
                     </tr>
                     <tr class="bp-stage1">
                         <td>Hipertensi Tahap 1</td>
-                        <td>130-139</td>
-                        <td>80-89</td>
+                        <td>140-159</td>
+                        <td>90-99</td>
                     </tr>
                     <tr class="bp-stage2">
                         <td>Hipertensi Tahap 2</td>
-                        <td>140-179</td>
-                        <td>90-119</td>
+                        <td>160-179</td>
+                        <td>100-119</td>
                     </tr>
                     <tr class="bp-hypertensive-crisis">
                         <td>Krisis Hipertensi</td>
@@ -667,14 +667,14 @@
             </table>
             
             <div id="jncrecommendation" class="jncrecommendation">
-                <h3 class="result-title">Rekomendasi Pengobatan Berdasarkan Panduan JNC 8</h3>
+                <h3 class="result-title">Rekomendasi Pengobatan</h3>
                 <div id="jncrecommendation-content">
                     <p>Masukkan data tekanan darah untuk melihat rekomendasi.</p>
                 </div>
                 <div id="treatment-recommendation"></div>
             </div>
             
-            <h3 class="result-title">Panduan JNC 8 untuk Hipertensi</h3>
+            <h3 class="result-title">Panduan untuk Hipertensi</h3>
             <table class="reference-table">
                 <thead>
                     <tr>
@@ -720,7 +720,7 @@
     </div>
     
     <footer>
-        <p>Kalkulator ini adalah alat skrining sederhana berdasarkan Panduan JNC 8. Untuk diagnosis yang akurat, konsultasikan dengan tenaga kesehatan profesional.</p>
+        <p>Kalkulator ini adalah alat skrining sederhana Dikembangkan Oleh PPDS KKLP FK UPH. Untuk diagnosis yang akurat, konsultasikan dengan tenaga kesehatan profesional.</p>
         <p>© 2023 Kalkulator IMT & Analisis Tekanan Darah</p>
     </footer>
 
@@ -747,7 +747,7 @@
                 { max: Infinity, category: "Obesitas", class: "obese", targetIMT: 23 }
             ];
             
-            // Kategori tekanan darah yang DIPERBAIKI sesuai permintaan
+            // Kategori tekanan darah dengan range sistolik yang DIPERBAIKI
             const bpCategories = [
                 { 
                     systolic: { min: 0, max: 119 }, 
@@ -756,20 +756,20 @@
                     class: "bp-normal" 
                 },
                 { 
-                    systolic: { min: 120, max: 129 }, 
-                    diastolic: { min: 0, max: 79 }, 
-                    category: "Tinggi", 
-                    class: "bp-elevated" 
+                    systolic: { min: 120, max: 139 },  // Diperbaiki: 120-139 (sebelumnya 120-129)
+                    diastolic: { min: 80, max: 89 }, 
+                    category: "Prehipertensi", 
+                    class: "bp-prehypertension" 
                 },
                 { 
-                    systolic: { min: 130, max: 139 }, 
-                    diastolic: { min: 80, max: 89 }, 
+                    systolic: { min: 140, max: 159 },  // Diperbaiki: 140-159 (sebelumnya 130-139)
+                    diastolic: { min: 90, max: 99 }, 
                     category: "Hipertensi Tahap 1", 
                     class: "bp-stage1" 
                 },
                 { 
-                    systolic: { min: 140, max: 179 }, 
-                    diastolic: { min: 90, max: 119 }, 
+                    systolic: { min: 160, max: 179 },  // Diperbaiki: 160-179 (sebelumnya 140-179)
+                    diastolic: { min: 100, max: 119 }, 
                     category: "Hipertensi Tahap 2", 
                     class: "bp-stage2" 
                 },
@@ -794,22 +794,52 @@
                 return targetWeight;
             }
             
-            // Fungsi untuk menentukan kategori tekanan darah
+            // Fungsi untuk menentukan kategori tekanan darah dengan logika yang benar
             function getBPCategory(systolic, diastolic) {
                 // Logika yang DIPERBAIKI untuk kategori tekanan darah
+                
+                // 1. Normal: sistolik < 120 DAN diastolik < 80
                 if (systolic < 120 && diastolic < 80) {
                     return bpCategories[0]; // Normal
-                } else if (systolic >= 120 && systolic <= 129 && diastolic < 80) {
-                    return bpCategories[1]; // Tinggi
-                } else if ((systolic >= 130 && systolic <= 139) || (diastolic >= 80 && diastolic <= 89)) {
+                }
+                
+                // 2. Prehipertensi: sistolik 120-139 DAN diastolik 80-89
+                // CATATAN: Prehipertensi hanya jika keduanya dalam range
+                if ((systolic >= 120 && systolic <= 139) && (diastolic >= 80 && diastolic <= 89)) {
+                    return bpCategories[1]; // Prehipertensi
+                }
+                
+                // 3. Hipertensi Tahap 1: sistolik 140-159 ATAU diastolik 90-99
+                if ((systolic >= 140 && systolic <= 159) || (diastolic >= 90 && diastolic <= 99)) {
                     return bpCategories[2]; // Hipertensi Tahap 1
-                } else if ((systolic >= 140 && systolic <= 179) || (diastolic >= 90 && diastolic <= 119)) {
+                }
+                
+                // 4. Hipertensi Tahap 2: sistolik 160-179 ATAU diastolik 100-119
+                if ((systolic >= 160 && systolic <= 179) || (diastolic >= 100 && diastolic <= 119)) {
                     return bpCategories[3]; // Hipertensi Tahap 2
-                } else if (systolic >= 180 || diastolic >= 120) {
+                }
+                
+                // 5. Krisis Hipertensi: sistolik ≥ 180 ATAU diastolik ≥ 120
+                if (systolic >= 180 || diastolic >= 120) {
                     return bpCategories[4]; // Krisis Hipertensi
                 }
                 
-                return bpCategories[4]; // Fallback
+                // 6. Fallback untuk kasus-kasus khusus (mixed conditions)
+                // Contoh: 130/95 -> masuk Stage 1 karena diastolik 95
+                // Contoh: 145/85 -> masuk Prehipertensi? Tidak, karena sistolik 145 -> Stage 1
+                
+                // Prioritaskan kategori yang lebih tinggi untuk kasus mixed
+                if (systolic >= 160 || diastolic >= 100) {
+                    return bpCategories[3]; // Stage 2
+                }
+                if (systolic >= 140 || diastolic >= 90) {
+                    return bpCategories[2]; // Stage 1
+                }
+                if (systolic >= 120 || diastolic >= 80) {
+                    return bpCategories[1]; // Prehipertensi
+                }
+                
+                return bpCategories[0]; // Fallback ke Normal
             }
             
             // Fungsi untuk menentukan target berat badan dan IMT
@@ -1035,10 +1065,10 @@
                         `;
                         break;
                         
-                    case 'bp-elevated':
+                    case 'bp-prehypertension':
                         html = `
                             <div class="treatment-card">
-                                <div class="treatment-title">Tekanan Darah Tinggi</div>
+                                <div class="treatment-title">Prehipertensi</div>
                                 <p><strong>Rekomendasi:</strong> Perubahan gaya hidup tanpa terapi farmakologi.</p>
                                 <p><strong>Intervensi non-farmakologi:</strong></p>
                                 <ul>
@@ -1050,11 +1080,15 @@
                                     <li>Berhenti merokok</li>
                                 </ul>
                                 <p><strong>Pemantauan:</strong> Periksa tekanan darah dalam 3-6 bulan.</p>
+                                <p><strong>Target:</strong> Cegah perkembangan menjadi hipertensi.</p>
                             </div>
                         `;
                         break;
                         
                     case 'bp-stage1':
+                        // Tentukan apakah perlu pengobatan berdasarkan JNC 8
+                        // Untuk Stage 1, gunakan threshold 140/90 untuk usia <60 dan diabetes/CKD
+                        // Untuk usia ≥60, gunakan threshold 150/90
                         const needsTreatmentStage1 = (age >= 60 && (bpCategory.systolic.max >= 150 || bpCategory.diastolic.max >= 90)) ||
                                                     (age < 60 && (bpCategory.systolic.max >= 140 || bpCategory.diastolic.max >= 90)) ||
                                                     (conditions !== 'none' && (bpCategory.systolic.max >= 140 || bpCategory.diastolic.max >= 90));
