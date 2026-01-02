@@ -333,6 +333,49 @@
             border-color: #a5d6a7;
         }
         
+        .bp-category-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .bp-category-table th {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .bp-category-table td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .bp-category-table .bp-normal td {
+            background-color: #e8f5e9;
+        }
+        
+        .bp-category-table .bp-elevated td {
+            background-color: #fff3e0;
+        }
+        
+        .bp-category-table .bp-stage1 td {
+            background-color: #ffebee;
+        }
+        
+        .bp-category-table .bp-stage2 td {
+            background-color: #ffcdd2;
+        }
+        
+        .bp-category-table .bp-hypertensive-crisis td {
+            background-color: #fce4ec;
+        }
+        
         footer {
             text-align: center;
             margin-top: 30px;
@@ -468,6 +511,44 @@
             <div id="bp-value" class="imt-value">-/- mmHg</div>
             <div id="bp-category" class="blood-pressure-category">-</div>
             
+            <div class="section-title">Kategori Tekanan Darah</div>
+            <table class="bp-category-table">
+                <thead>
+                    <tr>
+                        <th>Kategori</th>
+                        <th>Sistolik (mmHg)</th>
+                        <th>Diastolik (mmHg)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="bp-normal">
+                        <td>Normal</td>
+                        <td>&lt; 120</td>
+                        <td>&lt; 80</td>
+                    </tr>
+                    <tr class="bp-elevated">
+                        <td>Tinggi</td>
+                        <td>120-129</td>
+                        <td>&lt; 80</td>
+                    </tr>
+                    <tr class="bp-stage1">
+                        <td>Hipertensi Tahap 1</td>
+                        <td>130-139</td>
+                        <td>80-89</td>
+                    </tr>
+                    <tr class="bp-stage2">
+                        <td>Hipertensi Tahap 2</td>
+                        <td>140-179</td>
+                        <td>90-119</td>
+                    </tr>
+                    <tr class="bp-hypertensive-crisis">
+                        <td>Krisis Hipertensi</td>
+                        <td>≥ 180</td>
+                        <td>≥ 120</td>
+                    </tr>
+                </tbody>
+            </table>
+            
             <div id="jncrecommendation" class="jncrecommendation">
                 <h3 class="result-title">Rekomendasi Pengobatan Berdasarkan Panduan JNC 8</h3>
                 <div id="jncrecommendation-content">
@@ -546,13 +627,38 @@
                 { max: Infinity, category: "Obesitas", class: "obese" }
             ];
             
-            // Kategori tekanan darah dengan range yang lebih detail
+            // Kategori tekanan darah yang DIPERBAIKI sesuai permintaan
             const bpCategories = [
-                { systolic: { min: 0, max: 120 }, diastolic: { min: 0, max: 80 }, category: "Normal", class: "bp-normal" },
-                { systolic: { min: 121, max: 129 }, diastolic: { min: 0, max: 80 }, category: "Elevated", class: "bp-elevated" },
-                { systolic: { min: 130, max: 139 }, diastolic: { min: 81, max: 89 }, category: "Hipertensi Stage 1", class: "bp-stage1" },
-                { systolic: { min: 140, max: 179 }, diastolic: { min: 90, max: 119 }, category: "Hipertensi Stage 2", class: "bp-stage2" },
-                { systolic: { min: 180, max: Infinity }, diastolic: { min: 120, max: Infinity }, category: "Krisis Hipertensi", class: "bp-hypertensive-crisis" }
+                { 
+                    systolic: { min: 0, max: 119 }, 
+                    diastolic: { min: 0, max: 79 }, 
+                    category: "Normal", 
+                    class: "bp-normal" 
+                },
+                { 
+                    systolic: { min: 120, max: 129 }, 
+                    diastolic: { min: 0, max: 79 }, 
+                    category: "Tinggi", 
+                    class: "bp-elevated" 
+                },
+                { 
+                    systolic: { min: 130, max: 139 }, 
+                    diastolic: { min: 80, max: 89 }, 
+                    category: "Hipertensi Tahap 1", 
+                    class: "bp-stage1" 
+                },
+                { 
+                    systolic: { min: 140, max: 179 }, 
+                    diastolic: { min: 90, max: 119 }, 
+                    category: "Hipertensi Tahap 2", 
+                    class: "bp-stage2" 
+                },
+                { 
+                    systolic: { min: 180, max: Infinity }, 
+                    diastolic: { min: 120, max: Infinity }, 
+                    category: "Krisis Hipertensi", 
+                    class: "bp-hypertensive-crisis" 
+                }
             ];
             
             // Rekomendasi berdasarkan kategori IMT
@@ -614,15 +720,26 @@
                 return weight / (heightInMeter * heightInMeter);
             }
             
-            // Fungsi untuk menentukan kategori tekanan darah
+            // Fungsi untuk menentukan kategori tekanan darah yang DIPERBAIKI
             function getBPCategory(systolic, diastolic) {
-                for (const category of bpCategories) {
-                    if (systolic >= category.systolic.min && systolic <= category.systolic.max &&
-                        diastolic >= category.diastolic.min && diastolic <= category.diastolic.max) {
-                        return category;
-                    }
+                // Logika yang DIPERBAIKI untuk kategori tekanan darah
+                if (systolic < 120 && diastolic < 80) {
+                    return bpCategories[0]; // Normal
+                } else if (systolic >= 120 && systolic <= 129 && diastolic < 80) {
+                    return bpCategories[1]; // Tinggi
+                } else if ((systolic >= 130 && systolic <= 139) || (diastolic >= 80 && diastolic <= 89)) {
+                    // Perhatikan: OR logic untuk Stage 1 - cukup salah satu yang memenuhi
+                    return bpCategories[2]; // Hipertensi Tahap 1
+                } else if ((systolic >= 140 && systolic <= 179) || (diastolic >= 90 && diastolic <= 119)) {
+                    // Perhatikan: OR logic untuk Stage 2 - cukup salah satu yang memenuhi
+                    return bpCategories[3]; // Hipertensi Tahap 2
+                } else if (systolic >= 180 || diastolic >= 120) {
+                    // Perhatikan: OR logic untuk Krisis - cukup salah satu yang memenuhi
+                    return bpCategories[4]; // Krisis Hipertensi
                 }
-                return bpCategories[bpCategories.length - 1];
+                
+                // Fallback - seharusnya tidak pernah mencapai sini
+                return bpCategories[4];
             }
             
             // Fungsi untuk rekomendasi JNC 8 berdasarkan kategori hipertensi
@@ -655,7 +772,7 @@
                     case 'bp-elevated':
                         html = `
                             <div class="treatment-card">
-                                <div class="treatment-title">Tekanan Darah Elevated (Meningkat)</div>
+                                <div class="treatment-title">Tekanan Darah Tinggi</div>
                                 <p><strong>Rekomendasi:</strong> Perubahan gaya hidup tanpa terapi farmakologi.</p>
                                 <p><strong>Intervensi non-farmakologi:</strong></p>
                                 <ul>
@@ -672,6 +789,7 @@
                         break;
                         
                     case 'bp-stage1':
+                        // Tentukan apakah perlu pengobatan berdasarkan JNC 8
                         const needsTreatmentStage1 = (age >= 60 && (bpCategory.systolic.max >= 150 || bpCategory.diastolic.max >= 90)) ||
                                                     (age < 60 && (bpCategory.systolic.max >= 140 || bpCategory.diastolic.max >= 90)) ||
                                                     (conditions !== 'none' && (bpCategory.systolic.max >= 140 || bpCategory.diastolic.max >= 90));
@@ -696,7 +814,7 @@
                             
                             html = `
                                 <div class="treatment-card">
-                                    <div class="treatment-title">Hipertensi Stage 1 - Perlu Terapi Farmakologi</div>
+                                    <div class="treatment-title">Hipertensi Tahap 1 - Perlu Terapi Farmakologi</div>
                                     <p><strong>Status:</strong> Memenuhi kriteria untuk memulai terapi farmakologi</p>
                                     <p><strong>Kelompok:</strong> ${targetGroup}</p>
                                     <p><strong>Pilihan Pengobatan Awal:</strong></p>
@@ -714,17 +832,18 @@
                         } else {
                             html = `
                                 <div class="treatment-card">
-                                    <div class="treatment-title">Hipertensi Stage 1 - Terapi Non-Farmakologi</div>
+                                    <div class="treatment-title">Hipertensi Tahap 1 - Terapi Non-Farmakologi</div>
                                     <p><strong>Rekomendasi:</strong> Modifikasi gaya hidup selama 3-6 bulan sebelum mempertimbangkan terapi farmakologi.</p>
                                     <p><strong>Intervensi:</strong></p>
-                                    <ul>
-                                        <li>Diet rendah garam dan lemak jenuh</li>
-                                        <li>Latihan fisik teratur</li>
-                                        <li>Penurunan berat badan jika overweight/obesitas</li>
-                                        <li>Manajemen stres</li>
-                                        <li>Pemantauan tekanan darah mingguan</li>
-                                    </ul>
-                                </div>
+                                <ul>
+                                    <li>Diet rendah garam dan lemak jenuh</li>
+                                    <li>Latihan fisik teratur (minimal 30 menit/hari)</li>
+                                    <li>Penurunan berat badan jika overweight/obesitas</li>
+                                    <li>Manajemen stres</li>
+                                    <li>Pemantauan tekanan darah mingguan</li>
+                                    <li>Batasi konsumsi alkohol dan berhenti merokok</li>
+                                </ul>
+                            </div>
                             `;
                         }
                         break;
@@ -749,7 +868,7 @@
                         
                         html = `
                             <div class="treatment-card">
-                                <div class="treatment-title">Hipertensi Stage 2 - Terapi Kombinasi</div>
+                                <div class="treatment-title">Hipertensi Tahap 2 - Terapi Kombinasi</div>
                                 <p><strong>Status:</strong> Segera memulai terapi farmakologi kombinasi</p>
                                 <p><strong>Kelompok:</strong> ${targetGroupStage2}</p>
                                 <p><strong>Strategi Pengobatan:</strong> Mulai dengan kombinasi 2 obat dari kelas yang berbeda</p>
@@ -888,9 +1007,6 @@
                     if (e.key === 'Enter') analyzeHealth();
                 });
             });
-            
-            // TIDAK ADA DATA DEFAULT YANG DIISI
-            // Semua input akan kosong saat halaman pertama dimuat
         });
     </script>
 </body>
