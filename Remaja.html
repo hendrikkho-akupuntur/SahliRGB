@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panduan Skrining HEEADSSS untuk Remaja</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            line-height: 1.6;
+            padding-bottom: 40px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%);
+            color: white;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        header p {
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+        .acronym {
+            background: rgba(255,255,255,0.15);
+            padding: 15px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+        }
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+        .section:hover {
+            transform: translateY(-5px);
+        }
+        .section h2 {
+            color: #2c3e50;
+            border-left: 5px solid #4b6cb7;
+            padding-left: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section h2 i {
+            color: #4b6cb7;
+        }
+        .subsection {
+            margin-bottom: 25px;
+        }
+        .subsection h3 {
+            color: #34495e;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e1e8ed;
+        }
+        th {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        ul, ol {
+            padding-left: 25px;
+            margin: 15px 0;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        .question-box {
+            background: #f0f7ff;
+            border-left: 4px solid #4b6cb7;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .question-box p {
+            margin: 5px 0;
+        }
+        .highlight {
+            background-color: #fffacd;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        .warning {
+            background-color: #ffeaa7;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #fdcb6e;
+        }
+        .tip {
+            background-color: #d1ecf1;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #0c5460;
+        }
+        .category-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0 30px;
+            justify-content: center;
+        }
+        .cat-btn {
+            padding: 10px 20px;
+            background: #4b6cb7;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .cat-btn:hover {
+            background: #3a559f;
+            transform: scale(1.05);
+        }
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        .print-btn {
+            display: inline-block;
+            background: #27ae60;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .print-btn:hover {
+            background: #219653;
+            transform: scale(1.05);
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            header h1 {
+                font-size: 2rem;
+            }
+            .section {
+                padding: 20px 15px;
+            }
+            .category-nav {
+                flex-direction: column;
+                align-items: center;
+            }
+            .cat-btn {
+                width: 90%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-heartbeat"></i> Panduan Skrining HEEADSSS untuk Remaja</h1>
+            <p>Alat wawancara psikososial yang sistematis untuk menilai risiko dan kesehatan remaja, dimulai dari topik paling netral hingga yang paling sensitif.</p>
+            <div class="acronym">
+                H - Home (Rumah) | E - Education (Pendidikan) | E - Eating (Makan) | A - Activities (Aktivitas) | D - Drugs (Obat/Napza) | S - Sexuality (Seksualitas) | S - Suicide/Depression (Bunuh Diri/Depresi) | S - Safety (Keamanan)
+            </div>
+        </header>
+
+        <div class="category-nav" id="nav">
+            <!-- Navigation buttons will be added by JavaScript -->
+        </div>
+
+        <div class="section" id="confidentiality">
+            <h2><i class="fas fa-user-secret"></i> Kerahasiaan</h2>
+            <div class="subsection">
+                <p>Rahasia harus dijamin agar remaja mau membahas informasi sensitif dan pribadi. <span class="highlight">Semua remaja dan keluarga (termasuk pengasuh) harus diberi tahu tentang kerahasiaan</span> di awal wawancara. Setiap pekerja sosial harus menentukan pernyataan kerahasiaannya sendiri.</p>
+                <div class="tip">
+                    <p><strong>Tips Memulai Wawancara:</strong></p>
+                    <ol>
+                        <li>Perkenalkan diri Anda kepada remaja dan orang tua. Jika orang tua hadir sebelum wawancara, perkenalkan diri Anda kepada remaja terlebih dahulu.</li>
+                        <li>Minta remaja menjelaskan pemahaman mereka tentang kerahasiaan dan batasannya.</li>
+                        <li>Setelah remaja dan keluarga memberikan pandangan mereka, akui tanggapan mereka dan tambahkan pandangan Anda sesuai situasi.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="home">
+            <h2><i class="fas fa-home"></i> Rumah & Lingkungan</h2>
+            <div class="subsection">
+                <h3>Pertanyaan Pembuka (Kurang/Lebih Sesuai Perkembangan)</h3>
+                <table>
+                    <tr>
+                        <th>Kurang Sesuai</th>
+                        <th>Lebih Sesuai</th>
+                        <th>Alasan</th>
+                    </tr>
+                    <tr>
+                        <td>Ceritakan tentang ibu dan ayah.</td>
+                        <td>Di mana kamu tinggal, dan siapa yang tinggal bersamamu?</td>
+                        <td>Orang tua mungkin sudah berpisah, bercerai, meninggal, atau meninggalkan rumah. Pertanyaan terbuka memungkinkan pengumpulan riwayat lingkungan dan pribadi.</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="subsection">
+                <h3>Contoh Pertanyaan yang Mungkin Ditanyakan</h3>
+                <div class="question-box">
+                    <p>• Siapa yang tinggal di rumah denganmu? Di mana kamu tinggal? Sudah berapa lama? Apakah kamu punya kamar sendiri?</p>
+                    <p>• Berapa banyak saudara kandung yang kamu miliki dan berapa usia mereka? Apakah saudara-saudaramu sehat?</p>
+                    <p>• Apakah ada orang baru yang tinggal di rumahmu?</p>
+                    <p>• Apakah orang tuamu sehat? Apa pekerjaan orang tuamu?</p>
+                    <p>• Bagaimana aturan di rumah?</p>
+                    <p>• Bagaimana hubunganmu dengan orang tua dan saudara? Hal apa yang paling sering diperdebatkan dengan keluargamu? Apa yang terjadi di rumah ketika ada perbedaan pendapat?</p>
+                    <p>• Apakah ada yang ingin kamu ubah tentang keluargamu?</p>
+                </div>
+                <div class="warning">
+                    <p><strong>Pertanyaan tentang kekerasan atau penyalahgunaan zat oleh orang tua mungkin sulit.</strong> Menggunakan skenario dapat memfasilitasi pertanyaan ini, misalnya: "Dari bekerja dengan remaja, saya belajar dari beberapa 'anak' bahwa hubungan mereka dengan orang tua mereka sulit; maksudnya mereka sering bertengkar dan berkelahi. Beberapa remaja mengatakan mereka berharap orang tua mereka tidak minum alkohol atau menggunakan narkoba. Apakah situasi ini terjadi di rumahmu? Apakah hal seperti itu pernah terjadi padamu?"</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="education">
+            <h2><i class="fas fa-graduation-cap"></i> Pendidikan & Pekerjaan</h2>
+            <div class="subsection">
+                <h3>Pertanyaan Pembuka (Kurang/Lebih Sesuai Perkembangan)</h3>
+                <table>
+                    <tr>
+                        <th>Kurang Sesuai</th>
+                        <th>Lebih Sesuai</th>
+                        <th>Alasan</th>
+                    </tr>
+                    <tr>
+                        <td>Bagaimana kabarmu di sekolah?</td>
+                        <td>Apakah kamu bersekolah? Apa keahlianmu di sekolah? Apa yang sulit bagimu? Nilai apa yang kamu dapatkan?</td>
+                        <td>Pertanyaan yang buruk bisa dijawab "oke". Pertanyaan terbuka meminta informasi tentang kekuatan dan kelemahan serta memungkinkan kuantifikasi/objektifikasi.</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="subsection">
+                <h3>Contoh Pertanyaan yang Mungkin Ditanyakan</h3>
+                <div class="question-box">
+                    <p>• Kamu sekolah di mana? Kelas berapa? Ada perubahan sekolah baru-baru ini?</p>
+                    <p>• Apa yang paling kamu suka dan tidak suka tentang sekolah? Mata pelajaran favorit? Mata pelajaran terburuk?</p>
+                    <p>• Berapa nilai terakhirmu? Apakah sama atau berbeda dengan yang dulu? Apakah kamu pernah gagal atau mengulang tahun ajaran?</p>
+                    <p>• Berapa jam pekerjaan rumah yang kamu lakukan setiap hari?</p>
+                    <p>• Berapa banyak sekolah yang kamu lewatkan tahun lalu/ini? Apakah kamu pernah membolos? Apakah kamu pernah diskors?</p>
+                    <p>• Apa yang ingin kamu lakukan setelah lulus sekolah? Ada rencana/tujuan masa depan?</p>
+                    <p>• Apakah kamu bekerja sekarang? Berapa banyak? Apakah kamu pernah bekerja di masa lalu?</p>
+                    <p>• Bagaimana hubunganmu dengan guru, atasan?</p>
+                    <p>• Bagaimana hubunganmu dengan teman sebaya? Tanyakan tentang "perundungan".</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="eating">
+            <h2><i class="fas fa-utensils"></i> Makan & Olahraga</h2>
+            <div class="subsection">
+                <h3>Pertanyaan Pembuka (Kurang/Lebih Sesuai Perkembangan)</h3>
+                <table>
+                    <tr>
+                        <th>Kurang Sesuai</th>
+                        <th>Lebih Sesuai</th>
+                        <th>Alasan</th>
+                    </tr>
+                    <tr>
+                        <td>Apakah kamu memiliki masalah dengan makan atau citra tubuh?</td>
+                        <td>Bagaimana kamu menggambarkan kebiasaan makanmu? Apakah berat badan atau citra tubuhmu membuatmu stres?</td>
+                        <td>Pertanyaan yang buruk bisa diabaikan. Pertanyaan terbuka memungkinkan Anda mengeksplorasi kemungkinan perilaku makan yang tidak teratur atau masalah harga diri terkait tubuh dengan cara yang tidak mengancam.</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="subsection">
+                <h3>Contoh Pertanyaan yang Mungkin Ditanyakan</h3>
+                <div class="question-box">
+                    <p>• Apa yang kamu suka dan tidak suka tentang tubuhmu?</p>
+                    <p>• Apakah ada perubahan baru-baru ini dalam berat badan atau tubuhmu?</p>
+                    <p>• Ceritakan tentang olahraga yang kamu lakukan atau dalam rutinitas harianmu.</p>
+                    <p>• Menurutmu apa yang disebut diet sehat? Bagaimana perbandingannya dengan pola makanmu saat ini?</p>
+                    <p>• Bagaimana jadinya jika kamu bertambah/berkurang 5 kg?</p>
+                    <p>• Apakah kamu pernah minum pil atau suplemen tubuh yang kamu harap dapat mengubah tubuhmu?</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="activities">
+            <h2><i class="fas fa-running"></i> Aktivitas</h2>
+            <div class="subsection">
+                <h3>Pertanyaan Pembuka (Kurang/Lebih Sesuai Perkembangan)</h3>
+                <table>
+                    <tr>
+                        <th>Kurang Sesuai</th>
+                        <th>Lebih Sesuai</th>
+                        <th>Alasan</th>
+                    </tr>
+                    <tr>
+                        <td>Apakah kamu memiliki aktivitas di luar sekolah?</td>
+                        <td>Apa yang kamu lakukan untuk bersenang-senang? Apa yang kamu lakukan dengan teman? Apa yang kamu lakukan dengan waktu luangmu?</td>
+                        <td>Pertanyaan yang baik adalah terbuka dan memungkinkan remaja mengekspresikan diri.</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="subsection">
+                <h3>Contoh Pertanyaan yang Mungkin Ditanyakan</h3>
+                <div class="question-box">
+                    <p>• Apakah sebagian besar temanmu dari sekolah atau dari tempat lain? Apakah mereka seusia denganmu?</p>
+                    <p>• Apakah kamu bergaul dengan orang-orang yang sama jenis kelaminnya atau campuran?</p>
+                    <p>• Apakah kamu punya satu sahabat atau beberapa teman? Apakah kamu punya banyak teman?</p>
+                    <p>• Apakah kamu menghabiskan waktu dengan keluargamu? Apa yang kamu lakukan dengan keluargamu?</p>
+                    <p>• Apakah kamu bertemu teman-teman di sekolah dan di akhir pekan juga? Apakah ada banyak pesta?</p>
+                    <p>• Apakah kamu melakukan olahraga atau latihan rutin? Hobi atau minat?</p>
+                    <p>• Apakah kamu memiliki afiliasi agama, bergereja, atau mempraktikkan keyakinan spiritual tertentu?</p>
+                    <p>• Berapa banyak TV yang kamu tonton? Apa acara favoritmu?</p>
+                    <p>• Apakah kamu membaca untuk bersenang-senang? Apa yang kamu baca?</p>
+                    <p>• Apa jenis musik favoritmu? Band favorit?</p>
+                    <p>• Apakah kamu punya mobil – pakai sabuk pengaman?</p>
+                    <p>• Apakah kamu pernah terlibat dengan polisi? Apakah kamu pernah dituntut? Apakah kamu termasuk dalam grup/geng?</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="drugs">
+            <h2><i class="fas fa-pills"></i> Obat & Zat</h2>
+            <div class="subsection">
+                <h3>Pertanyaan Pembuka (Kurang/Lebih Sesuai Perkembangan)</h3>
+                <table>
+                    <tr>
+                        <th>Kurang Sesuai</th>
+                        <th>Lebih Sesuai</th>
+                        <th>Alasan</th>
+                    </tr>
+                    <tr>
+                        <td>Apakah kamu menggunakan narkoba?</td>
+                        <td>Beberapa orang muda mencoba-coba narkoba, alkohol, atau rokok. Apakah kamu atau teman-temanmu pernah mencobanya? Apa yang pernah kamu coba?</td>
+                        <td>Pertanyaan yang baik adalah ekspresi kepedulian dengan tindak lanjut spesifik. Dengan remaja yang lebih muda, sebaiknya mulai dengan bertanya tentang teman.</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="subsection">
+                <h3>Contoh Pertanyaan yang Mungkin Ditanyakan</h3>
+                <div class="question-box">
+                    <p>• Ketika kamu pergi dengan teman-teman atau ke pesta, apakah sebagian besar orang yang kamu temui minum atau merokok? Apakah kamu? Berapa banyak dan seberapa sering?</p>
+                    <p>• Apakah ada anggota keluargamu yang minum, merokok, atau menggunakan narkoba lain? Jika ya, bagaimana perasaanmu tentang ini – apakah ini masalah bagimu?</p>
+                    <p>• Apakah kamu atau teman-temanmu pernah mencoba narkoba lain? Secara spesifik, apa? Apakah kamu pernah menggunakan jarum suntik?</p>
+                    <p>• Apakah kamu secara teratur menggunakan narkoba lain? Berapa banyak dan seberapa sering?</p>
+                    <p>• Apakah kamu atau teman-temanmu menyetir setelah minum?</p>
+                    <p>• Apakah kamu pernah mengalami kecelakaan mobil atau masalah dengan hukum, dan apakah itu terkait dengan minum atau narkoba?</p>
+                    <p>• Bagaimana kamu membayar rokok, alkohol, atau narkobamu?</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="sexuality">
+            <h2><i class="fas fa-heart"></i> Seksualitas</h2>
+            <div class="subsection">
+                <h3>Pertanyaan Pembuka (Kurang/Lebih Sesuai Perkembangan)</h3>
+                <table>
+                    <tr>
+                        <th>Kurang Sesuai</th>
+                        <th>Lebih Sesuai</th>
+                        <th>Alasan</th>
+                    </tr>
+                    <tr>
+                        <td>Apakah kamu pernah berhubungan seks? Ceritakan tentang pacarmu.</td>
+                        <td>Apakah kamu terlibat dalam suatu hubungan? Apakah kamu pernah terlibat dalam suatu hubungan? Bagaimana pengalaman itu bagimu? Bagaimana kamu menggambarkan perasaanmu terhadap laki-laki atau perempuan? Bagaimana kamu melihat dirimu dalam hal preferensi seksual, misalnya gay, straight, atau biseksual?</td>
+                        <td>Apa arti istilah "berhubungan seks" bagi remaja? Hanya menanyakan tentang hubungan heteroseksual langsung menutup pintu.</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="subsection">
+                <h3>Contoh Pertanyaan yang Mungkin Ditanyakan</h3>
+                <div class="question-box">
+                    <p>• Apakah kamu pernah menjalin hubungan? Kapan? Bagaimana rasanya? Berapa lama hubungan itu berlangsung?</p>
+                    <p>• Apakah kamu pernah berhubungan seks? Apakah itu pengalaman yang baik? Apakah kamu nyaman dengan aktivitas seksual? Jumlah pasangan?</p>
+                    <p>• Menggunakan kontrasepsi? Jenis dan seberapa sering (10, 50, atau 70% dari waktu).</p>
+                    <p>• Apakah kamu pernah hamil atau melakukan aborsi?</p>
+                    <p>• Apakah kamu pernah mengalami keputihan atau luka yang mengkhawatirkan? Apakah kamu pernah diperiksa untuk penyakit menular seksual? Pengetahuan tentang IMS dan pencegahannya?</p>
+                    <p>• Apakah kamu pernah melakukan pap smear?</p>
+                    <p>• Apakah kamu memiliki kekhawatiran tentang Hepatitis atau AIDS?</p>
+                    <p>• Apakah kamu pernah memiliki pengalaman di masa lalu di mana seseorang melakukan sesuatu padamu yang membuatmu tidak nyaman atau tidak dihormati?</p>
+                    <p>• Jika seseorang menyalahgunakan kamu, dengan siapa kamu akan membicarakannya? Bagaimana menurutmu kamu akan bereaksi?</p>
+                    <p>• Untuk perempuan: Tanyakan tentang Menarche, haid terakhir (LMP), dan siklus menstruasi.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="suicide">
+            <h2><i class="fas fa-brain"></i> Bunuh Diri & Depresi</h2>
+            <div class="subsection">
+                <h3>Pertanyaan Pembuka (Kurang/Lebih Sesuai Perkembangan)</h3>
+                <table>
+                    <tr>
+                        <th>Kurang Sesuai</th>
+                        <th>Lebih Sesuai</th>
+                        <th>Alasan</th>
+                    </tr>
+                    <tr>
+                        <td>Apakah saat ini kamu merasa ingin bunuh diri atau ingin menyakiti dirimu sendiri?</td>
+                        <td>Apakah kamu pernah memiliki pikiran untuk menyakiti dirimu sendiri, atau berharap kamu tidak ada? Bagaimana kamu menangani perasaan seperti itu di masa lalu?</td>
+                        <td>Menanyakan tentang pikiran/perasaan tersebut TIDAK meningkatkan risiko bunuh diri. Namun, pendekatan yang terlalu langsung dapat menyebabkan klien remaja menutup diri.</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="subsection">
+                <h3>Contoh Pertanyaan yang Mungkin Ditanyakan</h3>
+                <div class="question-box">
+                    <p>• Apakah kamu merasa stres atau cemas lebih dari biasanya akhir-akhir ini?</p>
+                    <p>• Apakah kamu mengalami kesulitan tidur?</p>
+                    <p>• Apakah kamu memiliki pikiran untuk menyakiti dirimu sendiri atau berharap kamu tidak ada?</p>
+                    <p>• Ceritakan tentang waktu ketika seseorang menggertakmu atau membuatmu merasa tidak nyaman.</p>
+                    <p>• Apakah tampaknya kamu kehilangan minat pada hal-hal yang dulu sangat kamu nikmati? Bisakah kamu menceritakan lebih banyak tentang itu?</p>
+                    <p>• Apakah kamu menghabiskan lebih sedikit waktu dengan teman dan orang yang kamu pedulikan?</p>
+                    <p>• Apakah kamu lebih suka sendiri sebagian besar waktu?</p>
+                    <p>• Apakah kamu pernah mencoba bunuh diri, atau merencanakan bunuh diri tetapi tidak melakukannya?</p>
+                    <p>• Apakah kamu pernah harus menyakiti dirimu sendiri (dengan mengiris diri, misalnya) untuk menenangkan diri atau membuatmu merasa lebih baik?</p>
+                </div>
+                <div class="warning">
+                    <p><strong>Ingat:</strong> Ekspresi apa pun tentang niat bunuh diri atau ide bunuh diri yang signifikan adalah alasan untuk eksplorasi lebih lanjut dan kemungkinan intervensi. Jika Anda khawatir, pertimbangkan untuk menyertakan alat penilaian risiko bunuh diri sebagai bagian dari wawancara psikososial Anda.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="safety">
+            <h2><i class="fas fa-shield-alt"></i> Keamanan</h2>
+            <div class="subsection">
+                <h3>Pertanyaan Pembuka (Kurang/Lebih Sesuai Perkembangan)</h3>
+                <table>
+                    <tr>
+                        <th>Kurang Sesuai</th>
+                        <th>Lebih Sesuai</th>
+                        <th>Alasan</th>
+                    </tr>
+                    <tr>
+                        <td>Apakah kamu merasa membuat keputusan bijak dalam hal menjaga keselamatan dirimu?</td>
+                        <td>Apakah kamu pernah membuat keputusan yang dapat membahayakan dirimu? Bagaimana kamu memutuskan apakah seseorang/situasi aman untukmu?</td>
+                        <td>Penting untuk menanyakan pertanyaan tentang keamanan remaja di sekolah, rumah, dan selama waktu luangnya. Menanyakan secara spesifik tentang kekerasan, mengemudi di bawah pengaruh alkohol atau narkoba, dan semua bentuk penyalahgunaan adalah aspek penting dalam menentukan keamanan.</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="subsection">
+                <h3>Contoh Pertanyaan yang Mungkin Ditanyakan</h3>
+                <div class="question-box">
+                    <p>• Apakah kamu pernah terluka parah? (Bagaimana)? Bagaimana dengan orang yang kamu kenal?</p>
+                    <p>• Apakah kamu selalu memakai sabuk pengaman di mobil?</p>
+                    <p>• Apakah kamu pernah bertemu secara langsung (atau berencana bertemu) dengan seseorang yang pertama kali kamu temui secara online?</p>
+                    <p>• Kapan terakhir kali kamu mengirim pesan teks saat mengemudi?</p>
+                    <p>• Apakah kamu pernah naik dengan pengemudi yang mabuk atau sedang tinggi?</p>
+                    <p>• Apakah ada banyak kekerasan di rumahmu? Sekolah? Lingkungan? Di antara teman?</p>
+                    <p>• Apakah kamu pernah diganggu atau diintimidasi? Apakah itu masalah saat ini?</p>
+                    <p>• Apakah kamu pernah terlibat perkelahian fisik di sekolah atau di lingkunganmu? Apakah itu masih terjadi?</p>
+                    <p>• Apakah kamu pernah merasa harus membawa pisau, senjata api, atau senjata lain untuk melindungi dirimu? Apakah kamu masih merasa seperti itu?</p>
+                    <p>• Apakah kamu pernah ditahan/dipenjara?</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="wrapup">
+            <h2><i class="fas fa-handshake"></i> Menutup Wawancara</h2>
+            <div class="subsection">
+                <h3>Saran untuk Mengakhiri Wawancara dengan Remaja</h3>
+                <ul>
+                    <li>Minta mereka meringkas hidup mereka dalam satu kata atau memberikan "laporan cuaca" keseluruhan untuk hidup mereka (cerah dengan beberapa awan, sangat cerah dengan tinggi sepanjang waktu, berawan dengan kemungkinan hujan, dll.).</li>
+                    <li>Minta mereka menceritakan apa yang mereka lihat ketika bercermin setiap hari. Khususnya, cari remaja yang mengatakan bahwa mereka "bosan". Kebosanan pada remaja dapat menunjukkan bahwa remaja tersebut depresi.</li>
+                    <li>Minta mereka memberi tahu siapa yang dapat mereka percayai dan curhati jika ada masalah dalam hidup mereka, dan mengapa mereka mempercayai orang itu. Ini sangat penting jika Anda belum mengidentifikasi orang dewasa tepercaya dalam keluarga. Katakan pada remaja bahwa dia sekarang memiliki orang dewasa lain – pekerja sosial – yang dapat dipercaya untuk membantu masalah dan menjawab pertanyaan.</li>
+                    <li>Berikan kesempatan untuk mengungkapkan kekhawatiran yang belum Anda bahas, dan minta umpan balik tentang wawancara. Jika mereka nanti ingat sesuatu yang mereka lupa katakan, ingatkan mereka bahwa mereka dipersilakan untuk menelepon kapan saja atau kembali untuk membicarakannya.</li>
+                    <li>Untuk remaja yang menunjukkan faktor risiko signifikan, sampaikan kekhawatiran Anda. Tanyakan apakah mereka bersedia mengubah hidup mereka atau tertarik mempelajari lebih banyak cara untuk menghadapi masalah mereka.</li>
+                    <li>Jika hidup remaja berjalan baik, katakan demikian. Dalam kebanyakan kasus, Anda dapat mengidentifikasi kekuatan dan kelemahan potensial atau nyata, dan membahas keduanya untuk menawarkan pandangan yang seimbang.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px;">
+            <button class="print-btn" onclick="window.print()"><i class="fas fa-print"></i> Cetak Panduan Ini</button>
+        </div>
+
+        <footer>
+            <p>Dikembangkan berdasarkan <strong>HEEADSSS Psychosocial Interview Format for Adolescents</strong> (Contemporary Pediatrics, Juli 1988)</p>
+            <p>© Panduan untuk digunakan oleh tenaga profesional kesehatan mental dan pekerja sosial.</p>
+            <p style="margin-top: 15px; font-size: 0.8rem; color: #888;">Situs ini tidak menyimpan data apa pun dan berfungsi sepenuhnya di peramban Anda.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Navigation buttons
+        const sections = [
+            {id: 'confidentiality', name: 'Kerahasiaan', icon: 'user-secret'},
+            {id: 'home', name: 'Rumah', icon: 'home'},
+            {id: 'education', name: 'Pendidikan', icon: 'graduation-cap'},
+            {id: 'eating', name: 'Makan', icon: 'utensils'},
+            {id: 'activities', name: 'Aktivitas', icon: 'running'},
+            {id: 'drugs', name: 'Obat & Zat', icon: 'pills'},
+            {id: 'sexuality', name: 'Seksualitas', icon: 'heart'},
+            {id: 'suicide', name: 'Bunuh Diri', icon: 'brain'},
+            {id: 'safety', name: 'Keamanan', icon: 'shield-alt'},
+            {id: 'wrapup', name: 'Penutup', icon: 'handshake'}
+        ];
+
+        const navContainer = document.getElementById('nav');
+        
+        sections.forEach(section => {
+            const button = document.createElement('button');
+            button.className = 'cat-btn';
+            button.innerHTML = `<i class="fas fa-${section.icon}"></i> ${section.name}`;
+            button.onclick = () => {
+                document.getElementById(section.id).scrollIntoView({behavior: 'smooth'});
+            };
+            navContainer.appendChild(button);
+        });
+
+        // Highlight current section on scroll
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.2
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.id;
+                    // Could add active state styling to nav buttons here
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => {
+            const element = document.getElementById(section.id);
+            if (element) observer.observe(element);
+        });
+    </script>
+</body>
+</html>
