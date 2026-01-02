@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator IMT - Skrining Kesehatan</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f7ff;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e6f2ff;
+        }
+        
+        h1 {
+            color: #2c80ff;
+            margin-bottom: 10px;
+            font-size: 1.8rem;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #d1e8ff;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            border-color: #2c80ff;
+            outline: none;
+        }
+        
+        button {
+            background-color: #2c80ff;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            background-color: #1a6de8;
+        }
+        
+        .result-section {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #f8fbff;
+            display: none;
+        }
+        
+        .result-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .result-title {
+            color: #2c80ff;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .imt-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin: 15px 0;
+        }
+        
+        .imt-category {
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: 600;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .underweight {
+            color: #ff9800;
+            background-color: #fff3e0;
+        }
+        
+        .normal {
+            color: #4caf50;
+            background-color: #e8f5e9;
+        }
+        
+        .overweight {
+            color: #ff5722;
+            background-color: #ffebee;
+        }
+        
+        .obese {
+            color: #d32f2f;
+            background-color: #ffcdd2;
+        }
+        
+        .recommendation, .promotion {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .recommendation {
+            background-color: #e8f5e9;
+            border-left: 5px solid #4caf50;
+        }
+        
+        .promotion {
+            background-color: #fff3e0;
+            border-left: 5px solid #ff9800;
+        }
+        
+        .section-title {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        ul {
+            padding-left: 20px;
+            margin: 15px 0;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .promotion-link {
+            display: inline-block;
+            background-color: #ff9800;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 15px;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+        
+        .promotion-link:hover {
+            background-color: #f57c00;
+        }
+        
+        .imt-reference {
+            margin-top: 20px;
+            background-color: #f0f7ff;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .reference-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2c80ff;
+        }
+        
+        .reference-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px dashed #d1e8ff;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #777;
+            font-size: 0.9rem;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .imt-value {
+                font-size: 2rem;
+            }
+            
+            .imt-category {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Kalkulator Indeks Massa Tubuh (IMT)</h1>
+            <p class="subtitle">Alat skrining untuk menilai status gizi berdasarkan tinggi dan berat badan</p>
+        </header>
+        
+        <div class="form-group">
+            <label for="height">Tinggi Badan (cm)</label>
+            <input type="number" id="height" placeholder="Contoh: 170" min="50" max="250">
+        </div>
+        
+        <div class="form-group">
+            <label for="weight">Berat Badan (kg)</label>
+            <input type="number" id="weight" placeholder="Contoh: 65" min="10" max="300">
+        </div>
+        
+        <button id="calculate-btn">HITUNG IMT</button>
+        
+        <div id="result-section" class="result-section">
+            <h2 class="result-title">Hasil Perhitungan IMT</h2>
+            <div id="imt-value" class="imt-value">0</div>
+            <div id="imt-category" class="imt-category">-</div>
+            
+            <div class="imt-reference">
+                <div class="reference-title">Kategori IMT (Standar Indonesia):</div>
+                <div class="reference-item">
+                    <span>Underweight (Kurus)</span>
+                    <span>&lt; 18.5</span>
+                </div>
+                <div class="reference-item">
+                    <span>Normal</span>
+                    <span>18.5 – 22.9</span>
+                </div>
+                <div class="reference-item">
+                    <span>Overweight (Kelebihan Berat Badan)</span>
+                    <span>23 – 24.9</span>
+                </div>
+                <div class="reference-item">
+                    <span>Obesitas</span>
+                    <span>≥ 25</span>
+                </div>
+            </div>
+        </div>
+        
+        <div id="recommendation" class="recommendation">
+            <h3 class="section-title">Rekomendasi Berdasarkan Hasil IMT</h3>
+            <div id="recommendation-content">
+                <p>Masukkan tinggi dan berat badan Anda lalu tekan tombol "HITUNG IMT" untuk melihat rekomendasi yang sesuai dengan kondisi Anda.</p>
+            </div>
+        </div>
+        
+        <div class="promotion">
+            <h3 class="section-title">Konsultasi Kesehatan</h3>
+            <p>Anda mengalami gangguan nyeri punggung dan saraf? Jangan tunda untuk berobat dan konsultasi dengan tenaga kesehatan profesional.</p>
+            <p>Dapatkan penanganan yang tepat untuk masalah kesehatan tulang dan saraf Anda.</p>
+            <a href="https://hendrikkho-akupuntur.github.io/profile/profile%20dr%20Hendrik%20akupuntur.html" class="promotion-link" target="_blank">Konsultasi dengan Dr. Hendrik Akupuntur</a>
+        </div>
+    </div>
+    
+    <footer>
+        <p>Kalkulator IMT ini adalah alat skrining sederhana. Untuk diagnosis yang akurat, konsultasikan dengan tenaga kesehatan profesional.</p>
+        <p>© 2023 Kalkulator IMT - Alat Skrining Kesehatan</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const calculateBtn = document.getElementById('calculate-btn');
+            const resultSection = document.getElementById('result-section');
+            const imtValue = document.getElementById('imt-value');
+            const imtCategory = document.getElementById('imt-category');
+            const recommendationContent = document.getElementById('recommendation-content');
+            const heightInput = document.getElementById('height');
+            const weightInput = document.getElementById('weight');
+            
+            // Referensi kategori IMT yang diperbarui sesuai permintaan
+            const imtCategories = [
+                { max: 18.5, category: "Underweight (Kurus)", class: "underweight" },
+                { max: 23, category: "Normal", class: "normal" },
+                { max: 25, category: "Overweight", class: "overweight" },
+                { max: Infinity, category: "Obesitas", class: "obese" }
+            ];
+            
+            // Rekomendasi berdasarkan kategori IMT
+            const recommendations = {
+                underweight: `
+                    <p><strong>Anda berada dalam kategori Underweight (Kurus).</strong></p>
+                    <p>Rekomendasi untuk meningkatkan berat badan secara sehat:</p>
+                    <ul>
+                        <li>Tingkatkan asupan kalori dengan makanan bergizi</li>
+                        <li>Konsumsi makanan tinggi protein seperti daging, telur, dan kacang-kacangan</li>
+                        <li>Lakukan latihan kekuatan untuk membangun massa otot</li>
+                        <li>Makan lebih sering dengan porsi kecil (5-6 kali sehari)</li>
+                        <li>Tambahkan camilan sehat seperti kacang, buah, atau yoghurt</li>
+                        <li>Konsultasikan dengan ahli gizi untuk rencana makan yang tepat</li>
+                    </ul>
+                `,
+                normal: `
+                    <p><strong>Anda berada dalam kategori Normal. Pertahankan!</strong></p>
+                    <p>Rekomendasi untuk menjaga berat badan sehat:</p>
+                    <ul>
+                        <li>Pertahankan pola makan seimbang dengan gizi lengkap</li>
+                        <li>Lakukan aktivitas fisik rutin minimal 150 menit per minggu</li>
+                        <li>Perbanyak konsumsi buah, sayuran, dan biji-bijian utuh</li>
+                        <li>Batasi makanan tinggi gula, garam, dan lemak jenuh</li>
+                        <li>Monitor berat badan secara berkala (sekali seminggu)</li>
+                        <li>Minum air putih minimal 8 gelas per hari</li>
+                    </ul>
+                `,
+                overweight: `
+                    <p><strong>Anda berada dalam kategori Overweight (Kelebihan Berat Badan).</strong></p>
+                    <p>Rekomendasi untuk menurunkan berat badan secara sehat:</p>
+                    <ul>
+                        <li>Kurangi asupan kalori harian sebanyak 500-750 kkal</li>
+                        <li>Perbanyak aktivitas fisik seperti jalan cepat, bersepeda, atau berenang minimal 30 menit per hari</li>
+                        <li>Batasi makanan cepat saji, minuman manis, dan makanan tinggi lemak</li>
+                        <li>Tingkatkan konsumsi serat dari sayuran dan buah-buahan</li>
+                        <li>Atur pola makan dengan porsi kecil tetapi sering</li>
+                        <li>Konsultasikan dengan tenaga kesehatan untuk program penurunan berat badan yang aman</li>
+                    </ul>
+                `,
+                obese: `
+                    <p><strong>Anda berada dalam kategori Obesitas.</strong></p>
+                    <p>Rekomendasi untuk penanganan obesitas:</p>
+                    <ul>
+                        <li>Segera konsultasikan dengan dokter untuk evaluasi kesehatan menyeluruh</li>
+                        <li>Mulai program penurunan berat badan dengan pengawasan tenaga kesehatan</li>
+                        <li>Tingkatkan aktivitas fisik secara bertahap sesuai kemampuan, targetkan 300 menit per minggu</li>
+                        <li>Terapkan pola makan sehat dengan kontrol kalori yang ketat</li>
+                        <li>Pantau tekanan darah, gula darah, dan kolesterol secara rutin</li>
+                        <li>Pertimbangkan konsultasi dengan ahli gizi untuk rencana makan personal</li>
+                        <li>Cari dukungan dari keluarga atau kelompok untuk motivasi</li>
+                    </ul>
+                `
+            };
+            
+            // Fungsi untuk menghitung IMT
+            function calculateIMT() {
+                const height = parseFloat(heightInput.value);
+                const weight = parseFloat(weightInput.value);
+                
+                // Validasi input
+                if (!height || !weight || height <= 0 || weight <= 0) {
+                    alert("Masukkan tinggi dan berat badan yang valid!");
+                    return;
+                }
+                
+                if (height < 50 || height > 250) {
+                    alert("Masukkan tinggi badan antara 50-250 cm!");
+                    return;
+                }
+                
+                if (weight < 10 || weight > 300) {
+                    alert("Masukkan berat badan antara 10-300 kg!");
+                    return;
+                }
+                
+                // Hitung IMT: berat (kg) / (tinggi (m) * tinggi (m))
+                const heightInMeter = height / 100;
+                const imt = weight / (heightInMeter * heightInMeter);
+                
+                // Tampilkan hasil dengan 1 desimal
+                imtValue.textContent = imt.toFixed(1);
+                
+                // Tentukan kategori IMT
+                let categoryName = "";
+                let categoryClass = "";
+                
+                for (const category of imtCategories) {
+                    if (imt < category.max) {
+                        categoryName = category.category;
+                        categoryClass = category.class;
+                        break;
+                    }
+                }
+                
+                // Tampilkan kategori
+                imtCategory.textContent = categoryName;
+                imtCategory.className = `imt-category ${categoryClass}`;
+                
+                // Tampilkan rekomendasi
+                recommendationContent.innerHTML = recommendations[categoryClass];
+                
+                // Tampilkan bagian hasil
+                resultSection.classList.add('active');
+                
+                // Scroll ke hasil
+                resultSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+            
+            // Event listener untuk tombol hitung
+            calculateBtn.addEventListener('click', calculateIMT);
+            
+            // Event listener untuk menekan Enter pada input
+            heightInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') calculateIMT();
+            });
+            
+            weightInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') calculateIMT();
+            });
+            
+            // Contoh data untuk demonstrasi
+            heightInput.value = "170";
+            weightInput.value = "70";
+            
+            // Hitung IMT otomatis saat halaman dimuat
+            calculateIMT();
+        });
+    </script>
+</body>
+</html>
