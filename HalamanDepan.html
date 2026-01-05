@@ -15,6 +15,7 @@
             --gray: #6c757d;
             --light-gray: #e9ecef;
             --insulin-color: #8a2be2;
+            --nutrition-color: #ff7b00;
         }
         
         * {
@@ -205,6 +206,20 @@
             background-color: #7b1fa2;
         }
         
+        /* Styling khusus untuk kartu Kalkulator Gizi */
+        .nutrition-card .tool-icon {
+            background-color: #fff4e6;
+            color: var(--nutrition-color);
+        }
+        
+        .nutrition-card .tool-link {
+            background-color: var(--nutrition-color);
+        }
+        
+        .nutrition-card .tool-link:hover {
+            background-color: #e66a00;
+        }
+        
         /* Footer */
         footer {
             background-color: var(--dark);
@@ -337,7 +352,7 @@
                         <div class="tool-content">
                             <h3>Screening Remaja (HEEADSSS)</h3>
                             <p>Alat screening psikososial untuk remaja dengan pendekatan HEEADSSS (Home, Education, Eating, Activities, Drugs, Sexuality, Suicide/depression, Safety).</p>
-                            <a href="https://hendrikkho-akupuntur.github.io/SahliRGB/Remaja.html" target="_blank" class="tool-link">Akses Alat</a>
+                            <a href="https://hendrikkho-akupuntur.github.io/SahliRGB/HEEADSSS.html" target="_blank" class="tool-link">Akses Alat</a>
                         </div>
                     </div>
                     
@@ -349,7 +364,7 @@
                         <div class="tool-content">
                             <h3>Kalkulator Indeks Massa Tubuh (IMT)</h3>
                             <p>Alat untuk menghitung Indeks Massa Tubuh (IMT) dengan cepat dan menentukan status gizi berdasarkan berat dan tinggi badan.</p>
-                            <a href="https://hendrikkho-akupuntur.github.io/SahliRGB/BMI.html" target="_blank" class="tool-link">Akses Alat</a>
+                            <a href="https://hendrikkho-akupuntur.github.io/SahliRGB/KalkulatorIMT.html" target="_blank" class="tool-link">Akses Alat</a>
                         </div>
                     </div>
                     
@@ -401,7 +416,7 @@
                         </div>
                     </div>
                     
-                    <!-- Alat 8: Panduan Penggunaan Insulin (BARU) -->
+                    <!-- Alat 8: Panduan Penggunaan Insulin -->
                     <div class="tool-card insulin-card">
                         <div class="tool-icon">
                             <i class="fas fa-syringe"></i>
@@ -410,6 +425,18 @@
                             <h3>Panduan Penggunaan Insulin</h3>
                             <p>Panduan lengkap untuk penggunaan insulin, termasuk jenis-jenis insulin, teknik penyuntikan, dosis, dan manajemen terapi insulin.</p>
                             <a href="https://hendrikkho-akupuntur.github.io/SahliRGB/PanduanInsulin.html" target="_blank" class="tool-link">Akses Panduan</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Alat 9: Kalkulator Gizi (BARU) -->
+                    <div class="tool-card nutrition-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-apple-alt"></i>
+                        </div>
+                        <div class="tool-content">
+                            <h3>Kalkulator Gizi</h3>
+                            <p>Alat untuk menghitung kebutuhan gizi harian, melacak asupan nutrisi, dan merencanakan diet seimbang berdasarkan kebutuhan individu.</p>
+                            <a href="https://hendrikkho-akupuntur.github.io/SahliRGB/gizi.html" target="_blank" class="tool-link">Akses Kalkulator</a>
                         </div>
                     </div>
                 </div>
@@ -442,11 +469,20 @@
                     const icon = this.querySelector('.tool-icon i');
                     icon.style.transform = 'scale(1.1)';
                     icon.style.transition = 'transform 0.3s ease';
+                    
+                    // Tambahkan animasi khusus untuk kartu tertentu
+                    if (this.classList.contains('insulin-card')) {
+                        icon.style.animation = 'pulse 1s infinite';
+                    }
+                    if (this.classList.contains('nutrition-card')) {
+                        icon.style.animation = 'bounce 1s infinite';
+                    }
                 });
                 
                 card.addEventListener('mouseleave', function() {
                     const icon = this.querySelector('.tool-icon i');
                     icon.style.transform = 'scale(1)';
+                    icon.style.animation = 'none';
                 });
             });
             
@@ -454,18 +490,6 @@
             const yearElement = document.querySelector('.copyright p');
             const currentYear = new Date().getFullYear();
             yearElement.innerHTML = yearElement.innerHTML.replace('2025', currentYear);
-            
-            // Tambahkan animasi khusus untuk kartu insulin
-            const insulinCard = document.querySelector('.insulin-card');
-            insulinCard.addEventListener('mouseenter', function() {
-                const icon = this.querySelector('.tool-icon i');
-                icon.style.animation = 'pulse 1s infinite';
-            });
-            
-            insulinCard.addEventListener('mouseleave', function() {
-                const icon = this.querySelector('.tool-icon i');
-                icon.style.animation = 'none';
-            });
         });
     </script>
     
@@ -475,6 +499,12 @@
             0% { transform: scale(1); }
             50% { transform: scale(1.15); }
             100% { transform: scale(1); }
+        }
+        
+        /* Animasi khusus untuk ikon gizi */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
         }
     </style>
 </body>
