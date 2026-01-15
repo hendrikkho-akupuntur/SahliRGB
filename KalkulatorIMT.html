@@ -200,7 +200,7 @@
             background-color: #fce4ec;
         }
         
-        .recommendation, .promotion, .jncrecommendation, .weight-target {
+        .recommendation, .promotion, .weight-target, .bp-recommendation {
             margin-top: 30px;
             padding: 20px;
             border-radius: 10px;
@@ -211,7 +211,7 @@
             border-left: 5px solid #4caf50;
         }
         
-        .jncrecommendation {
+        .bp-recommendation {
             background-color: #e3f2fd;
             border-left: 5px solid #2196f3;
         }
@@ -250,32 +250,6 @@
         
         .promotion-link:hover {
             background-color: #f57c00;
-        }
-        
-        .reference-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            background-color: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        .reference-table th {
-            background-color: #2c80ff;
-            color: white;
-            padding: 12px;
-            text-align: left;
-        }
-        
-        .reference-table td {
-            padding: 12px;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .reference-table tr:nth-child(even) {
-            background-color: #f8fbff;
         }
         
         .highlight {
@@ -476,6 +450,19 @@
             color: #666;
         }
         
+        .aha-guidelines {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f0f7ff;
+            border-radius: 8px;
+            border-left: 4px solid #2c80ff;
+        }
+        
+        .aha-guidelines h4 {
+            color: #2c80ff;
+            margin-bottom: 10px;
+        }
+        
         footer {
             text-align: center;
             margin-top: 30px;
@@ -533,8 +520,8 @@
     <div class="container">
         <header>
             <h1>Kalkulator IMT & Analisis Tekanan Darah</h1>
-            <p class="subtitle">Alat skrining kesehatan berdasarkan Panduan JNC 8 & Klasifikasi AHA 2025</p>
-            <p class="subtitle">Memeriksa status gizi dan rekomendasi tekanan darah</p>
+            <p class="subtitle">Alat skrining kesehatan berdasarkan Klasifikasi AHA 2025</p>
+            <p class="subtitle">Memeriksa status gizi dan klasifikasi tekanan darah</p>
         </header>
         
         <h2 class="section-title">Data Pribadi</h2>
@@ -669,45 +656,27 @@
                 *Krisis Hipertensi: kondisi darurat yang memerlukan penanganan medis segera
             </p>
             
-            <div id="jncrecommendation" class="jncrecommendation">
-                <h3 class="result-title">Rekomendasi Pengobatan Berdasarkan Panduan JNC 8</h3>
-                <div id="jncrecommendation-content">
+            <div id="bp-recommendation" class="bp-recommendation">
+                <h3 class="result-title">Rekomendasi Berdasarkan Klasifikasi AHA 2025</h3>
+                <div id="bp-recommendation-content">
                     <p>Masukkan data tekanan darah untuk melihat rekomendasi.</p>
                 </div>
                 <div id="treatment-recommendation"></div>
             </div>
             
-            <h3 class="result-title">Panduan JNC 8 untuk Hipertensi</h3>
-            <table class="reference-table">
-                <thead>
-                    <tr>
-                        <th>Kelompok Pasien</th>
-                        <th>Mulai Pengobatan</th>
-                        <th>Target Tekanan Darah</th>
-                        <th>Pengobatan Awal</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr id="row-general-old">
-                        <td>Umum ≥ 60 tahun</td>
-                        <td>≥ 150/90 mmHg</td>
-                        <td>&lt; 150/90 mmHg</td>
-                        <td>Diuretik thiazide, CCB, ACEi, atau ARB</td>
-                    </tr>
-                    <tr id="row-general-young">
-                        <td>Umum &lt; 60 tahun</td>
-                        <td>≥ 140/90 mmHg</td>
-                        <td>&lt; 140/90 mmHg</td>
-                        <td>Diuretik thiazide, CCB, ACEi, atau ARB</td>
-                    </tr>
-                    <tr id="row-diabetes-ckd">
-                        <td>Diabetes atau CKD</td>
-                        <td>≥ 140/90 mmHg</td>
-                        <td>&lt; 140/90 mmHg</td>
-                        <td>Diuretik thiazide, CCB, ACEi, atau ARB<br><small>(ACEi/ARB untuk CKD)</small></td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="aha-guidelines">
+                <h4>Panduan Umum AHA 2025 untuk Hipertensi</h4>
+                <p><strong>Prinsip Dasar:</strong></p>
+                <ul>
+                    <li>Monitor tekanan darah secara teratur</li>
+                    <li>Pola makan sehat (DASH diet) rendah garam</li>
+                    <li>Aktivitas fisik minimal 150 menit/minggu</li>
+                    <li>Manajemen berat badan dan hindari obesitas</li>
+                    <li>Batasi alkohol dan berhenti merokok</li>
+                    <li>Kelola stres dengan baik</li>
+                </ul>
+                <p><strong>Konsultasi Medis:</strong> Selalu konsultasikan dengan tenaga kesehatan profesional untuk diagnosis dan rencana pengobatan yang tepat.</p>
+            </div>
             
             <div class="warning">
                 <strong>Peringatan:</strong> Alat ini hanya untuk skrining awal. Konsultasikan dengan dokter untuk diagnosis dan pengobatan yang tepat.
@@ -723,7 +692,7 @@
     </div>
     
     <footer>
-        <p>Kalkulator ini adalah alat skrining sederhana berdasarkan Panduan JNC 8 & Klasifikasi AHA 2025. Untuk diagnosis yang akurat, konsultasikan dengan tenaga kesehatan profesional.</p>
+        <p>Kalkulator ini adalah alat skrining sederhana berdasarkan Klasifikasi AHA 2025. Untuk diagnosis yang akurat, konsultasikan dengan tenaga kesehatan profesional.</p>
         <p>© 2023 Kalkulator IMT & Analisis Tekanan Darah</p>
     </footer>
 
@@ -736,7 +705,7 @@
             const bpValue = document.getElementById('bp-value');
             const bpCategory = document.getElementById('bp-category');
             const recommendationContent = document.getElementById('recommendation-content');
-            const jncRecommendationContent = document.getElementById('jncrecommendation-content');
+            const bpRecommendationContent = document.getElementById('bp-recommendation-content');
             const treatmentRecommendation = document.getElementById('treatment-recommendation');
             const weightTargetContent = document.getElementById('weight-target-content');
             const targetInfo = document.getElementById('target-info');
@@ -771,8 +740,8 @@
                     class: "bp-stage1" 
                 },
                 { 
-                    systolic: { min: 140, max: 179 }, 
-                    diastolic: { min: 90, max: 119 }, 
+                    systolic: { min: 140, max: Infinity }, 
+                    diastolic: { min: 90, max: Infinity }, 
                     category: "Hipertensi Stage 2", 
                     class: "bp-stage2" 
                 },
@@ -817,17 +786,13 @@
                 }
                 
                 // 3. Stage 1: sistolik 130-139 ATAU diastolik 80-89
-                // Catatan: Stage 1 menggunakan logika OR (salah satu memenuhi)
                 if ((systolic >= 130 && systolic <= 139) || (diastolic >= 80 && diastolic <= 89)) {
-                    // Tapi perlu pastikan bukan Elevated (yang sudah di-handle di atas)
-                    // Jika sistolik 120-129 dan diastolik <80 sudah masuk Elevated
-                    // Jika sistolik 120-129 tapi diastolik 80-89, itu Stage 1
                     return bpCategories[2]; // Stage 1
                 }
                 
                 // 4. Stage 2: sistolik ≥ 140 ATAU diastolik ≥ 90
                 if (systolic >= 140 || diastolic >= 90) {
-                    // Tapi perlu pastikan bukan Krisis (≥180/≥120)
+                    // Periksa apakah masuk kategori krisis
                     if (systolic >= 180 || diastolic >= 120) {
                         return bpCategories[4]; // Krisis Hipertensi
                     }
@@ -839,21 +804,8 @@
                     return bpCategories[4]; // Krisis Hipertensi
                 }
                 
-                // Fallback untuk kasus-kasus khusus
-                // Contoh: 125/78 -> Elevated (sudah di-handle)
-                // Contoh: 125/85 -> Stage 1 (sistolik 125, diastolik 85)
-                
-                // Jika sistolik 120-129 dan diastolik ≥80, itu Stage 1
-                if (systolic >= 120 && systolic <= 129 && diastolic >= 80) {
-                    return bpCategories[2]; // Stage 1
-                }
-                
-                // Jika sistolik ≥130 dan diastolik <80, itu Stage 1 (karena sistolik ≥130)
-                if (systolic >= 130 && diastolic < 80) {
-                    return bpCategories[2]; // Stage 1
-                }
-                
-                return bpCategories[0]; // Fallback ke Normal
+                // Fallback
+                return bpCategories[0]; // Normal
             }
             
             // Fungsi untuk menentukan target berat badan dan IMT
@@ -1052,190 +1004,117 @@
                 `
             };
             
-            // Fungsi untuk rekomendasi JNC 8 berdasarkan kategori hipertensi
-            function getJNCTreatmentRecommendation(bpCategory, age, conditions) {
-                let html = '';
-                
-                // Reset highlight pada tabel
-                document.querySelectorAll('.reference-table tr').forEach(row => {
-                    row.classList.remove('highlight');
-                });
-                
-                // Tentukan rekomendasi berdasarkan kategori tekanan darah
-                switch(bpCategory.class) {
-                    case 'bp-normal':
-                        html = `
-                            <div class="treatment-card">
-                                <div class="treatment-title">Tekanan Darah Normal</div>
-                                <p><strong>Status:</strong> Tekanan darah Anda dalam rentang normal menurut klasifikasi AHA 2025.</p>
-                                <p><strong>Pencegahan:</strong></p>
-                                <ul>
-                                    <li>Pertahankan gaya hidup sehat</li>
-                                    <li>Monitor tekanan darah secara berkala (setiap 6-12 bulan)</li>
-                                    <li>Terapkan diet rendah garam dan tinggi serat</li>
-                                    <li>Lakukan aktivitas fisik rutin</li>
-                                </ul>
-                            </div>
-                        `;
-                        break;
-                        
-                    case 'bp-elevated':
-                        html = `
-                            <div class="treatment-card">
-                                <div class="treatment-title">Tekanan Darah Elevated (Meningkat)</div>
-                                <p><strong>Status:</strong> Tekanan darah Anda dalam kategori elevated menurut AHA 2025.</p>
-                                <p><strong>Rekomendasi:</strong> Perubahan gaya hidup tanpa terapi farmakologi.</p>
-                                <p><strong>Intervensi non-farmakologi:</strong></p>
-                                <ul>
-                                    <li>Modifikasi diet (DASH diet)</li>
-                                    <li>Pembatasan garam (< 2.4 g natrium/hari)</li>
-                                    <li>Aktivitas fisik aerobik 150 menit/minggu</li>
-                                    <li>Manajemen berat badan jika perlu</li>
-                                    <li>Batasi konsumsi alkohol</li>
-                                    <li>Berhenti merokok</li>
-                                </ul>
-                                <p><strong>Pemantauan:</strong> Periksa tekanan darah dalam 3-6 bulan.</p>
-                                <p><strong>Target:</strong> Cegah perkembangan menjadi hipertensi.</p>
-                            </div>
-                        `;
-                        break;
-                        
-                    case 'bp-stage1':
-                        // Tentukan apakah perlu pengobatan berdasarkan JNC 8
-                        // Untuk Stage 1, gunakan threshold 140/90 untuk usia <60 dan diabetes/CKD
-                        // Untuk usia ≥60, gunakan threshold 150/90
-                        const needsTreatmentStage1 = (age >= 60 && (systolic >= 150 || diastolic >= 90)) ||
-                                                    (age < 60 && (systolic >= 140 || diastolic >= 90)) ||
-                                                    (conditions !== 'none' && (systolic >= 140 || diastolic >= 90));
-                        
-                        if (needsTreatmentStage1) {
-                            let targetGroup = '';
-                            let medicationOptions = '';
-                            
-                            if (conditions === 'ckd' || conditions === 'both') {
-                                targetGroup = 'Pasien dengan CKD';
-                                medicationOptions = 'ACE inhibitor atau ARB direkomendasikan sebagai terapi awal';
-                                document.getElementById('row-diabetes-ckd').classList.add('highlight');
-                            } else if (age >= 60) {
-                                targetGroup = 'Usia ≥ 60 tahun';
-                                medicationOptions = 'Diuretik thiazide, CCB, ACE inhibitor, atau ARB';
-                                document.getElementById('row-general-old').classList.add('highlight');
-                            } else {
-                                targetGroup = 'Usia < 60 tahun';
-                                medicationOptions = 'Diuretik thiazide, CCB, ACE inhibitor, atau ARB';
-                                document.getElementById('row-general-young').classList.add('highlight');
-                            }
-                            
-                            html = `
-                                <div class="treatment-card">
-                                    <div class="treatment-title">Hipertensi Stage 1 - Perlu Evaluasi Pengobatan</div>
-                                    <p><strong>Status:</strong> Kategori Hipertensi Stage 1 menurut AHA 2025</p>
-                                    <p><strong>Evaluasi JNC 8:</strong> ${needsTreatmentStage1 ? 'Memerlukan evaluasi untuk terapi farmakologi' : 'Modifikasi gaya hidup direkomendasikan'}</p>
-                                    <p><strong>Kelompok:</strong> ${targetGroup}</p>
-                                    <p><strong>Pilihan Pengobatan Awal (jika diperlukan):</strong></p>
-                                    <div class="medication-list">
-                                        <span class="medication-item ${conditions === 'ckd' || conditions === 'both' ? 'highlight' : ''}">Diuretik Thiazide</span>
-                                        <span class="medication-item ${conditions === 'ckd' || conditions === 'both' ? 'highlight' : ''}">Calcium Channel Blocker</span>
-                                        <span class="medication-item ${conditions === 'ckd' || conditions === 'both' ? 'highlight' : ''}">ACE Inhibitor</span>
-                                        <span class="medication-item ${conditions === 'ckd' || conditions === 'both' ? 'highlight' : ''}">ARB</span>
-                                    </div>
-                                    <p><strong>Rekomendasi Khusus:</strong> ${medicationOptions}</p>
-                                    <p><strong>Pemantauan:</strong> Jika target tidak tercapai dalam 1 bulan, tingkatkan dosis atau tambah obat kedua.</p>
-                                    <p><strong>Peringatan:</strong> Jangan kombinasikan ACE inhibitor dengan ARB.</p>
-                                </div>
-                            `;
-                        } else {
-                            html = `
-                                <div class="treatment-card">
-                                    <div class="treatment-title">Hipertensi Stage 1 - Terapi Non-Farmakologi</div>
-                                    <p><strong>Status:</strong> Kategori Hipertensi Stage 1 menurut AHA 2025</p>
-                                    <p><strong>Rekomendasi:</strong> Modifikasi gaya hidup selama 3-6 bulan sebelum mempertimbangkan terapi farmakologi.</p>
-                                    <p><strong>Intervensi:</strong></p>
-                                <ul>
-                                    <li>Diet rendah garam dan lemak jenuh</li>
-                                    <li>Latihan fisik teratur (minimal 30 menit/hari)</li>
-                                    <li>Penurunan berat badan jika overweight/obesitas</li>
-                                    <li>Manajemen stres</li>
-                                    <li>Pemantauan tekanan darah mingguan</li>
-                                    <li>Batasi konsumsi alkohol dan berhenti merokok</li>
-                                </ul>
-                            </div>
-                            `;
-                        }
-                        break;
-                        
-                    case 'bp-stage2':
-                        let targetGroupStage2 = '';
-                        let medicationOptionsStage2 = '';
-                        
-                        if (conditions === 'ckd' || conditions === 'both') {
-                            targetGroupStage2 = 'Pasien dengan CKD';
-                            medicationOptionsStage2 = 'Mulai dengan ACE inhibitor atau ARB + diuretik thiazide atau CCB';
-                            document.getElementById('row-diabetes-ckd').classList.add('highlight');
-                        } else if (age >= 60) {
-                            targetGroupStage2 = 'Usia ≥ 60 tahun';
-                            medicationOptionsStage2 = 'Mulai dengan 2 obat: diuretik thiazide + CCB, ACE inhibitor, atau ARB';
-                            document.getElementById('row-general-old').classList.add('highlight');
-                        } else {
-                            targetGroupStage2 = 'Usia < 60 tahun';
-                            medicationOptionsStage2 = 'Mulai dengan 2 obat: diuretik thiazide + CCB, ACE inhibitor, atau ARB';
-                            document.getElementById('row-general-young').classList.add('highlight');
-                        }
-                        
-                        html = `
-                            <div class="treatment-card">
-                                <div class="treatment-title">Hipertensi Stage 2 - Perlu Terapi Farmakologi</div>
-                                <p><strong>Status:</strong> Kategori Hipertensi Stage 2 menurut AHA 2025</p>
-                                <p><strong>Rekomendasi JNC 8:</strong> Segera memulai terapi farmakologi kombinasi</p>
-                                <p><strong>Kelompok:</strong> ${targetGroupStage2}</p>
-                                <p><strong>Strategi Pengobatan:</strong> Mulai dengan kombinasi 2 obat dari kelas yang berbeda</p>
-                                <p><strong>Kombinasi yang Direkomendasikan:</strong></p>
-                                <div class="medication-list">
-                                    <span class="medication-item">Diuretik Thiazide + CCB</span>
-                                    <span class="medication-item">Diuretik Thiazide + ACE Inhibitor</span>
-                                    <span class="medication-item">Diuretik Thiazide + ARB</span>
-                                    <span class="medication-item ${conditions === 'ckd' || conditions === 'both' ? 'highlight' : ''}">ACE Inhibitor + Diuretik</span>
-                                    <span class="medication-item ${conditions === 'ckd' || conditions === 'both' ? 'highlight' : ''}">ARB + Diuretik</span>
-                                </div>
-                                <p><strong>Rekomendasi Khusus:</strong> ${medicationOptionsStage2}</p>
-                                <p><strong>Target Waktu:</strong> Capai target tekanan darah dalam 1 bulan</p>
-                                <p><strong>Pemantauan:</strong> Evaluasi dalam 2-4 minggu, tambah obat ketiga jika diperlukan</p>
-                                <p><strong>Peringatan:</strong> Jangan kombinasikan ACE inhibitor dengan ARB.</p>
-                            </div>
-                        `;
-                        break;
-                        
-                    case 'bp-hypertensive-crisis':
-                        html = `
-                            <div class="treatment-card urgent">
-                                <div class="treatment-title">KRISIS HIPERTENSI - DARURAT MEDIS</div>
-                                <p><strong>Status:</strong> Kondisi darurat yang memerlukan penanganan segera!</p>
-                                <p><strong>Tindakan Segera:</strong></p>
-                                <ul>
-                                    <li>Segera ke instalasi gawat darurat (IGD) terdekat</li>
-                                    <li>Pasien memerlukan monitoring ketat dan penurunan tekanan darah bertahap</li>
-                                    <li>Jangan mengubah atau menambah dosis obat sendiri</li>
-                                    <li>Hindari aktivitas fisik berat</li>
-                                </ul>
-                                <p><strong>Pengobatan di Rumah Sakit:</strong></p>
-                                <ul>
-                                    <li>Obat intravena: Nicardipine, Labetalol, Nitroprusside</li>
-                                    <li>Monitoring tekanan darah setiap 5-15 menit</li>
-                                    <li>Evaluasi kerusakan organ target (otak, jantung, ginjal)</li>
-                                    <li>Penurunan tekanan darah bertahap (25% dalam 1 jam pertama)</li>
-                                </ul>
-                                <p><strong>Peringatan:</strong> Tanpa penanganan segera, krisis hipertensi dapat menyebabkan stroke, serangan jantung, atau kerusakan ginjal permanen.</p>
-                            </div>
-                        `;
-                        break;
-                }
-                
-                return html;
-            }
-            
-            // Variabel global untuk systolic dan diastolic
-            let systolic = 0;
-            let diastolic = 0;
+            // Rekomendasi berdasarkan kategori tekanan darah AHA 2025
+            const ahaRecommendations = {
+                'bp-normal': `
+                    <div class="treatment-card">
+                        <div class="treatment-title">Tekanan Darah Normal</div>
+                        <p><strong>Status:</strong> Tekanan darah Anda dalam rentang normal menurut klasifikasi AHA 2025.</p>
+                        <p><strong>Rekomendasi:</strong></p>
+                        <ul>
+                            <li>Pertahankan gaya hidup sehat yang sudah Anda jalani</li>
+                            <li>Monitor tekanan darah secara berkala (setiap 6-12 bulan)</li>
+                            <li>Terapkan diet seimbang rendah garam dan tinggi serat</li>
+                            <li>Lakukan aktivitas fisik rutin minimal 150 menit per minggu</li>
+                            <li>Pertahankan berat badan ideal</li>
+                            <li>Kelola stres dengan baik</li>
+                        </ul>
+                    </div>
+                `,
+                'bp-elevated': `
+                    <div class="treatment-card">
+                        <div class="treatment-title">Tekanan Darah Elevated (Meningkat)</div>
+                        <p><strong>Status:</strong> Tekanan darah Anda dalam kategori elevated menurut AHA 2025.</p>
+                        <p><strong>Rekomendasi:</strong> Fokus pada modifikasi gaya hidup tanpa terapi farmakologi.</p>
+                        <p><strong>Intervensi yang Direkomendasikan:</strong></p>
+                        <ul>
+                            <li>Modifikasi diet (DASH diet) dengan pembatasan garam < 2.4 g natrium/hari</li>
+                            <li>Aktivitas fisik aerobik intensitas sedang 150 menit/minggu</li>
+                            <li>Manajemen berat badan jika diperlukan</li>
+                            <li>Batasi konsumsi alkohol (maksimal 1-2 gelas/hari)</li>
+                            <li>Berhenti merokok jika Anda perokok</li>
+                            <li>Kelola stres dengan teknik relaksasi</li>
+                        </ul>
+                        <p><strong>Pemantauan:</strong> Periksa tekanan darah setiap 3-6 bulan.</p>
+                        <p><strong>Target:</strong> Cegah perkembangan menjadi hipertensi stage 1.</p>
+                    </div>
+                `,
+                'bp-stage1': `
+                    <div class="treatment-card">
+                        <div class="treatment-title">Hipertensi Stage 1</div>
+                        <p><strong>Status:</strong> Kategori Hipertensi Stage 1 menurut AHA 2025.</p>
+                        <p><strong>Rekomendasi:</strong> Modifikasi gaya hidup intensif dan pertimbangkan evaluasi untuk terapi farmakologi.</p>
+                        <p><strong>Intervensi Non-Farmakologi:</strong></p>
+                        <ul>
+                            <li>Diet DASH dengan pembatasan garam ketat (< 1.5 g natrium/hari)</li>
+                            <li>Aktivitas fisik 150-300 menit/minggu intensitas sedang</li>
+                            <li>Penurunan berat badan jika overweight/obesitas (target 5-10% dari berat badan)</li>
+                            <li>Manajemen stres yang efektif</li>
+                            <li>Batasi alkohol dan hindari rokok sepenuhnya</li>
+                        </ul>
+                        <p><strong>Evaluasi Medis:</strong> Konsultasikan dengan dokter untuk:</p>
+                        <ul>
+                            <li>Evaluasi risiko kardiovaskular secara menyeluruh</li>
+                            <li>Pertimbangan terapi farmakologi berdasarkan risiko individu</li>
+                            <li>Pemantauan tekanan darah yang lebih sering</li>
+                            <li>Evaluasi organ target jika diperlukan</li>
+                        </ul>
+                        <p><strong>Pemantauan:</strong> Periksa tekanan darah mingguan.</p>
+                    </div>
+                `,
+                'bp-stage2': `
+                    <div class="treatment-card">
+                        <div class="treatment-title">Hipertensi Stage 2</div>
+                        <p><strong>Status:</strong> Kategori Hipertensi Stage 2 menurut AHA 2025.</p>
+                        <p><strong>Rekomendasi:</strong> Segera konsultasikan dengan dokter untuk terapi farmakologi.</p>
+                        <p><strong>Intervensi Segera:</strong></p>
+                        <ul>
+                            <li><strong>Konsultasi medis segera</strong> untuk evaluasi dan rencana pengobatan</li>
+                            <li>Modifikasi gaya hidup intensif bersamaan dengan terapi farmakologi</li>
+                            <li>Diet DASH ketat dengan pembatasan garam < 1.5 g natrium/hari</li>
+                            <li>Aktivitas fisik sesuai kemampuan dengan pengawasan</li>
+                            <li>Penurunan berat badan yang signifikan jika diperlukan</li>
+                        </ul>
+                        <p><strong>Terapi Farmakologi:</strong> Berdasarkan AHA 2025, untuk Stage 2 biasanya memerlukan:</p>
+                        <ul>
+                            <li>Terapi kombinasi dua obat dari kelas berbeda</li>
+                            <li>Pemilihan obat berdasarkan kondisi komorbiditas</li>
+                            <li>Pemantauan ketat efek samping dan efektivitas</li>
+                            <li>Penyesuaian dosis berdasarkan respons</li>
+                        </ul>
+                        <p><strong>Peringatan:</strong> Jangan mengubah atau menambah obat tanpa konsultasi dokter.</p>
+                    </div>
+                `,
+                'bp-hypertensive-crisis': `
+                    <div class="treatment-card urgent">
+                        <div class="treatment-title">KRISIS HIPERTENSI - DARURAT MEDIS</div>
+                        <p><strong>Status:</strong> Kondisi darurat yang memerlukan penanganan segera!</p>
+                        <p><strong>Tindakan Segera:</strong></p>
+                        <ul>
+                            <li>Segera ke instalasi gawat darurat (IGD) terdekat</li>
+                            <li>Jangan mengemudi sendiri - mintalah bantuan orang lain</li>
+                            <li>Jangan mengubah atau menambah dosis obat sendiri</li>
+                            <li>Hindari aktivitas fisik berat dan tetap tenang</li>
+                        </ul>
+                        <p><strong>Pengobatan di Rumah Sakit:</strong></p>
+                        <ul>
+                            <li>Monitoring tekanan darah setiap 5-15 menit</li>
+                            <li>Obat intravena untuk penurunan tekanan darah bertahap</li>
+                            <li>Evaluasi kerusakan organ target (otak, jantung, ginjal, mata)</li>
+                            <li>Penurunan tekanan darah bertahap (25% dalam 1 jam pertama)</li>
+                        </ul>
+                        <p><strong>Peringatan:</strong> Tanpa penanganan segera, krisis hipertensi dapat menyebabkan:</p>
+                        <ul>
+                            <li>Stroke atau perdarahan otak</li>
+                            <li>Serangan jantung</li>
+                            <li>Gagal ginjal akut</li>
+                            <li>Retinopati hipertensif (kerusakan mata)</li>
+                            <li>Aneurisma atau diseksi aorta</li>
+                        </ul>
+                        <p><strong>SETELAH STABIL:</strong> Rencana pengobatan jangka panjang dan follow-up ketat diperlukan.</p>
+                    </div>
+                `
+            };
             
             // Fungsi utama untuk analisis kesehatan
             function analyzeHealth() {
@@ -1243,8 +1122,8 @@
                 const gender = document.getElementById('gender').value;
                 const height = parseFloat(document.getElementById('height').value);
                 const weight = parseFloat(document.getElementById('weight').value);
-                systolic = parseFloat(document.getElementById('systolic').value);
-                diastolic = parseFloat(document.getElementById('diastolic').value);
+                const systolic = parseFloat(document.getElementById('systolic').value);
+                const diastolic = parseFloat(document.getElementById('diastolic').value);
                 const conditions = document.getElementById('conditions').value;
                 
                 // Validasi input dasar
@@ -1314,9 +1193,9 @@
                 bpCategory.textContent = bpCat.category;
                 bpCategory.className = `blood-pressure-category ${bpCat.class}`;
                 
-                // 5. Rekomendasi JNC 8 berdasarkan kategori hipertensi
-                const jncTreatment = getJNCTreatmentRecommendation(bpCat, age, conditions);
-                treatmentRecommendation.innerHTML = jncTreatment;
+                // 5. Rekomendasi berdasarkan AHA 2025
+                const ahaRec = ahaRecommendations[bpCat.class];
+                bpRecommendationContent.innerHTML = ahaRec;
                 
                 // Tampilkan bagian hasil
                 resultSection.classList.add('active');
