@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator IMT - Skrining Kesehatan</title>
+    <title>Kalkulator IMT & Analisis Tekanan Darah</title>
     <style>
         * {
             box-sizing: border-box;
@@ -46,6 +46,15 @@
         .subtitle {
             color: #666;
             font-size: 1rem;
+            margin-bottom: 5px;
+        }
+        
+        .section-title {
+            color: #2c80ff;
+            margin: 25px 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e6f2ff;
+            font-size: 1.4rem;
         }
         
         .form-group {
@@ -59,7 +68,7 @@
             color: #444;
         }
         
-        input {
+        input, select {
             width: 100%;
             padding: 12px 15px;
             border: 2px solid #d1e8ff;
@@ -68,9 +77,21 @@
             transition: border-color 0.3s;
         }
         
-        input:focus {
+        input:focus, select:focus {
             border-color: #2c80ff;
             outline: none;
+        }
+        
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -10px;
+        }
+        
+        .col {
+            flex: 1;
+            padding: 0 10px;
+            min-width: 150px;
         }
         
         button {
@@ -83,12 +104,14 @@
             cursor: pointer;
             width: 100%;
             font-weight: 600;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
             margin-top: 10px;
         }
         
         button:hover {
             background-color: #1a6de8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         
         .result-section {
@@ -113,6 +136,7 @@
             color: #2c80ff;
             margin-bottom: 15px;
             text-align: center;
+            font-size: 1.3rem;
         }
         
         .imt-value {
@@ -122,7 +146,7 @@
             margin: 15px 0;
         }
         
-        .imt-category {
+        .imt-category, .blood-pressure-category {
             text-align: center;
             font-size: 1.4rem;
             font-weight: 600;
@@ -151,7 +175,32 @@
             background-color: #ffcdd2;
         }
         
-        .recommendation, .promotion {
+        .bp-normal {
+            color: #4caf50;
+            background-color: #e8f5e9;
+        }
+        
+        .bp-prehypertension {
+            color: #ffb300;
+            background-color: #fff3e0;
+        }
+        
+        .bp-stage1 {
+            color: #ff5722;
+            background-color: #ffebee;
+        }
+        
+        .bp-stage2 {
+            color: #d32f2f;
+            background-color: #ffcdd2;
+        }
+        
+        .bp-hypertensive-crisis {
+            color: #880e4f;
+            background-color: #fce4ec;
+        }
+        
+        .recommendation, .promotion, .jncrecommendation, .weight-target {
             margin-top: 30px;
             padding: 20px;
             border-radius: 10px;
@@ -162,15 +211,19 @@
             border-left: 5px solid #4caf50;
         }
         
-        .promotion {
+        .jncrecommendation {
+            background-color: #e3f2fd;
+            border-left: 5px solid #2196f3;
+        }
+        
+        .weight-target {
             background-color: #fff3e0;
             border-left: 5px solid #ff9800;
         }
         
-        .section-title {
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 1.3rem;
+        .promotion {
+            background-color: #fff8e1;
+            border-left: 5px solid #ffb300;
         }
         
         ul {
@@ -199,25 +252,228 @@
             background-color: #f57c00;
         }
         
-        .imt-reference {
-            margin-top: 20px;
-            background-color: #f0f7ff;
-            padding: 15px;
+        .reference-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: white;
             border-radius: 8px;
-            font-size: 0.9rem;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
-        .reference-title {
+        .reference-table th {
+            background-color: #2c80ff;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        .reference-table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .reference-table tr:nth-child(even) {
+            background-color: #f8fbff;
+        }
+        
+        .highlight {
+            background-color: #fff9c4 !important;
             font-weight: 600;
-            margin-bottom: 10px;
-            color: #2c80ff;
         }
         
-        .reference-item {
+        .warning {
+            color: #d32f2f;
+            font-weight: 600;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #ffebee;
+            border-radius: 5px;
+            border-left: 4px solid #d32f2f;
+        }
+        
+        .treatment-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-left: 4px solid #2196f3;
+        }
+        
+        .treatment-card.urgent {
+            border-left: 4px solid #d32f2f;
+            background-color: #fff5f5;
+        }
+        
+        .treatment-title {
+            font-weight: 700;
+            color: #2c80ff;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .treatment-card.urgent .treatment-title {
+            color: #d32f2f;
+        }
+        
+        .medication-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        
+        .medication-item {
+            background: #e3f2fd;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid #bbdefb;
+        }
+        
+        .medication-item.highlight {
+            background: #c8e6c9;
+            border-color: #a5d6a7;
+        }
+        
+        .bp-category-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .bp-category-table th {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .bp-category-table td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .bp-category-table .bp-normal td {
+            background-color: #e8f5e9;
+        }
+        
+        .bp-category-table .bp-prehypertension td {
+            background-color: #fff3e0;
+        }
+        
+        .bp-category-table .bp-stage1 td {
+            background-color: #ffebee;
+        }
+        
+        .bp-category-table .bp-stage2 td {
+            background-color: #ffcdd2;
+        }
+        
+        .bp-category-table .bp-hypertensive-crisis td {
+            background-color: #fce4ec;
+        }
+        
+        .target-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .target-card {
+            flex: 1;
+            min-width: 200px;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .target-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2c80ff;
+            margin: 10px 0;
+        }
+        
+        .target-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .target-change {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 10px;
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+        
+        .target-change.positive {
+            background-color: #c8e6c9;
+            color: #2e7d32;
+        }
+        
+        .target-change.negative {
+            background-color: #ffcdd2;
+            color: #d32f2f;
+        }
+        
+        .target-change.neutral {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .progress-container {
+            margin: 20px 0;
+        }
+        
+        .progress-bar {
+            height: 20px;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+        
+        .progress-fill.underweight {
+            background-color: #ff9800;
+        }
+        
+        .progress-fill.normal {
+            background-color: #4caf50;
+        }
+        
+        .progress-fill.overweight {
+            background-color: #ff5722;
+        }
+        
+        .progress-fill.obese {
+            background-color: #d32f2f;
+        }
+        
+        .progress-labels {
             display: flex;
             justify-content: space-between;
-            padding: 5px 0;
-            border-bottom: 1px dashed #d1e8ff;
+            font-size: 0.9rem;
+            color: #666;
         }
         
         footer {
@@ -246,8 +502,29 @@
                 font-size: 2rem;
             }
             
-            .imt-category {
+            .imt-category, .blood-pressure-category {
                 font-size: 1.2rem;
+            }
+            
+            .row {
+                flex-direction: column;
+            }
+            
+            .col {
+                margin-bottom: 15px;
+            }
+            
+            .medication-list {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .target-info {
+                flex-direction: column;
+            }
+            
+            .target-card {
+                min-width: 100%;
             }
         }
     </style>
@@ -255,52 +532,182 @@
 <body>
     <div class="container">
         <header>
-            <h1>Kalkulator Indeks Massa Tubuh (IMT)</h1>
-            <p class="subtitle">Alat skrining untuk menilai status gizi berdasarkan tinggi dan berat badan</p>
+            <h1>Kalkulator IMT & Analisis Tekanan Darah</h1>
+            <p class="subtitle">Alat skrining kesehatan berdasarkan Panduan JNC 8</p>
+            <p class="subtitle">Memeriksa status gizi dan rekomendasi tekanan darah</p>
         </header>
         
-        <div class="form-group">
-            <label for="height">Tinggi Badan (cm)</label>
-            <input type="number" id="height" placeholder="Contoh: 170" min="50" max="250">
-        </div>
-        
-        <div class="form-group">
-            <label for="weight">Berat Badan (kg)</label>
-            <input type="number" id="weight" placeholder="Contoh: 65" min="10" max="300">
-        </div>
-        
-        <button id="calculate-btn">HITUNG IMT</button>
-        
-        <div id="result-section" class="result-section">
-            <h2 class="result-title">Hasil Perhitungan IMT</h2>
-            <div id="imt-value" class="imt-value">0</div>
-            <div id="imt-category" class="imt-category">-</div>
-            
-            <div class="imt-reference">
-                <div class="reference-title">Kategori IMT (Indonesia):</div>
-                <div class="reference-item">
-                    <span>Kurus</span>
-                    <span>&lt; 18.5</span>
+        <h2 class="section-title">Data Pribadi</h2>
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <label for="age">Usia (tahun)</label>
+                    <input type="number" id="age" placeholder="Contoh: 45" min="18" max="120">
                 </div>
-                <div class="reference-item">
-                    <span>Normal</span>
-                    <span>18.5 - 22.9</span>
-                </div>
-                <div class="reference-item">
-                    <span>Overweight</span>
-                    <span>23 - 27</span>
-                </div>
-                <div class="reference-item">
-                    <span>Obesitas</span>
-                    <span>&gt; 27</span>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <label for="gender">Jenis Kelamin</label>
+                    <select id="gender">
+                        <option value="">Pilih Jenis Kelamin</option>
+                        <option value="male">Laki-laki</option>
+                        <option value="female">Perempuan</option>
+                    </select>
                 </div>
             </div>
         </div>
         
-        <div id="recommendation" class="recommendation">
-            <h3 class="section-title">Rekomendasi Berdasarkan Hasil IMT</h3>
-            <div id="recommendation-content">
-                <p>Masukkan tinggi dan berat badan Anda lalu tekan tombol "HITUNG IMT" untuk melihat rekomendasi yang sesuai dengan kondisi Anda.</p>
+        <h2 class="section-title">Data Antropometri</h2>
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <label for="height">Tinggi Badan (cm)</label>
+                    <input type="number" id="height" placeholder="Contoh: 170" min="50" max="250">
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <label for="weight">Berat Badan (kg)</label>
+                    <input type="number" id="weight" placeholder="Contoh: 65" min="10" max="300">
+                </div>
+            </div>
+        </div>
+        
+        <h2 class="section-title">Tekanan Darah</h2>
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <label for="systolic">Sistolik (mmHg)</label>
+                    <input type="number" id="systolic" placeholder="Contoh: 120" min="50" max="300">
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <label for="diastolic">Diastolik (mmHg)</label>
+                    <input type="number" id="diastolic" placeholder="Contoh: 80" min="30" max="200">
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="conditions">Kondisi Kesehatan (jika ada)</label>
+            <select id="conditions">
+                <option value="none">Tidak ada</option>
+                <option value="diabetes">Diabetes</option>
+                <option value="ckd">Penyakit Ginjal Kronis (CKD)</option>
+                <option value="both">Diabetes dan CKD</option>
+            </select>
+        </div>
+        
+        <button id="calculate-btn">ANALISIS KESEHATAN</button>
+        
+        <div id="result-section" class="result-section">
+            <h2 class="result-title">Hasil Analisis Kesehatan</h2>
+            
+            <div class="section-title">1. Indeks Massa Tubuh (IMT)</div>
+            <div id="imt-value" class="imt-value">0</div>
+            <div id="imt-category" class="imt-category">-</div>
+            
+            <div id="weight-target-section" class="weight-target">
+                <h3 class="result-title">Target Berat Badan Ideal</h3>
+                <div id="weight-target-content">
+                    <p>Masukkan data untuk melihat target berat badan.</p>
+                </div>
+                <div id="target-info" class="target-info"></div>
+                <div id="progress-container" class="progress-container"></div>
+            </div>
+            
+            <div id="recommendation" class="recommendation">
+                <h3 class="result-title">Rekomendasi Berdasarkan IMT</h3>
+                <div id="recommendation-content">
+                    <p>Masukkan data untuk melihat rekomendasi.</p>
+                </div>
+            </div>
+            
+            <div class="section-title">2. Analisis Tekanan Darah (JNC 8)</div>
+            <div id="bp-value" class="imt-value">-/- mmHg</div>
+            <div id="bp-category" class="blood-pressure-category">-</div>
+            
+            <div class="section-title">Kategori Tekanan Darah</div>
+            <table class="bp-category-table">
+                <thead>
+                    <tr>
+                        <th>Kategori</th>
+                        <th>Sistolik (mmHg)</th>
+                        <th>Diastolik (mmHg)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="bp-normal">
+                        <td>Normal</td>
+                        <td>&lt; 120</td>
+                        <td>&lt; 80</td>
+                    </tr>
+                    <tr class="bp-prehypertension">
+                        <td>Prehipertensi</td>
+                        <td>120-139</td>
+                        <td>80-89</td>
+                    </tr>
+                    <tr class="bp-stage1">
+                        <td>Hipertensi Tahap 1</td>
+                        <td>140-159</td>
+                        <td>90-99</td>
+                    </tr>
+                    <tr class="bp-stage2">
+                        <td>Hipertensi Tahap 2</td>
+                        <td>160-179</td>
+                        <td>100-119</td>
+                    </tr>
+                    <tr class="bp-hypertensive-crisis">
+                        <td>Krisis Hipertensi</td>
+                        <td>≥ 180</td>
+                        <td>≥ 120</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div id="jncrecommendation" class="jncrecommendation">
+                <h3 class="result-title">Rekomendasi Pengobatan Berdasarkan Panduan JNC 8</h3>
+                <div id="jncrecommendation-content">
+                    <p>Masukkan data tekanan darah untuk melihat rekomendasi.</p>
+                </div>
+                <div id="treatment-recommendation"></div>
+            </div>
+            
+            <h3 class="result-title">Panduan JNC 8 untuk Hipertensi</h3>
+            <table class="reference-table">
+                <thead>
+                    <tr>
+                        <th>Kelompok Pasien</th>
+                        <th>Mulai Pengobatan</th>
+                        <th>Target Tekanan Darah</th>
+                        <th>Pengobatan Awal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr id="row-general-old">
+                        <td>Umum ≥ 60 tahun</td>
+                        <td>≥ 150/90 mmHg</td>
+                        <td>&lt; 150/90 mmHg</td>
+                        <td>Diuretik thiazide, CCB, ACEi, atau ARB</td>
+                    </tr>
+                    <tr id="row-general-young">
+                        <td>Umum &lt; 60 tahun</td>
+                        <td>≥ 140/90 mmHg</td>
+                        <td>&lt; 140/90 mmHg</td>
+                        <td>Diuretik thiazide, CCB, ACEi, atau ARB</td>
+                    </tr>
+                    <tr id="row-diabetes-ckd">
+                        <td>Diabetes atau CKD</td>
+                        <td>≥ 140/90 mmHg</td>
+                        <td>&lt; 140/90 mmHg</td>
+                        <td>Diuretik thiazide, CCB, ACEi, atau ARB<br><small>(ACEi/ARB untuk CKD)</small></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="warning">
+                <strong>Peringatan:</strong> Alat ini hanya untuk skrining awal. Konsultasikan dengan dokter untuk diagnosis dan pengobatan yang tepat.
             </div>
         </div>
         
@@ -313,8 +720,8 @@
     </div>
     
     <footer>
-        <p>Kalkulator IMT ini adalah alat skrining sederhana.diKembangkan oleh Prodi KKLP FK UPH.</p>
-        <p>© 2025 Kalkulator IMT - Alat Skrining Kesehatan</p>
+        <p>Kalkulator ini adalah alat skrining sederhana berdasarkan Panduan JNC 8. Untuk diagnosis yang akurat, konsultasikan dengan tenaga kesehatan profesional.</p>
+        <p>© 2023 Kalkulator IMT & Analisis Tekanan Darah</p>
     </footer>
 
     <script>
@@ -323,28 +730,272 @@
             const resultSection = document.getElementById('result-section');
             const imtValue = document.getElementById('imt-value');
             const imtCategory = document.getElementById('imt-category');
+            const bpValue = document.getElementById('bp-value');
+            const bpCategory = document.getElementById('bp-category');
             const recommendationContent = document.getElementById('recommendation-content');
-            const heightInput = document.getElementById('height');
-            const weightInput = document.getElementById('weight');
+            const jncRecommendationContent = document.getElementById('jncrecommendation-content');
+            const treatmentRecommendation = document.getElementById('treatment-recommendation');
+            const weightTargetContent = document.getElementById('weight-target-content');
+            const targetInfo = document.getElementById('target-info');
+            const progressContainer = document.getElementById('progress-container');
             
-            // Referensi kategori IMT untuk Indonesia
+            // Referensi kategori IMT yang diperbarui
             const imtCategories = [
-                { max: 18.5, category: "Kurus", class: "underweight" },
-                { max: 23, category: "Normal", class: "normal" },
-                { max: 27, category: "Overweight", class: "overweight" },
-                { max: Infinity, category: "Obesitas", class: "obese" }
+                { max: 18.5, category: "Underweight (Kurus)", class: "underweight", targetIMT: 21.5 },
+                { max: 23, category: "Normal", class: "normal", targetIMT: 21.5 },
+                { max: 25, category: "Overweight", class: "overweight", targetIMT: 22 },
+                { max: Infinity, category: "Obesitas", class: "obese", targetIMT: 23 }
             ];
+            
+            // Kategori tekanan darah dengan range sistolik yang DIPERBAIKI
+            const bpCategories = [
+                { 
+                    systolic: { min: 0, max: 119 }, 
+                    diastolic: { min: 0, max: 79 }, 
+                    category: "Normal", 
+                    class: "bp-normal" 
+                },
+                { 
+                    systolic: { min: 120, max: 139 },  // Diperbaiki: 120-139 (sebelumnya 120-129)
+                    diastolic: { min: 80, max: 89 }, 
+                    category: "Prehipertensi", 
+                    class: "bp-prehypertension" 
+                },
+                { 
+                    systolic: { min: 140, max: 159 },  // Diperbaiki: 140-159 (sebelumnya 130-139)
+                    diastolic: { min: 90, max: 99 }, 
+                    category: "Hipertensi Tahap 1", 
+                    class: "bp-stage1" 
+                },
+                { 
+                    systolic: { min: 160, max: 179 },  // Diperbaiki: 160-179 (sebelumnya 140-179)
+                    diastolic: { min: 100, max: 119 }, 
+                    category: "Hipertensi Tahap 2", 
+                    class: "bp-stage2" 
+                },
+                { 
+                    systolic: { min: 180, max: Infinity }, 
+                    diastolic: { min: 120, max: Infinity }, 
+                    category: "Krisis Hipertensi", 
+                    class: "bp-hypertensive-crisis" 
+                }
+            ];
+            
+            // Fungsi untuk menghitung IMT
+            function calculateIMT(height, weight) {
+                const heightInMeter = height / 100;
+                return weight / (heightInMeter * heightInMeter);
+            }
+            
+            // Fungsi untuk menghitung target berat badan berdasarkan IMT ideal
+            function calculateTargetWeight(height, currentIMT, targetIMT) {
+                const heightInMeter = height / 100;
+                const targetWeight = targetIMT * (heightInMeter * heightInMeter);
+                return targetWeight;
+            }
+            
+            // Fungsi untuk menentukan kategori tekanan darah dengan logika yang benar
+            function getBPCategory(systolic, diastolic) {
+                // Logika yang DIPERBAIKI untuk kategori tekanan darah
+                
+                // 1. Normal: sistolik < 120 DAN diastolik < 80
+                if (systolic < 120 && diastolic < 80) {
+                    return bpCategories[0]; // Normal
+                }
+                
+                // 2. Prehipertensi: sistolik 120-139 DAN diastolik 80-89
+                // CATATAN: Prehipertensi hanya jika keduanya dalam range
+                if ((systolic >= 120 && systolic <= 139) && (diastolic >= 80 && diastolic <= 89)) {
+                    return bpCategories[1]; // Prehipertensi
+                }
+                
+                // 3. Hipertensi Tahap 1: sistolik 140-159 ATAU diastolik 90-99
+                if ((systolic >= 140 && systolic <= 159) || (diastolic >= 90 && diastolic <= 99)) {
+                    return bpCategories[2]; // Hipertensi Tahap 1
+                }
+                
+                // 4. Hipertensi Tahap 2: sistolik 160-179 ATAU diastolik 100-119
+                if ((systolic >= 160 && systolic <= 179) || (diastolic >= 100 && diastolic <= 119)) {
+                    return bpCategories[3]; // Hipertensi Tahap 2
+                }
+                
+                // 5. Krisis Hipertensi: sistolik ≥ 180 ATAU diastolik ≥ 120
+                if (systolic >= 180 || diastolic >= 120) {
+                    return bpCategories[4]; // Krisis Hipertensi
+                }
+                
+                // 6. Fallback untuk kasus-kasus khusus (mixed conditions)
+                // Contoh: 130/95 -> masuk Stage 1 karena diastolik 95
+                // Contoh: 145/85 -> masuk Prehipertensi? Tidak, karena sistolik 145 -> Stage 1
+                
+                // Prioritaskan kategori yang lebih tinggi untuk kasus mixed
+                if (systolic >= 160 || diastolic >= 100) {
+                    return bpCategories[3]; // Stage 2
+                }
+                if (systolic >= 140 || diastolic >= 90) {
+                    return bpCategories[2]; // Stage 1
+                }
+                if (systolic >= 120 || diastolic >= 80) {
+                    return bpCategories[1]; // Prehipertensi
+                }
+                
+                return bpCategories[0]; // Fallback ke Normal
+            }
+            
+            // Fungsi untuk menentukan target berat badan dan IMT
+            function getWeightTargetInfo(height, weight, currentIMT, currentCategory) {
+                let html = '';
+                let targetIMT = 21.5; // Default target IMT untuk orang normal
+                let targetWeight = calculateTargetWeight(height, currentIMT, targetIMT);
+                let weightDifference = targetWeight - weight;
+                let targetCategory = '';
+                
+                // Tentukan target IMT berdasarkan kategori saat ini
+                for (const category of imtCategories) {
+                    if (currentIMT < category.max) {
+                        targetIMT = category.targetIMT;
+                        targetWeight = calculateTargetWeight(height, currentIMT, targetIMT);
+                        weightDifference = targetWeight - weight;
+                        targetCategory = category.category;
+                        break;
+                    }
+                }
+                
+                // Tampilkan informasi target
+                html = `
+                    <div class="target-info">
+                        <div class="target-card">
+                            <div class="target-label">Berat Badan Saat Ini</div>
+                            <div class="target-value">${weight.toFixed(1)} kg</div>
+                            <div class="target-label">IMT: ${currentIMT.toFixed(1)}</div>
+                        </div>
+                        
+                        <div class="target-card">
+                            <div class="target-label">Berat Badan Target</div>
+                            <div class="target-value">${targetWeight.toFixed(1)} kg</div>
+                            <div class="target-label">Target IMT: ${targetIMT.toFixed(1)}</div>
+                        </div>
+                        
+                        <div class="target-card">
+                            <div class="target-label">Perubahan yang Dibutuhkan</div>
+                            <div class="target-value">${Math.abs(weightDifference).toFixed(1)} kg</div>
+                            <div class="target-change ${weightDifference > 0 ? 'positive' : weightDifference < 0 ? 'negative' : 'neutral'}">
+                                ${weightDifference > 0 ? 'Tambah' : weightDifference < 0 ? 'Kurangi' : 'Pertahankan'} ${Math.abs(weightDifference).toFixed(1)} kg
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Tentukan pesan berdasarkan kategori IMT
+                let targetMessage = '';
+                let progressHtml = '';
+                
+                if (currentCategory.class === 'underweight') {
+                    targetMessage = `<p><strong>Status:</strong> Anda berada dalam kategori underweight. Target Anda adalah mencapai berat badan ideal dengan IMT sekitar ${targetIMT.toFixed(1)}.</p>`;
+                    
+                    // Buat progress bar untuk underweight
+                    const minWeight = calculateTargetWeight(height, currentIMT, 16);
+                    const maxWeight = calculateTargetWeight(height, currentIMT, 18.5);
+                    const progressPercentage = ((weight - minWeight) / (maxWeight - minWeight)) * 100;
+                    
+                    progressHtml = `
+                        <div class="progress-container">
+                            <p><strong>Progress menuju berat normal:</strong></p>
+                            <div class="progress-bar">
+                                <div class="progress-fill underweight" style="width: ${Math.min(100, Math.max(0, progressPercentage))}%"></div>
+                            </div>
+                            <div class="progress-labels">
+                                <span>${minWeight.toFixed(0)} kg</span>
+                                <span>${maxWeight.toFixed(0)} kg (Batas Normal)</span>
+                            </div>
+                        </div>
+                    `;
+                    
+                } else if (currentCategory.class === 'normal') {
+                    targetMessage = `<p><strong>Status:</strong> Anda sudah berada dalam kategori normal. Pertahankan berat badan Anda dalam range IMT 18.5-23.</p>`;
+                    
+                    // Buat progress bar untuk normal
+                    const minWeight = calculateTargetWeight(height, currentIMT, 18.5);
+                    const maxWeight = calculateTargetWeight(height, currentIMT, 23);
+                    const currentPercentage = ((currentIMT - 18.5) / (23 - 18.5)) * 100;
+                    
+                    progressHtml = `
+                        <div class="progress-container">
+                            <p><strong>Rentang berat badan normal untuk tinggi ${height} cm:</strong></p>
+                            <div class="progress-bar">
+                                <div class="progress-fill normal" style="width: ${Math.min(100, Math.max(0, currentPercentage))}%"></div>
+                            </div>
+                            <div class="progress-labels">
+                                <span>${minWeight.toFixed(0)} kg (IMT 18.5)</span>
+                                <span>${maxWeight.toFixed(0)} kg (IMT 23)</span>
+                            </div>
+                            <p>Berat Anda saat ini: ${weight.toFixed(1)} kg (IMT ${currentIMT.toFixed(1)})</p>
+                        </div>
+                    `;
+                    
+                } else if (currentCategory.class === 'overweight' || currentCategory.class === 'obese') {
+                    const isObese = currentCategory.class === 'obese';
+                    targetMessage = `<p><strong>Status:</strong> Anda berada dalam kategori ${isObese ? 'obesitas' : 'overweight'}. Target Anda adalah menurunkan berat badan hingga mencapai IMT di bawah ${isObese ? '25' : '23'}.</p>`;
+                    
+                    // Buat progress bar untuk overweight/obese
+                    const currentMax = isObese ? 40 : 27; // Batas atas untuk kategori
+                    const targetMax = isObese ? 25 : 23; // Target maksimal
+                    const minWeight = calculateTargetWeight(height, currentIMT, 18.5);
+                    const currentPercentage = ((currentIMT - 18.5) / (currentMax - 18.5)) * 100;
+                    const targetPercentage = ((targetMax - 18.5) / (currentMax - 18.5)) * 100;
+                    
+                    progressHtml = `
+                        <div class="progress-container">
+                            <p><strong>Progress menuju berat ideal:</strong></p>
+                            <div class="progress-bar">
+                                <div class="progress-fill ${currentCategory.class}" style="width: ${Math.min(100, Math.max(0, currentPercentage))}%"></div>
+                                <div class="progress-fill normal" style="width: ${Math.min(100, Math.max(0, targetPercentage))}%; opacity: 0.5;"></div>
+                            </div>
+                            <div class="progress-labels">
+                                <span>${minWeight.toFixed(0)} kg (Normal)</span>
+                                <span>${calculateTargetWeight(height, currentIMT, targetMax).toFixed(0)} kg (Target)</span>
+                                <span>${calculateTargetWeight(height, currentIMT, currentMax).toFixed(0)} kg (${isObese ? 'Obesitas' : 'Overweight'})</span>
+                            </div>
+                            <p>Target penurunan: <strong>${Math.abs(weightDifference).toFixed(1)} kg</strong> untuk mencapai IMT ${targetMax}</p>
+                        </div>
+                    `;
+                }
+                
+                // Tambahkan timeline dan rekomendasi
+                const weeklyLoss = 0.5; // Penurunan sehat: 0.5 kg/minggu
+                const weeklyGain = 0.25; // Penambahan sehat: 0.25 kg/minggu
+                const weeksNeeded = Math.abs(weightDifference) / (weightDifference < 0 ? weeklyLoss : weeklyGain);
+                const monthsNeeded = weeksNeeded / 4.3;
+                
+                html += targetMessage;
+                html += progressHtml;
+                
+                if (Math.abs(weightDifference) > 1) {
+                    html += `
+                        <p><strong>Timeline yang realistis:</strong> Untuk ${weightDifference < 0 ? 'menurunkan' : 'menambah'} ${Math.abs(weightDifference).toFixed(1)} kg dengan cara sehat:</p>
+                        <ul>
+                            <li>${weightDifference < 0 ? 'Penurunan' : 'Penambahan'} sehat: ${weightDifference < 0 ? weeklyLoss : weeklyGain} kg per minggu</li>
+                            <li>Waktu yang dibutuhkan: ${weeksNeeded.toFixed(0)} minggu (sekitar ${monthsNeeded.toFixed(1)} bulan)</li>
+                            <li>${weightDifference < 0 ? 'Kurangi' : 'Tambah'} ${(Math.abs(weightDifference) / weeksNeeded).toFixed(2)} kg per minggu</li>
+                            <li>Konsultasikan dengan ahli gizi untuk program yang sesuai</li>
+                        </ul>
+                    `;
+                }
+                
+                return html;
+            }
             
             // Rekomendasi berdasarkan kategori IMT
             const recommendations = {
                 underweight: `
-                    <p><strong>Anda berada dalam kategori Kurus.</strong></p>
+                    <p><strong>Anda berada dalam kategori Underweight (Kurus).</strong></p>
                     <p>Rekomendasi untuk meningkatkan berat badan secara sehat:</p>
                     <ul>
                         <li>Tingkatkan asupan kalori dengan makanan bergizi</li>
                         <li>Konsumsi makanan tinggi protein seperti daging, telur, dan kacang-kacangan</li>
                         <li>Lakukan latihan kekuatan untuk membangun massa otot</li>
-                        <li>Makan lebih sering dengan porsi kecil</li>
+                        <li>Makan lebih sering dengan porsi kecil (5-6 kali sehari)</li>
+                        <li>Tambahkan camilan sehat seperti kacang, buah, atau yoghurt</li>
                         <li>Konsultasikan dengan ahli gizi untuk rencana makan yang tepat</li>
                     </ul>
                 `,
@@ -353,20 +1004,21 @@
                     <p>Rekomendasi untuk menjaga berat badan sehat:</p>
                     <ul>
                         <li>Pertahankan pola makan seimbang dengan gizi lengkap</li>
-                        <li>Lakukan aktivitas fisik rutin minimal 30 menit per hari</li>
+                        <li>Lakukan aktivitas fisik rutin minimal 150 menit per minggu</li>
                         <li>Perbanyak konsumsi buah, sayuran, dan biji-bijian utuh</li>
                         <li>Batasi makanan tinggi gula, garam, dan lemak jenuh</li>
-                        <li>Monitor berat badan secara berkala</li>
+                        <li>Monitor berat badan secara berkala (sekali seminggu)</li>
+                        <li>Minum air putih minimal 8 gelas per hari</li>
                     </ul>
                 `,
                 overweight: `
-                    <p><strong>Anda berada dalam kategori Overweight.</strong></p>
+                    <p><strong>Anda berada dalam kategori Overweight (Kelebihan Berat Badan).</strong></p>
                     <p>Rekomendasi untuk menurunkan berat badan secara sehat:</p>
                     <ul>
-                        <li>Kurangi asupan kalori harian secara bertahap</li>
-                        <li>Perbanyak aktivitas fisik seperti jalan cepat, bersepeda, atau berenang</li>
-                        <li>Batasi makanan cepat saji dan minuman manis</li>
-                        <li>Tingkatkan konsumsi serat dari sayuran dan buah</li>
+                        <li>Kurangi asupan kalori harian sebanyak 500-750 kkal</li>
+                        <li>Perbanyak aktivitas fisik seperti jalan cepat, bersepeda, atau berenang minimal 30 menit per hari</li>
+                        <li>Batasi makanan cepat saji, minuman manis, dan makanan tinggi lemak</li>
+                        <li>Tingkatkan konsumsi serat dari sayuran dan buah-buahan</li>
                         <li>Atur pola makan dengan porsi kecil tetapi sering</li>
                         <li>Konsultasikan dengan tenaga kesehatan untuk program penurunan berat badan yang aman</li>
                     </ul>
@@ -377,50 +1029,272 @@
                     <ul>
                         <li>Segera konsultasikan dengan dokter untuk evaluasi kesehatan menyeluruh</li>
                         <li>Mulai program penurunan berat badan dengan pengawasan tenaga kesehatan</li>
-                        <li>Tingkatkan aktivitas fisik secara bertahap sesuai kemampuan</li>
+                        <li>Tingkatkan aktivitas fisik secara bertahap sesuai kemampuan, targetkan 300 menit per minggu</li>
                         <li>Terapkan pola makan sehat dengan kontrol kalori yang ketat</li>
                         <li>Pantau tekanan darah, gula darah, dan kolesterol secara rutin</li>
                         <li>Pertimbangkan konsultasi dengan ahli gizi untuk rencana makan personal</li>
+                        <li>Cari dukungan dari keluarga atau kelompok untuk motivasi</li>
                     </ul>
                 `
             };
             
-            // Fungsi untuk menghitung IMT
-            function calculateIMT() {
-                const height = parseFloat(heightInput.value);
-                const weight = parseFloat(weightInput.value);
+            // Fungsi untuk rekomendasi JNC 8 berdasarkan kategori hipertensi
+            function getJNCTreatmentRecommendation(bpCategory, age, conditions) {
+                let html = '';
                 
-                // Validasi input
-                if (!height || !weight || height <= 0 || weight <= 0) {
-                    alert("Masukkan tinggi dan berat badan yang valid!");
+                // Reset highlight pada tabel
+                document.querySelectorAll('.reference-table tr').forEach(row => {
+                    row.classList.remove('highlight');
+                });
+                
+                // Tentukan rekomendasi berdasarkan kategori tekanan darah
+                switch(bpCategory.class) {
+                    case 'bp-normal':
+                        html = `
+                            <div class="treatment-card">
+                                <div class="treatment-title">Tekanan Darah Normal</div>
+                                <p><strong>Rekomendasi:</strong> Tekanan darah Anda dalam rentang normal.</p>
+                                <p><strong>Pencegahan:</strong></p>
+                                <ul>
+                                    <li>Pertahankan gaya hidup sehat</li>
+                                    <li>Monitor tekanan darah secara berkala (setiap 6-12 bulan)</li>
+                                    <li>Terapkan diet rendah garam dan tinggi serat</li>
+                                    <li>Lakukan aktivitas fisik rutin</li>
+                                </ul>
+                            </div>
+                        `;
+                        break;
+                        
+                    case 'bp-prehypertension':
+                        html = `
+                            <div class="treatment-card">
+                                <div class="treatment-title">Prehipertensi</div>
+                                <p><strong>Rekomendasi:</strong> Perubahan gaya hidup tanpa terapi farmakologi.</p>
+                                <p><strong>Intervensi non-farmakologi:</strong></p>
+                                <ul>
+                                    <li>Modifikasi diet (DASH diet)</li>
+                                    <li>Pembatasan garam (< 2.4 g natrium/hari)</li>
+                                    <li>Aktivitas fisik aerobik 150 menit/minggu</li>
+                                    <li>Manajemen berat badan jika perlu</li>
+                                    <li>Batasi konsumsi alkohol</li>
+                                    <li>Berhenti merokok</li>
+                                </ul>
+                                <p><strong>Pemantauan:</strong> Periksa tekanan darah dalam 3-6 bulan.</p>
+                                <p><strong>Target:</strong> Cegah perkembangan menjadi hipertensi.</p>
+                            </div>
+                        `;
+                        break;
+                        
+                    case 'bp-stage1':
+                        // Tentukan apakah perlu pengobatan berdasarkan JNC 8
+                        // Untuk Stage 1, gunakan threshold 140/90 untuk usia <60 dan diabetes/CKD
+                        // Untuk usia ≥60, gunakan threshold 150/90
+                        const needsTreatmentStage1 = (age >= 60 && (bpCategory.systolic.max >= 150 || bpCategory.diastolic.max >= 90)) ||
+                                                    (age < 60 && (bpCategory.systolic.max >= 140 || bpCategory.diastolic.max >= 90)) ||
+                                                    (conditions !== 'none' && (bpCategory.systolic.max >= 140 || bpCategory.diastolic.max >= 90));
+                        
+                        if (needsTreatmentStage1) {
+                            let targetGroup = '';
+                            let medicationOptions = '';
+                            
+                            if (conditions === 'ckd' || conditions === 'both') {
+                                targetGroup = 'Pasien dengan CKD';
+                                medicationOptions = 'ACE inhibitor atau ARB direkomendasikan sebagai terapi awal';
+                                document.getElementById('row-diabetes-ckd').classList.add('highlight');
+                            } else if (age >= 60) {
+                                targetGroup = 'Usia ≥ 60 tahun';
+                                medicationOptions = 'Diuretik thiazide, CCB, ACE inhibitor, atau ARB';
+                                document.getElementById('row-general-old').classList.add('highlight');
+                            } else {
+                                targetGroup = 'Usia < 60 tahun';
+                                medicationOptions = 'Diuretik thiazide, CCB, ACE inhibitor, atau ARB';
+                                document.getElementById('row-general-young').classList.add('highlight');
+                            }
+                            
+                            html = `
+                                <div class="treatment-card">
+                                    <div class="treatment-title">Hipertensi Tahap 1 - Perlu Terapi Farmakologi</div>
+                                    <p><strong>Status:</strong> Memenuhi kriteria untuk memulai terapi farmakologi</p>
+                                    <p><strong>Kelompok:</strong> ${targetGroup}</p>
+                                    <p><strong>Pilihan Pengobatan Awal:</strong></p>
+                                    <div class="medication-list">
+                                        <span class="medication-item ${conditions === 'ckd' || conditions === 'both' ? 'highlight' : ''}">Diuretik Thiazide</span>
+                                        <span class="medication-item ${conditions === 'ckd' || conditions === 'both' ? 'highlight' : ''}">Calcium Channel Blocker</span>
+                                        <span class="medication-item ${conditions === 'ckd' || conditions === 'both' ? 'highlight' : ''}">ACE Inhibitor</span>
+                                        <span class="medication-item ${conditions === 'ckd' || conditions === 'both' ? 'highlight' : ''}">ARB</span>
+                                    </div>
+                                    <p><strong>Rekomendasi Khusus:</strong> ${medicationOptions}</p>
+                                    <p><strong>Pemantauan:</strong> Jika target tidak tercapai dalam 1 bulan, tingkatkan dosis atau tambah obat kedua.</p>
+                                    <p><strong>Peringatan:</strong> Jangan kombinasikan ACE inhibitor dengan ARB.</p>
+                                </div>
+                            `;
+                        } else {
+                            html = `
+                                <div class="treatment-card">
+                                    <div class="treatment-title">Hipertensi Tahap 1 - Terapi Non-Farmakologi</div>
+                                    <p><strong>Rekomendasi:</strong> Modifikasi gaya hidup selama 3-6 bulan sebelum mempertimbangkan terapi farmakologi.</p>
+                                    <p><strong>Intervensi:</strong></p>
+                                <ul>
+                                    <li>Diet rendah garam dan lemak jenuh</li>
+                                    <li>Latihan fisik teratur (minimal 30 menit/hari)</li>
+                                    <li>Penurunan berat badan jika overweight/obesitas</li>
+                                    <li>Manajemen stres</li>
+                                    <li>Pemantauan tekanan darah mingguan</li>
+                                    <li>Batasi konsumsi alkohol dan berhenti merokok</li>
+                                </ul>
+                            </div>
+                            `;
+                        }
+                        break;
+                        
+                    case 'bp-stage2':
+                        let targetGroupStage2 = '';
+                        let medicationOptionsStage2 = '';
+                        
+                        if (conditions === 'ckd' || conditions === 'both') {
+                            targetGroupStage2 = 'Pasien dengan CKD';
+                            medicationOptionsStage2 = 'Mulai dengan ACE inhibitor atau ARB + diuretik thiazide atau CCB';
+                            document.getElementById('row-diabetes-ckd').classList.add('highlight');
+                        } else if (age >= 60) {
+                            targetGroupStage2 = 'Usia ≥ 60 tahun';
+                            medicationOptionsStage2 = 'Mulai dengan 2 obat: diuretik thiazide + CCB, ACE inhibitor, atau ARB';
+                            document.getElementById('row-general-old').classList.add('highlight');
+                        } else {
+                            targetGroupStage2 = 'Usia < 60 tahun';
+                            medicationOptionsStage2 = 'Mulai dengan 2 obat: diuretik thiazide + CCB, ACE inhibitor, atau ARB';
+                            document.getElementById('row-general-young').classList.add('highlight');
+                        }
+                        
+                        html = `
+                            <div class="treatment-card">
+                                <div class="treatment-title">Hipertensi Tahap 2 - Terapi Kombinasi</div>
+                                <p><strong>Status:</strong> Segera memulai terapi farmakologi kombinasi</p>
+                                <p><strong>Kelompok:</strong> ${targetGroupStage2}</p>
+                                <p><strong>Strategi Pengobatan:</strong> Mulai dengan kombinasi 2 obat dari kelas yang berbeda</p>
+                                <p><strong>Kombinasi yang Direkomendasikan:</strong></p>
+                                <div class="medication-list">
+                                    <span class="medication-item">Diuretik Thiazide + CCB</span>
+                                    <span class="medication-item">Diuretik Thiazide + ACE Inhibitor</span>
+                                    <span class="medication-item">Diuretik Thiazide + ARB</span>
+                                    <span class="medication-item ${conditions === 'ckd' || conditions === 'both' ? 'highlight' : ''}">ACE Inhibitor + Diuretik</span>
+                                    <span class="medication-item ${conditions === 'ckd' || conditions === 'both' ? 'highlight' : ''}">ARB + Diuretik</span>
+                                </div>
+                                <p><strong>Rekomendasi Khusus:</strong> ${medicationOptionsStage2}</p>
+                                <p><strong>Target Waktu:</strong> Capai target tekanan darah dalam 1 bulan</p>
+                                <p><strong>Pemantauan:</strong> Evaluasi dalam 2-4 minggu, tambah obat ketiga jika diperlukan</p>
+                                <p><strong>Peringatan:</strong> Jangan kombinasikan ACE inhibitor dengan ARB.</p>
+                            </div>
+                        `;
+                        break;
+                        
+                    case 'bp-hypertensive-crisis':
+                        html = `
+                            <div class="treatment-card urgent">
+                                <div class="treatment-title">KRISIS HIPERTENSI - DARURAT MEDIS</div>
+                                <p><strong>Status:</strong> Kondisi darurat yang memerlukan penanganan segera!</p>
+                                <p><strong>Tindakan Segera:</strong></p>
+                                <ul>
+                                    <li>Segera ke instalasi gawat darurat (IGD) terdekat</li>
+                                    <li>Pasien memerlukan monitoring ketat dan penurunan tekanan darah bertahap</li>
+                                    <li>Jangan mengubah atau menambah dosis obat sendiri</li>
+                                    <li>Hindari aktivitas fisik berat</li>
+                                </ul>
+                                <p><strong>Pengobatan di Rumah Sakit:</strong></p>
+                                <ul>
+                                    <li>Obat intravena: Nicardipine, Labetalol, Nitroprusside</li>
+                                    <li>Monitoring tekanan darah setiap 5-15 menit</li>
+                                    <li>Evaluasi kerusakan organ target (otak, jantung, ginjal)</li>
+                                    <li>Penurunan tekanan darah bertahap (25% dalam 1 jam pertama)</li>
+                                </ul>
+                                <p><strong>Peringatan:</strong> Tanpa penanganan segera, krisis hipertensi dapat menyebabkan stroke, serangan jantung, atau kerusakan ginjal permanen.</p>
+                            </div>
+                        `;
+                        break;
+                }
+                
+                return html;
+            }
+            
+            // Fungsi utama untuk analisis kesehatan
+            function analyzeHealth() {
+                const age = parseFloat(document.getElementById('age').value);
+                const gender = document.getElementById('gender').value;
+                const height = parseFloat(document.getElementById('height').value);
+                const weight = parseFloat(document.getElementById('weight').value);
+                const systolic = parseFloat(document.getElementById('systolic').value);
+                const diastolic = parseFloat(document.getElementById('diastolic').value);
+                const conditions = document.getElementById('conditions').value;
+                
+                // Validasi input dasar
+                if (!age || !gender || !height || !weight || !systolic || !diastolic) {
+                    alert("Harap lengkapi semua data yang diperlukan!");
                     return;
                 }
                 
-                // Hitung IMT: berat (kg) / (tinggi (m) * tinggi (m))
-                const heightInMeter = height / 100;
-                const imt = weight / (heightInMeter * heightInMeter);
+                // Validasi rentang nilai
+                if (age < 18 || age > 120) {
+                    alert("Masukkan usia antara 18-120 tahun!");
+                    return;
+                }
                 
-                // Tampilkan hasil dengan 1 desimal
+                if (height < 50 || height > 250) {
+                    alert("Masukkan tinggi badan antara 50-250 cm!");
+                    return;
+                }
+                
+                if (weight < 10 || weight > 300) {
+                    alert("Masukkan berat badan antara 10-300 kg!");
+                    return;
+                }
+                
+                if (systolic < 50 || systolic > 300) {
+                    alert("Masukkan tekanan sistolik antara 50-300 mmHg!");
+                    return;
+                }
+                
+                if (diastolic < 30 || diastolic > 200) {
+                    alert("Masukkan tekanan diastolik antara 30-200 mmHg!");
+                    return;
+                }
+                
+                // 1. Hitung dan tampilkan IMT
+                const imt = calculateIMT(height, weight);
                 imtValue.textContent = imt.toFixed(1);
                 
                 // Tentukan kategori IMT
-                let categoryName = "";
-                let categoryClass = "";
+                let imtCategoryName = "";
+                let imtCategoryClass = "";
+                let currentCategory = null;
                 
                 for (const category of imtCategories) {
                     if (imt < category.max) {
-                        categoryName = category.category;
-                        categoryClass = category.class;
+                        imtCategoryName = category.category;
+                        imtCategoryClass = category.class;
+                        currentCategory = category;
                         break;
                     }
                 }
                 
-                // Tampilkan kategori
-                imtCategory.textContent = categoryName;
-                imtCategory.className = `imt-category ${categoryClass}`;
+                imtCategory.textContent = imtCategoryName;
+                imtCategory.className = `imt-category ${imtCategoryClass}`;
                 
-                // Tampilkan rekomendasi
-                recommendationContent.innerHTML = recommendations[categoryClass];
+                // 2. Tampilkan target berat badan
+                const weightTargetInfo = getWeightTargetInfo(height, weight, imt, currentCategory);
+                weightTargetContent.innerHTML = weightTargetInfo;
+                
+                // 3. Tampilkan rekomendasi IMT
+                recommendationContent.innerHTML = recommendations[imtCategoryClass];
+                
+                // 4. Analisis tekanan darah
+                bpValue.textContent = `${systolic}/${diastolic} mmHg`;
+                
+                const bpCat = getBPCategory(systolic, diastolic);
+                bpCategory.textContent = bpCat.category;
+                bpCategory.className = `blood-pressure-category ${bpCat.class}`;
+                
+                // 5. Rekomendasi JNC 8 berdasarkan kategori hipertensi
+                const jncTreatment = getJNCTreatmentRecommendation(bpCat, age, conditions);
+                treatmentRecommendation.innerHTML = jncTreatment;
                 
                 // Tampilkan bagian hasil
                 resultSection.classList.add('active');
@@ -430,20 +1304,14 @@
             }
             
             // Event listener untuk tombol hitung
-            calculateBtn.addEventListener('click', calculateIMT);
+            calculateBtn.addEventListener('click', analyzeHealth);
             
             // Event listener untuk menekan Enter pada input
-            heightInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') calculateIMT();
+            document.querySelectorAll('input, select').forEach(element => {
+                element.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') analyzeHealth();
+                });
             });
-            
-            weightInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') calculateIMT();
-            });
-            
-            // Contoh data untuk demonstrasi
-            heightInput.value = "170";
-            weightInput.value = "70";
         });
     </script>
 </body>
