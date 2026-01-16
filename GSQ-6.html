@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alat Skrining Tidur Lansia - GSQ-6</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            background-image: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1a6dbb 0%, #2c8bd8 100%);
+            color: white;
+            padding: 25px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+        
+        .logo {
+            height: 80px;
+            width: auto;
+            object-fit: contain;
+            background-color: white;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-text {
+            flex-grow: 1;
+        }
+        
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        .content {
+            padding: 40px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+        
+        @media (max-width: 900px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .question-section, .results-section {
+            background-color: #f9fbfd;
+            padding: 30px;
+            border-radius: 12px;
+            border-left: 5px solid #2c8bd8;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+        }
+        
+        .section-title {
+            color: #1a6dbb;
+            margin-bottom: 25px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #eaeff5;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title i {
+            color: #2c8bd8;
+        }
+        
+        .instructions {
+            background-color: #eef7ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #2c8bd8;
+            font-size: 15px;
+        }
+        
+        .instructions p {
+            margin-bottom: 10px;
+        }
+        
+        .instructions ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+        
+        .question {
+            margin-bottom: 30px;
+            padding-bottom: 25px;
+            border-bottom: 1px dashed #ddd;
+        }
+        
+        .question:last-child {
+            border-bottom: none;
+        }
+        
+        .question-text {
+            font-size: 17px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            background-color: white;
+            border: 2px solid #e0e6ed;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .option:hover {
+            border-color: #a8c6e0;
+            background-color: #f5f9ff;
+        }
+        
+        .option.selected {
+            border-color: #2c8bd8;
+            background-color: #eef7ff;
+        }
+        
+        .option input {
+            margin-right: 12px;
+            transform: scale(1.2);
+        }
+        
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #2c8bd8 0%, #1a6dbb 100%);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(44, 139, 216, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(44, 139, 216, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .results-section {
+            display: none;
+        }
+        
+        .score-display {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f0f8ff 0%, #e4f1ff 100%);
+            border-radius: 10px;
+            border: 2px solid #d1e7ff;
+        }
+        
+        .score-value {
+            font-size: 48px;
+            font-weight: 700;
+            color: #1a6dbb;
+            margin: 10px 0;
+        }
+        
+        .score-label {
+            font-size: 20px;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .interpretation {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+        }
+        
+        .interpretation h3 {
+            color: #1a6dbb;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        
+        .recommendations {
+            background-color: #fff9e6;
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .recommendations h3 {
+            color: #d4a017;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        
+        .recommendations ul {
+            margin-left: 20px;
+        }
+        
+        .recommendations li {
+            margin-bottom: 10px;
+        }
+        
+        .reset-btn {
+            background-color: #f8f9fa;
+            color: #1a6dbb;
+            border: 2px solid #1a6dbb;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            margin-top: 20px;
+            display: inline-block;
+        }
+        
+        .reset-btn:hover {
+            background-color: #1a6dbb;
+            color: white;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 25px 40px;
+            background-color: #f1f5f9;
+            color: #4a5568;
+            border-top: 1px solid #e2e8f0;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+        
+        .developer {
+            color: #1a6dbb;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+        
+        .copyright {
+            margin-top: 10px;
+            font-size: 13px;
+            opacity: 0.8;
+        }
+        
+        .alert {
+            display: none;
+            background-color: #ffeaa7;
+            color: #d63031;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #d63031;
+            font-weight: 500;
+        }
+        
+        .question-counter {
+            background-color: #eef7ff;
+            color: #1a6dbb;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+            
+            .logo-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .content {
+                padding: 20px;
+                gap: 25px;
+            }
+            
+            .question-section, .results-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <img src="KKLP.jpg" alt="Logo KKLP" class="logo">
+                <img src="fkuph.jpg" alt="Logo FK UPH" class="logo">
+            </div>
+            <div class="header-text">
+                <h1>Alat Skrining Tidur Lansia - GSQ-6</h1>
+                <p class="subtitle">Geriatric Sleep Questionnaire-6 | Alat evaluasi kualitas tidur pada lanjut usia</p>
+            </div>
+        </header>
+        
+        <div class="content">
+            <div class="question-section">
+                <div class="section-title">
+                    <i class="fas fa-bed"></i> Kuesioner Skrining
+                </div>
+                
+                <div class="instructions">
+                    <p><strong>Petunjuk Pengisian:</strong></p>
+                    <p>Berikut adalah beberapa pertanyaan mengenai kualitas tidur Anda dalam 1 bulan terakhir. Mohon jawab setiap pertanyaan dengan memilih satu jawaban yang paling sesuai dengan kondisi Anda.</p>
+                    <ul>
+                        <li>Pilih satu jawaban untuk setiap pertanyaan</li>
+                        <li>Jawab sesuai dengan pengalaman Anda selama 1 bulan terakhir</li>
+                        <li>Setelah semua pertanyaan dijawab, klik tombol "Hitung Skor"</li>
+                    </ul>
+                </div>
+                
+                <div class="alert" id="alert-message">
+                    <i class="fas fa-exclamation-circle"></i> Harap jawab semua pertanyaan sebelum menghitung skor.
+                </div>
+                
+                <div id="questions-container">
+                    <!-- Pertanyaan akan dimasukkan melalui JavaScript -->
+                </div>
+                
+                <div class="btn-container">
+                    <button class="btn" id="calculate-btn">
+                        <i class="fas fa-calculator"></i> Hitung Skor
+                    </button>
+                </div>
+            </div>
+            
+            <div class="results-section" id="results-section">
+                <div class="section-title">
+                    <i class="fas fa-chart-bar"></i> Hasil Skrining & Interpretasi
+                </div>
+                
+                <div class="score-display">
+                    <div class="score-label">Skor GSQ-6 Anda</div>
+                    <div class="score-value" id="score-value">0</div>
+                    <div class="score-label" id="score-category"></div>
+                </div>
+                
+                <div class="interpretation">
+                    <h3><i class="fas fa-info-circle"></i> Interpretasi Skor</h3>
+                    <p id="interpretation-text">Interpretasi akan muncul di sini setelah perhitungan skor.</p>
+                </div>
+                
+                <div class="recommendations">
+                    <h3><i class="fas fa-lightbulb"></i> Rekomendasi</h3>
+                    <div id="recommendations-text">
+                        Rekomendasi akan muncul di sini setelah perhitungan skor.
+                    </div>
+                </div>
+                
+                <div class="btn-container">
+                    <button class="reset-btn" id="reset-btn">
+                        <i class="fas fa-redo"></i> Isi Ulang Kuesioner
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p><strong>Dikembangkan Oleh Prodi PPDS KKLP FK UPH - dr Hendrik</strong></p>
+            <p class="developer">Program Pendidikan Dokter Spesialis Kedokteran Keluarga Layanan Primer</p>
+            <p>Fakultas Kedokteran Universitas Pelita Harapan</p>
+            <p class="copyright">© 2025 - Program Studi Spesialis Kedokteran Primer FK UPH</p>
+        </footer>
+    </div>
+
+    <script>
+        // Data pertanyaan GSQ-6 dalam bahasa Indonesia
+        const questions = [
+            {
+                id: 1,
+                text: "Apakah Anda mengalami kesulitan untuk memulai tidur (sulit tidur) pada malam hari?",
+                options: [
+                    { value: 0, text: "Tidak pernah" },
+                    { value: 1, text: "Kadang-kadang (1-2 kali/minggu)" },
+                    { value: 2, text: "Sering (3-4 kali/minggu)" },
+                    { value: 3, text: "Selalu (≥5 kali/minggu)" }
+                ]
+            },
+            {
+                id: 2,
+                text: "Apakah Anda terbangun di malam hari dan sulit untuk tidur kembali?",
+                options: [
+                    { value: 0, text: "Tidak pernah" },
+                    { value: 1, text: "Kadang-kadang (1-2 kali/minggu)" },
+                    { value: 2, text: "Sering (3-4 kali/minggu)" },
+                    { value: 3, text: "Selalu (≥5 kali/minggu)" }
+                ]
+            },
+            {
+                id: 3,
+                text: "Apakah Anda terbangun terlalu pagi dan tidak bisa tidur kembali?",
+                options: [
+                    { value: 0, text: "Tidak pernah" },
+                    { value: 1, text: "Kadang-kadang (1-2 kali/minggu)" },
+                    { value: 2, text: "Sering (3-4 kali/minggu)" },
+                    { value: 3, text: "Selalu (≥5 kali/minggu)" }
+                ]
+            },
+            {
+                id: 4,
+                text: "Apakah Anda merasa kurang segar/bugar setelah bangun tidur?",
+                options: [
+                    { value: 0, text: "Tidak pernah" },
+                    { value: 1, text: "Kadang-kadang (1-2 kali/minggu)" },
+                    { value: 2, text: "Sering (3-4 kali/minggu)" },
+                    { value: 3, text: "Selalu (≥5 kali/minggu)" }
+                ]
+            },
+            {
+                id: 5,
+                text: "Apakah Anda merasa mengantuk berlebihan di siang hari?",
+                options: [
+                    { value: 0, text: "Tidak pernah" },
+                    { value: 1, text: "Kadang-kadang (1-2 kali/minggu)" },
+                    { value: 2, text: "Sering (3-4 kali/minggu)" },
+                    { value: 3, text: "Selalu (≥5 kali/minggu)" }
+                ]
+            },
+            {
+                id: 6,
+                text: "Apakah Anda merasa tidak puas dengan kualitas tidur Anda?",
+                options: [
+                    { value: 0, text: "Tidak pernah" },
+                    { value: 1, text: "Kadang-kadang (1-2 kali/minggu)" },
+                    { value: 2, text: "Sering (3-4 kali/minggu)" },
+                    { value: 3, text: "Selalu (≥5 kali/minggu)" }
+                ]
+            }
+        ];
+
+        // Data interpretasi berdasarkan skor
+        const interpretations = [
+            {
+                minScore: 0,
+                maxScore: 3,
+                category: "Kualitas Tidur Baik",
+                description: "Hasil skrining menunjukkan kualitas tidur Anda dalam kategori baik. Anda tidak mengalami gangguan tidur yang signifikan berdasarkan parameter GSQ-6.",
+                color: "#27ae60"
+            },
+            {
+                minScore: 4,
+                maxScore: 8,
+                category: "Gangguan Tidur Ringan",
+                description: "Hasil skrining menunjukkan adanya gangguan tidur ringan. Beberapa masalah tidur mungkin mulai muncul namun belum mengganggu fungsi sehari-hari secara signifikan.",
+                color: "#f39c12"
+            },
+            {
+                minScore: 9,
+                maxScore: 18,
+                category: "Gangguan Tidur Sedang-Berat",
+                description: "Hasil skrining menunjukkan adanya gangguan tidur sedang hingga berat. Gangguan tidur yang dialami mungkin sudah mempengaruhi kualitas hidup dan memerlukan perhatian lebih lanjut.",
+                color: "#e74c3c"
+            }
+        ];
+
+        // Data rekomendasi berdasarkan kategori skor
+        const recommendations = {
+            good: [
+                "Pertahankan kebiasaan tidur yang baik dan jadwal tidur yang teratur",
+                "Lakukan aktivitas fisik secara teratur di siang hari",
+                "Hindari konsumsi kafein, alkohol, dan makanan berat sebelum tidur",
+                "Ciptakan lingkungan tidur yang nyaman, gelap, dan tenang",
+                "Batasi paparan layar elektronik 1-2 jam sebelum waktu tidur"
+            ],
+            mild: [
+                "Evaluasi rutinitas sebelum tidur dan buat jadwal tidur yang konsisten",
+                "Lakukan teknik relaksasi seperti pernapasan dalam atau meditasi sebelum tidur",
+                "Batasi waktu tidur siang maksimal 30 menit dan tidak setelah jam 3 sore",
+                "Hindari konsumsi cairan berlebihan sebelum tidur untuk mengurangi bangun ke toilet",
+                "Pertimbangkan konsultasi dengan dokter jika keluhan berlanjut setelah 2 minggu"
+            ],
+            severe: [
+                "Segera konsultasikan hasil ini dengan dokter atau tenaga kesehatan",
+                "Pertimbangkan untuk menjalani pemeriksaan lebih lanjut seperti polisomnografi",
+                "Dokter mungkin merekomendasikan terapi perilaku kognitif untuk insomnia (CBT-I)",
+                "Evaluasi penggunaan obat-obatan yang mungkin mempengaruhi kualitas tidur",
+                "Pertimbangkan rujukan ke spesialis tidur jika diperlukan"
+            ]
+        };
+
+        // Inisialisasi aplikasi
+        document.addEventListener('DOMContentLoaded', function() {
+            const questionsContainer = document.getElementById('questions-container');
+            const calculateBtn = document.getElementById('calculate-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            const resultsSection = document.getElementById('results-section');
+            const questionSection = document.querySelector('.question-section');
+            const alertMessage = document.getElementById('alert-message');
+            
+            // Render pertanyaan
+            questions.forEach((question, index) => {
+                const questionElement = document.createElement('div');
+                questionElement.className = 'question';
+                
+                questionElement.innerHTML = `
+                    <div class="question-counter">Pertanyaan ${index + 1} dari ${questions.length}</div>
+                    <div class="question-text">${question.text}</div>
+                    <div class="options" id="options-${question.id}">
+                        ${question.options.map(option => `
+                            <label class="option">
+                                <input type="radio" name="question-${question.id}" value="${option.value}">
+                                <span>${option.text}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                `;
+                
+                questionsContainer.appendChild(questionElement);
+                
+                // Tambahkan event listener untuk pilihan
+                const optionElements = questionElement.querySelectorAll('.option');
+                optionElements.forEach(option => {
+                    const radio = option.querySelector('input');
+                    option.addEventListener('click', () => {
+                        // Hapus kelas selected dari semua pilihan dalam pertanyaan ini
+                        optionElements.forEach(opt => opt.classList.remove('selected'));
+                        // Tambahkan kelas selected ke pilihan yang dipilih
+                        option.classList.add('selected');
+                        // Set radio button sebagai checked
+                        radio.checked = true;
+                    });
+                });
+            });
+            
+            // Event listener untuk tombol hitung skor
+            calculateBtn.addEventListener('click', function() {
+                let allAnswered = true;
+                let totalScore = 0;
+                
+                // Periksa apakah semua pertanyaan telah dijawab
+                questions.forEach(question => {
+                    const selectedOption = document.querySelector(`input[name="question-${question.id}"]:checked`);
+                    if (!selectedOption) {
+                        allAnswered = false;
+                    } else {
+                        totalScore += parseInt(selectedOption.value);
+                    }
+                });
+                
+                if (!allAnswered) {
+                    alertMessage.style.display = 'block';
+                    setTimeout(() => {
+                        alertMessage.style.display = 'none';
+                    }, 5000);
+                    return;
+                }
+                
+                // Tampilkan hasil
+                displayResults(totalScore);
+                
+                // Tampilkan bagian hasil, sembunyikan bagian pertanyaan
+                questionSection.style.display = 'none';
+                resultsSection.style.display = 'block';
+                
+                // Scroll ke bagian hasil
+                resultsSection.scrollIntoView({ behavior: 'smooth' });
+            });
+            
+            // Event listener untuk tombol reset
+            resetBtn.addEventListener('click', function() {
+                // Reset semua pilihan
+                document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                    radio.checked = false;
+                });
+                
+                // Reset kelas selected
+                document.querySelectorAll('.option').forEach(option => {
+                    option.classList.remove('selected');
+                });
+                
+                // Tampilkan bagian pertanyaan, sembunyikan bagian hasil
+                questionSection.style.display = 'block';
+                resultsSection.style.display = 'none';
+                
+                // Scroll ke bagian atas
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+            
+            // Fungsi untuk menampilkan hasil
+            function displayResults(score) {
+                // Update skor
+                document.getElementById('score-value').textContent = score;
+                
+                // Tentukan interpretasi berdasarkan skor
+                let interpretation = interpretations[0]; // Default
+                for (const interp of interpretations) {
+                    if (score >= interp.minScore && score <= interp.maxScore) {
+                        interpretation = interp;
+                        break;
+                    }
+                }
+                
+                // Update kategori skor
+                document.getElementById('score-category').textContent = interpretation.category;
+                document.getElementById('score-category').style.color = interpretation.color;
+                
+                // Update interpretasi
+                document.getElementById('interpretation-text').innerHTML = `
+                    <p><strong>${interpretation.category}</strong></p>
+                    <p>${interpretation.description}</p>
+                    <p>Skor GSQ-6 Anda adalah <strong>${score}</strong> dari skor maksimal 18.</p>
+                `;
+                
+                // Tentukan rekomendasi berdasarkan kategori
+                let recs = [];
+                if (score <= 3) {
+                    recs = recommendations.good;
+                } else if (score <= 8) {
+                    recs = recommendations.mild;
+                } else {
+                    recs = recommendations.severe;
+                }
+                
+                // Update rekomendasi
+                const recommendationsHTML = recs.map(rec => `<li>${rec}</li>`).join('');
+                document.getElementById('recommendations-text').innerHTML = `
+                    <ul>${recommendationsHTML}</ul>
+                    <p style="margin-top: 15px; font-style: italic;">Rekomendasi ini bersifat umum. Konsultasikan dengan tenaga kesehatan untuk penanganan yang sesuai dengan kondisi Anda.</p>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alat Skrining Instabilitas Lansia</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, #2c7873 0%, #5ba19d 100%);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+        
+        .logo {
+            height: 80px;
+            width: auto;
+            object-fit: contain;
+        }
+        
+        .title-section {
+            text-align: center;
+            flex-grow: 1;
+        }
+        
+        .title-section h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        .title-section p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .sidebar {
+            flex: 0 0 300px;
+            background-color: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .content {
+            flex: 1;
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .section-title {
+            color: #2c7873;
+            border-bottom: 2px solid #e0f2f1;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 22px;
+            font-weight: 600;
+        }
+        
+        .patient-type-selector {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .patient-type-btn {
+            padding: 18px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: white;
+        }
+        
+        .outpatient-btn {
+            background-color: #5ba19d;
+        }
+        
+        .inpatient-btn {
+            background-color: #2c7873;
+        }
+        
+        .patient-type-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .patient-type-btn.active {
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5), 0 7px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .test-instruction {
+            background-color: #f0f7f7;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border-left: 5px solid #5ba19d;
+        }
+        
+        .test-instruction h3 {
+            color: #2c7873;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        
+        .test-instruction ol, .test-instruction ul {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .test-instruction li {
+            margin-bottom: 8px;
+        }
+        
+        .assessment-form {
+            margin-top: 25px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #5ba19d;
+        }
+        
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+        
+        .radio-option:hover {
+            background-color: #e9f5f5;
+        }
+        
+        .radio-option input {
+            width: 18px;
+            height: 18px;
+        }
+        
+        .score-display {
+            background: linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 25px;
+            text-align: center;
+            display: none;
+        }
+        
+        .score-value {
+            font-size: 48px;
+            font-weight: 700;
+            color: #2c7873;
+            margin: 10px 0;
+        }
+        
+        .interpretation {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 25px;
+            display: none;
+        }
+        
+        .interpretation h3 {
+            color: #2c7873;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        
+        .interpretation p {
+            margin-bottom: 15px;
+        }
+        
+        .btn {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-calculate {
+            background-color: #2c7873;
+            color: white;
+            width: 100%;
+            margin-top: 15px;
+        }
+        
+        .btn-calculate:hover {
+            background-color: #235c58;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 25px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            color: #555;
+            font-size: 15px;
+        }
+        
+        .developer {
+            margin-top: 15px;
+            font-weight: 600;
+            color: #2c7873;
+        }
+        
+        .copyright {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #777;
+        }
+        
+        @media (max-width: 992px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                flex: 1;
+            }
+            
+            .header {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+            
+            .logo-section {
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .logo-section {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .patient-type-btn {
+                font-size: 16px;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-section">
+                <img src="KKLP.jpg" alt="Logo KKLP" class="logo">
+                <img src="fkuph.jpg" alt="Logo FK UPH" class="logo">
+            </div>
+            <div class="title-section">
+                <h1>Alat Skrining Instabilitas pada Lansia</h1>
+                <p>Pilihan alat skrining berdasarkan jenis perawatan pasien</p>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="sidebar">
+                <h2 class="section-title">Pilihan Jenis Perawatan</h2>
+                <div class="patient-type-selector">
+                    <button class="patient-type-btn outpatient-btn active" id="outpatientBtn">
+                        <i class="fas fa-user-md"></i> Pasien Rawat Jalan
+                    </button>
+                    <button class="patient-type-btn inpatient-btn" id="inpatientBtn">
+                        <i class="fas fa-procedures"></i> Pasien Rawat Inap
+                    </button>
+                </div>
+                
+                <div class="test-instruction">
+                    <h3 id="testTitle">Timed Up and Go (TUG) Test</h3>
+                    <div id="testInstructions">
+                        <p><strong>Petunjuk Pemeriksaan:</strong></p>
+                        <ol>
+                            <li>Siapkan kursi dengan sandaran yang kokoh</li>
+                            <li>Pasien duduk di kursi dengan punggung menempel pada sandaran</li>
+                            <li>Instruksikan pasien untuk berdiri, berjalan sejauh 3 meter, berbalik, berjalan kembali, dan duduk</li>
+                            <li>Catat waktu yang dibutuhkan sejak instruksi diberikan hingga pasien duduk kembali</li>
+                            <li>Lakukan pengukuran satu kali</li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <div class="score-display" id="scoreDisplay">
+                    <h3>Skor Hasil Pemeriksaan</h3>
+                    <div class="score-value" id="scoreValue">0</div>
+                    <p id="scoreLabel">Detik</p>
+                </div>
+            </div>
+            
+            <div class="content">
+                <h2 class="section-title">Formulir Penilaian</h2>
+                
+                <div id="outpatientForm">
+                    <div class="assessment-form">
+                        <div class="form-group">
+                            <label for="tugTime">Waktu yang dibutuhkan (detik)</label>
+                            <input type="number" id="tugTime" class="form-control" min="0" step="0.1" placeholder="Masukkan waktu dalam detik">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Apakah pasien menggunakan alat bantu berjalan?</label>
+                            <div class="radio-group">
+                                <label class="radio-option">
+                                    <input type="radio" name="walkingAid" value="0" checked> Tidak menggunakan alat bantu
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="walkingAid" value="1"> Menggunakan alat bantu (tongkat, walker, dll)
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Keseimbangan saat duduk dan berdiri</label>
+                            <div class="radio-group">
+                                <label class="radio-option">
+                                    <input type="radio" name="balance" value="0" checked> Stabil, tidak perlu menggunakan tangan
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="balance" value="1"> Tidak stabil, perlu menggunakan tangan
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="inpatientForm" style="display: none;">
+                    <div class="assessment-form">
+                        <div class="form-group">
+                            <label>Apakah pasien dapat berpindah dari tempat tidur ke kursi tanpa bantuan?</label>
+                            <div class="radio-group">
+                                <label class="radio-option">
+                                    <input type="radio" name="transfer" value="0"> Tidak, membutuhkan bantuan penuh
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="transfer" value="1"> Ya, dengan pengawasan atau bantuan minimal
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="transfer" value="2" checked> Ya, mandiri sepenuhnya
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Seberapa sering pasien berjalan dengan atau tanpa bantuan selama rawat inap?</label>
+                            <div class="radio-group">
+                                <label class="radio-option">
+                                    <input type="radio" name="walking" value="0"> Tidak pernah berjalan
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="walking" value="1"> Berjalan hanya dengan bantuan
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="walking" value="2" checked> Berjalan sendiri atau dengan bantuan minimal
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Bagaimana keseimbangan pasien saat duduk di tepi tempat tidur?</label>
+                            <div class="radio-group">
+                                <label class="radio-option">
+                                    <input type="radio" name="sittingBalance" value="0"> Tidak seimbang (miring, butuh dukungan)
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="sittingBalance" value="1"> Seimbang dengan bantuan minimal
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="sittingBalance" value="2" checked> Seimbang dengan baik dan stabil
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Apakah pasien pernah jatuh selama rawat inap?</label>
+                            <div class="radio-group">
+                                <label class="radio-option">
+                                    <input type="radio" name="falls" value="0" checked> Tidak pernah
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="falls" value="1"> Pernah, 1 kali
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="falls" value="2"> Pernah, lebih dari 1 kali
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Status mental pasien (orientasi, mengikuti instruksi)</label>
+                            <div class="radio-group">
+                                <label class="radio-option">
+                                    <input type="radio" name="mentalStatus" value="0"> Terganggu (bingung, disorientasi)
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="mentalStatus" value="1" checked> Sebagian terganggu
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="mentalStatus" value="2"> Normal (orientasi baik, mengikuti instruksi)
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Penggunaan alat bantu berjalan</label>
+                            <div class="radio-group">
+                                <label class="radio-option">
+                                    <input type="radio" name="morseAid" value="0" checked> Tidak menggunakan alat bantu atau menggunakan furnitur sebagai penyangga
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="morseAid" value="1"> Menggunakan tongkat atau walker
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="morseAid" value="2"> Tidak menggunakan alat bantu atau berjalan dengan bantuan perawat
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn btn-calculate" id="calculateBtn">
+                    <i class="fas fa-calculator"></i> Hitung Skor dan Interpretasi
+                </button>
+                
+                <div class="interpretation" id="interpretation">
+                    <h3>Interpretasi Hasil & Rekomendasi</h3>
+                    <div id="interpretationContent">
+                        <!-- Konten interpretasi akan dimasukkan oleh JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Alat ini dikembangkan untuk membantu tenaga kesehatan dalam melakukan skrining risiko instabilitas dan jatuh pada pasien lansia.</p>
+            <p class="developer">Dikembangkan Oleh Prodi PPDS KKLP FK UPH - dr Hendrik</p>
+            <p class="copyright">© 2025 - Program Studi Spesialis Kedokteran Primer FK UPH</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const outpatientBtn = document.getElementById('outpatientBtn');
+            const inpatientBtn = document.getElementById('inpatientBtn');
+            const outpatientForm = document.getElementById('outpatientForm');
+            const inpatientForm = document.getElementById('inpatientForm');
+            const testTitle = document.getElementById('testTitle');
+            const testInstructions = document.getElementById('testInstructions');
+            const calculateBtn = document.getElementById('calculateBtn');
+            const scoreDisplay = document.getElementById('scoreDisplay');
+            const scoreValue = document.getElementById('scoreValue');
+            const scoreLabel = document.getElementById('scoreLabel');
+            const interpretation = document.getElementById('interpretation');
+            const interpretationContent = document.getElementById('interpretationContent');
+            
+            let currentTestType = 'outpatient';
+            
+            // Fungsi untuk mengganti jenis pasien
+            function switchPatientType(type) {
+                if (type === 'outpatient') {
+                    outpatientBtn.classList.add('active');
+                    inpatientBtn.classList.remove('active');
+                    outpatientForm.style.display = 'block';
+                    inpatientForm.style.display = 'none';
+                    testTitle.textContent = 'Timed Up and Go (TUG) Test';
+                    testInstructions.innerHTML = `
+                        <p><strong>Petunjuk Pemeriksaan:</strong></p>
+                        <ol>
+                            <li>Siapkan kursi dengan sandaran yang kokoh</li>
+                            <li>Pasien duduk di kursi dengan punggung menempel pada sandaran</li>
+                            <li>Instruksikan pasien untuk berdiri, berjalan sejauh 3 meter, berbalik, berjalan kembali, dan duduk</li>
+                            <li>Catat waktu yang dibutuhkan sejak instruksi diberikan hingga pasien duduk kembali</li>
+                            <li>Lakukan pengukuran satu kali</li>
+                        </ol>
+                    `;
+                    scoreLabel.textContent = 'Detik';
+                    currentTestType = 'outpatient';
+                } else {
+                    outpatientBtn.classList.remove('active');
+                    inpatientBtn.classList.add('active');
+                    outpatientForm.style.display = 'none';
+                    inpatientForm.style.display = 'block';
+                    testTitle.textContent = 'Skala Morse';
+                    testInstructions.innerHTML = `
+                        <p><strong>Petunjuk Pemeriksaan:</strong></p>
+                        <p>Skala Morse digunakan untuk menilai risiko jatuh pada pasien rawat inap. Penilaian dilakukan dengan mengobservasi dan menanyakan:</p>
+                        <ul>
+                            <li>Riwayat jatuh (dalam 3 bulan terakhir atau selama rawat inap)</li>
+                            <li>Diagnosis sekunder (penyakit penyerta)</li>
+                            <li>Penggunaan alat bantu ambulasi</li>
+                            <li>Terapi intravena/heparin lock</li>
+                            <li>Gaya berjalan</li>
+                            <li>Status mental</li>
+                        </ul>
+                    `;
+                    scoreLabel.textContent = 'Poin';
+                    currentTestType = 'inpatient';
+                }
+                
+                // Reset tampilan
+                scoreDisplay.style.display = 'none';
+                interpretation.style.display = 'none';
+            }
+            
+            // Event listener untuk tombol pilihan pasien
+            outpatientBtn.addEventListener('click', () => switchPatientType('outpatient'));
+            inpatientBtn.addEventListener('click', () => switchPatientType('inpatient'));
+            
+            // Fungsi untuk menghitung skor TUG (Outpatient)
+            function calculateTUGScore() {
+                const time = parseFloat(document.getElementById('tugTime').value);
+                if (!time || time <= 0) {
+                    alert('Masukkan waktu yang valid untuk TUG test');
+                    return null;
+                }
+                
+                let score = time;
+                
+                // Penambahan skor berdasarkan alat bantu
+                const walkingAid = document.querySelector('input[name="walkingAid"]:checked').value;
+                if (walkingAid === '1') score += 2;
+                
+                // Penambahan skor berdasarkan keseimbangan
+                const balance = document.querySelector('input[name="balance"]:checked').value;
+                if (balance === '1') score += 1;
+                
+                return score;
+            }
+            
+            // Fungsi untuk menghitung skor Morse (Inpatient)
+            function calculateMorseScore() {
+                let score = 0;
+                
+                // Transfer dari tempat tidur ke kursi
+                const transfer = document.querySelector('input[name="transfer"]:checked').value;
+                score += parseInt(transfer);
+                
+                // Berjalan
+                const walking = document.querySelector('input[name="walking"]:checked').value;
+                score += parseInt(walking);
+                
+                // Keseimbangan saat duduk
+                const sittingBalance = document.querySelector('input[name="sittingBalance"]:checked').value;
+                score += parseInt(sittingBalance);
+                
+                // Riwayat jatuh
+                const falls = document.querySelector('input[name="falls"]:checked').value;
+                score += parseInt(falls) * 5; // Morse memberikan 25 poin untuk riwayat jatuh
+                
+                // Status mental
+                const mentalStatus = document.querySelector('input[name="mentalStatus"]:checked').value;
+                score += parseInt(mentalStatus);
+                
+                // Alat bantu berjalan
+                const morseAid = document.querySelector('input[name="morseAid"]:checked').value;
+                score += parseInt(morseAid) * 10; // Morse memberikan 15 poin untuk penggunaan furnitur sebagai penyangga
+                
+                return score;
+            }
+            
+            // Fungsi untuk mendapatkan interpretasi TUG
+            function getTUGInterpretation(score) {
+                let interpretationText = '';
+                let recommendations = '';
+                
+                if (score < 12) {
+                    interpretationText = '<p><strong>Risiko Rendah</strong> - Pasien memiliki mobilitas yang baik dan risiko jatuh rendah.</p>';
+                    recommendations = `
+                        <p><strong>Rekomendasi:</strong></p>
+                        <ul>
+                            <li>Lanjutkan aktivitas fisik rutin untuk mempertahankan kekuatan dan keseimbangan</li>
+                            <li>Evaluasi berkala setiap 6-12 bulan</li>
+                            <li>Edukasi tentang pencegahan jatuh di rumah</li>
+                        </ul>
+                    `;
+                } else if (score >= 12 && score <= 14) {
+                    interpretationText = '<p><strong>Risiko Sedang</strong> - Pasien memiliki mobilitas terbatas dan peningkatan risiko jatuh.</p>';
+                    recommendations = `
+                        <p><strong>Rekomendasi:</strong></p>
+                        <ul>
+                            <li>Evaluasi lebih lanjut oleh fisioterapis</li>
+                            <li>Pertimbangkan alat bantu berjalan jika diperlukan</li>
+                            <li>Latihan keseimbangan dan penguatan otot kaki</li>
+                            <li>Evaluasi ulang dalam 3-6 bulan</li>
+                        </ul>
+                    `;
+                } else {
+                    interpretationText = '<p><strong>Risiko Tinggi</strong> - Pasien memiliki mobilitas sangat terbatas dan risiko jatuh yang tinggi.</p>';
+                    recommendations = `
+                        <p><strong>Rekomendasi:</strong></p>
+                        <ul>
+                            <li>Rujuk ke spesialis geriatri atau fisioterapis segera</li>
+                            <li>Pertimbangkan alat bantu berjalan (walker, tongkat)</li>
+                            <li>Modifikasi lingkungan rumah untuk mengurangi risiko jatuh</li>
+                            <li>Evaluasi penglihatan dan pengobatan yang mungkin mempengaruhi keseimbangan</li>
+                            <li>Pantau ketat dan evaluasi ulang dalam 1-3 bulan</li>
+                        </ul>
+                    `;
+                }
+                
+                return interpretationText + recommendations;
+            }
+            
+            // Fungsi untuk mendapatkan interpretasi Morse
+            function getMorseInterpretation(score) {
+                let interpretationText = '';
+                let recommendations = '';
+                
+                if (score <= 24) {
+                    interpretationText = '<p><strong>Risiko Rendah</strong> - Risiko jatuh rendah.</p>';
+                    recommendations = `
+                        <p><strong>Rekomendasi:</strong></p>
+                        <ul>
+                            <li>Pencegahan jatuh rutin</li>
+                            <li>Evaluasi berkala selama rawat inap</li>
+                            <li>Pastikan lingkungan sekitar tempat tidur aman</li>
+                        </ul>
+                    `;
+                } else if (score > 24 && score <= 44) {
+                    interpretationText = '<p><strong>Risiko Sedang</strong> - Risiko jatuh sedang.</p>';
+                    recommendations = `
+                        <p><strong>Rekomendasi:</strong></p>
+                        <ul>
+                            <li>Pasang tanda risiko jatuh di ruangan pasien</li>
+                            <li>Tempatkan pasien di dekat pos perawat</li>
+                            <li>Pertimbangkan penggunaan alarm tempat tidur</li>
+                            <li>Bantu pasien saat ambulasi</li>
+                            <li>Evaluasi pengobatan yang mungkin meningkatkan risiko jatuh</li>
+                        </ul>
+                    `;
+                } else {
+                    interpretationText = '<p><strong>Risiko Tinggi</strong> - Risiko jatuh tinggi.</p>';
+                    recommendations = `
+                        <p><strong>Rekomendasi:</strong></p>
+                        <ul>
+                            <li>Implementasi protokol pencegahan jatuh ketat</li>
+                            <li>Pantau ketat setiap 2 jam</li>
+                            <li>Gunakan alarm tempat tidur atau kursi</li>
+                            <li>Bantu penuh saat ambulasi</li>
+                            <li>Evaluasi lingkungan dan pindahkan benda berbahaya</li>
+                            <li>Koordinasi dengan tim multidisiplin (dokter, perawat, fisioterapis)</li>
+                        </ul>
+                    `;
+                }
+                
+                return interpretationText + recommendations;
+            }
+            
+            // Event listener untuk tombol hitung
+            calculateBtn.addEventListener('click', function() {
+                let score = 0;
+                let interpretationHTML = '';
+                
+                if (currentTestType === 'outpatient') {
+                    score = calculateTUGScore();
+                    if (score === null) return;
+                    interpretationHTML = getTUGInterpretation(score);
+                } else {
+                    score = calculateMorseScore();
+                    interpretationHTML = getMorseInterpretation(score);
+                }
+                
+                // Tampilkan skor
+                scoreValue.textContent = score.toFixed(1);
+                scoreDisplay.style.display = 'block';
+                
+                // Tampilkan interpretasi
+                interpretationContent.innerHTML = interpretationHTML;
+                interpretation.style.display = 'block';
+                
+                // Scroll ke interpretasi
+                interpretation.scrollIntoView({ behavior: 'smooth' });
+            });
+            
+            // Inisialisasi default
+            switchPatientType('outpatient');
+        });
+    </script>
+</body>
+</html>

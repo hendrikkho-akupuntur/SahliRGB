@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skrining Incontinensia Lansia - RUIS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f9fc;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1a6dbb 0%, #2c9ae6 100%);
+            color: white;
+            padding: 25px 30px;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .logo {
+            height: 80px;
+            width: auto;
+            object-fit: contain;
+            background-color: white;
+            padding: 8px;
+            border-radius: 8px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .title-container {
+            flex-grow: 1;
+            padding-left: 20px;
+        }
+        
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 0;
+        }
+        
+        .sidebar {
+            flex: 0 0 300px;
+            background-color: #f0f7ff;
+            padding: 30px 25px;
+            border-right: 1px solid #e1e8f0;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 30px 35px;
+            min-width: 300px;
+        }
+        
+        .info-box {
+            background-color: #e8f4ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-left: 4px solid #2c9ae6;
+        }
+        
+        .info-box h3 {
+            color: #1a6dbb;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .info-box p {
+            font-size: 0.95rem;
+        }
+        
+        .instructions {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 25px;
+            border: 1px dashed #ccc;
+        }
+        
+        .instructions h3 {
+            color: #444;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .instructions ul {
+            padding-left: 20px;
+            font-size: 0.95rem;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+        }
+        
+        .form-section h2 {
+            color: #1a6dbb;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e1e8f0;
+            font-size: 1.5rem;
+        }
+        
+        .question {
+            background-color: #f9fbfe;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #e1e8f0;
+            transition: all 0.3s ease;
+        }
+        
+        .question:hover {
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .question h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        
+        .option {
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        .option input {
+            display: none;
+        }
+        
+        .option label {
+            display: block;
+            padding: 12px 15px;
+            background-color: white;
+            border: 2px solid #e1e8f0;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .option input:checked + label {
+            background-color: #1a6dbb;
+            color: white;
+            border-color: #1a6dbb;
+        }
+        
+        .option label:hover {
+            border-color: #1a6dbb;
+        }
+        
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #1a6dbb 0%, #2c9ae6 100%);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(26, 109, 187, 0.25);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(26, 109, 187, 0.3);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .result-container {
+            display: none;
+            background-color: #f9fbfe;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 20px;
+            border: 1px solid #e1e8f0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .result-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .result-header h2 {
+            color: #1a6dbb;
+            font-size: 1.8rem;
+        }
+        
+        .score-display {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #1a6dbb 0%, #2c9ae6 100%);
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 6px 15px rgba(26, 109, 187, 0.3);
+        }
+        
+        .score-value {
+            font-size: 3.5rem;
+            line-height: 1;
+        }
+        
+        .score-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .interpretation {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-left: 4px solid #1a6dbb;
+        }
+        
+        .interpretation h3 {
+            color: #1a6dbb;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .recommendation {
+            background-color: #fff9e6;
+            border-radius: 10px;
+            padding: 25px;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .recommendation h3 {
+            color: #e6a700;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 25px;
+            margin-top: 30px;
+            background-color: #f0f7ff;
+            border-top: 1px solid #e1e8f0;
+            color: #555;
+            font-size: 0.95rem;
+        }
+        
+        .footer-line {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed #ccc;
+            color: #777;
+            font-size: 0.9rem;
+        }
+        
+        .developer {
+            margin-top: 10px;
+            font-weight: 600;
+            color: #1a6dbb;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                border-right: none;
+                border-bottom: 1px solid #e1e8f0;
+            }
+            
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .logo-container {
+                flex-direction: column;
+                gap: 15px;
+                margin-bottom: 15px;
+            }
+            
+            .title-container {
+                padding-left: 0;
+            }
+            
+            .options {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-container">
+                <img src="KKLP.jpg" alt="Logo KKLP" class="logo">
+                <img src="fkuph.jpg" alt="Logo FK UPH" class="logo">
+            </div>
+            <div class="title-container">
+                <h1>Alat Skrining Incontinensia pada Lansia</h1>
+                <p class="subtitle">Menggunakan Revised Urinary Incontinence Scale (RUIS)</p>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="sidebar">
+                <div class="info-box">
+                    <h3><i class="fas fa-info-circle"></i> Tentang Incontinensia</h3>
+                    <p>Incontinensia urin adalah kondisi dimana terjadi pengeluaran urin yang tidak disengaja. Pada lansia, kondisi ini dapat mempengaruhi kualitas hidup dan memerlukan penanganan yang tepat.</p>
+                </div>
+                
+                <div class="info-box">
+                    <h3><i class="fas fa-stethoscope"></i> Tentang RUIS</h3>
+                    <p>Revised Urinary Incontinence Scale (RUIS) adalah alat skrining yang divalidasi untuk mengidentifikasi risiko incontinensia urin pada populasi lansia.</p>
+                </div>
+                
+                <div class="instructions">
+                    <h3><i class="fas fa-clipboard-check"></i> Petunjuk Penggunaan</h3>
+                    <ul>
+                        <li>Jawab semua pertanyaan sesuai dengan kondisi yang dialami</li>
+                        <li>Pilih satu jawaban yang paling sesuai untuk setiap pertanyaan</li>
+                        <li>Skor akan dihitung otomatis setelah semua pertanyaan dijawab</li>
+                        <li>Hasil skrining bersifat preliminer dan tidak menggantikan konsultasi medis</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="main-content">
+                <div class="form-section">
+                    <h2><i class="fas fa-question-circle"></i> Pertanyaan Skrining</h2>
+                    
+                    <form id="ruis-form">
+                        <div class="question">
+                            <h3>1. Apakah Anda pernah mengalami kebocoran urin (pipis) saat batuk, bersin, atau tertawa?</h3>
+                            <div class="options">
+                                <div class="option">
+                                    <input type="radio" id="q1_0" name="q1" value="0">
+                                    <label for="q1_0">Tidak pernah</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q1_1" name="q1" value="1">
+                                    <label for="q1_1">Sekali sebulan atau kurang</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q1_2" name="q1" value="2">
+                                    <label for="q1_2">2-3 kali sebulan</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q1_3" name="q1" value="3">
+                                    <label for="q1_3">Sekali seminggu</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q1_4" name="q1" value="4">
+                                    <label for="q1_4">Setiap hari</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="question">
+                            <h3>2. Apakah Anda pernah mengalami kebocoran urin (pipis) saat beraktivitas fisik (berjalan, berdiri, olahraga ringan)?</h3>
+                            <div class="options">
+                                <div class="option">
+                                    <input type="radio" id="q2_0" name="q2" value="0">
+                                    <label for="q2_0">Tidak pernah</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q2_1" name="q2" value="1">
+                                    <label for="q2_1">Sekali sebulan atau kurang</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q2_2" name="q2" value="2">
+                                    <label for="q2_2">2-3 kali sebulan</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q2_3" name="q2" value="3">
+                                    <label for="q2_3">Sekali seminggu</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q2_4" name="q2" value="4">
+                                    <label for="q2_4">Setiap hari</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="question">
+                            <h3>3. Apakah Anda pernah mengalami kebocoran urin (pipis) tanpa ada dorongan untuk buang air kecil sebelumnya?</h3>
+                            <div class="options">
+                                <div class="option">
+                                    <input type="radio" id="q3_0" name="q3" value="0">
+                                    <label for="q3_0">Tidak pernah</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q3_1" name="q3" value="1">
+                                    <label for="q3_1">Sekali sebulan atau kurang</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q3_2" name="q3" value="2">
+                                    <label for="q3_2">2-3 kali sebulan</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q3_3" name="q3" value="3">
+                                    <label for="q3_3">Sekali seminggu</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q3_4" name="q3" value="4">
+                                    <label for="q3_4">Setiap hari</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="question">
+                            <h3>4. Apakah Anda pernah mengalami kebocoran urin (pipis) karena tidak bisa menahan keinginan untuk buang air kecil?</h3>
+                            <div class="options">
+                                <div class="option">
+                                    <input type="radio" id="q4_0" name="q4" value="0">
+                                    <label for="q4_0">Tidak pernah</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q4_1" name="q4" value="1">
+                                    <label for="q4_1">Sekali sebulan atau kurang</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q4_2" name="q4" value="2">
+                                    <label for="q4_2">2-3 kali sebulan</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q4_3" name="q4" value="3">
+                                    <label for="q4_3">Sekali seminggu</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q4_4" name="q4" value="4">
+                                    <label for="q4_4">Setiap hari</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="btn-container">
+                            <button type="button" id="calculate-btn"><i class="fas fa-calculator"></i> Hitung Skor Skrining</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="result-container" id="result-container">
+                    <div class="result-header">
+                        <h2>Hasil Skrining Incontinensia</h2>
+                        <p>Berdasarkan jawaban Anda pada Revised Urinary Incontinence Scale (RUIS)</p>
+                    </div>
+                    
+                    <div class="score-display">
+                        <div class="score-circle">
+                            <div class="score-value" id="score-value">0</div>
+                            <div class="score-label">Total Skor</div>
+                        </div>
+                    </div>
+                    
+                    <div class="interpretation">
+                        <h3><i class="fas fa-chart-line"></i> Interpretasi Skor</h3>
+                        <p id="interpretation-text">Interpretasi akan muncul di sini setelah perhitungan skor.</p>
+                    </div>
+                    
+                    <div class="recommendation">
+                        <h3><i class="fas fa-hand-holding-heart"></i> Rekomendasi</h3>
+                        <p id="recommendation-text">Rekomendasi akan muncul di sini setelah perhitungan skor.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><strong>Alat Skrining Incontinensia pada Lansia menggunakan RUIS (Revised Urinary Incontinence Scale)</strong></p>
+            <div class="footer-line">
+                <p>Dikembangkan Oleh Prodi PPDS KKLP FK UPH - dr Hendrik</p>
+                <p class="developer">© 2025 - Program Studi Spesialis Kedokteran Primer FK UPH</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('calculate-btn').addEventListener('click', function() {
+            // Ambil nilai dari setiap pertanyaan
+            const q1 = document.querySelector('input[name="q1"]:checked');
+            const q2 = document.querySelector('input[name="q2"]:checked');
+            const q3 = document.querySelector('input[name="q3"]:checked');
+            const q4 = document.querySelector('input[name="q4"]:checked');
+            
+            // Validasi apakah semua pertanyaan telah dijawab
+            if (!q1 || !q2 || !q3 || !q4) {
+                alert('Silakan jawab semua pertanyaan sebelum menghitung skor.');
+                return;
+            }
+            
+            // Hitung total skor
+            const totalScore = parseInt(q1.value) + parseInt(q2.value) + parseInt(q3.value) + parseInt(q4.value);
+            
+            // Tampilkan skor
+            document.getElementById('score-value').textContent = totalScore;
+            
+            // Tentukan interpretasi berdasarkan skor
+            let interpretation = '';
+            let recommendation = '';
+            
+            if (totalScore === 0) {
+                interpretation = 'Skor Anda adalah 0. Berdasarkan Revised Urinary Incontinence Scale (RUIS), Anda tidak menunjukkan gejala incontinensia urin yang signifikan.';
+                recommendation = 'Pertahankan pola hidup sehat, konsumsi cairan yang cukup, dan lakukan latihan Kegel secara teratur untuk menjaga kesehatan sistem urinaria. Lakukan pemeriksaan rutin untuk pencegahan.';
+            } else if (totalScore >= 1 && totalScore <= 4) {
+                interpretation = 'Skor Anda adalah ' + totalScore + '. Berdasarkan Revised Urinary Incontinence Scale (RUIS), Anda memiliki gejala incontinensia urin ringan.';
+                recommendation = 'Disarankan untuk melakukan konsultasi dengan dokter umum atau geriatri untuk evaluasi lebih lanjut. Latihan dasar panggul (Kegel exercise) dapat membantu mengurangi gejala. Perhatikan pola minum dan buang air kecil.';
+            } else if (totalScore >= 5 && totalScore <= 8) {
+                interpretation = 'Skor Anda adalah ' + totalScore + '. Berdasarkan Revised Urinary Incontinence Scale (RUIS), Anda memiliki gejala incontinensia urin sedang.';
+                recommendation = 'Disarankan untuk berkonsultasi dengan dokter spesialis geriatri, urologi, atau ginekologi untuk evaluasi komprehensif. Mungkin diperlukan intervensi non-farmakologis seperti terapi perilaku, latihan panggul terstruktur, atau modifikasi pola minum.';
+            } else if (totalScore >= 9 && totalScore <= 12) {
+                interpretation = 'Skor Anda adalah ' + totalScore + '. Berdasarkan Revised Urinary Incontinence Scale (RUIS), Anda memiliki gejala incontinensia urin berat.';
+                recommendation = 'Segera konsultasikan dengan dokter spesialis geriatri, urologi, atau ginekologi untuk evaluasi dan penanganan komprehensif. Mungkin diperlukan terapi farmakologis, intervensi non-farmakologis intensif, atau evaluasi untuk penyebab yang mendasari. Incontinensia dapat mempengaruhi kualitas hidup dan meningkatkan risiko komplikasi lainnya.';
+            } else if (totalScore >= 13 && totalScore <= 16) {
+                interpretation = 'Skor Anda adalah ' + totalScore + '. Berdasarkan Revised Urinary Incontinence Scale (RUIS), Anda memiliki gejala incontinensia urin sangat berat.';
+                recommendation = 'Segera konsultasikan dengan dokter spesialis geriatri, urologi, atau ginekologi untuk evaluasi menyeluruh dan penanganan yang komprehensif. Gejala ini dapat mengindikasikan kondisi yang memerlukan penanganan medis segera. Evaluasi menyeluruh diperlukan untuk menentukan penyebab dan rencana terapi yang tepat.';
+            }
+            
+            // Tampilkan interpretasi dan rekomendasi
+            document.getElementById('interpretation-text').textContent = interpretation;
+            document.getElementById('recommendation-text').textContent = recommendation;
+            
+            // Tampilkan hasil
+            document.getElementById('result-container').style.display = 'block';
+            
+            // Scroll ke hasil
+            document.getElementById('result-container').scrollIntoView({ behavior: 'smooth' });
+        });
+        
+        // Tambahkan efek visual saat opsi dipilih
+        document.querySelectorAll('.option input').forEach(input => {
+            input.addEventListener('change', function() {
+                // Reset semua label di pertanyaan yang sama
+                const questionDiv = this.closest('.question');
+                questionDiv.querySelectorAll('.option label').forEach(label => {
+                    label.style.boxShadow = 'none';
+                });
+                
+                // Highlight label yang dipilih
+                const selectedLabel = this.nextElementSibling;
+                selectedLabel.style.boxShadow = '0 0 0 3px rgba(26, 109, 187, 0.2)';
+            });
+        });
+    </script>
+</body>
+</html>

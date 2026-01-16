@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alat Skrining MMSE untuk Lansia</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f7f9fc;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 20px 30px;
+            margin-bottom: 30px;
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+        
+        .logo {
+            height: 80px;
+            width: auto;
+            object-fit: contain;
+        }
+        
+        .title-section {
+            text-align: center;
+            flex-grow: 1;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            color: #3498db;
+            font-size: 18px;
+            font-weight: 500;
+        }
+        
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .instructions {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .instructions h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .instructions h2 i {
+            color: #3498db;
+        }
+        
+        .instructions ol {
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+            color: #555;
+        }
+        
+        .form-section {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            flex: 2;
+            min-width: 300px;
+        }
+        
+        .form-section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-section h2 i {
+            color: #3498db;
+        }
+        
+        .test-item {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .test-item:last-child {
+            border-bottom: none;
+        }
+        
+        .test-item h3 {
+            color: #2c3e50;
+            margin-bottom: 12px;
+            font-size: 18px;
+        }
+        
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .option-label {
+            display: flex;
+            align-items: center;
+            background-color: #f8f9fa;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        .option-label:hover {
+            background-color: #e3f2fd;
+            transform: translateY(-2px);
+        }
+        
+        .option-label input {
+            margin-right: 10px;
+            accent-color: #3498db;
+        }
+        
+        .btn-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-3px);
+            box-shadow: 0 7px 14px rgba(52, 152, 219, 0.2);
+        }
+        
+        .results-section {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 30px;
+            margin-top: 30px;
+            display: none;
+        }
+        
+        .results-section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .results-section h2 i {
+            color: #3498db;
+        }
+        
+        .score-display {
+            text-align: center;
+            padding: 25px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+        
+        .score-value {
+            font-size: 48px;
+            font-weight: 700;
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+        
+        .score-text {
+            font-size: 22px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .interpretation {
+            margin-bottom: 25px;
+        }
+        
+        .interpretation h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+        
+        .interpretation p {
+            color: #555;
+            margin-bottom: 10px;
+            line-height: 1.7;
+        }
+        
+        .recommendation {
+            background-color: #e8f4fc;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #3498db;
+        }
+        
+        .recommendation h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+        
+        .recommendation p {
+            color: #555;
+            line-height: 1.7;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 25px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-top: 30px;
+            color: #666;
+        }
+        
+        .developer {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-top: 15px;
+            font-size: 18px;
+        }
+        
+        .copyright {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #888;
+        }
+        
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+            
+            .logo-section {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .option-label {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header-container">
+        <div class="logo-section">
+            <img src="KKLP.jpg" alt="Logo KKLP" class="logo">
+            <img src="fkuph.jpg" alt="Logo FK UPH" class="logo">
+        </div>
+        <div class="title-section">
+            <h1>Alat Skrining MMSE untuk Lansia</h1>
+            <p class="subtitle">Mini-Mental State Examination - Versi Bahasa Indonesia</p>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="instructions">
+            <h2><i class="fas fa-info-circle"></i> Petunjuk Penggunaan</h2>
+            <p>Alat ini digunakan untuk skrining fungsi kognitif pada lansia dengan menggunakan Mini-Mental State Examination (MMSE).</p>
+            <ol>
+                <li>Skrining ini terdiri dari 6 domain penilaian fungsi kognitif</li>
+                <li>Pilih jawaban yang sesuai dengan kondisi pasien untuk setiap pertanyaan</li>
+                <li>Setiap jawaban memiliki bobot skor yang berbeda (0-1 atau 0-3)</li>
+                <li>Total skor maksimal adalah 30 poin</li>
+                <li>Setelah selesai, klik tombol "Hitung Skor" untuk melihat hasil dan interpretasi</li>
+            </ol>
+            <p><strong>Catatan:</strong> Alat ini hanya untuk tujuan skrining awal, bukan diagnosis definitif.</p>
+        </div>
+        
+        <div class="form-section">
+            <h2><i class="fas fa-clipboard-check"></i> Formulir Skrining MMSE</h2>
+            
+            <form id="mmse-form">
+                <!-- Orientasi -->
+                <div class="test-item">
+                    <h3>1. Orientasi (Maksimal 10 poin)</h3>
+                    <p>Tanggal: <input type="number" id="q1a" min="0" max="1" value="0" style="width: 60px; margin-right: 20px;"> (1 poin jika benar)</p>
+                    <p>Bulan: <input type="number" id="q1b" min="0" max="1" value="0" style="width: 60px; margin-right: 20px;"> (1 poin jika benar)</p>
+                    <p>Tahun: <input type="number" id="q1c" min="0" max="1" value="0" style="width: 60px; margin-right: 20px;"> (1 poin jika benar)</p>
+                    <p>Musim: <input type="number" id="q1d" min="0" max="1" value="0" style="width: 60px; margin-right: 20px;"> (1 poin jika benar)</p>
+                    <p>Hari: <input type="number" id="q1e" min="0" max="1" value="0" style="width: 60px; margin-right: 20px;"> (1 poin jika benar)</p>
+                    <p>Tempat: <input type="number" id="q1f" min="0" max="1" value="0" style="width: 60px; margin-right: 20px;"> (1 poin jika benar)</p>
+                    <p>Kota: <input type="number" id="q1g" min="0" max="1" value="0" style="width: 60px; margin-right: 20px;"> (1 poin jika benar)</p>
+                    <p>Provinsi: <input type="number" id="q1h" min="0" max="1" value="0" style="width: 60px; margin-right: 20px;"> (1 poin jika benar)</p>
+                    <p>Alamat: <input type="number" id="q1i" min="0" max="1" value="0" style="width: 60px; margin-right: 20px;"> (1 poin jika benar)</p>
+                    <p>Lantai: <input type="number" id="q1j" min="0" max="1" value="0" style="width: 60px;"> (1 poin jika benar)</p>
+                </div>
+                
+                <!-- Registrasi -->
+                <div class="test-item">
+                    <h3>2. Registrasi (Maksimal 3 poin)</h3>
+                    <p>Pasien diminta untuk mengingat 3 benda (misal: apel, meja, uang logam)</p>
+                    <p>Jumlah benda yang dapat diingat: 
+                        <select id="q2" style="padding: 8px; border-radius: 5px; margin-left: 10px;">
+                            <option value="0">0 benda</option>
+                            <option value="1">1 benda</option>
+                            <option value="2">2 benda</option>
+                            <option value="3">3 benda</option>
+                        </select>
+                    </p>
+                </div>
+                
+                <!-- Perhatian dan Kalkulasi -->
+                <div class="test-item">
+                    <h3>3. Perhatian dan Kalkulasi (Maksimal 5 poin)</h3>
+                    <p>Pasien diminta menghitung mundur 7 dari 100</p>
+                    <p>Jumlah jawaban benar (setiap pengurangan benar 1 poin): 
+                        <select id="q3" style="padding: 8px; border-radius: 5px; margin-left: 10px;">
+                            <option value="0">0 jawaban benar</option>
+                            <option value="1">1 jawaban benar</option>
+                            <option value="2">2 jawaban benar</option>
+                            <option value="3">3 jawaban benar</option>
+                            <option value="4">4 jawaban benar</option>
+                            <option value="5">5 jawaban benar</option>
+                        </select>
+                    </p>
+                </div>
+                
+                <!-- Recall -->
+                <div class="test-item">
+                    <h3>4. Recall (Maksimal 3 poin)</h3>
+                    <p>Pasien diminta menyebut kembali 3 benda yang sudah disebutkan sebelumnya</p>
+                    <p>Jumlah benda yang dapat diingat kembali: 
+                        <select id="q4" style="padding: 8px; border-radius: 5px; margin-left: 10px;">
+                            <option value="0">0 benda</option>
+                            <option value="1">1 benda</option>
+                            <option value="2">2 benda</option>
+                            <option value="3">3 benda</option>
+                        </select>
+                    </p>
+                </div>
+                
+                <!-- Bahasa -->
+                <div class="test-item">
+                    <h3>5. Bahasa (Maksimal 8 poin)</h3>
+                    <p>Menamai benda (2 poin): <input type="number" id="q5a" min="0" max="2" value="0" style="width: 60px;"></p>
+                    <p>Mengulang kalimat (1 poin): <input type="number" id="q5b" min="0" max="1" value="0" style="width: 60px; margin-left: 10px;"></p>
+                    <p>Membaca dan menaati perintah (3 poin): <input type="number" id="q5c" min="0" max="3" value="0" style="width: 60px; margin-left: 10px;"></p>
+                    <p>Menulis kalimat (1 poin): <input type="number" id="q5d" min="0" max="1" value="0" style="width: 60px; margin-left: 10px;"></p>
+                    <p>Menggambar (1 poin): <input type="number" id="q5e" min="0" max="1" value="0" style="width: 60px; margin-left: 10px;"></p>
+                </div>
+                
+                <!-- Praksis Konstruksional -->
+                <div class="test-item">
+                    <h3>6. Praksis Konstruksional (Maksimal 1 poin)</h3>
+                    <p>Pasien diminta menggambar bentuk poligon yang saling berpotongan (seperti dua segi lima yang berpotongan)</p>
+                    <p>Skor: 
+                        <select id="q6" style="padding: 8px; border-radius: 5px; margin-left: 10px;">
+                            <option value="0">Tidak dapat menggambar dengan benar</option>
+                            <option value="1">Dapat menggambar dengan benar</option>
+                        </select>
+                    </p>
+                </div>
+                
+                <div class="btn-container">
+                    <button type="button" class="btn" id="calculate-btn">
+                        <i class="fas fa-calculator"></i> Hitung Skor MMSE
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div class="results-section" id="results-section">
+        <h2><i class="fas fa-chart-line"></i> Hasil dan Interpretasi</h2>
+        
+        <div class="score-display">
+            <div class="score-value" id="total-score">0</div>
+            <div class="score-text" id="score-category"></div>
+        </div>
+        
+        <div class="interpretation">
+            <h3>Interpretasi Skor MMSE</h3>
+            <p id="interpretation-text"></p>
+        </div>
+        
+        <div class="recommendation">
+            <h3>Rekomendasi Tindak Lanjut</h3>
+            <p id="recommendation-text"></p>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>Alat Skrining MMSE untuk Lansia - Versi Bahasa Indonesia</p>
+        <p class="developer">Dikembangkan Oleh Prodi PPDS KKLP FK UPH - dr Hendrik</p>
+        <p class="copyright">© 2025 - Program Studi Spesialis Kedokteran Primer FK UPH</p>
+    </div>
+
+    <script>
+        document.getElementById('calculate-btn').addEventListener('click', function() {
+            // Hitung skor untuk setiap bagian
+            let score = 0;
+            
+            // 1. Orientasi (maksimal 10 poin)
+            score += parseInt(document.getElementById('q1a').value) || 0;
+            score += parseInt(document.getElementById('q1b').value) || 0;
+            score += parseInt(document.getElementById('q1c').value) || 0;
+            score += parseInt(document.getElementById('q1d').value) || 0;
+            score += parseInt(document.getElementById('q1e').value) || 0;
+            score += parseInt(document.getElementById('q1f').value) || 0;
+            score += parseInt(document.getElementById('q1g').value) || 0;
+            score += parseInt(document.getElementById('q1h').value) || 0;
+            score += parseInt(document.getElementById('q1i').value) || 0;
+            score += parseInt(document.getElementById('q1j').value) || 0;
+            
+            // 2. Registrasi (maksimal 3 poin)
+            score += parseInt(document.getElementById('q2').value) || 0;
+            
+            // 3. Perhatian dan Kalkulasi (maksimal 5 poin)
+            score += parseInt(document.getElementById('q3').value) || 0;
+            
+            // 4. Recall (maksimal 3 poin)
+            score += parseInt(document.getElementById('q4').value) || 0;
+            
+            // 5. Bahasa (maksimal 8 poin)
+            score += parseInt(document.getElementById('q5a').value) || 0;
+            score += parseInt(document.getElementById('q5b').value) || 0;
+            score += parseInt(document.getElementById('q5c').value) || 0;
+            score += parseInt(document.getElementById('q5d').value) || 0;
+            score += parseInt(document.getElementById('q5e').value) || 0;
+            
+            // 6. Praksis Konstruksional (maksimal 1 poin)
+            score += parseInt(document.getElementById('q6').value) || 0;
+            
+            // Tampilkan hasil
+            document.getElementById('total-score').textContent = score;
+            
+            let category = "";
+            let interpretation = "";
+            let recommendation = "";
+            
+            // Interpretasi berdasarkan skor
+            if (score >= 24 && score <= 30) {
+                category = "Fungsi Kognitif Normal";
+                interpretation = "Skor MMSE pasien berada dalam rentang normal (24-30). Tidak ada indikasi gangguan kognitif yang signifikan berdasarkan skrining ini.";
+                recommendation = "Pertahankan pola hidup sehat dengan aktivitas fisik teratur, aktivitas kognitif, dan interaksi sosial. Lakukan skrining berkala setiap 6-12 bulan untuk memantau fungsi kognitif.";
+            } 
+            else if (score >= 18 && score <= 23) {
+                category = "Gangguan Kognitif Ringan";
+                interpretation = "Skor MMSE pasien menunjukkan kemungkinan gangguan kognitif ringan (18-23). Dapat mengindikasikan early stage cognitive impairment atau gangguan kognitif ringan.";
+                recommendation = "Diperlukan evaluasi lebih lanjut oleh dokter spesialis untuk diagnosis yang tepat. Pertimbangkan pemeriksaan neuropsikologi lengkap, pencitraan otak, dan pemeriksaan laboratorium. Pantau perubahan fungsi kognitif setiap 3-6 bulan.";
+            }
+            else if (score >= 10 && score <= 17) {
+                category = "Gangguan Kognitif Sedang";
+                interpretation = "Skor MMSE pasien menunjukkan gangguan kognitif sedang (10-17). Mengindikasikan kemungkinan demensia stadium sedang yang memerlukan penanganan medis.";
+                recommendation = "Segera konsultasikan ke dokter spesialis saraf atau geriatri untuk evaluasi komprehensif. Pertimbangkan terapi farmakologis dan non-farmakologis. Pasien mungkin memerlukan bantuan dalam aktivitas sehari-hari dan pengawasan untuk keamanan.";
+            }
+            else if (score >= 0 && score <= 9) {
+                category = "Gangguan Kognitif Berat";
+                interpretation = "Skor MMSS pasien menunjukkan gangguan kognitif berat (0-9). Mengindikasikan kemungkinan demensia stadium berat yang memerlukan penanganan intensif.";
+                recommendation = "Segera dirujuk ke dokter spesialis untuk penanganan yang komprehensif. Pasien memerlukan pengawasan penuh dan bantuan dalam aktivitas sehari-hari. Pertimbangkan dukungan caregiver, modifikasi lingkungan, dan penanganan medis yang sesuai.";
+            }
+            
+            document.getElementById('score-category').textContent = category;
+            document.getElementById('interpretation-text').textContent = interpretation;
+            document.getElementById('recommendation-text').textContent = recommendation;
+            
+            // Tampilkan hasil
+            document.getElementById('results-section').style.display = 'block';
+            
+            // Scroll ke hasil
+            document.getElementById('results-section').scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>

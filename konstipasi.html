@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alat Skreening Konstipasi pada Lansia - Modified ODS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f7f9fc;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4a6fa5 0%, #2c3e50 100%);
+            color: white;
+            padding: 30px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+        
+        .logos {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .logo {
+            height: 90px;
+            width: auto;
+            object-fit: contain;
+            background-color: white;
+            padding: 8px;
+            border-radius: 8px;
+        }
+        
+        .title-section h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .title-section h2 {
+            font-size: 20px;
+            font-weight: 400;
+            opacity: 0.9;
+        }
+        
+        .content {
+            display: flex;
+            min-height: 600px;
+        }
+        
+        .left-panel {
+            flex: 1;
+            padding: 35px;
+            background-color: #f9fafc;
+            border-right: 1px solid #eaeaea;
+        }
+        
+        .right-panel {
+            flex: 1;
+            padding: 35px;
+            background-color: white;
+        }
+        
+        .section-title {
+            color: #2c3e50;
+            font-size: 22px;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eaeaea;
+            font-weight: 600;
+        }
+        
+        .question {
+            margin-bottom: 25px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .question:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .question-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 17px;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid #eaeaea;
+        }
+        
+        .option:hover {
+            background-color: #eef5ff;
+            border-color: #4a6fa5;
+        }
+        
+        .option.selected {
+            background-color: #eef5ff;
+            border-color: #4a6fa5;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+        
+        .option input {
+            display: none;
+        }
+        
+        .option-label {
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            border: 2px solid #b0b7c3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .option.selected .option-label {
+            border-color: #4a6fa5;
+            background-color: #4a6fa5;
+        }
+        
+        .option.selected .option-label:after {
+            content: "";
+            display: block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: white;
+        }
+        
+        .option-text {
+            flex: 1;
+        }
+        
+        .option-score {
+            font-weight: 600;
+            color: #4a6fa5;
+            font-size: 15px;
+            min-width: 30px;
+            text-align: right;
+        }
+        
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .calculate-btn {
+            background: linear-gradient(to right, #4a6fa5, #3a5980);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 15px rgba(74, 111, 165, 0.3);
+        }
+        
+        .calculate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(74, 111, 165, 0.4);
+            background: linear-gradient(to right, #3a5980, #2c3e50);
+        }
+        
+        .result-container {
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 25px;
+            display: none;
+            border-left: 5px solid #4a6fa5;
+        }
+        
+        .result-container.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .score-display {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed #ccc;
+        }
+        
+        .score-value {
+            font-size: 48px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .score-text {
+            font-size: 20px;
+            color: #4a6fa5;
+            font-weight: 600;
+        }
+        
+        .interpretation {
+            margin-bottom: 25px;
+        }
+        
+        .interpretation-title {
+            font-size: 18px;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        
+        .interpretation-text {
+            color: #444;
+            line-height: 1.7;
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #4a6fa5;
+        }
+        
+        .recommendations {
+            margin-top: 25px;
+        }
+        
+        .recommendations-title {
+            font-size: 18px;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        
+        .recommendations-list {
+            list-style-type: none;
+        }
+        
+        .recommendations-list li {
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            background-color: white;
+            border-radius: 8px;
+            border-left: 4px solid #4CAF50;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .recommendations-list li i {
+            color: #4CAF50;
+        }
+        
+        .footer {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 25px 40px;
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .developer {
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .copyright {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        @media (max-width: 992px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            .left-panel {
+                border-right: none;
+                border-bottom: 1px solid #eaeaea;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 25px;
+                text-align: center;
+            }
+            
+            .header-left {
+                flex-direction: column;
+            }
+            
+            .logos {
+                justify-content: center;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .header, .left-panel, .right-panel {
+                padding: 25px 20px;
+            }
+            
+            .title-section h1 {
+                font-size: 24px;
+            }
+            
+            .title-section h2 {
+                font-size: 18px;
+            }
+            
+            .logos {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-left">
+                <div class="logos">
+                    <img src="KKLP.jpg" alt="Logo KKLP" class="logo">
+                    <img src="fkuph.jpg" alt="Logo FK UPH" class="logo">
+                </div>
+                <div class="title-section">
+                    <h1>Alat Skreening Konstipasi pada Lansia</h1>
+                    <h2>Modified Obstipation/Defecation Score (ODS)</h2>
+                </div>
+            </div>
+        </header>
+        
+        <div class="content">
+            <div class="left-panel">
+                <h3 class="section-title">Pertanyaan Skreening</h3>
+                
+                <div class="question" id="q1">
+                    <div class="question-title">1. Seberapa sering Anda buang air besar (frekuensi BAB)?</div>
+                    <div class="options">
+                        <div class="option" data-score="0" data-question="1">
+                            <div class="option-label"></div>
+                            <div class="option-text">Setiap hari atau setiap 2 hari sekali</div>
+                            <div class="option-score">0</div>
+                        </div>
+                        <div class="option" data-score="1" data-question="1">
+                            <div class="option-label"></div>
+                            <div class="option-text">Setiap 3-4 hari sekali</div>
+                            <div class="option-score">1</div>
+                        </div>
+                        <div class="option" data-score="2" data-question="1">
+                            <div class="option-label"></div>
+                            <div class="option-text">Setiap 5-6 hari sekali</div>
+                            <div class="option-score">2</div>
+                        </div>
+                        <div class="option" data-score="3" data-question="1">
+                            <div class="option-label"></div>
+                            <div class="option-text">Lebih dari 7 hari sekali</div>
+                            <div class="option-score">3</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question" id="q2">
+                    <div class="question-title">2. Bagaimana konsistensi tinja Anda (berdasarkan Bristol Stool Scale)?</div>
+                    <div class="options">
+                        <div class="option" data-score="0" data-question="2">
+                            <div class="option-label"></div>
+                            <div class="option-text">Normal (tipe 3-4: seperti sosis dengan retakan atau halus dan lunak)</div>
+                            <div class="option-score">0</div>
+                        </div>
+                        <div class="option" data-score="1" data-question="2">
+                            <div class="option-label"></div>
+                            <div class="option-text">Keras, berbentuk bulat kecil (tipe 1-2)</div>
+                            <div class="option-score">1</div>
+                        </div>
+                        <div class="option" data-score="2" data-question="2">
+                            <div class="option-label"></div>
+                            <div class="option-text">Sangat keras, sulit dikeluarkan</div>
+                            <div class="option-score">2</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question" id="q3">
+                    <div class="question-title">3. Apakah Anda mengalami kesulitan atau harus mengejan saat BAB?</div>
+                    <div class="options">
+                        <div class="option" data-score="0" data-question="3">
+                            <div class="option-label"></div>
+                            <div class="option-text">Tidak pernah</div>
+                            <div class="option-score">0</div>
+                        </div>
+                        <div class="option" data-score="1" data-question="3">
+                            <div class="option-label"></div>
+                            <div class="option-text">Kadang-kadang</div>
+                            <div class="option-score">1</div>
+                        </div>
+                        <div class="option" data-score="2" data-question="3">
+                            <div class="option-label"></div>
+                            <div class="option-text">Sering</div>
+                            <div class="option-score">2</div>
+                        </div>
+                        <div class="option" data-score="3" data-question="3">
+                            <div class="option-label"></div>
+                            <div class="option-text">Selalu</div>
+                            <div class="option-score">3</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question" id="q4">
+                    <div class="question-title">4. Apakah Anda merasa tidak tuntas setelah BAB?</div>
+                    <div class="options">
+                        <div class="option" data-score="0" data-question="4">
+                            <div class="option-label"></div>
+                            <div class="option-text">Tidak pernah</div>
+                            <div class="option-score">0</div>
+                        </div>
+                        <div class="option" data-score="1" data-question="4">
+                            <div class="option-label"></div>
+                            <div class="option-text">Kadang-kadang</div>
+                            <div class="option-score">1</div>
+                        </div>
+                        <div class="option" data-score="2" data-question="4">
+                            <div class="option-label"></div>
+                            <div class="option-text">Sering</div>
+                            <div class="option-score">2</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question" id="q5">
+                    <div class="question-title">5. Apakah Anda menggunakan bantuan manual (jari) untuk mengeluarkan tinja?</div>
+                    <div class="options">
+                        <div class="option" data-score="0" data-question="5">
+                            <div class="option-label"></div>
+                            <div class="option-text">Tidak pernah</div>
+                            <div class="option-score">0</div>
+                        </div>
+                        <div class="option" data-score="2" data-question="5">
+                            <div class="option-label"></div>
+                            <div class="option-text">Kadang-kadang</div>
+                            <div class="option-score">2</div>
+                        </div>
+                        <div class="option" data-score="3" data-question="5">
+                            <div class="option-label"></div>
+                            <div class="option-text">Sering</div>
+                            <div class="option-score">3</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="btn-container">
+                    <button class="calculate-btn" id="calculateBtn">
+                        <i class="fas fa-calculator"></i> Hitung Skor ODS
+                    </button>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <h3 class="section-title">Hasil dan Interpretasi</h3>
+                
+                <div class="instructions">
+                    <p>Silakan jawab semua pertanyaan di sebelah kiri dengan memilih salah satu opsi yang sesuai dengan kondisi Anda. Setelah semua pertanyaan terjawab, klik tombol <strong>"Hitung Skor ODS"</strong> untuk melihat hasil skrining.</p>
+                    <p>Skor ODS (Obstipation/Defecation Score) akan membantu mengidentifikasi tingkat keparahan konstipasi dan memberikan rekomendasi yang sesuai.</p>
+                </div>
+                
+                <div class="result-container" id="resultContainer">
+                    <div class="score-display">
+                        <div class="score-value" id="scoreValue">0</div>
+                        <div class="score-text" id="scoreText">Skor ODS</div>
+                    </div>
+                    
+                    <div class="interpretation">
+                        <div class="interpretation-title">Interpretasi Skor</div>
+                        <div class="interpretation-text" id="interpretationText">
+                            Hasil interpretasi akan muncul di sini setelah perhitungan.
+                        </div>
+                    </div>
+                    
+                    <div class="recommendations">
+                        <div class="recommendations-title">Rekomendasi</div>
+                        <ul class="recommendations-list" id="recommendationsList">
+                            <!-- Recommendations will be added by JavaScript -->
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="info-box" style="margin-top: 30px; padding: 20px; background-color: #f0f7ff; border-radius: 10px; border-left: 5px solid #4a6fa5;">
+                    <h4 style="color: #2c3e50; margin-bottom: 10px;"><i class="fas fa-info-circle"></i> Tentang Modified ODS</h4>
+                    <p>Modified Obstipation/Defecation Score (ODS) adalah alat skrining yang divalidasi untuk menilai konstipasi pada lansia. Alat ini mengukur frekuensi buang air besar, konsistensi tinja, dan gejala-gejala terkait konstipasi lainnya.</p>
+                    <p style="margin-top: 10px; font-style: italic;">Skor ODS ≥5 menunjukkan kemungkinan konstipasi yang memerlukan evaluasi lebih lanjut.</p>
+                </div>
+            </div>
+        </div>
+        
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="developer">Dikembangkan Oleh Prodi PPDS KKLP FK UPH - dr. Hendrik</div>
+                <div class="copyright">© 2025 - Program Studi Spesialis Kedokteran Primer FK UPH</div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Variables to store selected options
+            let selectedOptions = {
+                1: null,
+                2: null,
+                3: null,
+                4: null,
+                5: null
+            };
+            
+            // Select all options
+            const options = document.querySelectorAll('.option');
+            
+            // Add click event to each option
+            options.forEach(option => {
+                option.addEventListener('click', function() {
+                    const questionNum = parseInt(this.getAttribute('data-question'));
+                    const score = parseInt(this.getAttribute('data-score'));
+                    
+                    // Remove selected class from all options in this question
+                    const questionOptions = document.querySelectorAll(`.option[data-question="${questionNum}"]`);
+                    questionOptions.forEach(opt => opt.classList.remove('selected'));
+                    
+                    // Add selected class to clicked option
+                    this.classList.add('selected');
+                    
+                    // Store selected option
+                    selectedOptions[questionNum] = score;
+                    
+                    // Enable calculate button if all questions answered
+                    enableCalculateButton();
+                });
+            });
+            
+            // Calculate button event
+            document.getElementById('calculateBtn').addEventListener('click', function() {
+                // Check if all questions are answered
+                let allAnswered = true;
+                for (let i = 1; i <= 5; i++) {
+                    if (selectedOptions[i] === null) {
+                        allAnswered = false;
+                        break;
+                    }
+                }
+                
+                if (!allAnswered) {
+                    alert('Silakan jawab semua pertanyaan sebelum menghitung skor.');
+                    return;
+                }
+                
+                // Calculate total score
+                let totalScore = 0;
+                for (let i = 1; i <= 5; i++) {
+                    totalScore += selectedOptions[i];
+                }
+                
+                // Display total score
+                document.getElementById('scoreValue').textContent = totalScore;
+                
+                // Determine interpretation based on score
+                let interpretation = '';
+                let recommendations = [];
+                
+                if (totalScore <= 3) {
+                    interpretation = 'Skor ODS Anda rendah. Kemungkinan besar Anda tidak mengalami konstipasi yang signifikan. Pola buang air besar Anda termasuk dalam kategori normal untuk lansia.';
+                    recommendations = [
+                        'Pertahankan asupan serat yang cukup dari buah, sayuran, dan biji-bijian',
+                        'Minum air putih minimal 8 gelas per hari',
+                        'Lakukan aktivitas fisik ringan secara teratur sesuai kemampuan',
+                        'Jangan menunda keinginan untuk buang air besar'
+                    ];
+                } else if (totalScore >= 4 && totalScore <= 7) {
+                    interpretation = 'Skor ODS Anda menunjukkan kemungkinan konstipasi ringan hingga sedang. Anda mungkin memerlukan intervensi gaya hidup dan pemantauan lebih lanjut.';
+                    recommendations = [
+                        'Tingkatkan asupan serat secara bertahap',
+                        'Pastikan hidrasi yang cukup dengan minum air putih 8-10 gelas per hari',
+                        'Pertimbangkan olahraga ringan seperti jalan kaki 20-30 menit per hari',
+                        'Coba buang air besar pada waktu yang sama setiap hari',
+                        'Jika berlanjut, konsultasikan dengan dokter untuk evaluasi lebih lanjut'
+                    ];
+                } else if (totalScore >= 8 && totalScore <= 11) {
+                    interpretation = 'Skor ODS Anda menunjukkan kemungkinan konstipasi sedang hingga berat. Anda disarankan untuk berkonsultasi dengan tenaga kesehatan untuk evaluasi dan penanganan yang tepat.';
+                    recommendations = [
+                        'Segera konsultasikan dengan dokter untuk evaluasi menyeluruh',
+                        'Pertimbangkan penggunaan laksatif sesuai anjuran dokter',
+                        'Tingkatkan asupan serat dan cairan secara signifikan',
+                        'Evaluasi obat-obatan yang mungkin menyebabkan konstipasi',
+                        'Pertimbangkan terapi perilaku untuk buang air besar',
+                        'Pantau gejala secara berkala dan catat pola buang air besar'
+                    ];
+                } else if (totalScore >= 12) {
+                    interpretation = 'Skor ODS Anda tinggi, menunjukkan kemungkinan konstipasi berat yang memerlukan evaluasi medis segera. Gejala yang dialami mungkin mempengaruhi kualitas hidup dan memerlukan penanganan komprehensif.';
+                    recommendations = [
+                        'Segera konsultasikan dengan dokter spesialis untuk evaluasi menyeluruh',
+                        'Mungkin diperlukan pemeriksaan lebih lanjut untuk menyingkirkan penyebab organik',
+                        'Evaluasi komprehensif terhadap semua obat yang dikonsumsi',
+                        'Mungkin diperlukan terapi farmakologis di bawah pengawasan dokter',
+                        'Pertimbangkan rujukan ke spesialis gastroenterologi jika diperlukan',
+                        'Pantau ketat gejala dan respons terhadap terapi'
+                    ];
+                }
+                
+                // Display interpretation
+                document.getElementById('interpretationText').textContent = interpretation;
+                
+                // Display recommendations
+                const recommendationsList = document.getElementById('recommendationsList');
+                recommendationsList.innerHTML = '';
+                
+                recommendations.forEach(recommendation => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<i class="fas fa-check-circle"></i> ${recommendation}`;
+                    recommendationsList.appendChild(li);
+                });
+                
+                // Show result container with animation
+                const resultContainer = document.getElementById('resultContainer');
+                resultContainer.classList.add('show');
+                
+                // Scroll to result
+                resultContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+            
+            // Function to enable calculate button if all questions answered
+            function enableCalculateButton() {
+                let allAnswered = true;
+                for (let i = 1; i <= 5; i++) {
+                    if (selectedOptions[i] === null) {
+                        allAnswered = false;
+                        break;
+                    }
+                }
+                
+                const calculateBtn = document.getElementById('calculateBtn');
+                if (allAnswered) {
+                    calculateBtn.style.opacity = "1";
+                    calculateBtn.style.cursor = "pointer";
+                } else {
+                    calculateBtn.style.opacity = "0.7";
+                    calculateBtn.style.cursor = "not-allowed";
+                }
+            }
+            
+            // Initialize button state
+            enableCalculateButton();
+        });
+    </script>
+</body>
+</html>

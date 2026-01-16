@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skrining Kerapuhan (Frailty) untuk Lansia</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .logo {
+            height: 80px;
+            width: auto;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+        
+        .title-section {
+            flex-grow: 1;
+            text-align: center;
+            padding: 0 20px;
+        }
+        
+        h1 {
+            color: #1565c0;
+            font-size: 28px;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .subtitle {
+            color: #5d7a9c;
+            font-size: 16px;
+            font-style: italic;
+        }
+        
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .screening-section {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        .result-section {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        h2 {
+            color: #1976d2;
+            border-bottom: 2px solid #e3f2fd;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+        
+        .question {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .question:last-child {
+            border-bottom: none;
+        }
+        
+        .question p {
+            margin-bottom: 12px;
+            font-weight: 500;
+            color: #37474f;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .option:hover {
+            background-color: #f5f9ff;
+        }
+        
+        .option.selected {
+            background-color: #e3f2fd;
+            border-left: 4px solid #1976d2;
+        }
+        
+        .option input {
+            margin-right: 12px;
+            cursor: pointer;
+        }
+        
+        .option label {
+            cursor: pointer;
+            flex-grow: 1;
+        }
+        
+        .score-display {
+            text-align: center;
+            margin: 25px 0;
+            padding: 25px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #f5f9ff 0%, #e8f4ff 100%);
+            border: 1px solid #d1e7ff;
+        }
+        
+        .score-value {
+            font-size: 48px;
+            font-weight: 700;
+            color: #1565c0;
+            margin: 15px 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .interpretation {
+            background-color: #f8fdff;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 20px;
+            border-left: 5px solid #42a5f5;
+        }
+        
+        .interpretation h3 {
+            color: #1976d2;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        
+        .interpretation p {
+            margin-bottom: 15px;
+        }
+        
+        .recommendation {
+            background-color: #f1f8e9;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 20px;
+            border-left: 5px solid #8bc34a;
+        }
+        
+        .recommendation h3 {
+            color: #689f38;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        
+        .recommendation ul {
+            padding-left: 20px;
+        }
+        
+        .recommendation li {
+            margin-bottom: 8px;
+        }
+        
+        .promotion-section {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 40px 0;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .promotion-content {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .promotion-image {
+            flex: 0 0 auto;
+            text-align: center;
+        }
+        
+        .promotion-image img {
+            width: 200px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .promotion-button {
+            display: inline-block;
+            background-color: #388e3c;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(56, 142, 60, 0.2);
+        }
+        
+        .promotion-button:hover {
+            background-color: #2e7d32;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(56, 142, 60, 0.3);
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 25px;
+            margin-top: 30px;
+            color: #5d7a9c;
+            border-top: 1px solid #e0e0e0;
+            font-size: 14px;
+        }
+        
+        .developer {
+            font-weight: 600;
+            color: #1565c0;
+            margin: 10px 0;
+        }
+        
+        .copyright {
+            margin-top: 10px;
+            font-size: 13px;
+        }
+        
+        .calculate-button {
+            background-color: #1976d2;
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            width: 100%;
+            font-weight: 600;
+            margin-top: 20px;
+            box-shadow: 0 4px 10px rgba(25, 118, 210, 0.3);
+        }
+        
+        .calculate-button:hover {
+            background-color: #1565c0;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(25, 118, 210, 0.4);
+        }
+        
+        .reset-button {
+            background-color: #f5f5f5;
+            color: #666;
+            border: 1px solid #ddd;
+            padding: 10px 20px;
+            font-size: 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-block;
+            margin-top: 15px;
+        }
+        
+        .reset-button:hover {
+            background-color: #e0e0e0;
+        }
+        
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+            
+            .logo-section {
+                justify-content: center;
+            }
+            
+            .container {
+                flex-direction: column;
+            }
+            
+            .promotion-section {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header-container">
+        <div class="logo-section">
+            <img src="KKLP.jpg" alt="Logo KKLP" class="logo">
+            <img src="fkuph.jpg" alt="Logo FK UPH" class="logo">
+        </div>
+        <div class="title-section">
+            <h1>Alat Skrining Kerapuhan (Frailty) untuk Lansia</h1>
+            <p class="subtitle">Panduan awal untuk mendeteksi risiko kerapuhan pada usia lanjut</p>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="screening-section">
+            <h2>Pertanyaan Skrining</h2>
+            <p style="margin-bottom: 20px; color: #666;">Jawablah setiap pertanyaan berikut sesuai dengan kondisi Anda selama 3 bulan terakhir. Pilih satu jawaban yang paling sesuai.</p>
+            
+            <div class="question" id="question1">
+                <p>1. <strong>Penurunan Berat Badan:</strong> Apakah Anda mengalami penurunan berat badan yang tidak disengaja lebih dari 4.5 kg dalam setahun terakhir?</p>
+                <div class="options">
+                    <div class="option" onclick="selectOption(1, 0)">
+                        <input type="radio" id="q1a1" name="q1" value="0">
+                        <label for="q1a1">Tidak, berat badan saya stabil atau bertambah</label>
+                    </div>
+                    <div class="option" onclick="selectOption(1, 1)">
+                        <input type="radio" id="q1a2" name="q1" value="1">
+                        <label for="q1a2">Ya, saya mengalami penurunan berat badan yang signifikan</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" id="question2">
+                <p>2. <strong>Kelelahan:</strong> Apakah Anda sering merasa lelah atau tidak bertenaga untuk melakukan aktivitas sehari-hari?</p>
+                <div class="options">
+                    <div class="option" onclick="selectOption(2, 0)">
+                        <input type="radio" id="q2a1" name="q2" value="0">
+                        <label for="q2a1">Tidak, saya jarang merasa lelah berlebihan</label>
+                    </div>
+                    <div class="option" onclick="selectOption(2, 1)">
+                        <input type="radio" id="q2a2" name="q2" value="1">
+                        <label for="q2a2">Ya, saya sering merasa sangat lelah atau tidak bertenaga</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" id="question3">
+                <p>3. <strong>Aktivitas Fisik:</strong> Apakah Anda melakukan aktivitas fisik ringan (seperti berjalan, berkebun) setidaknya 2-3 kali seminggu?</p>
+                <div class="options">
+                    <div class="option" onclick="selectOption(3, 0)">
+                        <input type="radio" id="q3a1" name="q3" value="0">
+                        <label for="q3a1">Ya, saya rutin melakukan aktivitas fisik ringan</label>
+                    </div>
+                    <div class="option" onclick="selectOption(3, 1)">
+                        <input type="radio" id="q3a2" name="q3" value="1">
+                        <label for="q3a2">Tidak, saya jarang melakukan aktivitas fisik</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" id="question4">
+                <p>4. <strong>Kecepatan Berjalan:</strong> Apakah Anda merasa kecepatan berjalan Anda semakin melambat dalam setahun terakhir?</p>
+                <div class="options">
+                    <div class="option" onclick="selectOption(4, 0)">
+                        <input type="radio" id="q4a1" name="q4" value="0">
+                        <label for="q4a1">Tidak, kecepatan berjalan saya masih normal</label>
+                    </div>
+                    <div class="option" onclick="selectOption(4, 1)">
+                        <input type="radio" id="q4a2" name="q4" value="1">
+                        <label for="q4a2">Ya, saya merasa berjalan semakin lambat</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" id="question5">
+                <p>5. <strong>Kekuatan Genggaman:</strong> Apakah Anda mengalami kesulitan membuka toples atau melakukan tugas yang memerlukan kekuatan tangan?</p>
+                <div class="options">
+                    <div class="option" onclick="selectOption(5, 0)">
+                        <input type="radio" id="q5a1" name="q5" value="0">
+                        <label for="q5a1">Tidak, kekuatan tangan saya masih baik</label>
+                    </div>
+                    <div class="option" onclick="selectOption(5, 1)">
+                        <input type="radio" id="q5a2" name="q5" value="1">
+                        <label for="q5a2">Ya, saya mengalami penurunan kekuatan genggaman</label>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="calculate-button" onclick="calculateScore()">Hitung Skor Kerapuhan</button>
+            <button class="reset-button" onclick="resetForm()">Reset Jawaban</button>
+        </div>
+        
+        <div class="result-section">
+            <h2>Hasil dan Interpretasi</h2>
+            <p style="margin-bottom: 20px; color: #666;">Setelah menjawab semua pertanyaan, klik tombol "Hitung Skor Kerapuhan" untuk melihat hasil skrining Anda.</p>
+            
+            <div class="score-display">
+                <p style="font-size: 18px; color: #5d7a9c;">Skor Kerapuhan Anda:</p>
+                <div class="score-value" id="scoreValue">0</div>
+                <p style="font-size: 16px; color: #5d7a9c;">dari 5 poin maksimal</p>
+            </div>
+            
+            <div class="interpretation">
+                <h3>Interpretasi Skor</h3>
+                <div id="interpretationText">
+                    <p>Skor 0: <strong>Tidak rapuh (Robust)</strong> - Kondisi fisik dan kesehatan Anda baik.</p>
+                    <p>Skor 1-2: <strong>Pra-rapuh (Pre-frail)</strong> - Ada risiko berkembang menjadi kerapuhan.</p>
+                    <p>Skor 3-5: <strong>Rapuh (Frail)</strong> - Menandakan kondisi kerapuhan yang memerlukan perhatian medis.</p>
+                </div>
+            </div>
+            
+            <div class="recommendation" id="recommendationSection">
+                <h3>Rekomendasi Berdasarkan Skor</h3>
+                <div id="recommendationText">
+                    <p>Hasil rekomendasi akan muncul setelah Anda menghitung skor.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="promotion-section">
+        <div class="promotion-content">
+            <h2>Mengalami Nyeri Punggung atau Kebas Saraf?</h2>
+            <p>Jangan biarkan nyeri dan kebas mengganggu kualitas hidup Anda. Dapatkan penanganan yang tepat dan aman dengan akupunktur dari spesialis yang berpengalaman.</p>
+            <p>Dr. Hendrik Amd, Akup adalah dokter dan ahli akupunktur dengan pengalaman lebih dari 9 tahun membantu pasien di Medan, Sumatera Utara untuk mengatasi masalah nyeri dan kebas dengan gabungan ilmu Akupunktur dan Medis Modern.</p>
+            <a href="https://hendrikkho-akupuntur.github.io/profile/profile%20dr%20Hendrik%20akupuntur.html" class="promotion-button" target="_blank">Konsultasi dengan Dr. Hendrik</a>
+        </div>
+        <div class="promotion-image">
+            <img src="Hendrik.jpg" alt="Dr. Hendrik Amd, Akup">
+            <p style="margin-top: 10px; font-weight: 600; color: #2e7d32;">Dr. Hendrik Amd, Akup</p>
+            <p style="margin-top: 5px; color: #666;">Spesialis Akupunktur Nyeri dan Saraf</p>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p class="developer">Dikembangkan Oleh Prodi PPDS KKLP FK UPH - dr Hendrik</p>
+        <p class="copyright">© 2025 - Program Studi Spesialis Kedokteran Primer FK UPH</p>
+        <p style="margin-top: 15px; font-size: 12px; color: #999;">Alat ini didasarkan pada kriteria Frailty Phenotype (Fried et al.) untuk skrining awal kerapuhan pada lansia. Hasil ini bukan diagnosis medis. Konsultasikan dengan tenaga kesehatan untuk evaluasi lebih lanjut.</p>
+    </div>
+    
+    <script>
+        let selectedOptions = [null, null, null, null, null];
+        
+        function selectOption(questionNumber, value) {
+            const questionElement = document.getElementById(`question${questionNumber}`);
+            const options = questionElement.querySelectorAll('.option');
+            
+            options.forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            event.currentTarget.classList.add('selected');
+            
+            const radioInput = event.currentTarget.querySelector('input');
+            radioInput.checked = true;
+            
+            selectedOptions[questionNumber - 1] = value;
+        }
+        
+        function calculateScore() {
+            let score = 0;
+            let allAnswered = true;
+            
+            for (let i = 0; i < selectedOptions.length; i++) {
+                if (selectedOptions[i] === null) {
+                    allAnswered = false;
+                    alert(`Silakan jawab pertanyaan ${i + 1} terlebih dahulu.`);
+                    document.getElementById(`question${i + 1}`).scrollIntoView({behavior: 'smooth'});
+                    break;
+                }
+                score += selectedOptions[i];
+            }
+            
+            if (!allAnswered) return;
+            
+            document.getElementById('scoreValue').textContent = score;
+            
+            let interpretation = "";
+            let recommendation = "";
+            
+            if (score === 0) {
+                interpretation = `<p><strong>Tidak rapuh (Robust)</strong> - Kondisi fisik dan kesehatan Anda dalam keadaan baik. Tidak ada tanda-tanda kerapuhan yang terdeteksi berdasarkan skrining ini.</p>`;
+                recommendation = `
+                    <p>Pertahankan kondisi kesehatan Anda dengan:</p>
+                    <ul>
+                        <li>Melanjutkan aktivitas fisik rutin (jalan kaki, berenang, atau olahraga ringan lainnya)</li>
+                        <li>Menjaga pola makan seimbang dengan nutrisi yang cukup</li>
+                        <li>Melakukan pemeriksaan kesehatan berkala untuk memantau kondisi</li>
+                        <li>Tetap aktif secara sosial dan mental</li>
+                    </ul>
+                `;
+            } else if (score >= 1 && score <= 2) {
+                interpretation = `<p><strong>Pra-rapuh (Pre-frail)</strong> - Anda menunjukkan beberapa tanda awal kerapuhan. Ini adalah kondisi peringatan yang dapat berkembang menjadi kerapuhan penuh jika tidak ditangani.</p>`;
+                recommendation = `
+                    <p>Disarankan untuk:</p>
+                    <ul>
+                        <li>Konsultasi dengan dokter atau tenaga kesehatan untuk evaluasi lebih lanjut</li>
+                        <li>Memulai program latihan ringan yang teratur (seperti jalan kaki 30 menit, 3-4 kali seminggu)</li>
+                        <li>Memperhatikan asupan nutrisi, terutama protein untuk menjaga massa otot</li>
+                        <li>Memantau berat badan secara berkala untuk mencegah penurunan yang tidak diinginkan</li>
+                        <li>Mempertimbangkan konsultasi dengan ahli gizi untuk penyesuaian pola makan</li>
+                    </ul>
+                `;
+            } else {
+                interpretation = `<p><strong>Rapuh (Frail)</strong> - Skor Anda menunjukkan tanda-tanda kerapuhan yang memerlukan perhatian medis. Kondisi ini meningkatkan risiko jatuh, rawat inap, dan penurunan fungsi.</p>`;
+                recommendation = `
+                    <p>Segera konsultasikan dengan tenaga kesehatan:</p>
+                    <ul>
+                        <li>Buat janji dengan dokter untuk evaluasi komprehensif kondisi kerapuhan</li>
+                        <li>Pertimbangkan program rehabilitasi atau fisioterapi yang disesuaikan</li>
+                        <li>Evaluasi lingkungan rumah untuk mengurangi risiko jatuh</li>
+                        <li>Pertimbangkan suplementasi nutrisi jika diperlukan (atas rekomendasi dokter)</li>
+                        <li>Libatkan keluarga atau pengasuh dalam perawatan dan pemantauan</li>
+                        <li>Pemeriksaan komprehensif untuk mengidentifikasi kondisi medis yang mendasari</li>
+                    </ul>
+                `;
+            }
+            
+            document.getElementById('interpretationText').innerHTML = interpretation;
+            document.getElementById('recommendationText').innerHTML = recommendation;
+            
+            document.querySelector('.result-section').scrollIntoView({behavior: 'smooth', block: 'start'});
+        }
+        
+        function resetForm() {
+            selectedOptions = [null, null, null, null, null];
+            
+            document.querySelectorAll('.option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                radio.checked = false;
+            });
+            
+            document.getElementById('scoreValue').textContent = "0";
+            document.getElementById('interpretationText').innerHTML = `
+                <p>Skor 0: <strong>Tidak rapuh (Robust)</strong> - Kondisi fisik dan kesehatan Anda baik.</p>
+                <p>Skor 1-2: <strong>Pra-rapuh (Pre-frail)</strong> - Ada risiko berkembang menjadi kerapuhan.</p>
+                <p>Skor 3-5: <strong>Rapuh (Frail)</strong> - Menandakan kondisi kerapuhan yang memerlukan perhatian medis.</p>
+            `;
+            document.getElementById('recommendationText').innerHTML = `<p>Hasil rekomendasi akan muncul setelah Anda menghitung skor.</p>`;
+        }
+    </script>
+</body>
+</html>

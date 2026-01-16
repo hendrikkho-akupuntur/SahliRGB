@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skrining Seksualitas Lansia - ASEX</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f9f7f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            background-image: linear-gradient(to bottom right, #fef8f5, #f5f0eb);
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #e6f2ff 0%, #f0f8ff 100%);
+            padding: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        .logo-container {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .logo {
+            height: 80px;
+            width: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .title-section {
+            flex-grow: 1;
+            text-align: center;
+            padding: 0 20px;
+        }
+        
+        h1 {
+            color: #2c5aa0;
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 18px;
+            font-weight: 400;
+        }
+        
+        .intro {
+            padding: 30px;
+            background-color: #fff;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        .intro p {
+            margin-bottom: 15px;
+            color: #555;
+            font-size: 16px;
+        }
+        
+        .instructions {
+            background-color: #f8fafc;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border-left: 4px solid #4a90e2;
+        }
+        
+        .instructions h3 {
+            color: #2c5aa0;
+            margin-bottom: 10px;
+        }
+        
+        .instructions ol {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+        }
+        
+        .scale-info {
+            margin-top: 15px;
+            font-style: italic;
+            color: #777;
+            font-size: 15px;
+        }
+        
+        .form-container {
+            padding: 30px;
+        }
+        
+        .question-item {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #f9fbfd;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            border: 1px solid #eaeaea;
+        }
+        
+        .question-item:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .question-text {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        
+        .scale-options {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .scale-option {
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            padding: 12px 8px;
+            background-color: white;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .scale-option:hover {
+            background-color: #f0f7ff;
+            transform: translateY(-2px);
+        }
+        
+        .scale-option.selected {
+            background-color: #e6f2ff;
+            border-color: #4a90e2;
+            box-shadow: 0 4px 8px rgba(74, 144, 226, 0.2);
+        }
+        
+        .scale-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2c5aa0;
+            margin-bottom: 5px;
+        }
+        
+        .scale-label {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+        
+        button {
+            padding: 16px 40px;
+            font-size: 18px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        #calculateBtn {
+            background: linear-gradient(to right, #4a90e2, #2c5aa0);
+            color: white;
+        }
+        
+        #calculateBtn:hover {
+            background: linear-gradient(to right, #3a80d2, #1c4a90);
+            transform: translateY(-3px);
+            box-shadow: 0 7px 14px rgba(44, 90, 160, 0.2);
+        }
+        
+        #resetBtn {
+            background-color: #f8f9fa;
+            color: #666;
+            border: 1px solid #ddd;
+        }
+        
+        #resetBtn:hover {
+            background-color: #e9ecef;
+            transform: translateY(-3px);
+        }
+        
+        .result-container {
+            padding: 30px;
+            background-color: #f8fafc;
+            border-radius: 12px;
+            margin-top: 30px;
+            display: none;
+        }
+        
+        .result-header {
+            color: #2c5aa0;
+            font-size: 24px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e6f2ff;
+        }
+        
+        .score-display {
+            font-size: 48px;
+            font-weight: 700;
+            color: #2c5aa0;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .interpretation {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #4a90e2;
+        }
+        
+        .interpretation h3 {
+            color: #2c5aa0;
+            margin-bottom: 15px;
+        }
+        
+        .interpretation p {
+            margin-bottom: 15px;
+            color: #555;
+        }
+        
+        .recommendation {
+            background-color: #fff9e6;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .recommendation h3 {
+            color: #e6a700;
+            margin-bottom: 15px;
+        }
+        
+        .recommendation ul {
+            padding-left: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .recommendation li {
+            margin-bottom: 10px;
+            color: #666;
+        }
+        
+        .footer {
+            padding: 25px;
+            text-align: center;
+            background-color: #f0f7ff;
+            border-top: 1px solid #eaeaea;
+            color: #666;
+            font-size: 15px;
+        }
+        
+        .developer {
+            margin-top: 15px;
+            font-weight: 600;
+            color: #2c5aa0;
+        }
+        
+        .copyright {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #888;
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .logo-container {
+                justify-content: center;
+                margin-bottom: 20px;
+            }
+            
+            .scale-options {
+                flex-direction: column;
+            }
+            
+            .buttons {
+                flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .subtitle {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo-container">
+                <img src="KKLP.jpg" alt="Logo KKLP" class="logo">
+                <img src="fkuph.jpg" alt="Logo FK UPH" class="logo">
+            </div>
+            <div class="title-section">
+                <h1>Alat Skrining Seksualitas pada Lansia</h1>
+                <div class="subtitle">Arizona Sexual Experiences Scale (ASEX) - Versi Bahasa Indonesia</div>
+            </div>
+        </header>
+        
+        <section class="intro">
+            <p>Alat skrining ini dirancang untuk menilai fungsi seksual pada lansia menggunakan Arizona Sexual Experiences Scale (ASEX). Skala ini mengukur lima dimensi fungsi seksual: dorongan, gairah, lubrikasi/pelumasan (pada perempuan) atau ereksi (pada laki-laki), kemampuan mencapai orgasme, dan kepuasan orgasme.</p>
+            
+            <div class="instructions">
+                <h3><i class="fas fa-info-circle"></i> Petunjuk Pengisian:</h3>
+                <ol>
+                    <li>Pilih satu jawaban untuk setiap pertanyaan yang paling sesuai dengan pengalaman Anda dalam <strong>1-2 minggu terakhir</strong>.</li>
+                    <li>Jawablah dengan jujur dan spontan, tidak ada jawaban yang benar atau salah.</li>
+                    <li>Setelah menjawab semua pertanyaan, klik tombol "Hitung Skor" untuk melihat hasil dan rekomendasi.</li>
+                </ol>
+                <p class="scale-info"><strong>Skala penilaian:</strong> 1 = Sangat tinggi/baik, 2 = Tinggi/baik, 3 = Sedang, 4 = Rendah/buruk, 5 = Sangat rendah/buruk, 6 = Tidak pernah/tidak ada</p>
+            </div>
+        </section>
+        
+        <section class="form-container">
+            <form id="asexForm">
+                <div class="question-item">
+                    <div class="question-text">1. Seberapa kuat dorongan seksual (keinginan untuk melakukan aktivitas seksual) Anda?</div>
+                    <div class="scale-options">
+                        <div class="scale-option" data-value="1">
+                            <div class="scale-value">1</div>
+                            <div class="scale-label">Sangat kuat</div>
+                        </div>
+                        <div class="scale-option" data-value="2">
+                            <div class="scale-value">2</div>
+                            <div class="scale-label">Kuat</div>
+                        </div>
+                        <div class="scale-option" data-value="3">
+                            <div class="scale-value">3</div>
+                            <div class="scale-label">Sedang</div>
+                        </div>
+                        <div class="scale-option" data-value="4">
+                            <div class="scale-value">4</div>
+                            <div class="scale-label">Lemah</div>
+                        </div>
+                        <div class="scale-option" data-value="5">
+                            <div class="scale-value">5</div>
+                            <div class="scale-label">Sangat lemah</div>
+                        </div>
+                        <div class="scale-option" data-value="6">
+                            <div class="scale-value">6</div>
+                            <div class="scale-label">Tidak pernah</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question-item">
+                    <div class="question-text">2. Seberapa mudah Anda terangsang (membangkitkan gairah seksual)?</div>
+                    <div class="scale-options">
+                        <div class="scale-option" data-value="1">
+                            <div class="scale-value">1</div>
+                            <div class="scale-label">Sangat mudah</div>
+                        </div>
+                        <div class="scale-option" data-value="2">
+                            <div class="scale-value">2</div>
+                            <div class="scale-label">Mudah</div>
+                        </div>
+                        <div class="scale-option" data-value="3">
+                            <div class="scale-value">3</div>
+                            <div class="scale-label">Sedang</div>
+                        </div>
+                        <div class="scale-option" data-value="4">
+                            <div class="scale-value">4</div>
+                            <div class="scale-label">Sulit</div>
+                        </div>
+                        <div class="scale-option" data-value="5">
+                            <div class="scale-value">5</div>
+                            <div class="scale-label">Sangat sulit</div>
+                        </div>
+                        <div class="scale-option" data-value="6">
+                            <div class="scale-value">6</div>
+                            <div class="scale-label">Tidak pernah</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question-item">
+                    <div class="question-text">3. Seberapa mudah organ intim Anda mengalami pelumasan (pada perempuan) atau ereksi (pada laki-laki) selama aktivitas seksual?</div>
+                    <div class="scale-options">
+                        <div class="scale-option" data-value="1">
+                            <div class="scale-value">1</div>
+                            <div class="scale-label">Sangat mudah</div>
+                        </div>
+                        <div class="scale-option" data-value="2">
+                            <div class="scale-value">2</div>
+                            <div class="scale-label">Mudah</div>
+                        </div>
+                        <div class="scale-option" data-value="3">
+                            <div class="scale-value">3</div>
+                            <div class="scale-label">Sedang</div>
+                        </div>
+                        <div class="scale-option" data-value="4">
+                            <div class="scale-value">4</div>
+                            <div class="scale-label">Sulit</div>
+                        </div>
+                        <div class="scale-option" data-value="5">
+                            <div class="scale-value">5</div>
+                            <div class="scale-label">Sangat sulit</div>
+                        </div>
+                        <div class="scale-option" data-value="6">
+                            <div class="scale-value">6</div>
+                            <div class="scale-label">Tidak pernah</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question-item">
+                    <div class="question-text">4. Seberapa mudah Anda mencapai orgasme (puncak kenikmatan seksual)?</div>
+                    <div class="scale-options">
+                        <div class="scale-option" data-value="1">
+                            <div class="scale-value">1</div>
+                            <div class="scale-label">Sangat mudah</div>
+                        </div>
+                        <div class="scale-option" data-value="2">
+                            <div class="scale-value">2</div>
+                            <div class="scale-label">Mudah</div>
+                        </div>
+                        <div class="scale-option" data-value="3">
+                            <div class="scale-value">3</div>
+                            <div class="scale-label">Sedang</div>
+                        </div>
+                        <div class="scale-option" data-value="4">
+                            <div class="scale-value">4</div>
+                            <div class="scale-label">Sulit</div>
+                        </div>
+                        <div class="scale-option" data-value="5">
+                            <div class="scale-value">5</div>
+                            <div class="scale-label">Sangat sulit</div>
+                        </div>
+                        <div class="scale-option" data-value="6">
+                            <div class="scale-value">6</div>
+                            <div class="scale-label">Tidak pernah</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question-item">
+                    <div class="question-text">5. Seberapa puas Anda dengan orgasme yang Anda alami?</div>
+                    <div class="scale-options">
+                        <div class="scale-option" data-value="1">
+                            <div class="scale-value">1</div>
+                            <div class="scale-label">Sangat puas</div>
+                        </div>
+                        <div class="scale-option" data-value="2">
+                            <div class="scale-value">2</div>
+                            <div class="scale-label">Puas</div>
+                        </div>
+                        <div class="scale-option" data-value="3">
+                            <div class="scale-value">3</div>
+                            <div class="scale-label">Cukup puas</div>
+                        </div>
+                        <div class="scale-option" data-value="4">
+                            <div class="scale-value">4</div>
+                            <div class="scale-label">Kurang puas</div>
+                        </div>
+                        <div class="scale-option" data-value="5">
+                            <div class="scale-value">5</div>
+                            <div class="scale-label">Sangat tidak puas</div>
+                        </div>
+                        <div class="scale-option" data-value="6">
+                            <div class="scale-value">6</div>
+                            <div class="scale-label">Tidak pernah</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="buttons">
+                    <button type="button" id="calculateBtn"><i class="fas fa-calculator"></i> Hitung Skor</button>
+                    <button type="button" id="resetBtn"><i class="fas fa-redo"></i> Reset Form</button>
+                </div>
+            </form>
+            
+            <div class="result-container" id="resultContainer">
+                <h2 class="result-header"><i class="fas fa-chart-line"></i> Hasil Skrining ASEX</h2>
+                
+                <div class="score-display" id="totalScore">0</div>
+                
+                <div class="interpretation">
+                    <h3><i class="fas fa-stethoscope"></i> Interpretasi Skor</h3>
+                    <p id="interpretationText">Hasil interpretasi akan muncul di sini setelah perhitungan.</p>
+                </div>
+                
+                <div class="recommendation">
+                    <h3><i class="fas fa-hand-holding-heart"></i> Rekomendasi</h3>
+                    <div id="recommendationText">Rekomendasi akan muncul di sini setelah perhitungan.</div>
+                </div>
+                
+                <div class="instructions">
+                    <h3><i class="fas fa-exclamation-circle"></i> Catatan Penting:</h3>
+                    <p>Alat skrining ini tidak menggantikan diagnosis klinis oleh tenaga kesehatan profesional. Hasil skrining ini hanya sebagai indikator awal dan rekomendasi untuk berkonsultasi lebih lanjut dengan dokter atau spesialis kesehatan seksual.</p>
+                </div>
+            </div>
+        </section>
+        
+        <footer class="footer">
+            <div class="developer">Dikembangkan Oleh Prodi PPDS KKLP FK UPH - dr Hendrik</div>
+            <div class="copyright">© 2025 - Program Studi Spesialis Kedokteran Primer FK UPH</div>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inisialisasi pilihan skala
+            const scaleOptions = document.querySelectorAll('.scale-option');
+            scaleOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const questionItem = this.closest('.question-item');
+                    questionItem.querySelectorAll('.scale-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+                });
+            });
+            
+            // Tombol reset
+            document.getElementById('resetBtn').addEventListener('click', function() {
+                document.querySelectorAll('.scale-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                document.getElementById('resultContainer').style.display = 'none';
+                window.scrollTo({top: 0, behavior: 'smooth'});
+            });
+            
+            // Tombol hitung skor
+            document.getElementById('calculateBtn').addEventListener('click', function() {
+                const selectedOptions = document.querySelectorAll('.scale-option.selected');
+                
+                // Validasi apakah semua pertanyaan sudah dijawab
+                if (selectedOptions.length < 5) {
+                    alert('Harap jawab semua pertanyaan sebelum menghitung skor.');
+                    return;
+                }
+                
+                // Hitung total skor
+                let totalScore = 0;
+                selectedOptions.forEach(option => {
+                    totalScore += parseInt(option.getAttribute('data-value'));
+                });
+                
+                // Tampilkan skor total
+                document.getElementById('totalScore').textContent = totalScore;
+                
+                // Interpretasi skor
+                let interpretation = '';
+                let recommendation = '';
+                
+                if (totalScore <= 11) {
+                    interpretation = 'Skor Anda menunjukkan <strong>fungsi seksual yang baik</strong>. Tidak ada indikasi disfungsi seksual yang signifikan berdasarkan skala ASEX. Fungsi seksual pada lansia dengan skor ini umumnya dalam kategori normal.';
+                    recommendation = `
+                        <ul>
+                            <li>Pertahankan gaya hidup sehat dengan pola makan bergizi dan aktivitas fisik rutin</li>
+                            <li>Jaga komunikasi terbuka dengan pasangan mengenai kebutuhan seksual</li>
+                            <li>Lakukan pemeriksaan kesehatan rutin untuk memantau kondisi umum</li>
+                            <li>Pertimbangkan konsultasi berkala dengan dokter untuk pencegahan</li>
+                        </ul>
+                    `;
+                } else if (totalScore >= 12 && totalScore <= 19) {
+                    interpretation = 'Skor Anda menunjukkan <strong>fungsi seksual dengan beberapa kesulitan</strong>. Mungkin terdapat beberapa aspek fungsi seksual yang mengalami penurunan. Ini adalah kondisi yang umum dijumpai pada lansia dan dapat dipengaruhi oleh berbagai faktor seperti kesehatan umum, obat-obatan, atau kondisi psikologis.';
+                    recommendation = `
+                        <ul>
+                            <li>Pertimbangkan untuk berkonsultasi dengan dokter umum atau geriatri untuk evaluasi menyeluruh</li>
+                            <li>Diskusikan dengan dokter mengenai obat-obatan yang mungkin mempengaruhi fungsi seksual</li>
+                            <li>Pertimbangkan konseling seksual atau terapi untuk meningkatkan fungsi seksual</li>
+                            <li>Jelajahi bentuk-bentuk keintiman alternatif yang sesuai dengan kondisi Anda</li>
+                            <li>Kelola kondisi kesehatan kronis yang mungkin mempengaruhi fungsi seksual</li>
+                        </ul>
+                    `;
+                } else if (totalScore >= 20) {
+                    interpretation = 'Skor Anda menunjukkan <strong>adanya indikasi disfungsi seksual yang signifikan</strong>. Hasil ini mengindikasikan adanya kesulitan pada beberapa aspek fungsi seksual yang mungkin memerlukan evaluasi lebih lanjut. Disfungsi seksual pada lansia dapat disebabkan oleh berbagai faktor medis, psikologis, atau kombinasi keduanya.';
+                    recommendation = `
+                        <ul>
+                            <li><strong>Segera konsultasikan dengan dokter spesialis geriatri, andrologi (untuk laki-laki), atau ginekologi (untuk perempuan)</strong></li>
+                            <li>Lakukan evaluasi medis menyeluruh untuk mengidentifikasi penyebab yang mendasari</li>
+                            <li>Diskusikan semua obat yang dikonsumsi dengan dokter untuk menilai efek sampingnya</li>
+                            <li>Pertimbangkan rujukan ke psikolog atau psikiater jika terdapat faktor psikologis</li>
+                            <li>Ikuti program terapi seksual yang sesuai dengan kondisi dan kebutuhan Anda</li>
+                            <li>Jangan ragu untuk mencari pendapat kedua jika diperlukan</li>
+                        </ul>
+                    `;
+                }
+                
+                // Tampilkan interpretasi dan rekomendasi
+                document.getElementById('interpretationText').innerHTML = interpretation;
+                document.getElementById('recommendationText').innerHTML = recommendation;
+                
+                // Tampilkan hasil
+                document.getElementById('resultContainer').style.display = 'block';
+                
+                // Scroll ke hasil
+                document.getElementById('resultContainer').scrollIntoView({behavior: 'smooth'});
+            });
+            
+            // Animasi saat memilih opsi
+            const questionItems = document.querySelectorAll('.question-item');
+            questionItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    if (e.target.closest('.scale-option')) {
+                        this.style.transform = 'translateY(-5px)';
+                        setTimeout(() => {
+                            this.style.transform = 'translateY(0)';
+                        }, 200);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skreening Nutrisi Lansia - MNA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f9f7f7;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header-container {
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, #2c7873 0%, #6fb3b8 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            color: white;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .logo {
+            height: 80px;
+            width: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .header-text {
+            flex: 1;
+            padding-left: 30px;
+            border-left: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .container {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .form-container {
+            flex: 2;
+            min-width: 300px;
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+        }
+        
+        .result-container {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+        }
+        
+        h2 {
+            color: #2c7873;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+            font-weight: 600;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+        
+        .radio-group, .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .radio-option, .checkbox-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        input[type="radio"], input[type="checkbox"] {
+            accent-color: #2c7873;
+        }
+        
+        select, input[type="number"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        select:focus, input[type="number"]:focus {
+            outline: none;
+            border-color: #6fb3b8;
+            box-shadow: 0 0 0 3px rgba(111, 179, 184, 0.2);
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .calculate-btn {
+            background-color: #2c7873;
+            color: white;
+        }
+        
+        .calculate-btn:hover {
+            background-color: #235c58;
+            transform: translateY(-2px);
+        }
+        
+        .reset-btn {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        
+        .reset-btn:hover {
+            background-color: #e0e0e0;
+            transform: translateY(-2px);
+        }
+        
+        .score-display {
+            text-align: center;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            background-color: #f9f9f9;
+            border: 2px dashed #ddd;
+        }
+        
+        .score-value {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin: 10px 0;
+        }
+        
+        .score-normal {
+            color: #2c7873;
+        }
+        
+        .score-at-risk {
+            color: #ff9800;
+        }
+        
+        .score-malnourished {
+            color: #f44336;
+        }
+        
+        .interpretation {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border-left: 5px solid #6fb3b8;
+        }
+        
+        .recommendation {
+            background-color: #f0f7f8;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #2c7873;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 25px;
+            border-top: 1px solid #ddd;
+            color: #666;
+            font-size: 0.95rem;
+        }
+        
+        .footer strong {
+            color: #2c7873;
+        }
+        
+        .credit {
+            margin-top: 10px;
+            font-style: italic;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .header-container {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .logo-container {
+                justify-content: center;
+            }
+            
+            .header-text {
+                padding-left: 0;
+                border-left: none;
+                border-top: 2px solid rgba(255, 255, 255, 0.3);
+                padding-top: 20px;
+                margin-top: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header-container">
+        <div class="logo-container">
+            <img src="KKLP.jpg" alt="Logo KKLP" class="logo">
+            <img src="fkuph.jpg" alt="Logo FK UPH" class="logo">
+        </div>
+        <div class="header-text">
+            <h1><i class="fas fa-heartbeat"></i> Alat Skreening Nutrisi Lansia</h1>
+            <p class="subtitle">Menggunakan Mini Nutritional Assessment (MNA) - Versi Bahasa Indonesia</p>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="form-container">
+            <h2><i class="fas fa-clipboard-list"></i> Formulir Penilaian Nutrisi</h2>
+            
+            <form id="mnaForm">
+                <div class="form-group">
+                    <label>1. Apakah telah terjadi penurunan asupan makanan selama 3 bulan terakhir karena kehilangan nafsu makan, masalah pencernaan, mengunyah atau menelan?</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="q1a" name="q1" value="0" required>
+                            <label for="q1a">Penurunan berat badan yang parah (0 poin)</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="q1b" name="q1" value="1">
+                            <label for="q1b">Penurunan berat badan (1 poin)</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="q1c" name="q1" value="2">
+                            <label for="q1c">Tidak ada penurunan (2 poin)</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>2. Penurunan berat badan selama 3 bulan terakhir?</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="q2a" name="q2" value="0" required>
+                            <label for="q2a">Penurunan >3 kg (0 poin)</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="q2b" name="q2" value="1">
+                            <label for="q2b">Tidak tahu (1 poin)</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="q2c" name="q2" value="2">
+                            <label for="q2c">Penurunan 1-3 kg (2 poin)</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="q2d" name="q2" value="3">
+                            <label for="q2d">Tidak ada penurunan (3 poin)</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>3. Mobilitas?</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="q3a" name="q3" value="0" required>
+                            <label for="q3a">Harus tetap di tempat tidur atau kursi roda (0 poin)</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="q3b" name="q3" value="1">
+                            <label for="q3b">Dapat bangun dari tempat tidur/kursi tetapi tidak sering keluar (1 poin)</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="q3c" name="q3" value="2">
+                            <label for="q3c">Dapat keluar rumah (2 poin)</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>4. Stres psikologis atau penyakit akut dalam 3 bulan terakhir?</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="q4a" name="q4" value="0" required>
+                            <label for="q4a">Ya (0 poin)</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="q4b" name="q4" value="1">
+                            <label for="q4b">Tidak (1 poin)</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>5. Masalah neuropsikologis?</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="q5a" name="q5" value="0" required>
+                            <label for="q5a">Demensia atau depresi berat (0 poin)</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="q5b" name="q5" value="1">
+                            <label for="q5b">Demensia ringan (1 poin)</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="q5c" name="q5" value="2">
+                            <label for="q5c">Tidak ada masalah (2 poin)</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>6. Indeks Massa Tubuh (IMT)?</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="q6a" name="q6" value="0" required>
+                            <label for="q6a">IMT < 19 (0 poin)</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="q6b" name="q6" value="1">
+                            <label for="q6b">IMT 19 - 21 (1 poin)</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="q6c" name="q6" value="2">
+                            <label for="q6c">IMT 21 - 23 (2 poin)</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="q6d" name="q6" value="3">
+                            <label for="q6d">IMT ≥ 23 (3 poin)</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>7. Apakah tinggal secara independen (tidak di panti jompo atau rumah sakit)?</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="q7a" name="q7" value="0" required>
+                            <label for="q7a">Tidak (0 poin)</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="q7b" name="q7" value="1">
+                            <label for="q7b">Ya (1 poin)</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>8. Minum lebih dari 3 obat per hari?</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="q8a" name="q8" value="0" required>
+                            <label for="q8a">Ya (0 poin)</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="q8b" name="q8" value="1">
+                            <label for="q8b">Tidak (1 poin)</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>9. Apakah terdapat luka tekan atau ulkus kulit?</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="q9a" name="q9" value="0" required>
+                            <label for="q9a">Ya (0 poin)</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="q9b" name="q9" value="1">
+                            <label for="q9b">Tidak (1 poin)</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>10. Berapa kali makan dalam sehari?</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="q10a" name="q10" value="0" required>
+                            <label for="q10a">1 kali (0 poin)</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="q10b" name="q10" value="1">
+                            <label for="q10b">2 kali (1 poin)</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="q10c" name="q10" value="2">
+                            <label for="q10c">3 kali (2 poin)</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>11. Konsumsi produk protein (daging, ikan, telur, susu, kacang-kacangan) minimal satu kali per hari?</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="q11a" name="q11" value="0" required>
+                            <label for="q11a">Tidak (0 poin)</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="q11b" name="q11" value="0.5">
+                            <label for="q11b">1 dari 2 pertanyaan ya (0.5 poin)</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="q11c" name="q11" value="1">
+                            <label for="q11c">Ya (1 poin)</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>12. Konsumsi buah atau sayur minimal dua kali per hari?</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="q12a" name="q12" value="0" required>
+                            <label for="q12a">Tidak (0 poin)</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="q12b" name="q12" value="1">
+                            <label for="q12b">Ya (1 poin)</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="buttons">
+                    <button type="button" class="calculate-btn" id="calculateBtn"><i class="fas fa-calculator"></i> Hitung Skor MNA</button>
+                    <button type="button" class="reset-btn" id="resetBtn"><i class="fas fa-redo"></i> Reset Formulir</button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="result-container">
+            <h2><i class="fas fa-chart-line"></i> Hasil Skreening</h2>
+            
+            <div class="score-display">
+                <p><strong>Total Skor MNA:</strong></p>
+                <div class="score-value" id="scoreValue">-</div>
+                <p id="scoreCategory">Silakan isi formulir dan tekan "Hitung Skor MNA"</p>
+            </div>
+            
+            <div class="interpretation">
+                <h3><i class="fas fa-stethoscope"></i> Interpretasi Skor:</h3>
+                <div id="interpretationText">
+                    <p>Skor MNA akan ditampilkan setelah perhitungan.</p>
+                    <p>MNA adalah alat skreening yang divalidasi untuk menilai status gizi pada lansia berusia 65 tahun ke atas.</p>
+                </div>
+            </div>
+            
+            <div class="recommendation">
+                <h3><i class="fas fa-hand-holding-heart"></i> Rekomendasi:</h3>
+                <div id="recommendationText">
+                    <p>Rekomendasi akan ditampilkan setelah perhitungan skor.</p>
+                    <p>Rekomendasi dapat mencakup intervensi gizi, rujukan ke ahli gizi, atau pemantauan berkala.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p><strong>Dikembangkan Oleh Prodi PPDS KKLP FK UPH - dr Hendrik</strong></p>
+        <p class="credit">© 2025 - Program Studi Spesialis Kedokteran Primer FK UPH</p>
+        <p><i class="fas fa-info-circle"></i> Alat ini digunakan untuk keperluan skreening awal. Diagnosis dan penanganan lebih lanjut memerlukan konsultasi dengan tenaga kesehatan profesional.</p>
+    </div>
+
+    <script>
+        document.getElementById('calculateBtn').addEventListener('click', calculateScore);
+        document.getElementById('resetBtn').addEventListener('click', resetForm);
+        
+        function calculateScore() {
+            // Get all form values
+            const form = document.getElementById('mnaForm');
+            const formData = new FormData(form);
+            
+            let totalScore = 0;
+            let allQuestionsAnswered = true;
+            
+            // Calculate total score
+            for (let i = 1; i <= 12; i++) {
+                const value = formData.get(`q${i}`);
+                if (value === null) {
+                    allQuestionsAnswered = false;
+                    break;
+                }
+                totalScore += parseFloat(value);
+            }
+            
+            if (!allQuestionsAnswered) {
+                alert("Harap jawab semua pertanyaan sebelum menghitung skor.");
+                return;
+            }
+            
+            // Round to 1 decimal place
+            totalScore = Math.round(totalScore * 10) / 10;
+            
+            // Display score
+            document.getElementById('scoreValue').textContent = totalScore;
+            
+            // Determine category and set color
+            let category = "";
+            let categoryClass = "";
+            let interpretation = "";
+            let recommendation = "";
+            
+            if (totalScore >= 12) {
+                category = "Status Gizi Normal";
+                categoryClass = "score-normal";
+                interpretation = `
+                    <p><strong>Status Gizi Normal (Skor: ${totalScore})</strong></p>
+                    <p>Lansia memiliki status gizi yang baik. Tidak terdapat indikasi malnutrisi berdasarkan penilaian MNA.</p>
+                    <p>Pertahankan pola makan seimbang dengan asupan nutrisi yang adekuat sesuai kebutuhan usia.</p>
+                `;
+                recommendation = `
+                    <p>1. Pertahankan pola makan seimbang dengan variasi makanan</p>
+                    <p>2. Lanjutkan aktivitas fisik sesuai kemampuan</p>
+                    <p>3. Pantau berat badan secara berkala (setiap bulan)</p>
+                    <p>4. Lakukan skreening ulang setiap 6-12 bulan</p>
+                    <p>5. Konsumsi cukup cairan (minimal 8 gelas/hari)</p>
+                `;
+            } else if (totalScore >= 8) {
+                category = "Berisiko Malnutrisi";
+                categoryClass = "score-at-risk";
+                interpretation = `
+                    <p><strong>Berisiko Malnutrisi (Skor: ${totalScore})</strong></p>
+                    <p>Lansia berisiko mengalami malnutrisi. Diperlukan intervensi untuk mencegah penurunan status gizi lebih lanjut.</p>
+                    <p>Evaluasi asupan makanan, faktor penghambat makan, dan kondisi kesehatan secara menyeluruh.</p>
+                `;
+                recommendation = `
+                    <p>1. Tingkatkan asupan kalori dan protein secara bertahap</p>
+                    <p>2. Konsultasi dengan ahli gizi untuk modifikasi diet</p>
+                    <p>3. Pantau asupan makanan dan berat badan setiap minggu</p>
+                    <p>4. Pertimbangkan suplementasi nutrisi oral jika diperlukan</p>
+                    <p>5. Evaluasi penyebab potensial (gangguan gigi, depresi, dll.)</p>
+                    <p>6. Skreening ulang dalam 1-3 bulan</p>
+                `;
+            } else {
+                category = "Malnutrisi";
+                categoryClass = "score-malnourished";
+                interpretation = `
+                    <p><strong>Malnutrisi (Skor: ${totalScore})</strong></p>
+                    <p>Lansia mengalami malnutrisi. Diperlukan intervensi nutrisi segera dan evaluasi medis menyeluruh.</p>
+                    <p>Kondisi ini meningkatkan risiko komplikasi kesehatan, infeksi, dan penurunan kualitas hidup.</p>
+                `;
+                recommendation = `
+                    <p>1. <strong>Segera konsultasi dengan dokter dan ahli gizi</strong></p>
+                    <p>2. Mulai intervensi nutrisi sesuai kondisi klinis</p>
+                    <p>3. Pertimbangkan suplementasi nutrisi yang komprehensif</p>
+                    <p>4. Evaluasi penyebab medis yang mendasari</p>
+                    <p>5. Pantau berat badan dan asupan makanan setiap hari</p>
+                    <p>6. Rawat inap mungkin diperlukan untuk nutrisi parenteral</p>
+                    <p>7. Rujuk ke layanan gizi klinis untuk penanganan intensif</p>
+                `;
+            }
+            
+            // Update display
+            document.getElementById('scoreValue').className = `score-value ${categoryClass}`;
+            document.getElementById('scoreCategory').textContent = category;
+            document.getElementById('interpretationText').innerHTML = interpretation;
+            document.getElementById('recommendationText').innerHTML = recommendation;
+        }
+        
+        function resetForm() {
+            document.getElementById('mnaForm').reset();
+            document.getElementById('scoreValue').textContent = "-";
+            document.getElementById('scoreValue').className = "score-value";
+            document.getElementById('scoreCategory').textContent = "Silakan isi formulir dan tekan 'Hitung Skor MNA'";
+            document.getElementById('interpretationText').innerHTML = `
+                <p>Skor MNA akan ditampilkan setelah perhitungan.</p>
+                <p>MNA adalah alat skreening yang divalidasi untuk menilai status gizi pada lansia berusia 65 tahun ke atas.</p>
+            `;
+            document.getElementById('recommendationText').innerHTML = `
+                <p>Rekomendasi akan ditampilkan setelah perhitungan skor.</p>
+                <p>Rekomendasi dapat mencakup intervensi gizi, rujukan ke ahli gizi, atau pemantauan berkala.</p>
+            `;
+        }
+    </script>
+</body>
+</html>

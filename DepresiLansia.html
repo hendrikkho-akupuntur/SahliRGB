@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skrining Depresi Lansia - GDS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        /* Header Section */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 25px 40px;
+            background: linear-gradient(135deg, #1e5799 0%, #207cca 100%);
+            color: white;
+            position: relative;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .logo {
+            height: 80px;
+            width: auto;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .title-container {
+            flex-grow: 1;
+        }
+
+        .title {
+            font-size: 2.2rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            min-height: 600px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 35%;
+            background: linear-gradient(to bottom, #f1f8ff, #e6f2ff);
+            padding: 30px;
+            border-right: 1px solid #e0e0e0;
+        }
+
+        .info-box {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid #207cca;
+        }
+
+        .info-box h3 {
+            color: #1e5799;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-box h3 i {
+            font-size: 1.2rem;
+        }
+
+        .info-box p {
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+            color: #555;
+        }
+
+        .info-box ul {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .info-box li {
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        /* Questionnaire Section */
+        .questionnaire {
+            width: 65%;
+            padding: 30px 40px;
+        }
+
+        .instructions {
+            background-color: #fff8e1;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-left: 5px solid #ffc107;
+        }
+
+        .instructions h3 {
+            color: #d17c00;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .instructions p {
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .question {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed #e0e0e0;
+        }
+
+        .question:last-child {
+            border-bottom: none;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .options {
+            display: flex;
+            gap: 20px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 10px 15px;
+            background-color: #f5f9ff;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .option:hover {
+            background-color: #e6f0ff;
+            transform: translateY(-2px);
+        }
+
+        .option.selected {
+            background-color: #d4e7ff;
+            border-color: #207cca;
+        }
+
+        .option input {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .option label {
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        /* Button Section */
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 15px 35px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-submit {
+            background: linear-gradient(to right, #1e5799, #207cca);
+            color: white;
+        }
+
+        .btn-submit:hover {
+            background: linear-gradient(to right, #18467e, #1a6cb0);
+            box-shadow: 0 5px 15px rgba(30, 87, 153, 0.3);
+            transform: translateY(-3px);
+        }
+
+        .btn-reset {
+            background-color: #f8f9fa;
+            color: #495057;
+            border: 1px solid #dee2e6;
+        }
+
+        .btn-reset:hover {
+            background-color: #e9ecef;
+            transform: translateY(-3px);
+        }
+
+        /* Result Section */
+        .result-container {
+            display: none;
+            margin-top: 40px;
+            padding: 30px;
+            background: linear-gradient(to bottom, #f8fff8, #f0fff0);
+            border-radius: 12px;
+            border-left: 5px solid #28a745;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .result-header {
+            color: #28a745;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .score-display {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 25px 0;
+        }
+
+        .score-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1e5799 0%, #207cca 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .score-value {
+            font-size: 2.8rem;
+            line-height: 1;
+        }
+
+        .score-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .interpretation {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 25px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .interpretation h3 {
+            color: #1e5799;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .interpretation p {
+            margin-bottom: 15px;
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        .recommendation {
+            background-color: #fff8e1;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            border-left: 5px solid #ffc107;
+        }
+
+        .recommendation h3 {
+            color: #d17c00;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .recommendation ul {
+            padding-left: 20px;
+        }
+
+        .recommendation li {
+            margin-bottom: 10px;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 25px;
+            background-color: #f8f9fa;
+            border-top: 1px solid #e0e0e0;
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .developer-info {
+            font-weight: 600;
+            color: #1e5799;
+            margin-top: 10px;
+            font-size: 1.05rem;
+        }
+
+        .copyright {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .sidebar, .questionnaire {
+                width: 100%;
+            }
+            
+            .sidebar {
+                border-right: none;
+                border-bottom: 1px solid #e0e0e0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+                padding: 20px;
+            }
+            
+            .logo-container {
+                flex-direction: column;
+                gap: 20px;
+                margin-bottom: 20px;
+            }
+            
+            .options {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .button-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <div class="logo-container">
+                <img src="KKLP.jpg" alt="Logo KKLP" class="logo">
+                <img src="fkuph.jpg" alt="Logo FK UPH" class="logo">
+            </div>
+            <div class="title-container">
+                <h1 class="title">Skrining Depresi Lansia</h1>
+                <p class="subtitle">Menggunakan Geriatric Depression Scale (GDS) - Versi Bahasa Indonesia</p>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Sidebar dengan informasi -->
+            <div class="sidebar">
+                <div class="info-box">
+                    <h3><i class="fas fa-info-circle"></i> Tentang Alat Ini</h3>
+                    <p>Geriatric Depression Scale (GDS) adalah alat skrining yang dirancang khusus untuk mendeteksi gejala depresi pada populasi lanjut usia.</p>
+                    <p>Alat ini terdiri dari 15 pertanyaan sederhana dengan jawaban "Ya" atau "Tidak".</p>
+                </div>
+                
+                <div class="info-box">
+                    <h3><i class="fas fa-user-md"></i> Petunjuk Penggunaan</h3>
+                    <ul>
+                        <li>Alat ini khusus untuk lansia (usia ≥ 60 tahun)</li>
+                        <li>Jawab setiap pertanyaan dengan jujur sesuai perasaan selama 1 minggu terakhir</li>
+                        <li>Pilih jawaban yang paling mencerminkan kondisi Anda</li>
+                        <li>Waktu pengerjaan sekitar 5-10 menit</li>
+                        <li>Hasil skrining tidak menggantikan diagnosis klinis</li>
+                    </ul>
+                </div>
+                
+                <div class="info-box">
+                    <h3><i class="fas fa-shield-alt"></i> Kerahasiaan Data</h3>
+                    <p>Semua data dan jawaban yang diberikan akan dijaga kerahasiaannya dan hanya digunakan untuk tujuan skrining.</p>
+                    <p>Hasil skrining dapat dibagikan dengan tenaga kesehatan untuk konsultasi lebih lanjut.</p>
+                </div>
+            </div>
+
+            <!-- Bagian Kuesioner -->
+            <div class="questionnaire">
+                <div class="instructions">
+                    <h3><i class="fas fa-exclamation-circle"></i> Petunjuk Pengerjaan</h3>
+                    <p>Silakan baca setiap pertanyaan dengan seksama dan pilih jawaban yang paling sesuai dengan perasaan Anda selama <strong>1 minggu terakhir</strong>.</p>
+                    <p>Pilih <strong>"Ya"</strong> jika pernyataan sesuai dengan kondisi Anda, atau <strong>"Tidak"</strong> jika tidak sesuai.</p>
+                </div>
+
+                <form id="gds-form">
+                    <!-- Pertanyaan 1-15 GDS -->
+                    <div class="question" id="q1">
+                        <div class="question-text">1. Apakah Anda pada dasarnya puas dengan hidup Anda?</div>
+                        <div class="options">
+                            <div class="option" onclick="selectOption(this, 'q1', 'Ya')">
+                                <input type="radio" name="q1" value="Ya" id="q1_ya">
+                                <label for="q1_ya">Ya</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this, 'q1', 'Tidak')">
+                                <input type="radio" name="q1" value="Tidak" id="q1_tidak">
+                                <label for="q1_tidak">Tidak</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question" id="q2">
+                        <div class="question-text">2. Apakah Anda telah meninggalkan banyak kegiatan dan minat Anda?</div>
+                        <div class="options">
+                            <div class="option" onclick="selectOption(this, 'q2', 'Ya')">
+                                <input type="radio" name="q2" value="Ya" id="q2_ya">
+                                <label for="q2_ya">Ya</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this, 'q2', 'Tidak')">
+                                <input type="radio" name="q2" value="Tidak" id="q2_tidak">
+                                <label for="q2_tidak">Tidak</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question" id="q3">
+                        <div class="question-text">3. Apakah Anda merasa hidup Anda kosong?</div>
+                        <div class="options">
+                            <div class="option" onclick="selectOption(this, 'q3', 'Ya')">
+                                <input type="radio" name="q3" value="Ya" id="q3_ya">
+                                <label for="q3_ya">Ya</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this, 'q3', 'Tidak')">
+                                <input type="radio" name="q3" value="Tidak" id="q3_tidak">
+                                <label for="q3_tidak">Tidak</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question" id="q4">
+                        <div class="question-text">4. Apakah Anda sering merasa bosan?</div>
+                        <div class="options">
+                            <div class="option" onclick="selectOption(this, 'q4', 'Ya')">
+                                <input type="radio" name="q4" value="Ya" id="q4_ya">
+                                <label for="q4_ya">Ya</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this, 'q4', 'Tidak')">
+                                <input type="radio" name="q4" value="Tidak" id="q4_tidak">
+                                <label for="q4_tidak">Tidak</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question" id="q5">
+                        <div class="question-text">5. Apakah Anda dalam suasana hati yang baik hampir sepanjang waktu?</div>
+                        <div class="options">
+                            <div class="option" onclick="selectOption(this, 'q5', 'Ya')">
+                                <input type="radio" name="q5" value="Ya" id="q5_ya">
+                                <label for="q5_ya">Ya</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this, 'q5', 'Tidak')">
+                                <input type="radio" name="q5" value="Tidak" id="q5_tidak">
+                                <label for="q5_tidak">Tidak</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question" id="q6">
+                        <div class="question-text">6. Apakah Anda takut akan terjadi sesuatu yang buruk pada Anda?</div>
+                        <div class="options">
+                            <div class="option" onclick="selectOption(this, 'q6', 'Ya')">
+                                <input type="radio" name="q6" value="Ya" id="q6_ya">
+                                <label for="q6_ya">Ya</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this, 'q6', 'Tidak')">
+                                <input type="radio" name="q6" value="Tidak" id="q6_tidak">
+                                <label for="q6_tidak">Tidak</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question" id="q7">
+                        <div class="question-text">7. Apakah Anda merasa bahagia hampir sepanjang waktu?</div>
+                        <div class="options">
+                            <div class="option" onclick="selectOption(this, 'q7', 'Ya')">
+                                <input type="radio" name="q7" value="Ya" id="q7_ya">
+                                <label for="q7_ya">Ya</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this, 'q7', 'Tidak')">
+                                <input type="radio" name="q7" value="Tidak" id="q7_tidak">
+                                <label for="q7_tidak">Tidak</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question" id="q8">
+                        <div class="question-text">8. Apakah Anda sering merasa tidak berdaya?</div>
+                        <div class="options">
+                            <div class="option" onclick="selectOption(this, 'q8', 'Ya')">
+                                <input type="radio" name="q8" value="Ya" id="q8_ya">
+                                <label for="q8_ya">Ya</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this, 'q8', 'Tidak')">
+                                <input type="radio" name="q8" value="Tidak" id="q8_tidak">
+                                <label for="q8_tidak">Tidak</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question" id="q9">
+                        <div class="question-text">9. Apakah Anda lebih sering memilih untuk tinggal di rumah daripada pergi keluar dan melakukan hal-hal baru?</div>
+                        <div class="options">
+                            <div class="option" onclick="selectOption(this, 'q9', 'Ya')">
+                                <input type="radio" name="q9" value="Ya" id="q9_ya">
+                                <label for="q9_ya">Ya</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this, 'q9', 'Tidak')">
+                                <input type="radio" name="q9" value="Tidak" id="q9_tidak">
+                                <label for="q9_tidak">Tidak</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question" id="q10">
+                        <div class="question-text">10. Apakah Anda merasa memiliki masalah memori lebih dari kebanyakan orang?</div>
+                        <div class="options">
+                            <div class="option" onclick="selectOption(this, 'q10', 'Ya')">
+                                <input type="radio" name="q10" value="Ya" id="q10_ya">
+                                <label for="q10_ya">Ya</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this, 'q10', 'Tidak')">
+                                <input type="radio" name="q10" value="Tidak" id="q10_tidak">
+                                <label for="q10_tidak">Tidak</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question" id="q11">
+                        <div class="question-text">11. Apakah Anda merasa sangat menyenangkan untuk masih hidup?</div>
+                        <div class="options">
+                            <div class="option" onclick="selectOption(this, 'q11', 'Ya')">
+                                <input type="radio" name="q11" value="Ya" id="q11_ya">
+                                <label for="q11_ya">Ya</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this, 'q11', 'Tidak')">
+                                <input type="radio" name="q11" value="Tidak" id="q11_tidak">
+                                <label for="q11_tidak">Tidak</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question" id="q12">
+                        <div class="question-text">12. Apakah Anda merasa tidak berharga seperti sekarang ini?</div>
+                        <div class="options">
+                            <div class="option" onclick="selectOption(this, 'q12', 'Ya')">
+                                <input type="radio" name="q12" value="Ya" id="q12_ya">
+                                <label for="q12_ya">Ya</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this, 'q12', 'Tidak')">
+                                <input type="radio" name="q12" value="Tidak" id="q12_tidak">
+                                <label for="q12_tidak">Tidak</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question" id="q13">
+                        <div class="question-text">13. Apakah Anda merasa penuh energi?</div>
+                        <div class="options">
+                            <div class="option" onclick="selectOption(this, 'q13', 'Ya')">
+                                <input type="radio" name="q13" value="Ya" id="q13_ya">
+                                <label for="q13_ya">Ya</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this, 'q13', 'Tidak')">
+                                <input type="radio" name="q13" value="Tidak" id="q13_tidak">
+                                <label for="q13_tidak">Tidak</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question" id="q14">
+                        <div class="question-text">14. Apakah Anda merasa situasi Anda tanpa harapan?</div>
+                        <div class="options">
+                            <div class="option" onclick="selectOption(this, 'q14', 'Ya')">
+                                <input type="radio" name="q14" value="Ya" id="q14_ya">
+                                <label for="q14_ya">Ya</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this, 'q14', 'Tidak')">
+                                <input type="radio" name="q14" value="Tidak" id="q14_tidak">
+                                <label for="q14_tidak">Tidak</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question" id="q15">
+                        <div class="question-text">15. Apakah Anda berpikir bahwa sebagian besar orang lebih baik daripada Anda?</div>
+                        <div class="options">
+                            <div class="option" onclick="selectOption(this, 'q15', 'Ya')">
+                                <input type="radio" name="q15" value="Ya" id="q15_ya">
+                                <label for="q15_ya">Ya</label>
+                            </div>
+                            <div class="option" onclick="selectOption(this, 'q15', 'Tidak')">
+                                <input type="radio" name="q15" value="Tidak" id="q15_tidak">
+                                <label for="q15_tidak">Tidak</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="button-container">
+                        <button type="button" class="btn btn-submit" onclick="calculateScore()">
+                            <i class="fas fa-calculator"></i> Hitung Skor
+                        </button>
+                        <button type="button" class="btn btn-reset" onclick="resetForm()">
+                            <i class="fas fa-redo"></i> Reset Jawaban
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Hasil Skor dan Interpretasi -->
+                <div class="result-container" id="result-container">
+                    <div class="result-header">
+                        <i class="fas fa-chart-line"></i> Hasil Skrining Depresi Lansia
+                    </div>
+                    
+                    <div class="score-display">
+                        <div class="score-circle">
+                            <div class="score-value" id="score-value">0</div>
+                            <div class="score-label">Skor Total</div>
+                        </div>
+                    </div>
+
+                    <div class="interpretation">
+                        <h3><i class="fas fa-stethoscope"></i> Interpretasi Skor</h3>
+                        <p id="interpretation-text">Interpretasi akan muncul di sini setelah perhitungan skor.</p>
+                    </div>
+
+                    <div class="recommendation">
+                        <h3><i class="fas fa-hand-holding-heart"></i> Rekomendasi</h3>
+                        <ul id="recommendation-list">
+                            <li>Rekomendasi akan muncul di sini setelah perhitungan skor.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="developer-info">
+                Dikembangkan Oleh Prodi PPDS KKLP FK UPH - dr Hendrik
+            </div>
+            <div class="copyright">
+                © 2025 - Program Studi Spesialis Kedokteran Primer FK UPH
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fungsi untuk memilih opsi jawaban
+        function selectOption(element, questionId, value) {
+            // Hapus kelas selected dari semua opsi dalam pertanyaan yang sama
+            const questionElement = document.getElementById(questionId);
+            const allOptions = questionElement.querySelectorAll('.option');
+            allOptions.forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Tambahkan kelas selected ke opsi yang dipilih
+            element.classList.add('selected');
+            
+            // Update radio button yang dipilih
+            const radioButton = element.querySelector('input[type="radio"]');
+            radioButton.checked = true;
+        }
+
+        // Fungsi untuk menghitung skor GDS
+        function calculateScore() {
+            // Pertanyaan dengan jawaban "Tidak" yang dianggap sebagai indikasi depresi
+            const depressionIndicators = {
+                "q1": "Tidak",   // Tidak puas dengan hidup
+                "q2": "Ya",      // Meninggalkan kegiatan
+                "q3": "Ya",      // Merasa hidup kosong
+                "q4": "Ya",      // Sering merasa bosan
+                "q5": "Tidak",   // Tidak dalam suasana hati baik
+                "q6": "Ya",      // Takut terjadi sesuatu buruk
+                "q7": "Tidak",   // Tidak merasa bahagia
+                "q8": "Ya",      // Sering merasa tidak berdaya
+                "q9": "Ya",      // Lebih suka tinggal di rumah
+                "q10": "Ya",     // Masalah memori
+                "q11": "Tidak",  // Tidak merasa menyenangkan hidup
+                "q12": "Ya",     // Merasa tidak berharga
+                "q13": "Tidak",  // Tidak merasa penuh energi
+                "q14": "Ya",     // Merasa situasi tanpa harapan
+                "q15": "Ya"      // Berpikir orang lain lebih baik
+            };
+            
+            let score = 0;
+            let unanswered = [];
+            
+            // Hitung skor berdasarkan jawaban
+            for (let i = 1; i <= 15; i++) {
+                const questionName = `q${i}`;
+                const selectedOption = document.querySelector(`input[name="${questionName}"]:checked`);
+                
+                if (selectedOption) {
+                    const answer = selectedOption.value;
+                    
+                    // Jika jawaban sesuai dengan indikator depresi, tambah skor
+                    if (answer === depressionIndicators[questionName]) {
+                        score++;
+                    }
+                } else {
+                    unanswered.push(i);
+                }
+            }
+            
+            // Jika ada pertanyaan yang belum dijawab
+            if (unanswered.length > 0) {
+                alert(`Silakan jawab semua pertanyaan. Pertanyaan berikut belum dijawab: ${unanswered.join(", ")}`);
+                return;
+            }
+            
+            // Tampilkan hasil
+            displayResults(score);
+        }
+        
+        // Fungsi untuk menampilkan hasil
+        function displayResults(score) {
+            // Tampilkan container hasil
+            document.getElementById('result-container').style.display = 'block';
+            
+            // Tampilkan skor
+            document.getElementById('score-value').textContent = score;
+            
+            // Tentukan interpretasi berdasarkan skor
+            let interpretation = "";
+            let recommendations = [];
+            
+            if (score <= 4) {
+                interpretation = "Tidak ada depresi yang signifikan. Skor Anda menunjukkan bahwa kemungkinan besar Anda tidak mengalami depresi klinis. Namun, jika Anda merasa ada gejala yang mengganggu, tetap disarankan untuk berkonsultasi dengan tenaga kesehatan.";
+                recommendations = [
+                    "Pertahankan gaya hidup sehat dengan aktivitas fisik rutin",
+                    "Jaga interaksi sosial dengan keluarga dan teman",
+                    "Lakukan kegiatan yang Anda nikmati dan bermakna",
+                    "Pantau perasaan Anda secara berkala"
+                ];
+            } else if (score >= 5 && score <= 9) {
+                interpretation = "Depresi ringan. Skor Anda menunjukkan kemungkinan gejala depresi ringan. Ini mungkin mempengaruhi kualitas hidup sehari-hari. Konsultasi dengan tenaga kesehatan dianjurkan untuk evaluasi lebih lanjut.";
+                recommendations = [
+                    "Konsultasikan hasil ini dengan dokter atau tenaga kesehatan mental",
+                    "Pertimbangkan untuk meningkatkan aktivitas fisik dan sosial",
+                    "Cari dukungan dari keluarga atau kelompok pendukung",
+                    "Praktikkan teknik relaksasi seperti pernapasan dalam atau meditasi",
+                    "Jadwalkan aktivitas menyenangkan setiap hari"
+                ];
+            } else if (score >= 10 && score <= 15) {
+                interpretation = "Depresi sedang hingga berat. Skor Anda menunjukkan kemungkinan gejala depresi yang signifikan. Sangat disarankan untuk segera berkonsultasi dengan dokter atau tenaga kesehatan mental untuk evaluasi dan penanganan yang tepat.";
+                recommendations = [
+                    "Segera konsultasikan hasil ini dengan dokter atau psikiater",
+                    "Pertimbangkan untuk mencari dukungan profesional seperti psikoterapi",
+                    "Beritahu orang terdekat tentang kondisi Anda untuk mendapatkan dukungan",
+                    "Hindari isolasi sosial, usahakan tetap terhubung dengan orang lain",
+                    "Ikuti rencana perawatan yang direkomendasikan oleh tenaga kesehatan"
+                ];
+            }
+            
+            // Tampilkan interpretasi dan rekomendasi
+            document.getElementById('interpretation-text').textContent = interpretation;
+            
+            const recommendationList = document.getElementById('recommendation-list');
+            recommendationList.innerHTML = "";
+            recommendations.forEach(rec => {
+                const li = document.createElement('li');
+                li.textContent = rec;
+                recommendationList.appendChild(li);
+            });
+            
+            // Scroll ke hasil
+            document.getElementById('result-container').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Fungsi untuk mereset form
+        function resetForm() {
+            // Reset semua pilihan radio
+            const allRadioButtons = document.querySelectorAll('input[type="radio"]');
+            allRadioButtons.forEach(radio => {
+                radio.checked = false;
+            });
+            
+            // Reset tampilan opsi
+            const allOptions = document.querySelectorAll('.option');
+            allOptions.forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Sembunyikan hasil
+            document.getElementById('result-container').style.display = 'none';
+            
+            // Scroll ke atas
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

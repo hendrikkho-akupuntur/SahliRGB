@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skrining Immobility Lansia - EMS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f7f9fc;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+            max-width: 1400px;
+            margin: 0 auto;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: 300px;
+            background: linear-gradient(to bottom, #1a5f7a, #2c7873);
+            color: white;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            background-color: white;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 5px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        
+        .logo-subtitle {
+            font-size: 1.2rem;
+            text-align: center;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+        
+        .sidebar-info {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 0.95rem;
+        }
+        
+        .sidebar-info h3 {
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            color: #ffd166;
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            padding: 30px 40px;
+            background-color: white;
+            overflow-y: auto;
+        }
+        
+        header h1 {
+            color: #1a5f7a;
+            margin-bottom: 10px;
+            font-size: 2.2rem;
+            border-bottom: 3px solid #57cc99;
+            padding-bottom: 10px;
+        }
+        
+        .description {
+            color: #555;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+        
+        /* Form Styles */
+        .form-container {
+            background-color: #f8fafc;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed #ddd;
+        }
+        
+        .form-group:last-child {
+            border-bottom: none;
+        }
+        
+        .question-title {
+            font-size: 1.3rem;
+            color: #2c7873;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .option {
+            flex: 1;
+            min-width: 200px;
+            background-color: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .option:hover {
+            border-color: #57cc99;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .option.selected {
+            border-color: #2c7873;
+            background-color: rgba(44, 120, 115, 0.05);
+        }
+        
+        .option-score {
+            display: inline-block;
+            background-color: #2c7873;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+        
+        .option-text {
+            font-size: 1rem;
+            line-height: 1.4;
+        }
+        
+        /* Button Styles */
+        .button-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background-color: #2c7873;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #1a5f7a;
+        }
+        
+        .btn-secondary {
+            background-color: #f1f5f9;
+            color: #475569;
+            border: 1px solid #cbd5e1;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e2e8f0;
+        }
+        
+        /* Results Section */
+        .results-container {
+            background: linear-gradient(to right, #f8fafc, #f1f8ff);
+            padding: 30px;
+            border-radius: 10px;
+            border-left: 5px solid #2c7873;
+            margin-top: 40px;
+            display: none;
+        }
+        
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .results-title {
+            color: #1a5f7a;
+            font-size: 1.8rem;
+        }
+        
+        .total-score {
+            background-color: #1a5f7a;
+            color: white;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        
+        .interpretation {
+            margin-bottom: 25px;
+        }
+        
+        .interpretation h3 {
+            color: #2c7873;
+            margin-bottom: 10px;
+            font-size: 1.4rem;
+        }
+        
+        .interpretation p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .recommendation {
+            background-color: rgba(255, 209, 102, 0.15);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #ffd166;
+        }
+        
+        .recommendation h3 {
+            color: #b88b1e;
+            margin-bottom: 10px;
+            font-size: 1.4rem;
+        }
+        
+        /* Footer */
+        footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            text-align: center;
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+        
+        .developer {
+            font-weight: 600;
+            color: #2c7873;
+            margin: 10px 0;
+        }
+        
+        .copyright {
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                padding: 20px;
+            }
+            
+            .logo-container {
+                flex-direction: row;
+                justify-content: center;
+                gap: 20px;
+            }
+            
+            .logo {
+                margin-bottom: 0;
+                width: 80px;
+                height: 80px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 20px;
+            }
+            
+            .options {
+                flex-direction: column;
+            }
+            
+            .button-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo-container">
+                <div>
+                    <img src="KKLP.jpg" alt="Logo KKLP" class="logo">
+                </div>
+                <div>
+                    <img src="fkuph.jpg" alt="Logo FK UPH" class="logo">
+                </div>
+            </div>
+            
+            <h1 class="logo-title">Skrining Immobility Lansia</h1>
+            <p class="logo-subtitle">Elderly Mobility Scale (EMS)</p>
+            
+            <div class="sidebar-info">
+                <h3><i class="fas fa-info-circle"></i> Petunjuk Penggunaan</h3>
+                <p>Alat ini digunakan untuk menilai mobilitas lansia berdasarkan 7 parameter fungsional. Pilih satu jawaban untuk setiap pertanyaan yang paling sesuai dengan kondisi lansia.</p>
+                <p>Setelah menjawab semua pertanyaan, klik tombol "Hitung Skor" untuk melihat hasil interpretasi dan rekomendasi.</p>
+            </div>
+            
+            <div class="sidebar-info">
+                <h3><i class="fas fa-scale-balanced"></i> Rentang Skor EMS</h3>
+                <p><strong>20</strong>: Mobilitas normal</p>
+                <p><strong>16-19</strong>: Mobilitas ringan terganggu</p>
+                <p><strong>10-15</strong>: Mobilitas sedang terganggu</p>
+                <p><strong>≤9</strong>: Mobilitas sangat terganggu</p>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <header>
+                <h1>Elderly Mobility Scale (EMS)</h1>
+                <p class="description">Alat skrining ini digunakan untuk menilai risiko immobility pada lansia berdasarkan kemampuan fungsional dalam melakukan aktivitas sehari-hari. Penilaian ini membantu dalam menentukan intervensi yang sesuai untuk meningkatkan kualitas hidup lansia.</p>
+            </header>
+            
+            <!-- Form Skrining -->
+            <div class="form-container">
+                <div class="form-group">
+                    <h3 class="question-title">1. Berdiri dari kursi tanpa menggunakan tangan (tanpa bantuan tangan)</h3>
+                    <div class="options">
+                        <div class="option" data-score="3" data-question="1">
+                            <span class="option-score">3 poin</span>
+                            <p class="option-text">Mampu berdiri tanpa menggunakan tangan (tanpa bantuan tangan)</p>
+                        </div>
+                        <div class="option" data-score="2" data-question="1">
+                            <span class="option-score">2 poin</span>
+                            <p class="option-text">Mampu berdiri menggunakan satu tangan</p>
+                        </div>
+                        <div class="option" data-score="1" data-question="1">
+                            <span class="option-score">1 poin</span>
+                            <p class="option-text">Mampu berdiri menggunakan dua tangan</p>
+                        </div>
+                        <div class="option" data-score="0" data-question="1">
+                            <span class="option-score">0 poin</span>
+                            <p class="option-text">Tidak mampu berdiri tanpa bantuan orang lain</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <h3 class="question-title">2. Berjalan (6 meter)</h3>
+                    <div class="options">
+                        <div class="option" data-score="3" data-question="2">
+                            <span class="option-score">3 poin</span>
+                            <p class="option-text">Mampu berjalan 6 meter tanpa alat bantu</p>
+                        </div>
+                        <div class="option" data-score="2" data-question="2">
+                            <span class="option-score">2 poin</span>
+                            <p class="option-text">Mampu berjalan 6 meter dengan alat bantu (tongkat, walker)</p>
+                        </div>
+                        <div class="option" data-score="1" data-question="2">
+                            <span class="option-score">1 poin</span>
+                            <p class="option-text">Mampu berjalan 6 meter dengan bantuan orang lain</p>
+                        </div>
+                        <div class="option" data-score="0" data-question="2">
+                            <span class="option-score">0 poin</span>
+                            <p class="option-text">Tidak mampu berjalan 6 meter</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <h3 class="question-title">3. Kemandirian dalam berjalan (alat bantu)</h3>
+                    <div class="options">
+                        <div class="option" data-score="3" data-question="3">
+                            <span class="option-score">3 poin</span>
+                            <p class="option-text">Berjalan mandiri tanpa alat bantu</p>
+                        </div>
+                        <div class="option" data-score="2" data-question="3">
+                            <span class="option-score">2 poin</span>
+                            <p class="option-text">Menggunakan satu tongkat atau alat bantu ringan</p>
+                        </div>
+                        <div class="option" data-score="1" data-question="3">
+                            <span class="option-score">1 poin</span>
+                            <p class="option-text">Menggunakan walker atau dua tongkat</p>
+                        </div>
+                        <div class="option" data-score="0" data-question="3">
+                            <span class="option-score">0 poin</span>
+                            <p class="option-text">Tidak mampu berjalan atau menggunakan kursi roda dengan bantuan</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <h3 class="question-title">4. Berdiri tanpa bergerak (statik balance)</h3>
+                    <div class="options">
+                        <div class="option" data-score="3" data-question="4">
+                            <span class="option-score">3 poin</span>
+                            <p class="option-text">Mampu berdiri tanpa pegangan selama 60 detik</p>
+                        </div>
+                        <div class="option" data-score="2" data-question="4">
+                            <span class="option-score">2 poin</span>
+                            <p class="option-text">Mampu berdiri tanpa pegangan selama 30-59 detik</p>
+                        </div>
+                        <div class="option" data-score="1" data-question="4">
+                            <span class="option-score">1 poin</span>
+                            <p class="option-text">Mampu berdiri tanpa pegangan kurang dari 30 detik</p>
+                        </div>
+                        <div class="option" data-score="0" data-question="4">
+                            <span class="option-score">0 poin</span>
+                            <p class="option-text">Tidak mampu berdiri tanpa pegangan</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <h3 class="question-title">5. Duduk ke berdiri (tanpa bantuan tangan)</h3>
+                    <div class="options">
+                        <div class="option" data-score="3" data-question="5">
+                            <span class="option-score">3 poin</span>
+                            <p class="option-text">Mampu duduk ke berdiri tanpa bantuan tangan</p>
+                        </div>
+                        <div class="option" data-score="2" data-question="5">
+                            <span class="option-score">2 poin</span>
+                            <p class="option-text">Mampu duduk ke berdiri dengan satu tangan</p>
+                        </div>
+                        <div class="option" data-score="1" data-question="5">
+                            <span class="option-score">1 poin</span>
+                            <p class="option-text">Mampu duduk ke berdiri dengan dua tangan</p>
+                        </div>
+                        <div class="option" data-score="0" data-question="5">
+                            <span class="option-score">0 poin</span>
+                            <p class="option-text">Tidak mampu duduk ke berdiri tanpa bantuan orang lain</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <h3 class="question-title">6. Berjalan 3 meter dan berbalik (dynamic balance)</h3>
+                    <div class="options">
+                        <div class="option" data-score="3" data-question="6">
+                            <span class="option-score">3 poin</span>
+                            <p class="option-text">Mampu berjalan 3 meter dan berbalik dengan stabil</p>
+                        </div>
+                        <div class="option" data-score="2" data-question="6">
+                            <span class="option-score">2 poin</span>
+                            <p class="option-text">Mampu berjalan 3 meter dan berbalik dengan tidak stabil</p>
+                        </div>
+                        <div class="option" data-score="1" data-question="6">
+                            <span class="option-score">1 poin</span>
+                            <p class="option-text">Mampu berjalan 3 meter tetapi tidak mampu berbalik</p>
+                        </div>
+                        <div class="option" data-score="0" data-question="6">
+                            <span class="option-score">0 poin</span>
+                            <p class="option-text">Tidak mampu berjalan 3 meter</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <h3 class="question-title">7. Berjalan di tempat (marching)</h3>
+                    <div class="options">
+                        <div class="option" data-score="3" data-question="7">
+                            <span class="option-score">3 poin</span>
+                            <p class="option-text">Mampu berjalan di tempat dengan mengangkat kaki tinggi</p>
+                        </div>
+                        <div class="option" data-score="2" data-question="7">
+                            <span class="option-score">2 poin</span>
+                            <p class="option-text">Mampu berjalan di tempat dengan mengangkat kaki rendah</p>
+                        </div>
+                        <div class="option" data-score="1" data-question="7">
+                            <span class="option-score">1 poin</span>
+                            <p class="option-text">Hanya mampu menggeser kaki di tempat</p>
+                        </div>
+                        <div class="option" data-score="0" data-question="7">
+                            <span class="option-score">0 poin</span>
+                            <p class="option-text">Tidak mampu berjalan di tempat</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="button-container">
+                    <button class="btn btn-primary" id="calculate-btn">
+                        <i class="fas fa-calculator"></i> Hitung Skor EMS
+                    </button>
+                    <button class="btn btn-secondary" id="reset-btn">
+                        <i class="fas fa-redo"></i> Reset Form
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Results Section -->
+            <div class="results-container" id="results-container">
+                <div class="results-header">
+                    <h2 class="results-title">Hasil Skrining EMS</h2>
+                    <div class="total-score" id="total-score">0</div>
+                </div>
+                
+                <div class="interpretation">
+                    <h3 id="interpretation-title">Interpretasi Skor</h3>
+                    <p id="interpretation-text">Skor Anda akan muncul di sini setelah perhitungan.</p>
+                </div>
+                
+                <div class="recommendation">
+                    <h3>Rekomendasi</h3>
+                    <p id="recommendation-text">Rekomendasi akan muncul di sini setelah perhitungan.</p>
+                </div>
+                
+                <div class="button-container" style="margin-top: 25px;">
+                    <button class="btn btn-secondary" id="print-btn">
+                        <i class="fas fa-print"></i> Cetak Hasil
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Footer -->
+            <footer>
+                <p class="developer">Dikembangkan Oleh Prodi PPDS KKLP FK UPH - dr Hendrik</p>
+                <p class="copyright">© 2025 - Program Studi Spesialis Kedokteran Primer FK UPH</p>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        // Inisialisasi data skor per pertanyaan
+        const scores = {
+            1: null,
+            2: null,
+            3: null,
+            4: null,
+            5: null,
+            6: null,
+            7: null
+        };
+        
+        // Interpretasi berdasarkan skor total
+        const interpretations = {
+            20: {
+                title: "Mobilitas Normal",
+                text: "Lansia memiliki mobilitas normal dengan kemampuan fungsional yang baik. Tidak terdapat risiko immobility yang signifikan.",
+                recommendation: "Pertahankan aktivitas fisik rutin seperti jalan pagi, senam lansia, atau aktivitas ringan lainnya. Lakukan evaluasi berkala setiap 6-12 bulan."
+            },
+            19: {
+                title: "Mobilitas Ringan Terganggu",
+                text: "Lansia mengalami gangguan mobilitas ringan dengan sedikit keterbatasan dalam aktivitas sehari-hari. Risiko immobility rendah.",
+                recommendation: "Lakukan latihan keseimbangan dan kekuatan otot kaki secara teratur. Evaluasi lingkungan rumah untuk memastikan keamanan. Periksa ke dokter jika terdapat keluhan nyeri sendi."
+            },
+            18: {
+                title: "Mobilitas Ringan Terganggu",
+                text: "Lansia mengalami gangguan mobilitas ringan dengan sedikit keterbatasan dalam aktivitas sehari-hari. Risiko immobility rendah.",
+                recommendation: "Lakukan latihan keseimbangan dan kekuatan otot kaki secara teratur. Evaluasi lingkungan rumah untuk memastikan keamanan. Periksa ke dokter jika terdapat keluhan nyeri sendi."
+            },
+            17: {
+                title: "Mobilitas Ringan Terganggu",
+                text: "Lansia mengalami gangguan mobilitas ringan dengan sedikit keterbatasan dalam aktivitas sehari-hari. Risiko immobility rendah.",
+                recommendation: "Lakukan latihan keseimbangan dan kekuatan otot kaki secara teratur. Evaluasi lingkungan rumah untuk memastikan keamanan. Periksa ke dokter jika terdapat keluhan nyeri sendi."
+            },
+            16: {
+                title: "Mobilitas Ringan Terganggu",
+                text: "Lansia mengalami gangguan mobilitas ringan dengan sedikit keterbatasan dalam aktivitas sehari-hari. Risiko immobility rendah.",
+                recommendation: "Lakukan latihan keseimbangan dan kekuatan otot kaki secara teratur. Evaluasi lingkungan rumah untuk memastikan keamanan. Periksa ke dokter jika terdapat keluhan nyeri sendi."
+            },
+            15: {
+                title: "Mobilitas Sedang Terganggu",
+                text: "Lansia mengalami gangguan mobilitas sedang dengan keterbatasan yang mempengaruhi aktivitas sehari-hari. Risiko immobility sedang.",
+                recommendation: "Perlu evaluasi medis lebih lanjut untuk identifikasi penyebab gangguan mobilitas. Pertimbangkan terapi fisik dan penggunaan alat bantu jalan. Lakukan modifikasi lingkungan untuk meningkatkan keamanan."
+            },
+            14: {
+                title: "Mobilitas Sedang Terganggu",
+                text: "Lansia mengalami gangguan mobilitas sedang dengan keterbatasan yang mempengaruhi aktivitas sehari-hari. Risiko immobility sedang.",
+                recommendation: "Perlu evaluasi medis lebih lanjut untuk identifikasi penyebab gangguan mobilitas. Pertimbangkan terapi fisik dan penggunaan alat bantu jalan. Lakukan modifikasi lingkungan untuk meningkatkan keamanan."
+            },
+            13: {
+                title: "Mobilitas Sedang Terganggu",
+                text: "Lansia mengalami gangguan mobilitas sedang dengan keterbatasan yang mempengaruhi aktivitas sehari-hari. Risiko immobility sedang.",
+                recommendation: "Perlu evaluasi medis lebih lanjut untuk identifikasi penyebab gangguan mobilitas. Pertimbangkan terapi fisik dan penggunaan alat bantu jalan. Lakukan modifikasi lingkungan untuk meningkatkan keamanan."
+            },
+            12: {
+                title: "Mobilitas Sedang Terganggu",
+                text: "Lansia mengalami gangguan mobilitas sedang dengan keterbatasan yang mempengaruhi aktivitas sehari-hari. Risiko immobility sedang.",
+                recommendation: "Perlu evaluasi medis lebih lanjut untuk identifikasi penyebab gangguan mobilitas. Pertimbangkan terapi fisik dan penggunaan alat bantu jalan. Lakukan modifikasi lingkungan untuk meningkatkan keamanan."
+            },
+            11: {
+                title: "Mobilitas Sedang Terganggu",
+                text: "Lansia mengalami gangguan mobilitas sedang dengan keterbatasan yang mempengaruhi aktivitas sehari-hari. Risiko immobility sedang.",
+                recommendation: "Perlu evaluasi medis lebih lanjut untuk identifikasi penyebab gangguan mobilitas. Pertimbangkan terapi fisik dan penggunaan alat bantu jalan. Lakukan modifikasi lingkungan untuk meningkatkan keamanan."
+            },
+            10: {
+                title: "Mobilitas Sedang Terganggu",
+                text: "Lansia mengalami gangguan mobilitas sedang dengan keterbatasan yang mempengaruhi aktivitas sehari-hari. Risiko immobility sedang.",
+                recommendation: "Perlu evaluasi medis lebih lanjut untuk identifikasi penyebab gangguan mobilitas. Pertimbangkan terapi fisik dan penggunaan alat bantu jalan. Lakukan modifikasi lingkungan untuk meningkatkan keamanan."
+            },
+            9: {
+                title: "Mobilitas Sangat Terganggu",
+                text: "Lansia mengalami gangguan mobilitas berat dengan ketergantungan tinggi pada bantuan orang lain. Risiko immobility tinggi.",
+                recommendation: "Diperlukan evaluasi medis segera untuk penanganan komprehensif. Pertimbangkan penggunaan alat bantu mobilitas seperti kursi roda atau walker dengan pengawasan. Modifikasi lingkungan rumah secara ekstensif untuk keamanan."
+            },
+            8: {
+                title: "Mobilitas Sangat Terganggu",
+                text: "Lansia mengalami gangguan mobilitas berat dengan ketergantungan tinggi pada bantuan orang lain. Risiko immobility tinggi.",
+                recommendation: "Diperlukan evaluasi medis segera untuk penanganan komprehensif. Pertimbangkan penggunaan alat bantu mobilitas seperti kursi roda atau walker dengan pengawasan. Modifikasi lingkungan rumah secara ekstensif untuk keamanan."
+            },
+            7: {
+                title: "Mobilitas Sangat Terganggu",
+                text: "Lansia mengalami gangguan mobilitas berat dengan ketergantungan tinggi pada bantuan orang lain. Risiko immobility tinggi.",
+                recommendation: "Diperlukan evaluasi medis segera untuk penanganan komprehensif. Pertimbangkan penggunaan alat bantu mobilitas seperti kursi roda atau walker dengan pengawasan. Modifikasi lingkungan rumah secara ekstensif untuk keamanan."
+            },
+            6: {
+                title: "Mobilitas Sangat Terganggu",
+                text: "Lansia mengalami gangguan mobilitas berat dengan ketergantungan tinggi pada bantuan orang lain. Risiko immobility tinggi.",
+                recommendation: "Diperlukan evaluasi medis segera untuk penanganan komprehensif. Pertimbangkan penggunaan alat bantu mobilitas seperti kursi roda atau walker dengan pengawasan. Modifikasi lingkungan rumah secara ekstensif untuk keamanan."
+            },
+            5: {
+                title: "Mobilitas Sangat Terganggu",
+                text: "Lansia mengalami gangguan mobilitas berat dengan ketergantungan tinggi pada bantuan orang lain. Risiko immobility tinggi.",
+                recommendation: "Diperlukan evaluasi medis segera untuk penanganan komprehensif. Pertimbangkan penggunaan alat bantu mobilitas seperti kursi roda atau walker dengan pengawasan. Modifikasi lingkungan rumah secara ekstensif untuk keamanan."
+            },
+            4: {
+                title: "Mobilitas Sangat Terganggu",
+                text: "Lansia mengalami gangguan mobilitas berat dengan ketergantungan tinggi pada bantuan orang lain. Risiko immobility tinggi.",
+                recommendation: "Diperlukan evaluasi medis segera untuk penanganan komprehensif. Pertimbangkan penggunaan alat bantu mobilitas seperti kursi roda atau walker dengan pengawasan. Modifikasi lingkungan rumah secara ekstensif untuk keamanan."
+            },
+            3: {
+                title: "Mobilitas Sangat Terganggu",
+                text: "Lansia mengalami gangguan mobilitas berat dengan ketergantungan tinggi pada bantuan orang lain. Risiko immobility tinggi.",
+                recommendation: "Diperlukan evaluasi medis segera untuk penanganan komprehensif. Pertimbangkan penggunaan alat bantu mobilitas seperti kursi roda atau walker dengan pengawasan. Modifikasi lingkungan rumah secara ekstensif untuk keamanan."
+            },
+            2: {
+                title: "Mobilitas Sangat Terganggu",
+                text: "Lansia mengalami gangguan mobilitas berat dengan ketergantungan tinggi pada bantuan orang lain. Risiko immobility tinggi.",
+                recommendation: "Diperlukan evaluasi medis segera untuk penanganan komprehensif. Pertimbangkan penggunaan alat bantu mobilitas seperti kursi roda atau walker dengan pengawasan. Modifikasi lingkungan rumah secara ekstensif untuk keamanan."
+            },
+            1: {
+                title: "Mobilitas Sangat Terganggu",
+                text: "Lansia mengalami gangguan mobilitas berat dengan ketergantungan tinggi pada bantuan orang lain. Risiko immobility tinggi.",
+                recommendation: "Diperlukan evaluasi medis segera untuk penanganan komprehensif. Pertimbangkan penggunaan alat bantu mobilitas seperti kursi roda atau walker dengan pengawasan. Modifikasi lingkungan rumah secara ekstensif untuk keamanan."
+            },
+            0: {
+                title: "Mobilitas Sangat Terganggu",
+                text: "Lansia mengalami gangguan mobilitas berat dengan ketergantungan tinggi pada bantuan orang lain. Risiko immobility tinggi.",
+                recommendation: "Diperlukan evaluasi medis segera untuk penanganan komprehensif. Pertimbangkan penggunaan alat bantu mobilitas seperti kursi roda atau walker dengan pengawasan. Modifikasi lingkungan rumah secara ekstensif untuk keamanan."
+            }
+        };
+        
+        // Fungsi untuk mendapatkan interpretasi berdasarkan skor
+        function getInterpretation(score) {
+            if (score >= 20) {
+                return interpretations[20];
+            } else if (score >= 16) {
+                return interpretations[16];
+            } else if (score >= 10) {
+                return interpretations[10];
+            } else {
+                return interpretations[9];
+            }
+        }
+        
+        // Event listener untuk pilihan jawaban
+        document.querySelectorAll('.option').forEach(option => {
+            option.addEventListener('click', function() {
+                const question = this.getAttribute('data-question');
+                const score = parseInt(this.getAttribute('data-score'));
+                
+                // Hapus seleksi dari semua opsi di pertanyaan yang sama
+                document.querySelectorAll(`.option[data-question="${question}"]`).forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                
+                // Tandai opsi yang dipilih
+                this.classList.add('selected');
+                
+                // Simpan skor untuk pertanyaan ini
+                scores[question] = score;
+            });
+        });
+        
+        // Event listener untuk tombol hitung skor
+        document.getElementById('calculate-btn').addEventListener('click', function() {
+            // Periksa apakah semua pertanyaan telah dijawab
+            let allAnswered = true;
+            let totalScore = 0;
+            
+            for (let question in scores) {
+                if (scores[question] === null) {
+                    allAnswered = false;
+                    break;
+                }
+                totalScore += scores[question];
+            }
+            
+            if (!allAnswered) {
+                alert('Silakan jawab semua pertanyaan sebelum menghitung skor.');
+                return;
+            }
+            
+            // Tampilkan hasil
+            document.getElementById('total-score').textContent = totalScore;
+            
+            // Tampilkan interpretasi
+            const interpretation = getInterpretation(totalScore);
+            document.getElementById('interpretation-title').textContent = interpretation.title;
+            document.getElementById('interpretation-text').textContent = interpretation.text;
+            document.getElementById('recommendation-text').textContent = interpretation.recommendation;
+            
+            // Tampilkan container hasil
+            document.getElementById('results-container').style.display = 'block';
+            
+            // Scroll ke hasil
+            document.getElementById('results-container').scrollIntoView({ behavior: 'smooth' });
+        });
+        
+        // Event listener untuk tombol reset
+        document.getElementById('reset-btn').addEventListener('click', function() {
+            // Reset semua pilihan
+            document.querySelectorAll('.option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Reset skor
+            for (let question in scores) {
+                scores[question] = null;
+            }
+            
+            // Sembunyikan hasil
+            document.getElementById('results-container').style.display = 'none';
+        });
+        
+        // Event listener untuk tombol cetak
+        document.getElementById('print-btn').addEventListener('click', function() {
+            window.print();
+        });
+    </script>
+</body>
+</html>

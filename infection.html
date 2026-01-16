@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alat Skrining Infeksi pada Lansia dengan NEWS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f7ff;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1a6dbb 0%, #2a91d1 100%);
+            color: white;
+            padding: 25px 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M0,0 L100,0 L100,100 Z" fill="white" opacity="0.05"/></svg>');
+            background-size: cover;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .logo {
+            height: 80px;
+            width: auto;
+            background-color: white;
+            padding: 8px;
+            border-radius: 8px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-text {
+            flex: 1;
+            margin-left: 20px;
+        }
+        
+        .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .header p {
+            font-size: 1rem;
+            opacity: 0.9;
+            max-width: 600px;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .calculator-section {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .interpretation-section {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .section-title {
+            color: #1a6dbb;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e6f2ff;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title i {
+            color: #2a91d1;
+        }
+        
+        .parameter {
+            margin-bottom: 25px;
+        }
+        
+        .parameter label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 10px;
+        }
+        
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            background-color: #f8fbff;
+            border: 1px solid #d1e7ff;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .option:hover {
+            background-color: #e6f2ff;
+            transform: translateY(-2px);
+        }
+        
+        .option.selected {
+            background-color: #d1e7ff;
+            border-color: #1a6dbb;
+            box-shadow: 0 3px 8px rgba(26, 109, 187, 0.2);
+        }
+        
+        .option input {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        
+        .calculate-btn {
+            background: linear-gradient(to right, #1a6dbb, #2a91d1);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .calculate-btn:hover {
+            background: linear-gradient(to right, #165ea3, #1a6dbb);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(26, 109, 187, 0.3);
+        }
+        
+        .result-box {
+            background-color: #f8fbff;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+            border-left: 5px solid #1a6dbb;
+        }
+        
+        .score-display {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .score-value {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #1a6dbb;
+            line-height: 1;
+        }
+        
+        .score-label {
+            font-size: 1.2rem;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .recommendation {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .risk-low {
+            color: #28a745;
+        }
+        
+        .risk-medium {
+            color: #ffc107;
+        }
+        
+        .risk-high {
+            color: #dc3545;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 25px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            color: #666;
+            margin-top: 20px;
+        }
+        
+        .developer {
+            margin-top: 15px;
+            font-weight: 600;
+            color: #1a6dbb;
+        }
+        
+        .copyright {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #888;
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+                padding: 20px;
+            }
+            
+            .logo-container {
+                flex-direction: column;
+                gap: 15px;
+                margin-bottom: 15px;
+            }
+            
+            .header-text {
+                margin-left: 0;
+            }
+            
+            .options {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .info-note {
+            background-color: #fff9e6;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo-container">
+                <img src="KKLP.jpg" alt="Logo KKLP" class="logo">
+                <img src="fkuph.jpg" alt="Logo FK UPH" class="logo">
+            </div>
+            <div class="header-text">
+                <h1>Alat Skrining Infeksi pada Lansia dengan NEWS</h1>
+                <p>National Early Warning Score (NEWS) adalah sistem skoring klinis yang digunakan untuk mendeteksi secara dini kemungkinan infeksi dan kondisi klinis yang memburuk pada lansia.</p>
+            </div>
+        </header>
+        
+        <div class="main-content">
+            <section class="calculator-section">
+                <h2 class="section-title"><i class="fas fa-calculator"></i> Kalkulator NEWS</h2>
+                <p>Silakan pilih nilai untuk setiap parameter klinis pasien:</p>
+                
+                <div class="info-note">
+                    <i class="fas fa-info-circle"></i> NEWS (National Early Warning Score) membantu mengidentifikasi pasien dengan risiko klinis yang memerlukan penanganan lebih lanjut.
+                </div>
+                
+                <form id="newsForm">
+                    <!-- Frekuensi Pernapasan -->
+                    <div class="parameter">
+                        <label>1. Frekuensi Pernapasan (per menit)</label>
+                        <div class="options">
+                            <label class="option">
+                                <input type="radio" name="respiratory" value="0" required> ≤ 8
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="respiratory" value="1"> 9-11
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="respiratory" value="0"> 12-20
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="respiratory" value="2"> 21-24
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="respiratory" value="3"> ≥ 25
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Saturasi Oksigen -->
+                    <div class="parameter">
+                        <label>2. Saturasi Oksigen (%)</label>
+                        <div class="options">
+                            <label class="option">
+                                <input type="radio" name="oxygen" value="3" required> ≤ 91
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="oxygen" value="2"> 92-93
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="oxygen" value="1"> 94-95
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="oxygen" value="0"> ≥ 96
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Suhu -->
+                    <div class="parameter">
+                        <label>3. Suhu (°C)</label>
+                        <div class="options">
+                            <label class="option">
+                                <input type="radio" name="temperature" value="3" required> ≤ 35.0
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="temperature" value="1"> 35.1-36.0
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="temperature" value="0"> 36.1-38.0
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="temperature" value="1"> 38.1-39.0
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="temperature" value="2"> ≥ 39.1
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Tekanan Darah Sistolik -->
+                    <div class="parameter">
+                        <label>4. Tekanan Darah Sistolik (mmHg)</label>
+                        <div class="options">
+                            <label class="option">
+                                <input type="radio" name="bloodPressure" value="3" required> ≤ 90
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="bloodPressure" value="2"> 91-100
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="bloodPressure" value="1"> 101-110
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="bloodPressure" value="0"> 111-219
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="bloodPressure" value="3"> ≥ 220
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Denyut Jantung -->
+                    <div class="parameter">
+                        <label>5. Denyut Jantung (per menit)</label>
+                        <div class="options">
+                            <label class="option">
+                                <input type="radio" name="heartRate" value="3" required> ≤ 40
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="heartRate" value="1"> 41-50
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="heartRate" value="0"> 51-90
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="heartRate" value="1"> 91-110
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="heartRate" value="2"> 111-130
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="heartRate" value="3"> ≥ 131
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Tingkat Kesadaran -->
+                    <div class="parameter">
+                        <label>6. Tingkat Kesadaran</label>
+                        <div class="options">
+                            <label class="option">
+                                <input type="radio" name="consciousness" value="0" required> Sadar penuh
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="consciousness" value="3"> Tampak bingung
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="consciousness" value="3"> Tidak responsif
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <button type="button" id="calculateBtn" class="calculate-btn">
+                        <i class="fas fa-stethoscope"></i> Hitung Skor NEWS
+                    </button>
+                </form>
+                
+                <div id="result" class="result-box" style="display: none;">
+                    <div class="score-display">
+                        <div class="score-value" id="scoreValue">0</div>
+                        <div class="score-label">Total Skor NEWS</div>
+                    </div>
+                    
+                    <div id="interpretation"></div>
+                    
+                    <div id="recommendation" class="recommendation"></div>
+                </div>
+            </section>
+            
+            <section class="interpretation-section">
+                <h2 class="section-title"><i class="fas fa-chart-line"></i> Interpretasi Skor NEWS</h2>
+                <p>Berikut adalah interpretasi skor NEWS dan rekomendasi penatalaksanaan:</p>
+                
+                <div class="parameter">
+                    <h3><span class="risk-low">Skor 0-4: Risiko Rendah</span></h3>
+                    <p>Pasien dalam kondisi stabil. Lakukan pemantauan rutin sesuai protokol klinis standar.</p>
+                    <div class="recommendation">
+                        <strong>Rekomendasi:</strong> Observasi rutin, evaluasi dalam 12-24 jam berikutnya.
+                    </div>
+                </div>
+                
+                <div class="parameter">
+                    <h3><span class="risk-medium">Skor 5-6: Risiko Sedang</span></h3>
+                    <p>Pasien memerlukan peningkatan pemantauan dan evaluasi klinis lebih lanjut.</p>
+                    <div class="recommendation">
+                        <strong>Rekomendasi:</strong> Pemantauan ketat setiap 4-6 jam, pertimbangkan konsultasi dengan dokter senior.
+                    </div>
+                </div>
+                
+                <div class="parameter">
+                    <h3><span class="risk-high">Skor ≥7: Risiko Tinggi</span></h3>
+                    <p>Pasien dalam kondisi kritis dan memerlukan intervensi segera.</p>
+                    <div class="recommendation">
+                        <strong>Rekomendasi:</strong> Evaluasi segera oleh tim medis senior, pertimbangkan perawatan intensif, dan pemantauan kontinu.
+                    </div>
+                </div>
+                
+                <div class="info-note">
+                    <i class="fas fa-exclamation-triangle"></i> <strong>Catatan Penting:</strong> Alat ini merupakan panduan skrining awal dan tidak menggantikan penilaian klinis yang komprehensif oleh tenaga kesehatan profesional. Selalu lakukan evaluasi menyeluruh terhadap kondisi pasien.
+                </div>
+                
+                <div class="parameter">
+                    <h3>Parameter NEWS:</h3>
+                    <ul style="padding-left: 20px; margin-top: 10px;">
+                        <li>Frekuensi Pernapasan</li>
+                        <li>Saturasi Oksigen</li>
+                        <li>Suhu</li>
+                        <li>Tekanan Darah Sistolik</li>
+                        <li>Denyut Jantung</li>
+                        <li>Tingkat Kesadaran</li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+        
+        <footer class="footer">
+            <p>Alat Skrining Infeksi pada Lansia dengan National Early Warning Score (NEWS)</p>
+            <p class="developer">Dikembangkan Oleh Prodi PPDS KKLP FK UPH - dr Hendrik</p>
+            <p class="copyright">© 2025 - Program Studi Spesialis Kedokteran Primer FK UPH</p>
+        </footer>
+    </div>
+
+    <script>
+        // Menangani pemilihan opsi
+        document.querySelectorAll('.option').forEach(option => {
+            option.addEventListener('click', function() {
+                // Hapus kelas selected dari semua opsi dalam grup yang sama
+                const groupName = this.querySelector('input').name;
+                document.querySelectorAll(`input[name="${groupName}"]`).forEach(input => {
+                    input.parentElement.classList.remove('selected');
+                });
+                
+                // Tambahkan kelas selected ke opsi yang dipilih
+                this.classList.add('selected');
+            });
+        });
+        
+        // Menangani tombol hitung
+        document.getElementById('calculateBtn').addEventListener('click', function() {
+            // Validasi form
+            const form = document.getElementById('newsForm');
+            const inputs = form.querySelectorAll('input[type="radio"]:checked');
+            
+            if (inputs.length < 6) {
+                alert('Harap pilih nilai untuk semua parameter sebelum menghitung skor.');
+                return;
+            }
+            
+            // Hitung total skor
+            let totalScore = 0;
+            inputs.forEach(input => {
+                totalScore += parseInt(input.value);
+            });
+            
+            // Tampilkan hasil
+            document.getElementById('scoreValue').textContent = totalScore;
+            
+            // Tentukan interpretasi berdasarkan skor
+            let interpretation = '';
+            let recommendation = '';
+            let riskClass = '';
+            
+            if (totalScore <= 4) {
+                interpretation = '<h3 class="risk-low">Risiko Rendah</h3><p>Pasien dalam kondisi stabil berdasarkan parameter NEWS.</p>';
+                recommendation = '<p><strong>Rekomendasi Tatalaksana:</strong></p><ul><li>Observasi rutin sesuai protokol klinis</li><li>Evaluasi kondisi dalam 12-24 jam berikutnya</li><li>Pertimbangkan pemeriksaan laboratorium dasar jika terdapat faktor risiko tambahan</li></ul>';
+                riskClass = 'risk-low';
+            } else if (totalScore >= 5 && totalScore <= 6) {
+                interpretation = '<h3 class="risk-medium">Risiko Sedang</h3><p>Pasien menunjukkan tanda-tanda klinis yang memerlukan peningkatan pemantauan.</p>';
+                recommendation = '<p><strong>Rekomendasi Tatalaksana:</strong></p><ul><li>Pemantauan ketat setiap 4-6 jam</li><li>Konsultasi dengan dokter senior atau spesialis</li><li>Pertimbangkan pemeriksaan laboratorium lengkap dan radiologi</li><li>Evaluasi kebutuhan terapi suportif (oksigen, cairan, dll)</li></ul>';
+                riskClass = 'risk-medium';
+            } else {
+                interpretation = '<h3 class="risk-high">Risiko Tinggi</h3><p>Pasien berada dalam kondisi kritis dan memerlukan intervensi medis segera.</p>';
+                recommendation = '<p><strong>Rekomendasi Tatalaksana:</strong></p><ul><li>Evaluasi segera oleh tim medis senior</li><li>Pertimbangkan perawatan intensif atau ruang observasi khusus</li><li>Pemantauan kontinu tanda vital</li><li>Inisiasi terapi sesuai penyebab yang dicurigai</li><li>Pertimbangkan rujukan ke fasilitas dengan kemampuan lebih tinggi jika diperlukan</li></ul>';
+                riskClass = 'risk-high';
+            }
+            
+            // Tambahkan kelas risiko pada nilai skor
+            document.getElementById('scoreValue').className = `score-value ${riskClass}`;
+            
+            // Tampilkan interpretasi dan rekomendasi
+            document.getElementById('interpretation').innerHTML = interpretation;
+            document.getElementById('recommendation').innerHTML = recommendation;
+            
+            // Tampilkan hasil
+            document.getElementById('result').style.display = 'block';
+            
+            // Scroll ke hasil
+            document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+        
+        // Reset form saat halaman dimuat ulang
+        window.addEventListener('load', function() {
+            // Reset semua pilihan radio
+            document.querySelectorAll('input[type="radio"]').forEach(input => {
+                input.checked = false;
+            });
+            
+            // Hapus kelas selected dari semua opsi
+            document.querySelectorAll('.option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Sembunyikan hasil
+            document.getElementById('result').style.display = 'none';
+        });
+    </script>
+</body>
+</html>
