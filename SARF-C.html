@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skrining SARC-F untuk Deteksi Sarcopenia</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, #1a73e8 0%, #6c8ef5 100%);
+            color: white;
+            padding: 25px 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .logo {
+            height: 80px;
+            width: auto;
+            object-fit: contain;
+        }
+        
+        .header-text {
+            flex-grow: 1;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .questionnaire {
+            flex: 2;
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .instructions {
+            background-color: #e8f4ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid #1a73e8;
+        }
+        
+        .instructions h3 {
+            color: #1a73e8;
+            margin-bottom: 10px;
+        }
+        
+        .question {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .question:last-child {
+            border-bottom: none;
+        }
+        
+        .question h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #1a73e8;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .option:hover {
+            background-color: #e8f4ff;
+        }
+        
+        .option.selected {
+            background-color: #e1f0ff;
+            border-color: #1a73e8;
+        }
+        
+        .option input {
+            margin-right: 15px;
+            transform: scale(1.2);
+        }
+        
+        .result-panel {
+            flex: 1;
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            min-width: 300px;
+        }
+        
+        .result-panel h2 {
+            color: #1a73e8;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .score-display {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .score-value {
+            font-size: 48px;
+            font-weight: 700;
+            color: #1a73e8;
+            margin: 10px 0;
+        }
+        
+        .interpretation {
+            background-color: #f0f7ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .interpretation h3 {
+            color: #1a73e8;
+            margin-bottom: 10px;
+        }
+        
+        .recommendation {
+            background-color: #fff8e1;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .recommendation h3 {
+            color: #ff9800;
+            margin-bottom: 10px;
+        }
+        
+        .calculate-btn {
+            background: linear-gradient(to right, #1a73e8, #6c8ef5);
+            color: white;
+            border: none;
+            padding: 16px 30px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+        
+        .calculate-btn:hover {
+            background: linear-gradient(to right, #0d62d9, #5a7df0);
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(26, 115, 232, 0.2);
+        }
+        
+        .reset-btn {
+            background-color: #f1f3f4;
+            color: #5f6368;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .reset-btn:hover {
+            background-color: #e8eaed;
+        }
+        
+        .promotion {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.2);
+        }
+        
+        .promotion-img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 5px solid white;
+        }
+        
+        .promotion-text {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .promotion h2 {
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+        
+        .promotion a {
+            display: inline-block;
+            background-color: white;
+            color: #ff6b6b;
+            padding: 12px 25px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .promotion a:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 25px;
+            background-color: #1a2753;
+            color: white;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+        
+        .footer p {
+            margin: 8px 0;
+        }
+        
+        .copyright {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-top: 15px;
+        }
+        
+        .disclaimer {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            .header {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+            
+            .logo-container {
+                justify-content: center;
+            }
+            
+            .promotion {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-container">
+                <img src="KKLP.jpg" alt="Logo KKLP" class="logo">
+                <img src="fkuph.jpg" alt="Logo FK UPH" class="logo">
+            </div>
+            <div class="header-text">
+                <h1>Alat Skrining SARC-F untuk Deteksi Sarcopenia</h1>
+                <p>Skrining mandiri untuk menilai risiko penurunan massa dan fungsi otot terkait usia (sarcopenia)</p>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="questionnaire">
+                <div class="instructions">
+                    <h3>Petunjuk Penggunaan</h3>
+                    <p>Alat skrining SARC-F ini terdiri dari 5 pertanyaan sederhana. Pilih jawaban yang paling sesuai dengan kondisi Anda selama ini. Setelah menjawab semua pertanyaan, klik tombol "Hitung Skor" untuk melihat hasil dan rekomendasi.</p>
+                </div>
+                
+                <div class="question" id="question1">
+                    <h3>1. Kekuatan (Strength) - Seberapa besar kesulitan Anda mengangkat dan membawa barang seberat 5 kg?</h3>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q1" value="0"> Tidak ada kesulitan sama sekali
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q1" value="1"> Sedikit kesulitan
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q1" value="2"> Sangat sulit, tidak mampu, atau butuh bantuan
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="question" id="question2">
+                    <h3>2. Bantuan berjalan (Assistance in walking) - Seberapa besar kesulitan Anda berjalan melintasi ruangan?</h3>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q2" value="0"> Tidak ada kesulitan sama sekali
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q2" value="1"> Sedikit kesulitan
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q2" value="2"> Sangat sulit, tidak mampu, atau butuh bantuan
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="question" id="question3">
+                    <h3>3. Bangun dari kursi (Rise from a chair) - Seberapa besar kesulitan Anda bangun dari kursi atau tempat tidur?</h3>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q3" value="0"> Tidak ada kesulitan sama sekali
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q3" value="1"> Sedikit kesulitan
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q3" value="2"> Sangat sulit, tidak mampu, atau butuh bantuan tanpa bantuan
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="question" id="question4">
+                    <h3>4. Naik tangga (Climb stairs) - Seberapa besar kesulitan Anda menaiki 10 anak tangga?</h3>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q4" value="0"> Tidak ada kesulitan sama sekali
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q4" value="1"> Sedikit kesulitan
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q4" value="2"> Sangat sulit, tidak mampu, atau butuh bantuan
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="question" id="question5">
+                    <h3>5. Jatuh (Falls) - Berapa kali Anda jatuh dalam setahun terakhir?</h3>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q5" value="0"> Tidak pernah jatuh
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q5" value="1"> Jatuh 1-3 kali
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q5" value="2"> Jatuh 4 kali atau lebih
+                        </label>
+                    </div>
+                </div>
+                
+                <button class="calculate-btn" id="calculateBtn">Hitung Skor SARC-F</button>
+                <button class="reset-btn" id="resetBtn">Reset Jawaban</button>
+            </div>
+            
+            <div class="result-panel">
+                <h2>Hasil Skrining SARC-F</h2>
+                <p>Skor SARC-F Anda akan muncul setelah Anda menjawab semua pertanyaan dan mengklik tombol "Hitung Skor".</p>
+                
+                <div class="score-display" id="scoreDisplay" style="display: none;">
+                    <p>Total Skor SARC-F:</p>
+                    <div class="score-value" id="scoreValue">0</div>
+                    <p>dari 10 poin maksimum</p>
+                </div>
+                
+                <div class="interpretation" id="interpretation" style="display: none;">
+                    <h3>Interpretasi Skor</h3>
+                    <p id="interpretationText"></p>
+                </div>
+                
+                <div class="recommendation" id="recommendation" style="display: none;">
+                    <h3>Rekomendasi</h3>
+                    <p id="recommendationText"></p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="promotion">
+            <img src="Hendrik.jpg" alt="Dr. Hendrik" class="promotion-img">
+            <div class="promotion-text">
+                <h2>Mengalami Nyeri Punggung atau Kebas Saraf?</h2>
+                <p>Konsultasikan masalah muskuloskeletal dan saraf Anda dengan dokter spesialis. Dapatkan penanganan yang tepat untuk meningkatkan kualitas hidup Anda.</p>
+                <a href="https://hendrikkho-akupuntur.github.io/profile/profile%20dr%20Hendrik%20akupuntur.html" target="_blank">Konsultasi dengan dr. Hendrik</a>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><strong>Dikembangkan Oleh Prodi PPDS KKLP FK UPH - dr. Hendrik</strong></p>
+            <p class="copyright">© 2025 - Program Studi Spesialis Kedokteran Primer FK UPH</p>
+        </div>
+        
+        <div class="disclaimer">
+            <p><strong>Disclaimer:</strong> Alat skrining ini adalah alat bantu deteksi dini dan tidak menggantikan diagnosis medis dari tenaga kesehatan profesional. Jika Anda memiliki kekhawatiran tentang kesehatan otot atau risiko sarcopenia, konsultasikan dengan dokter untuk pemeriksaan lebih lanjut.</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Menambahkan interaksi pada pilihan jawaban
+            const options = document.querySelectorAll('.option');
+            options.forEach(option => {
+                option.addEventListener('click', function() {
+                    const radioInput = this.querySelector('input[type="radio"]');
+                    radioInput.checked = true;
+                    
+                    // Reset semua pilihan di pertanyaan yang sama
+                    const questionDiv = this.closest('.question');
+                    const allOptions = questionDiv.querySelectorAll('.option');
+                    allOptions.forEach(opt => opt.classList.remove('selected'));
+                    
+                    // Tandai pilihan yang dipilih
+                    this.classList.add('selected');
+                });
+            });
+            
+            // Tombol hitung skor
+            const calculateBtn = document.getElementById('calculateBtn');
+            calculateBtn.addEventListener('click', calculateScore);
+            
+            // Tombol reset
+            const resetBtn = document.getElementById('resetBtn');
+            resetBtn.addEventListener('click', resetForm);
+            
+            function calculateScore() {
+                let totalScore = 0;
+                let allAnswered = true;
+                
+                // Hitung skor untuk setiap pertanyaan
+                for (let i = 1; i <= 5; i++) {
+                    const selectedOption = document.querySelector(`input[name="q${i}"]:checked`);
+                    
+                    if (selectedOption) {
+                        totalScore += parseInt(selectedOption.value);
+                    } else {
+                        allAnswered = false;
+                        // Highlight pertanyaan yang belum dijawab
+                        document.getElementById(`question${i}`).style.backgroundColor = '#fff5f5';
+                    }
+                }
+                
+                if (!allAnswered) {
+                    alert('Silakan jawab semua pertanyaan sebelum menghitung skor.');
+                    return;
+                }
+                
+                // Tampilkan skor
+                document.getElementById('scoreValue').textContent = totalScore;
+                document.getElementById('scoreDisplay').style.display = 'block';
+                
+                // Tentukan interpretasi dan rekomendasi berdasarkan skor
+                let interpretation = '';
+                let recommendation = '';
+                
+                if (totalScore < 4) {
+                    interpretation = 'Skor SARC-F Anda rendah (<4). Hasil ini menunjukkan risiko sarcopenia yang rendah berdasarkan penilaian mandiri. Namun, tetap penting untuk menjaga kesehatan otot dengan gaya hidup aktif dan nutrisi yang baik.';
+                    recommendation = 'Pertahankan gaya hidup aktif dengan olahraga teratur yang melatih kekuatan otot, konsumsi protein yang cukup, dan rutin melakukan aktivitas fisik sehari-hari. Skrining ulang dapat dilakukan 6-12 bulan lagi atau jika terjadi perubahan kemampuan fisik.';
+                } else {
+                    interpretation = `Skor SARC-F Anda ${totalScore} (≥4). Hasil ini menunjukkan kemungkinan adanya sarcopenia atau penurunan fungsi otot yang signifikan. Disarankan untuk berkonsultasi dengan tenaga kesehatan profesional untuk evaluasi lebih lanjut.`;
+                    recommendation = 'Konsultasikan hasil ini dengan dokter atau ahli geriatri untuk pemeriksaan fisik lebih lanjut seperti pengukuran kekuatan genggam, kecepatan berjalan, dan komposisi tubuh. Dokter mungkin akan merekomendasikan pemeriksaan DEXA scan untuk mengukur massa otot, serta program latihan resistensi dan nutrisi yang sesuai.';
+                }
+                
+                // Tampilkan interpretasi dan rekomendasi
+                document.getElementById('interpretationText').textContent = interpretation;
+                document.getElementById('recommendationText').textContent = recommendation;
+                document.getElementById('interpretation').style.display = 'block';
+                document.getElementById('recommendation').style.display = 'block';
+                
+                // Scroll ke hasil
+                document.getElementById('scoreDisplay').scrollIntoView({ behavior: 'smooth' });
+            }
+            
+            function resetForm() {
+                // Reset semua pilihan radio
+                document.querySelectorAll('input[type="radio"]').forEach(input => {
+                    input.checked = false;
+                });
+                
+                // Reset tampilan pilihan
+                document.querySelectorAll('.option').forEach(option => {
+                    option.classList.remove('selected');
+                });
+                
+                // Reset highlight pertanyaan
+                for (let i = 1; i <= 5; i++) {
+                    document.getElementById(`question${i}`).style.backgroundColor = '';
+                }
+                
+                // Sembunyikan hasil
+                document.getElementById('scoreDisplay').style.display = 'none';
+                document.getElementById('interpretation').style.display = 'none';
+                document.getElementById('recommendation').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
