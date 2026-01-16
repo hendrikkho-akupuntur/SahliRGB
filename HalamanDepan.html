@@ -17,6 +17,7 @@
             --insulin-color: #8a2be2;
             --nutrition-color: #ff7b00;
             --geriatric-color: #5d4037;
+            --geriatric-full-color: #795548;
         }
         
         * {
@@ -233,6 +234,20 @@
         
         .geriatric-card .tool-link:hover {
             background-color: #4e342e;
+        }
+        
+        /* Styling khusus untuk kartu Geriatric FULL */
+        .geriatric-full-card .tool-icon {
+            background-color: #d7ccc8;
+            color: var(--geriatric-full-color);
+        }
+        
+        .geriatric-full-card .tool-link {
+            background-color: var(--geriatric-full-color);
+        }
+        
+        .geriatric-full-card .tool-link:hover {
+            background-color: #6d4c41;
         }
         
         /* Footer */
@@ -455,7 +470,7 @@
                         </div>
                     </div>
                     
-                    <!-- Alat 10: Geriatric (BARU) -->
+                    <!-- Alat 10: Geriatric -->
                     <div class="tool-card geriatric-card">
                         <div class="tool-icon">
                             <i class="fas fa-user-md"></i>
@@ -464,6 +479,18 @@
                             <h3>Screening Geriatric</h3>
                             <p>Alat screening komprehensif untuk pasien geriatri, termasuk penilaian fungsi kognitif, mobilitas, dan status kesehatan lansia secara menyeluruh.</p>
                             <a href="https://hendrikkho-akupuntur.github.io/SahliRGB/Geriatric.html" target="_blank" class="tool-link">Akses Alat</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Alat 11: Geriatric FULL (BARU) -->
+                    <div class="tool-card geriatric-full-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-clipboard-check"></i>
+                        </div>
+                        <div class="tool-content">
+                            <h3>Geriatric FULL (Lengkap)</h3>
+                            <p>Alat screening geriatri lengkap dengan penilaian komprehensif multidomain termasuk kognitif, fisik, psikologis, dan sosial untuk evaluasi menyeluruh pasien lansia.</p>
+                            <a href="https://hendrikkho-akupuntur.github.io/SahliRGB/GeriatricLengkap.html" target="_blank" class="tool-link">Akses Alat Lengkap</a>
                         </div>
                     </div>
                 </div>
@@ -507,6 +534,9 @@
                     if (this.classList.contains('geriatric-card')) {
                         icon.style.animation = 'rotate 2s infinite';
                     }
+                    if (this.classList.contains('geriatric-full-card')) {
+                        icon.style.animation = 'pulse-grow 1.5s infinite';
+                    }
                 });
                 
                 card.addEventListener('mouseleave', function() {
@@ -543,6 +573,13 @@
             25% { transform: rotate(5deg); }
             75% { transform: rotate(-5deg); }
             100% { transform: rotate(0deg); }
+        }
+        
+        /* Animasi khusus untuk ikon geriatric FULL */
+        @keyframes pulse-grow {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
         }
     </style>
 </body>
