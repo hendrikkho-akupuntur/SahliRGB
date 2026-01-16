@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assessment 14 I - Lansia</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f9f7f7 0%, #eef7f6 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Header Styles */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(to right, #2c7873, #4a9e95);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            box-shadow: 0 6px 20px rgba(44, 120, 115, 0.2);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .logo {
+            height: 70px;
+            width: auto;
+            border-radius: 5px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .title-container {
+            flex-grow: 1;
+            text-align: center;
+        }
+        
+        .title-container h1 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        
+        .title-container p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+        
+        /* Main Content */
+        .main-content {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .main-title {
+            color: #2c7873;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .main-title:after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, #6fb3b8, #2c7873);
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+        
+        .subtitle {
+            color: #555;
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* Assessment Items Grid */
+        .assessment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+        
+        .assessment-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            border-top: 5px solid #6fb3b8;
+        }
+        
+        .assessment-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            border-top-color: #2c7873;
+        }
+        
+        .assessment-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #eef7f6, #d1ecea);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            color: #2c7873;
+            box-shadow: 0 4px 10px rgba(111, 179, 184, 0.3);
+        }
+        
+        .assessment-card h3 {
+            color: #2c7873;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .assessment-card p {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .assessment-link {
+            display: inline-block;
+            background: linear-gradient(to right, #2c7873, #4a9e95);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(44, 120, 115, 0.2);
+        }
+        
+        .assessment-link:hover {
+            background: linear-gradient(to right, #245e59, #3a857d);
+            box-shadow: 0 6px 15px rgba(44, 120, 115, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .coming-soon {
+            background: linear-gradient(to right, #a0a0a0, #c0c0c0);
+            cursor: not-allowed;
+        }
+        
+        .coming-soon:hover {
+            background: linear-gradient(to right, #a0a0a0, #c0c0c0);
+            transform: none;
+            box-shadow: 0 4px 10px rgba(44, 120, 115, 0.2);
+        }
+        
+        /* Info Box */
+        .info-box {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 50px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            border-left: 5px solid #2c7873;
+        }
+        
+        .info-box h2 {
+            color: #2c7873;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .info-box p {
+            color: #555;
+            line-height: 1.7;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            padding: 30px;
+            color: #666;
+            font-size: 0.95rem;
+            border-top: 1px solid #ddd;
+        }
+        
+        .developer {
+            font-weight: 600;
+            color: #2c7873;
+            margin: 15px 0;
+            font-size: 1.1rem;
+        }
+        
+        .copyright {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #888;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+                padding: 20px;
+            }
+            
+            .logo-container {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            .logo {
+                height: 60px;
+            }
+            
+            .title-container h1 {
+                font-size: 1.6rem;
+            }
+            
+            .main-title {
+                font-size: 2rem;
+            }
+            
+            .assessment-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 20px;
+            }
+            
+            .assessment-card h3 {
+                font-size: 1.2rem;
+                min-height: 50px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .assessment-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-title {
+                font-size: 1.8rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo-container">
+                <img src="fkuph.jpg" alt="Logo FK UPH" class="logo" onerror="this.style.display='none'">
+                <img src="KKLP.jpg" alt="Logo KKLP" class="logo" onerror="this.style.display='none'">
+            </div>
+            <div class="title-container">
+                <h1>ASSESSMENT 14 I - LANSIA</h1>
+                <p>Sistem Komprehensif untuk Evaluasi Kesehatan Lansia</p>
+            </div>
+        </header>
+        
+        <main class="main-content">
+            <h1 class="main-title">Assessment 14 I Geriatri</h1>
+            <p class="subtitle">Platform komprehensif untuk menilai aspek kesehatan lansia berdasarkan konsep 14 I dalam geriatri. Pilih salah satu assessment untuk mulai mengevaluasi kondisi kesehatan lansia.</p>
+            
+            <div class="assessment-grid">
+                <!-- 14 Assessment Items -->
+                <div class="assessment-card">
+                    <div class="assessment-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>Intellectual Impairment</h3>
+                    <p>Assessment fungsi kognitif dan gangguan memori pada lansia</p>
+                    <a href="https://hendrikkho-akupuntur.github.io/SahliRGB/MMSE.html" target="_blank" class="assessment-link">Mulai Assessment</a>
+                </div>
+                
+                <div class="assessment-card">
+                    <div class="assessment-icon">
+                        <i class="fas fa-wheelchair"></i>
+                    </div>
+                    <h3>Immobility</h3>
+                    <p>Evaluasi kemampuan mobilitas dan pergerakan fisik lansia</p>
+                    <a href="https://hendrikkho-akupuntur.github.io/SahliRGB/EMS.html" target="_blank" class="assessment-link">Mulai Assessment</a>
+                </div>
+                
+                <div class="assessment-card">
+                    <div class="assessment-icon">
+                        <i class="fas fa-walking"></i>
+                    </div>
+                    <h3>Instability</h3>
+                    <p>Penilaian keseimbangan dan risiko jatuh pada lansia</p>
+                    <a href="https://hendrikkho-akupuntur.github.io/SahliRGB/instabilitas.html" target="_blank" class="assessment-link">Mulai Assessment</a>
+                </div>
+                
+                <div class="assessment-card">
+                    <div class="assessment-icon">
+                        <i class="fas fa-toilet"></i>
+                    </div>
+                    <h3>Incontinence</h3>
+                    <p>Assessment gangguan kontrol berkemih dan defekasi</p>
+                    <a href="https://hendrikkho-akupuntur.github.io/SahliRGB/incontinensia.html" target="_blank" class="assessment-link">Mulai Assessment</a>
+                </div>
+                
+                <div class="assessment-card">
+                    <div class="assessment-icon">
+                        <i class="fas fa-virus"></i>
+                    </div>
+                    <h3>Infection</h3>
+                    <p>Evaluasi risiko dan deteksi infeksi pada lansia</p>
+                    <a href="https://hendrikkho-akupuntur.github.io/SahliRGB/infection.html" target="_blank" class="assessment-link">Mulai Assessment</a>
+                </div>
+                
+                <div class="assessment-card">
+                    <div class="assessment-icon">
+                        <i class="fas fa-ear-deaf"></i>
+                    </div>
+                    <h3>Impairment of Hearing and Vision</h3>
+                    <p>Skrining gangguan pendengaran dan penglihatan</p>
+                    <a href="https://hendrikkho-akupuntur.github.io/SahliRGB/audiometry.html" target="_blank" class="assessment-link">Mulai Assessment</a>
+                </div>
+                
+                <div class="assessment-card">
+                    <div class="assessment-icon">
+                        <i class="fas fa-stomach"></i>
+                    </div>
+                    <h3>Impaction</h3>
+                    <p>Assessment konstipasi dan masalah pencernaan</p>
+                    <a href="https://hendrikkho-akupuntur.github.io/SahliRGB/konstipasi.html" target="_blank" class="assessment-link">Mulai Assessment</a>
+                </div>
+                
+                <div class="assessment-card">
+                    <div class="assessment-icon">
+                        <i class="fas fa-user-friends"></i>
+                    </div>
+                    <h3>Isolation</h3>
+                    <p>Evaluasi isolasi sosial dan risiko depresi</p>
+                    <a href="https://hendrikkho-akupuntur.github.io/SahliRGB/DepresiLansia.html" target="_blank" class="assessment-link">Mulai Assessment</a>
+                </div>
+                
+                <div class="assessment-card">
+                    <div class="assessment-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <h3>Inanition (Malnutrition)</h3>
+                    <p>Assessment status gizi dan risiko malnutrisi</p>
+                    <a href="https://hendrikkho-akupuntur.github.io/SahliRGB/MNA.html" target="_blank" class="assessment-link">Mulai Assessment</a>
+                </div>
+                
+                <div class="assessment-card">
+                    <div class="assessment-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <h3>Impecunity (Poverty)</h3>
+                    <p>Evaluasi kondisi ekonomi dan akses terhadap layanan kesehatan</p>
+                    <a href="#" class="assessment-link coming-soon">Segera Hadir</a>
+                </div>
+                
+                <div class="assessment-card">
+                    <div class="assessment-icon">
+                        <i class="fas fa-prescription-bottle-medical"></i>
+                    </div>
+                    <h3>Iatrogenesis</h3>
+                    <p>Assessment efek samping pengobatan dan polifarmasi</p>
+                    <a href="#" class="assessment-link coming-soon">Segera Hadir</a>
+                </div>
+                
+                <div class="assessment-card">
+                    <div class="assessment-icon">
+                        <i class="fas fa-bed"></i>
+                    </div>
+                    <h3>Insomnia</h3>
+                    <p>Evaluasi gangguan tidur dan kualitas tidur lansia</p>
+                    <a href="https://hendrikkho-akupuntur.github.io/SahliRGB/GSQ-6.html" target="_blank" class="assessment-link">Mulai Assessment</a>
+                </div>
+                
+                <div class="assessment-card">
+                    <div class="assessment-icon">
+                        <i class="fas fa-shield-virus"></i>
+                    </div>
+                    <h3>Immune Deficiency</h3>
+                    <p>Penilaian fungsi imun dan risiko infeksi berulang</p>
+                    <a href="#" class="assessment-link coming-soon">Segera Hadir</a>
+                </div>
+                
+                <div class="assessment-card">
+                    <div class="assessment-icon">
+                        <i class="fas fa-venus-mars"></i>
+                    </div>
+                    <h3>Impotence</h3>
+                    <p>Assessment fungsi seksual dan disfungsi ereksi</p>
+                    <a href="https://hendrikkho-akupuntur.github.io/SahliRGB/ASEX.html" target="_blank" class="assessment-link">Mulai Assessment</a>
+                </div>
+            </div>
+            
+            <div class="info-box">
+                <h2>Tentang Assessment 14 I</h2>
+                <p>Assessment 14 I merupakan pendekatan komprehensif dalam geriatri untuk menilai berbagai aspek kesehatan lansia. Konsep ini mencakup 14 area penilaian yang dimulai dengan huruf "I", yang mencerminkan masalah-masalah umum yang dihadapi populasi lanjut usia. Dengan menggunakan platform ini, tenaga kesehatan dapat melakukan evaluasi menyeluruh untuk merencanakan intervensi yang tepat dan meningkatkan kualitas hidup lansia.</p>
+            </div>
+        </main>
+        
+        <footer class="footer">
+            <p class="developer">Dikembangkan Oleh Prodi PPDS KKLP FK UPH - dr Hendrik</p>
+            <p>Program Pendidikan Dokter Spesialis Kedokteran Keluarga Layanan Primer</p>
+            <p class="copyright">© 2025 - Program Studi Spesialis Kedokteran Primer FK UPH</p>
+        </footer>
+    </div>
+    
+    <script>
+        // Add functionality for assessment items
+        document.addEventListener('DOMContentLoaded', function() {
+            // For items without links, show alert
+            const comingSoonLinks = document.querySelectorAll('.coming-soon');
+            
+            comingSoonLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const card = this.closest('.assessment-card');
+                    const title = card.querySelector('h3').textContent;
+                    alert(`Assessment untuk "${title}" sedang dalam pengembangan. Akan segera hadir!`);
+                });
+            });
+            
+            // Set current date in copyright if needed
+            const currentYear = new Date().getFullYear();
+            const copyrightElement = document.querySelector('.copyright');
+            if (copyrightElement) {
+                copyrightElement.innerHTML = copyrightElement.innerHTML.replace('2025', currentYear);
+            }
+            
+            // Add hover effect for cards
+            const cards = document.querySelectorAll('.assessment-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    const icon = this.querySelector('.assessment-icon');
+                    icon.style.transform = 'scale(1.1)';
+                    icon.style.transition = 'transform 0.3s ease';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    const icon = this.querySelector('.assessment-icon');
+                    icon.style.transform = 'scale(1)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
