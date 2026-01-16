@@ -16,6 +16,7 @@
             --light-gray: #e9ecef;
             --insulin-color: #8a2be2;
             --nutrition-color: #ff7b00;
+            --geriatric-color: #5d4037;
         }
         
         * {
@@ -218,6 +219,20 @@
         
         .nutrition-card .tool-link:hover {
             background-color: #e66a00;
+        }
+        
+        /* Styling khusus untuk kartu Geriatric */
+        .geriatric-card .tool-icon {
+            background-color: #efebe9;
+            color: var(--geriatric-color);
+        }
+        
+        .geriatric-card .tool-link {
+            background-color: var(--geriatric-color);
+        }
+        
+        .geriatric-card .tool-link:hover {
+            background-color: #4e342e;
         }
         
         /* Footer */
@@ -428,7 +443,7 @@
                         </div>
                     </div>
                     
-                    <!-- Alat 9: Kalkulator Gizi (BARU) -->
+                    <!-- Alat 9: Kalkulator Gizi -->
                     <div class="tool-card nutrition-card">
                         <div class="tool-icon">
                             <i class="fas fa-apple-alt"></i>
@@ -437,6 +452,18 @@
                             <h3>Kalkulator Gizi</h3>
                             <p>Alat untuk menghitung kebutuhan gizi harian, melacak asupan nutrisi, dan merencanakan diet seimbang berdasarkan kebutuhan individu.</p>
                             <a href="https://hendrikkho-akupuntur.github.io/SahliRGB/gizi.html" target="_blank" class="tool-link">Akses Kalkulator</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Alat 10: Geriatric (BARU) -->
+                    <div class="tool-card geriatric-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        <div class="tool-content">
+                            <h3>Screening Geriatric</h3>
+                            <p>Alat screening komprehensif untuk pasien geriatri, termasuk penilaian fungsi kognitif, mobilitas, dan status kesehatan lansia secara menyeluruh.</p>
+                            <a href="https://hendrikkho-akupuntur.github.io/SahliRGB/Geriatric.html" target="_blank" class="tool-link">Akses Alat</a>
                         </div>
                     </div>
                 </div>
@@ -477,6 +504,9 @@
                     if (this.classList.contains('nutrition-card')) {
                         icon.style.animation = 'bounce 1s infinite';
                     }
+                    if (this.classList.contains('geriatric-card')) {
+                        icon.style.animation = 'rotate 2s infinite';
+                    }
                 });
                 
                 card.addEventListener('mouseleave', function() {
@@ -505,6 +535,14 @@
         @keyframes bounce {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-5px); }
+        }
+        
+        /* Animasi khusus untuk ikon geriatric */
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(5deg); }
+            75% { transform: rotate(-5deg); }
+            100% { transform: rotate(0deg); }
         }
     </style>
 </body>
