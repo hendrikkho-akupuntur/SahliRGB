@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alat Periksa Anak - FK UPH</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4a90e2;
+            --primary-light: #e3f2fd;
+            --secondary: #43a047;
+            --secondary-light: #e8f5e9;
+            --accent: #ff9800;
+            --light: #f9f9f9;
+            --dark: #333;
+            --gray: #777;
+            --light-gray: #f0f0f0;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8fafc;
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: white;
+            box-shadow: var(--shadow);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .logo {
+            height: 70px;
+            width: auto;
+            object-fit: contain;
+        }
+        
+        .title-section {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .title-section h1 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+        
+        .title-section p {
+            color: var(--gray);
+            font-size: 1rem;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 40px 0;
+        }
+        
+        .intro-section {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 30px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+        
+        .intro-section h2 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 2rem;
+        }
+        
+        .intro-section p {
+            color: var(--gray);
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+        }
+        
+        /* Tools Section */
+        .tools-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        
+        .tool-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 30px;
+            text-align: center;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tool-icon {
+            font-size: 3.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        
+        .tool-card h3 {
+            color: var(--dark);
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .tool-card p {
+            color: var(--gray);
+            margin-bottom: 25px;
+            flex: 1;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 14px 28px;
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .btn:hover {
+            background-color: #3a7bc8;
+            transform: translateY(-3px);
+            box-shadow: 0 7px 14px rgba(58, 123, 200, 0.2);
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #388e3c;
+            box-shadow: 0 7px 14px rgba(56, 142, 60, 0.2);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: auto;
+        }
+        
+        .footer-content {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .footer-content p {
+            margin-bottom: 10px;
+            color: #ddd;
+        }
+        
+        .footer-content .copyright {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        
+        .developer-info {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin: 20px 0;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .logo-section {
+                justify-content: center;
+            }
+            
+            .title-section h1 {
+                font-size: 1.5rem;
+            }
+            
+            .tools-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .intro-section {
+                padding: 20px;
+            }
+            
+            .intro-section h2 {
+                font-size: 1.7rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .tool-card {
+                padding: 20px;
+            }
+            
+            .btn {
+                padding: 12px 24px;
+                width: 100%;
+            }
+            
+            .logo {
+                height: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-content">
+            <div class="logo-section">
+                <img src="KKLP.jpg" alt="Logo KKLP" class="logo">
+                <img src="fkuph.jpg" alt="Logo FK UPH" class="logo">
+            </div>
+            <div class="title-section">
+                <h1>Alat Periksa Anak Versi Website</h1>
+                <p>Fakultas Kedokteran - Universitas Pelita Harapan</p>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Introduction -->
+            <section class="intro-section">
+                <h2>Platform Pemeriksaan Kesehatan Anak</h2>
+                <p>Alat ini dirancang untuk membantu tenaga kesehatan dan orang tua dalam melakukan skrining pertumbuhan dan perkembangan anak dengan standar WHO dan KTSP/SIDTK. Gunakan alat di bawah ini untuk memantau kesehatan anak secara berkala.</p>
+            </section>
+            
+            <!-- Tools Section -->
+            <section class="tools-section">
+                <!-- Tool 1 -->
+                <div class="tool-card">
+                    <div class="tool-icon">
+                        <i class="fas fa-child"></i>
+                    </div>
+                    <h3>Alat Skrining Pertumbuhan Anak (WHO)</h3>
+                    <p>Alat ini menggunakan standar Organisasi Kesehatan Dunia (WHO) untuk memantau pertumbuhan anak berdasarkan parameter tinggi badan, berat badan, dan lingkar kepala sesuai usia dan jenis kelamin.</p>
+                    <a href="https://hendrikkho-akupuntur.github.io/SahliRGB/skreening_pertumbuhan_anak.html" target="_blank" class="btn">Buka Alat Skrining</a>
+                </div>
+                
+                <!-- Tool 2 -->
+                <div class="tool-card">
+                    <div class="tool-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>Alat Skrining Perkembangan Anak (KTSP/SIDTK)</h3>
+                    <p>Alat skrining perkembangan anak berdasarkan Kuisioner Pra Skrining Perkembangan (KPSP) dan Standar Internasional Deteksi Tumbuh Kembang untuk menilai pencapaian perkembangan anak sesuai usianya.</p>
+                    <a href="https://hendrikkho-akupuntur.github.io/SahliRGB/SIDTK.html" target="_blank" class="btn btn-secondary">Buka Alat Skrining</a>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="developer-info">
+                    <p><strong>Dikembangkan Oleh Prodi PPDS KKLP FK UPH</strong></p>
+                    <p><strong>dr Hendrik</strong></p>
+                </div>
+                <p>© 2025 - Program Studi Spesialis Kedokteran Primer FK UPH</p>
+                <p class="copyright">Alat ini ditujukan untuk membantu skrining awal pertumbuhan dan perkembangan anak. Hasil skrining tidak menggantikan konsultasi dengan tenaga kesehatan profesional.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Menambahkan efek interaktif sederhana
+        document.addEventListener('DOMContentLoaded', function() {
+            const toolCards = document.querySelectorAll('.tool-card');
+            
+            toolCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    const icon = this.querySelector('.tool-icon i');
+                    icon.style.transform = 'scale(1.1)';
+                    icon.style.transition = 'transform 0.3s ease';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    const icon = this.querySelector('.tool-icon i');
+                    icon.style.transform = 'scale(1)';
+                });
+            });
+            
+            // Menambahkan tahun saat ini di copyright jika diperlukan
+            const yearSpan = document.getElementById('current-year');
+            if (yearSpan) {
+                yearSpan.textContent = new Date().getFullYear();
+            }
+        });
+    </script>
+</body>
+</html>
