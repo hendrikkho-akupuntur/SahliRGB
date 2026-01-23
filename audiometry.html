@@ -155,6 +155,11 @@
             color: #155724;
         }
         
+        .frequency-btn.heard {
+            background: linear-gradient(to bottom, #c3e6cb, #b1dfbb);
+            border-color: #28a745;
+        }
+        
         .control-panel {
             background: #f8f9fa;
             padding: 20px;
@@ -201,6 +206,40 @@
             background: #4a6fa5;
             border-radius: 50%;
             cursor: pointer;
+        }
+        
+        .test-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .heard-btn, .not-heard-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .heard-btn {
+            background: #28a745;
+            color: white;
+        }
+        
+        .heard-btn:hover {
+            background: #218838;
+        }
+        
+        .not-heard-btn {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .not-heard-btn:hover {
+            background: #c82333;
         }
         
         .results-section {
@@ -278,6 +317,12 @@
             border-radius: 10px;
             border: 2px solid #dee2e6;
             text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .result-item.recorded {
+            border-color: #4a6fa5;
+            background: #f0f7ff;
         }
         
         .result-freq {
@@ -295,6 +340,11 @@
         
         .result-value.fail {
             color: #dc3545;
+        }
+        
+        .result-value.pending {
+            color: #6c757d;
+            font-style: italic;
         }
         
         .action-buttons {
@@ -328,6 +378,11 @@
         
         .btn-danger {
             background: #dc3545;
+            color: white;
+        }
+        
+        .btn-success {
+            background: #28a745;
             color: white;
         }
         
@@ -379,6 +434,56 @@
             font-weight: 600;
             margin-top: 10px;
         }
+        
+        .current-test {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #4a6fa5;
+        }
+        
+        .current-test-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .test-status {
+            font-weight: bold;
+            color: #4a6fa5;
+        }
+        
+        .threshold-recorder {
+            background: #fff3cd;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .history-panel {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 10px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        
+        .history-title {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 5px;
+        }
+        
+        .history-item {
+            font-size: 0.85rem;
+            padding: 3px 0;
+            border-bottom: 1px dashed #dee2e6;
+        }
     </style>
 </head>
 <body>
@@ -412,9 +517,9 @@
             
             <div class="control-panel">
                 <div class="slider-container">
-                    <label>Volume (dB): <span id="volumeValue">50</span> dB</label>
+                    <label>Intensitas Saat Ini: <span id="volumeValue">2</span> dB</label>
                     <div class="slider-wrapper">
-                        <input type="range" id="volumeSlider" min="0" max="100" value="50" step="1">
+                        <input type="range" id="volumeSlider" min="0" max="100" value="2" step="1">
                     </div>
                 </div>
                 
@@ -423,6 +528,29 @@
                     <div class="slider-wrapper">
                         <input type="range" id="durationSlider" min="1" max="10" value="3" step="1">
                     </div>
+                </div>
+                
+                <div class="test-controls">
+                    <button class="heard-btn" id="heardBtn">✓ SUDAH DENGAR (Catat Threshold)</button>
+                    <button class="not-heard-btn" id="notHeardBtn">✗ BELUM DENGAR (+3 dB)</button>
+                </div>
+            </div>
+            
+            <div class="current-test" id="currentTestBox" style="display: none;">
+                <div class="current-test-info">
+                    <div>
+                        <strong>Pengujian Aktif:</strong>
+                        <span id="currentFrequency">-</span> Hz pada 
+                        <span id="currentDB">-</span> dB
+                    </div>
+                    <div class="test-status" id="testStatus">Status: Mulai dari 2 dB</div>
+                </div>
+                <div class="threshold-recorder">
+                    🔄 <strong>Mode Pencarian Threshold:</strong> Mulai dari 2 dB, naik 3 dB setiap klik "BELUM DENGAR"
+                </div>
+                <div class="history-panel">
+                    <div class="history-title">Riwayat Pengujian Frekuensi Ini:</div>
+                    <div id="testHistory"></div>
                 </div>
             </div>
             
@@ -433,7 +561,7 @@
             
             <div class="results-section">
                 <div class="results-card">
-                    <h3>Hasil Skrining</h3>
+                    <h3>Hasil Skrining (Threshold Akhir)</h3>
                     <div class="result-grid" id="resultGrid">
                         <!-- Hasil akan di-generate oleh JavaScript -->
                     </div>
@@ -455,22 +583,22 @@
             </div>
             
             <div class="action-buttons">
-                <button class="btn btn-danger" id="stopBtn">⏹️ Stop Semua Suara</button>
-                <button class="btn btn-primary" id="testAllBtn">▶️ Test Semua Frekuensi</button>
-                <button class="btn btn-secondary" id="resetBtn">🔄 Reset Hasil</button>
+                <button class="btn btn-danger" id="stopBtn">⏹️ Stop Suara</button>
+                <button class="btn btn-success" id="testSequenceBtn">▶️ Test Urut (250→8000 Hz)</button>
+                <button class="btn btn-secondary" id="resetBtn">🔄 Reset Semua</button>
                 <button class="btn btn-primary" id="saveBtn">💾 Simpan Hasil</button>
             </div>
             
             <div class="instructions">
                 <h4>Petunjuk Penggunaan:</h4>
                 <ul>
-                    <li>Pastikan menggunakan headset yang berkualitas baik</li>
-                    <li>Pilih mode sesuai dengan headset yang digunakan</li>
-                    <li>Atur volume awal ke level yang nyaman</li>
-                    <li>Klik frekuensi yang ingin diuji atau gunakan "Test Semua Frekuensi"</li>
-                    <li>Catat pada intensitas berapa Anda mulai mendengar suara</li>
-                    <li>Hasil normal: mampu mendengar ≤25 dB untuk setiap frekuensi</li>
-                    <li>Hasil akan ditampilkan dalam bentuk audiogram dan kesimpulan</li>
+                    <li><strong>Langkah 1:</strong> Pilih frekuensi yang akan diuji (dimulai dari 2 dB)</li>
+                    <li><strong>Langkah 2:</strong> Dengarkan suara yang dimainkan (3 detik)</li>
+                    <li><strong>Langkah 3:</strong> Jika <strong>TIDAK DENGAR</strong>, klik tombol "BELUM DENGAR" → intensitas akan naik <strong>3 dB</strong></li>
+                    <li><strong>Langkah 4:</strong> Jika <strong>SUDAH DENGAR</strong>, klik tombol "SUDAH DENGAR" untuk mencatat threshold akhir</li>
+                    <li><strong>Langkah 5:</strong> Ulangi untuk semua frekuensi (250, 500, 1000, 2000, 4000, 8000 Hz)</li>
+                    <li><strong>Hasil Normal:</strong> Threshold ≤25 dB untuk semua frekuensi</li>
+                    <li><strong>Catatan:</strong> Threshold dicatat saat pasien pertama kali menyatakan bisa mendengar</li>
                 </ul>
             </div>
             
@@ -490,8 +618,14 @@
                 this.oscillator = null;
                 this.gainNode = null;
                 this.currentMode = 'air';
-                this.thresholds = {};
+                this.thresholds = {}; // Menyimpan threshold FINAL (dB saat pertama kali dengar)
+                this.testHistory = {}; // Menyimpan riwayat pengujian per frekuensi
                 this.isPlaying = false;
+                this.currentTestingFrequency = null;
+                this.currentTestingDB = null;
+                this.testInProgress = false;
+                this.startDB = 2; // Mulai dari 2 dB
+                this.incrementDB = 3; // Naik 3 dB setiap tidak dengar
                 
                 // Frekuensi standar untuk skrining audiometri
                 this.frequencies = [250, 500, 1000, 2000, 4000, 8000];
@@ -503,12 +637,10 @@
                 this.generateResultGrid();
                 this.initAudiogram();
                 
-                // Fallback untuk logo jika tidak ditemukan
                 this.setupLogoFallback();
             }
             
             setupLogoFallback() {
-                // Fallback text jika logo tidak ditemukan
                 const fkLogo = document.getElementById('fkLogo');
                 const kklpLogo = document.getElementById('kklpLogo');
                 
@@ -542,7 +674,6 @@
             initAudioContext() {
                 try {
                     this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                    console.log('AudioContext berhasil diinisialisasi');
                 } catch (error) {
                     console.error('AudioContext tidak didukung:', error);
                     alert('Browser Anda tidak mendukung fitur audio yang diperlukan. Silakan gunakan browser terbaru seperti Chrome atau Firefox.');
@@ -557,12 +688,19 @@
                 this.airBtn = document.getElementById('airBtn');
                 this.boneBtn = document.getElementById('boneBtn');
                 this.stopBtn = document.getElementById('stopBtn');
-                this.testAllBtn = document.getElementById('testAllBtn');
+                this.testSequenceBtn = document.getElementById('testSequenceBtn');
                 this.resetBtn = document.getElementById('resetBtn');
                 this.saveBtn = document.getElementById('saveBtn');
+                this.heardBtn = document.getElementById('heardBtn');
+                this.notHeardBtn = document.getElementById('notHeardBtn');
                 this.frequencyGrid = document.getElementById('frequencyGrid');
                 this.resultGrid = document.getElementById('resultGrid');
                 this.conclusionText = document.getElementById('conclusionText');
+                this.currentTestBox = document.getElementById('currentTestBox');
+                this.currentFrequency = document.getElementById('currentFrequency');
+                this.currentDB = document.getElementById('currentDB');
+                this.testStatus = document.getElementById('testStatus');
+                this.testHistoryDiv = document.getElementById('testHistory');
                 this.canvas = document.getElementById('audiogramCanvas');
                 this.ctx = this.canvas.getContext('2d');
             }
@@ -579,11 +717,12 @@
                 this.airBtn.addEventListener('click', () => this.setMode('air'));
                 this.boneBtn.addEventListener('click', () => this.setMode('bone'));
                 this.stopBtn.addEventListener('click', () => this.stopAllSounds());
-                this.testAllBtn.addEventListener('click', () => this.testAllFrequencies());
+                this.testSequenceBtn.addEventListener('click', () => this.testSequence());
                 this.resetBtn.addEventListener('click', () => this.resetResults());
                 this.saveBtn.addEventListener('click', () => this.saveResults());
+                this.heardBtn.addEventListener('click', () => this.recordHeard());
+                this.notHeardBtn.addEventListener('click', () => this.increaseVolume());
                 
-                // Atur ukuran canvas saat window resize
                 window.addEventListener('resize', () => {
                     this.resizeCanvas();
                     this.drawAudiogram();
@@ -686,11 +825,11 @@
                 const frequencies = [250, 500, 1000, 2000, 4000, 8000];
                 const points = [];
                 
-                // Collect points
+                // Collect points dari thresholds FINAL
                 frequencies.forEach(freq => {
                     if (this.thresholds[freq] !== undefined) {
                         const db = this.thresholds[freq];
-                        // Convert freq to x position (log scale approximation)
+                        // Convert freq to x position
                         const freqIndex = Math.log2(freq/125) / Math.log2(8000/125);
                         const x = 50 + freqIndex * (width - 70);
                         
@@ -723,6 +862,12 @@
                     ctx.strokeStyle = '#333';
                     ctx.lineWidth = 1;
                     ctx.stroke();
+                    
+                    // Label dB value
+                    ctx.fillStyle = '#333';
+                    ctx.font = '10px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(`${point.db} dB`, point.x, point.y - 10);
                 });
             }
             
@@ -735,8 +880,7 @@
                     button.dataset.frequency = freq;
                     
                     button.addEventListener('click', () => {
-                        this.playFrequency(freq);
-                        this.updateButtonState(button);
+                        this.startFrequencyTest(freq);
                     });
                     
                     this.frequencyGrid.appendChild(button);
@@ -750,39 +894,78 @@
                     resultItem.className = 'result-item';
                     resultItem.innerHTML = `
                         <div class="result-freq">${freq} Hz</div>
-                        <div class="result-value" id="result-${freq}">- dB</div>
+                        <div class="result-value pending" id="result-${freq}">Belum diuji</div>
                     `;
                     this.resultGrid.appendChild(resultItem);
                 });
             }
             
-            setMode(mode) {
-                this.currentMode = mode;
-                
-                if (mode === 'air') {
-                    this.airBtn.classList.add('active');
-                    this.boneBtn.classList.remove('active');
-                } else {
-                    this.airBtn.classList.remove('active');
-                    this.boneBtn.classList.add('active');
+            startFrequencyTest(frequency) {
+                if (this.testInProgress) {
+                    if (confirm('Tes sedang berjalan. Apakah Anda ingin menghentikan tes saat ini?')) {
+                        this.stopAllSounds();
+                    } else {
+                        return;
+                    }
                 }
                 
-                this.drawAudiogram();
-                this.updateConclusion();
+                this.currentTestingFrequency = frequency;
+                this.currentTestingDB = this.startDB; // Mulai dari 2 dB
+                this.testInProgress = true;
+                
+                // Inisialisasi riwayat untuk frekuensi ini
+                if (!this.testHistory[frequency]) {
+                    this.testHistory[frequency] = [];
+                }
+                
+                // Reset slider ke 2 dB
+                this.volumeSlider.value = this.currentTestingDB;
+                this.volumeValue.textContent = this.currentTestingDB;
+                
+                // Update UI
+                this.currentTestBox.style.display = 'block';
+                this.currentFrequency.textContent = frequency;
+                this.currentDB.textContent = `${this.currentTestingDB} dB`;
+                this.testStatus.textContent = `Status: Mulai dari ${this.currentTestingDB} dB`;
+                this.testStatus.style.color = '#4a6fa5';
+                
+                // Reset button state untuk semua frekuensi
+                document.querySelectorAll('.frequency-btn').forEach(btn => {
+                    btn.classList.remove('playing', 'heard');
+                });
+                
+                // Highlight frekuensi yang sedang diuji
+                document.querySelectorAll('.frequency-btn').forEach(btn => {
+                    if (parseInt(btn.dataset.frequency) === frequency) {
+                        btn.classList.add('playing');
+                    }
+                });
+                
+                // Update riwayat
+                this.updateTestHistory();
+                
+                // Mainkan suara pertama
+                this.playCurrentTest();
             }
             
-            playFrequency(frequency) {
+            playCurrentTest() {
+                if (!this.testInProgress || !this.currentTestingFrequency) return;
+                
+                this.stopSound();
+                
+                const frequency = this.currentTestingFrequency;
+                const dbLevel = this.currentTestingDB;
+                const duration = parseInt(this.durationSlider.value);
+                
+                // Konversi dB ke gain (dB ke linear)
+                // dB = 20 * log10(gain), jadi gain = 10^(dB/20)
+                // Normalisasi: 0 dB = gain 1, 100 dB = gain 100000
+                const gainValue = Math.pow(10, (dbLevel - 60) / 20); // Skala yang lebih masuk akal
+                
                 if (!this.audioContext) {
                     this.initAudioContext();
                     if (!this.audioContext) return;
                 }
-                
-                this.stopSound();
-                
-                const volume = parseInt(this.volumeSlider.value);
-                const duration = parseInt(this.durationSlider.value);
-                const gainValue = volume / 100;
-                const dbLevel = Math.round((volume / 100) * 100);
                 
                 this.oscillator = this.audioContext.createOscillator();
                 this.gainNode = this.audioContext.createGain();
@@ -804,28 +987,151 @@
                 
                 this.isPlaying = true;
                 
-                if (!this.thresholds[frequency] || dbLevel < this.thresholds[frequency]) {
-                    this.thresholds[frequency] = dbLevel;
-                    this.updateResult(frequency, dbLevel);
-                    this.updateConclusion();
-                    this.drawAudiogram();
+                // Update status
+                this.testStatus.textContent = `Status: Memainkan ${dbLevel} dB`;
+                
+                // Tambahkan ke riwayat (hanya jika belum ada entry untuk dB ini)
+                const historyEntry = `${new Date().toLocaleTimeString()} - ${dbLevel} dB: Dimainkan`;
+                if (!this.testHistory[this.currentTestingFrequency].some(entry => 
+                    entry.includes(`${dbLevel} dB: Dimainkan`))) {
+                    this.testHistory[this.currentTestingFrequency].push(historyEntry);
+                    this.updateTestHistory();
                 }
                 
+                // Reset button state setelah durasi
                 setTimeout(() => {
                     this.isPlaying = false;
-                    this.resetButtonStates();
                 }, duration * 1000);
             }
             
-            updateButtonState(button) {
-                this.resetButtonStates();
-                button.classList.add('playing');
+            increaseVolume() {
+                if (!this.testInProgress || !this.currentTestingFrequency) return;
+                
+                // Naikkan 3 dB (sesuai permintaan)
+                this.currentTestingDB += this.incrementDB;
+                
+                // Pastikan tidak melebihi 100 dB
+                if (this.currentTestingDB > 100) {
+                    this.currentTestingDB = 100;
+                    alert('Intensitas maksimum (100 dB) telah tercapai. Klik "SUDAH DENGAR" untuk mencatat threshold 100 dB.');
+                }
+                
+                // Update UI
+                this.currentDB.textContent = `${this.currentTestingDB} dB`;
+                this.volumeSlider.value = this.currentTestingDB;
+                this.volumeValue.textContent = this.currentTestingDB;
+                this.testStatus.textContent = `Status: Dinaikkan ke ${this.currentTestingDB} dB (+${this.incrementDB} dB)`;
+                this.testStatus.style.color = '#dc3545';
+                
+                // Tambahkan ke riwayat
+                const historyEntry = `${new Date().toLocaleTimeString()} - ${this.currentTestingDB} dB: Tidak dengar`;
+                this.testHistory[this.currentTestingFrequency].push(historyEntry);
+                this.updateTestHistory();
+                
+                // Mainkan suara dengan intensitas baru
+                this.playCurrentTest();
             }
             
-            resetButtonStates() {
-                document.querySelectorAll('.frequency-btn').forEach(btn => {
-                    btn.classList.remove('playing');
+            updateTestHistory() {
+                if (!this.currentTestingFrequency) return;
+                
+                const history = this.testHistory[this.currentTestingFrequency] || [];
+                this.testHistoryDiv.innerHTML = '';
+                
+                if (history.length === 0) {
+                    this.testHistoryDiv.innerHTML = '<div class="history-item">Belum ada riwayat pengujian</div>';
+                    return;
+                }
+                
+                // Tampilkan maksimal 10 riwayat terakhir
+                const recentHistory = history.slice(-10);
+                recentHistory.forEach(entry => {
+                    const div = document.createElement('div');
+                    div.className = 'history-item';
+                    div.textContent = entry;
+                    this.testHistoryDiv.appendChild(div);
                 });
+                
+                // Scroll ke bawah
+                this.testHistoryDiv.scrollTop = this.testHistoryDiv.scrollHeight;
+            }
+            
+            recordHeard() {
+                if (!this.testInProgress || !this.currentTestingFrequency) return;
+                
+                const freq = this.currentTestingFrequency;
+                const finalDB = this.currentTestingDB;
+                
+                // Simpan threshold FINAL (nilai dB saat pasien pertama kali bilang DENGAR)
+                this.thresholds[freq] = finalDB;
+                
+                // Update hasil di tabel
+                this.updateResult(freq, finalDB);
+                
+                // Update UI
+                document.querySelectorAll('.frequency-btn').forEach(btn => {
+                    if (parseInt(btn.dataset.frequency) === freq) {
+                        btn.classList.remove('playing');
+                        btn.classList.add('heard');
+                        btn.innerHTML = `${freq} Hz<br><small>✓ Threshold: ${finalDB} dB</small>`;
+                    }
+                });
+                
+                // Update hasil item
+                const resultItem = document.querySelector(`[id="result-${freq}"]`).closest('.result-item');
+                resultItem.classList.add('recorded');
+                
+                // Tambahkan ke riwayat sebagai threshold final
+                const historyEntry = `${new Date().toLocaleTimeString()} - ${finalDB} dB: ✓ THRESHOLD FINAL`;
+                this.testHistory[freq].push(historyEntry);
+                this.updateTestHistory();
+                
+                // Update kesimpulan dan audiogram
+                this.updateConclusion();
+                this.drawAudiogram();
+                
+                // Reset test state
+                this.testInProgress = false;
+                this.testStatus.textContent = `Status: Selesai - Threshold: ${finalDB} dB`;
+                this.testStatus.style.color = '#28a745';
+                
+                // Konfirmasi
+                alert(`✅ Threshold untuk ${freq} Hz telah dicatat: ${finalDB} dB\n\nIni adalah nilai dB saat Anda pertama kali bisa mendengar suara.`);
+                
+                // Auto-hide test box setelah 3 detik
+                setTimeout(() => {
+                    this.currentTestBox.style.display = 'none';
+                }, 3000);
+            }
+            
+            updateResult(frequency, dbLevel) {
+                const resultElement = document.getElementById(`result-${frequency}`);
+                if (resultElement) {
+                    resultElement.textContent = `${dbLevel} dB`;
+                    resultElement.classList.remove('pending');
+                    
+                    if (dbLevel > 25) {
+                        resultElement.classList.add('fail');
+                        resultElement.classList.remove('pending');
+                    } else {
+                        resultElement.classList.remove('fail', 'pending');
+                    }
+                }
+            }
+            
+            setMode(mode) {
+                this.currentMode = mode;
+                
+                if (mode === 'air') {
+                    this.airBtn.classList.add('active');
+                    this.boneBtn.classList.remove('active');
+                } else {
+                    this.airBtn.classList.remove('active');
+                    this.boneBtn.classList.add('active');
+                }
+                
+                this.drawAudiogram();
+                this.updateConclusion();
             }
             
             stopSound() {
@@ -833,40 +1139,31 @@
                     this.oscillator.stop();
                     this.oscillator.disconnect();
                     this.isPlaying = false;
-                    this.resetButtonStates();
                 }
             }
             
             stopAllSounds() {
                 this.stopSound();
-            }
-            
-            testAllFrequencies() {
-                const duration = parseInt(this.durationSlider.value);
-                const pauseBetween = 1000;
+                this.testInProgress = false;
+                this.currentTestBox.style.display = 'none';
                 
-                this.frequencies.forEach((freq, index) => {
-                    setTimeout(() => {
-                        this.playFrequency(freq);
-                        const buttons = document.querySelectorAll('.frequency-btn');
-                        if (buttons[index]) {
-                            this.updateButtonState(buttons[index]);
-                        }
-                    }, index * (duration * 1000 + pauseBetween));
+                // Reset button states
+                document.querySelectorAll('.frequency-btn').forEach(btn => {
+                    btn.classList.remove('playing');
                 });
             }
             
-            updateResult(frequency, dbLevel) {
-                const resultElement = document.getElementById(`result-${frequency}`);
-                if (resultElement) {
-                    resultElement.textContent = `${dbLevel} dB`;
-                    
-                    if (dbLevel > 25) {
-                        resultElement.classList.add('fail');
-                    } else {
-                        resultElement.classList.remove('fail');
-                    }
+            testSequence() {
+                if (this.testInProgress) {
+                    alert('Selesaikan tes saat ini terlebih dahulu.');
+                    return;
                 }
+                
+                if (!confirm('Tes akan dimulai dari 250 Hz dengan intensitas 2 dB. Setiap kali "BELUM DENGAR", intensitas akan naik 3 dB. Lanjutkan?')) {
+                    return;
+                }
+                
+                this.startFrequencyTest(250);
             }
             
             updateConclusion() {
@@ -878,62 +1175,134 @@
                 }
                 
                 const averageThreshold = thresholds.reduce((a, b) => a + b, 0) / thresholds.length;
-                const maxThreshold = Math.max(...thresholds);
                 const abnormalCount = thresholds.filter(t => t > 25).length;
+                const testedCount = thresholds.length;
                 
                 let conclusion = "";
                 
-                if (abnormalCount === 0) {
-                    conclusion = "Hasil skrining menunjukkan pendengaran dalam batas normal (semua frekuensi ≤25 dB).";
-                } else if (abnormalCount <= 2) {
-                    conclusion = "Hasil skrining menunjukkan kemungkinan gangguan pendengaran ringan pada beberapa frekuensi.";
-                } else if (abnormalCount <= 4) {
-                    conclusion = "Hasil skrining menunjukkan kemungkinan gangguan pendengaran sedang pada beberapa frekuensi.";
+                if (abnormalCount === 0 && testedCount >= 3) {
+                    conclusion = "✅ Hasil skrining menunjukkan pendengaran dalam batas normal (semua frekuensi ≤25 dB).";
+                } else if (abnormalCount <= 2 && testedCount >= 3) {
+                    conclusion = "⚠️ Hasil skrining menunjukkan kemungkinan gangguan pendengaran ringan pada beberapa frekuensi.";
+                } else if (abnormalCount <= 4 && testedCount >= 3) {
+                    conclusion = "⚠️ Hasil skrining menunjukkan kemungkinan gangguan pendengaran sedang pada beberapa frekuensi.";
+                } else if (testedCount >= 3) {
+                    conclusion = "❌ Hasil skrining menunjukkan kemungkinan gangguan pendengaran signifikan pada banyak frekuensi.";
                 } else {
-                    conclusion = "Hasil skrining menunjukkan kemungkinan gangguan pendengaran signifikan pada banyak frekuensi.";
+                    conclusion = "📋 Tes belum lengkap. Lanjutkan pengujian untuk semua frekuensi.";
                 }
                 
-                conclusion += ` Rata-rata threshold: ${averageThreshold.toFixed(1)} dB. `;
-                conclusion += `Disarankan konsultasi dengan Spesialis Kedokteran Keluarga untuk evaluasi lebih lanjut.`;
+                if (testedCount >= 3) {
+                    conclusion += ` Rata-rata threshold: ${averageThreshold.toFixed(1)} dB. `;
+                    conclusion += `Disarankan konsultasi dengan Spesialis Kedokteran Keluarga untuk evaluasi lebih lanjut.`;
+                }
                 
                 this.conclusionText.textContent = conclusion;
             }
             
             resetResults() {
-                this.thresholds = {};
-                this.frequencies.forEach(freq => {
-                    const resultElement = document.getElementById(`result-${freq}`);
-                    if (resultElement) {
-                        resultElement.textContent = '- dB';
-                        resultElement.classList.remove('fail');
-                    }
-                });
-                this.updateConclusion();
-                this.drawAudiogram();
+                if (confirm('Apakah Anda yakin ingin mereset SEMUA hasil dan riwayat pengujian?')) {
+                    this.thresholds = {};
+                    this.testHistory = {};
+                    this.testInProgress = false;
+                    this.currentTestBox.style.display = 'none';
+                    
+                    this.frequencies.forEach(freq => {
+                        const resultElement = document.getElementById(`result-${freq}`);
+                        if (resultElement) {
+                            resultElement.textContent = 'Belum diuji';
+                            resultElement.className = 'result-value pending';
+                        }
+                        
+                        // Reset button
+                        document.querySelectorAll('.frequency-btn').forEach(btn => {
+                            if (parseInt(btn.dataset.frequency) === freq) {
+                                btn.classList.remove('heard', 'playing');
+                                btn.innerHTML = `${freq} Hz<br><small>Klik untuk test</small>`;
+                            }
+                        });
+                        
+                        // Reset result item
+                        const resultItem = document.querySelector(`[id="result-${freq}"]`).closest('.result-item');
+                        if (resultItem) {
+                            resultItem.classList.remove('recorded');
+                        }
+                    });
+                    
+                    // Reset slider ke 2 dB
+                    this.volumeSlider.value = this.startDB;
+                    this.volumeValue.textContent = this.startDB;
+                    
+                    this.updateConclusion();
+                    this.drawAudiogram();
+                    this.testHistoryDiv.innerHTML = '<div class="history-item">Belum ada riwayat pengujian</div>';
+                    
+                    alert('Semua hasil dan riwayat telah direset. Pengujian dapat dimulai kembali dari 2 dB.');
+                }
             }
             
             saveResults() {
                 const results = {
                     mode: this.currentMode,
                     date: new Date().toLocaleString('id-ID'),
+                    startDB: this.startDB,
+                    incrementDB: this.incrementDB,
                     thresholds: this.thresholds,
-                    conclusion: this.conclusionText.textContent
+                    testHistory: this.testHistory,
+                    conclusion: this.conclusionText.textContent,
+                    frequencies: this.frequencies.map(freq => ({
+                        frequency: freq,
+                        threshold: this.thresholds[freq] || 'Belum diuji',
+                        history: this.testHistory[freq] || []
+                    }))
                 };
                 
                 // Simpan ke localStorage
                 localStorage.setItem('audiometryResults', JSON.stringify(results));
                 
-                // Buat data untuk download
-                const dataStr = JSON.stringify(results, null, 2);
-                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                // Buat laporan text
+                let report = `LAPORAN SKRINING AUDIOMETRI\n`;
+                report += `================================\n`;
+                report += `Tanggal: ${results.date}\n`;
+                report += `Mode: ${results.mode === 'air' ? 'Air Conduction' : 'Bone Conduction'}\n`;
+                report += `Metode: Mulai dari ${results.startDB} dB, naik ${results.incrementDB} dB\n\n`;
+                report += `HASIL THRESHOLD AKHIR:\n`;
+                report += `--------------------------------\n`;
                 
-                // Buat link download
-                const downloadLink = document.createElement('a');
-                downloadLink.href = URL.createObjectURL(dataBlob);
-                downloadLink.download = `hasil-audiometri-${new Date().toISOString().slice(0,10)}.json`;
-                downloadLink.click();
+                results.frequencies.forEach(item => {
+                    report += `${item.frequency} Hz: ${item.threshold} dB\n`;
+                });
                 
-                alert('Hasil telah disimpan dan didownload sebagai file JSON.');
+                report += `\nRIWAYAT PENGUJIAN:\n`;
+                report += `--------------------------------\n`;
+                results.frequencies.forEach(item => {
+                    if (item.history.length > 0) {
+                        report += `\n${item.frequency} Hz:\n`;
+                        item.history.forEach((history, index) => {
+                            report += `  ${index + 1}. ${history}\n`;
+                        });
+                    }
+                });
+                
+                report += `\nKESIMPULAN:\n`;
+                report += `--------------------------------\n`;
+                report += `${results.conclusion}\n\n`;
+                report += `================================\n`;
+                report += `Prodi Spesialis KLLP FK UPH\n`;
+                report += `© PPDS KKLP FK UPH - dr. Hendrik\n`;
+                
+                // Download sebagai file text
+                const blob = new Blob([report], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `audiometri-${new Date().toISOString().slice(0,10)}.txt`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                alert('Hasil telah disimpan dan didownload sebagai file teks.');
             }
             
             loadResults() {
@@ -942,9 +1311,24 @@
                     try {
                         const results = JSON.parse(saved);
                         this.thresholds = results.thresholds || {};
+                        this.testHistory = results.testHistory || {};
                         
                         Object.keys(this.thresholds).forEach(freq => {
                             this.updateResult(parseInt(freq), this.thresholds[freq]);
+                            
+                            // Update button
+                            document.querySelectorAll('.frequency-btn').forEach(btn => {
+                                if (parseInt(btn.dataset.frequency) === parseInt(freq)) {
+                                    btn.classList.add('heard');
+                                    btn.innerHTML = `${freq} Hz<br><small>✓ Threshold: ${this.thresholds[freq]} dB</small>`;
+                                }
+                            });
+                            
+                            // Update result item
+                            const resultItem = document.querySelector(`[id="result-${freq}"]`).closest('.result-item');
+                            if (resultItem) {
+                                resultItem.classList.add('recorded');
+                            }
                         });
                         
                         this.updateConclusion();
@@ -959,18 +1343,21 @@
         // Inisialisasi aplikasi
         document.addEventListener('DOMContentLoaded', () => {
             const audiometryApp = new AudiometryScreening();
-            
-            // Auto-load saved results
             audiometryApp.loadResults();
             
             // Auto-save saat keluar
             window.addEventListener('beforeunload', () => {
-                localStorage.setItem('audiometryResults', JSON.stringify({
-                    mode: audiometryApp.currentMode,
-                    date: new Date().toLocaleString('id-ID'),
-                    thresholds: audiometryApp.thresholds,
-                    conclusion: audiometryApp.conclusionText.textContent
-                }));
+                if (Object.keys(audiometryApp.thresholds).length > 0) {
+                    localStorage.setItem('audiometryResults', JSON.stringify({
+                        mode: audiometryApp.currentMode,
+                        date: new Date().toLocaleString('id-ID'),
+                        startDB: audiometryApp.startDB,
+                        incrementDB: audiometryApp.incrementDB,
+                        thresholds: audiometryApp.thresholds,
+                        testHistory: audiometryApp.testHistory,
+                        conclusion: audiometryApp.conclusionText.textContent
+                    }));
+                }
             });
         });
     </script>
