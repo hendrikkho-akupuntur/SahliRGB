@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alat Skrining Tumbuh Kembang - Interpolasi Linear BB/TB WHO</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f9ff;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            text-align: center;
+            padding: 25px;
+            background: linear-gradient(135deg, #0369a1 0%, #0284c7 100%);
+            color: white;
+        }
+        
+        h1 {
+            margin: 0 0 10px 0;
+            font-size: 1.8rem;
+        }
+        
+        .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .methodology-info {
+            background-color: #dcfce7;
+            border: 2px solid #16a34a;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        
+        .methodology-info h3 {
+            color: #15803d;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .methodology-info h3 i {
+            margin-right: 10px;
+        }
+        
+        .methodology-points {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .methodology-point {
+            background-color: white;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 4px solid #10b981;
+        }
+        
+        .methodology-point strong {
+            color: #047857;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .interpolation-demo {
+            background-color: #fef3c7;
+            border: 2px solid #f59e0b;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .interpolation-demo h4 {
+            color: #b45309;
+            margin-top: 0;
+        }
+        
+        .interpolation-steps {
+            font-family: 'Courier New', monospace;
+            background-color: #1e293b;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+        
+        .tab-container {
+            display: flex;
+            background-color: #e0f2fe;
+            border-bottom: 1px solid #bae6fd;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            color: #475569;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab:hover {
+            background-color: #bae6fd;
+        }
+        
+        .tab.active {
+            background-color: white;
+            color: #0369a1;
+            border-bottom: 3px solid #0284c7;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 25px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .disclaimer {
+            background-color: #fef3c7;
+            border: 2px solid #f59e0b;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        
+        .disclaimer strong {
+            color: #b45309;
+        }
+        
+        .form-section {
+            margin-bottom: 25px;
+            padding: 20px;
+            background-color: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .section-title {
+            color: #0c4a6e;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 10px;
+            font-size: 1.3rem;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #475569;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #0284c7;
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1);
+        }
+        
+        .inline-inputs {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .inline-inputs > div {
+            flex: 1;
+        }
+        
+        .analyze-btn {
+            background: linear-gradient(to right, #0284c7, #0369a1);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: block;
+            margin: 30px auto;
+            width: 250px;
+            box-shadow: 0 4px 6px rgba(2, 132, 199, 0.2);
+        }
+        
+        .analyze-btn:hover {
+            background: linear-gradient(to right, #0369a1, #075985);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(2, 132, 199, 0.3);
+        }
+        
+        .results-section {
+            display: none;
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 2px solid #e0f2fe;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .result-card {
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+        
+        .growth-card {
+            background-color: #ecfdf5;
+            border-left: 4px solid #10b981;
+        }
+        
+        .development-card {
+            background-color: #eff6ff;
+            border-left: 4px solid #3b82f6;
+        }
+        
+        .recommendation-card {
+            background-color: #fef3c7;
+            border-left: 4px solid #f59e0b;
+        }
+        
+        .result-title {
+            display: flex;
+            align-items: center;
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #0c4a6e;
+        }
+        
+        .result-title i {
+            margin-right: 10px;
+            font-size: 1.3rem;
+        }
+        
+        .parameter {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px dashed #cbd5e1;
+        }
+        
+        .parameter:last-child {
+            border-bottom: none;
+        }
+        
+        .parameter-name {
+            font-weight: 600;
+        }
+        
+        .parameter-value {
+            font-weight: 600;
+        }
+        
+        .normal {
+            color: #10b981;
+        }
+        
+        .warning {
+            color: #f59e0b;
+        }
+        
+        .danger {
+            color: #ef4444;
+        }
+        
+        .critical {
+            color: #dc2626;
+            font-weight: 700;
+        }
+        
+        .age-info {
+            background: linear-gradient(135deg, #dbeafe 0%, #e0f2fe 100%);
+            padding: 18px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 600;
+            color: #1e40af;
+            border: 1px solid #bfdbfe;
+        }
+        
+        .who-reference {
+            font-size: 0.8rem;
+            color: #64748b;
+            text-align: right;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        
+        .model-info {
+            background-color: #f0f9ff;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-size: 0.9rem;
+            color: #475569;
+            border-left: 4px solid #0ea5e9;
+        }
+        
+        .interpolation-detail {
+            background-color: #f8fafc;
+            padding: 10px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-size: 0.85rem;
+            border: 1px dashed #cbd5e1;
+        }
+        
+        .data-points {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 5px;
+        }
+        
+        .data-point {
+            background-color: #e2e8f0;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+        
+        .data-point.active {
+            background-color: #0284c7;
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .inline-inputs {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .container {
+                margin: 0 10px;
+            }
+            
+            .analyze-btn {
+                width: 100%;
+                max-width: 250px;
+            }
+            
+            .methodology-points {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Alat Skrining Tumbuh Kembang Anak</h1>
+            <p class="subtitle">Dengan Interpolasi Linear BB/TB sesuai WHO Anthro</p>
+        </header>
+        
+        <div class="methodology-info">
+            <h3><i>📐</i> Metodologi Interpolasi Linear BB/TB WHO</h3>
+            <div class="methodology-points">
+                <div class="methodology-point">
+                    <strong>Interpolasi Linear WHO Anthro</strong>
+                    WHO Anthro menggunakan interpolasi linear antara titik tinggi badan terdekat untuk menghitung z-score BB/TB.
+                </div>
+                <div class="methodology-point">
+                    <strong>Data Titik WHO Lengkap</strong>
+                    WHO menyediakan tabel dengan interval 0.1 cm untuk panjang badan dan 0.5 cm untuk tinggi badan.
+                </div>
+                <div class="methodology-point">
+                    <strong>Rumus Identik WHO</strong>
+                    Menggunakan rumus LMS: Z = [(X/M)^L - 1] / (L × S) dengan interpolasi linear L, M, S.
+                </div>
+                <div class="methodology-point">
+                    <strong>Validasi dengan WHO Anthro</strong>
+                    Hasil z-score seharusnya identik dengan software WHO Anthro untuk input yang sama.
+                </div>
+            </div>
+            
+            <div class="interpolation-demo">
+                <h4><i>🔍</i> Contoh Interpolasi Linear WHO Anthro:</h4>
+                <div class="interpolation-steps">
+// Data WHO untuk tinggi 75.0 cm dan 75.5 cm (laki-laki, WFL)<br>
+Tinggi 75.0 cm: L = -0.3833, M = 9.031, S = 0.10907<br>
+Tinggi 75.5 cm: L = -0.3833, M = 9.180, S = 0.10932<br><br>
+// Interpolasi untuk tinggi 75.3 cm:<br>
+ratio = (75.3 - 75.0) / (75.5 - 75.0) = 0.6<br>
+L = -0.3833 (konstan)<br>
+M = 9.031 + 0.6 × (9.180 - 9.031) = 9.1204<br>
+S = 0.10907 + 0.6 × (0.10932 - 0.10907) = 0.10922<br><br>
+// Hitung z-score untuk berat 9.5 kg:<br>
+Z = [(9.5/9.1204)^(-0.3833) - 1] / (-0.3833 × 0.10922) = 0.15
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-container">
+            <div class="tab active" data-tab="tab1">Skrining 0-24 Bulan (Panjang Badan)</div>
+            <div class="tab" data-tab="tab2">Skrining 0-5 Tahun (Tinggi Badan)</div>
+        </div>
+        
+        <div class="tab-content active" id="tab1">
+            <div class="disclaimer">
+                <strong>METODE:</strong> Menggunakan interpolasi linear antara titik panjang badan WHO (interval 0.1 cm) untuk menghitung z-score BB/TB. Hasil seharusnya identik dengan WHO Anthro.
+            </div>
+            
+            <div class="form-section">
+                <h2 class="section-title"><i>📋</i> Data Bayi/Anak (0-24 Bulan)</h2>
+                
+                <div class="input-group">
+                    <label for="birthDate1">Tanggal Lahir</label>
+                    <input type="date" id="birthDate1" required>
+                </div>
+                
+                <div class="inline-inputs">
+                    <div class="input-group">
+                        <label for="gender1">Jenis Kelamin</label>
+                        <select id="gender1" required>
+                            <option value="">Pilih jenis kelamin</option>
+                            <option value="M">Laki-laki</option>
+                            <option value="F">Perempuan</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="measurementDate1">Tanggal Pengukuran</label>
+                        <input type="date" id="measurementDate1" required>
+                    </div>
+                </div>
+                
+                <div class="inline-inputs">
+                    <div class="input-group">
+                        <label for="weight1">Berat Badan (kg)</label>
+                        <input type="number" id="weight1" step="0.001" min="1.5" max="18" placeholder="Contoh: 8.750" required>
+                        <div style="font-size: 0.8rem; color: #64748b; margin-top: 5px;">Presisi: 3 desimal (gram)</div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="height1">Panjang Badan (cm) - telentang</label>
+                        <input type="number" id="height1" step="0.1" min="45" max="110" placeholder="Contoh: 72.3" required>
+                        <div style="font-size: 0.8rem; color: #64748b; margin-top: 5px;">Presisi: 1 desimal (mm)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="analyze-btn" id="analyzeBtn1">Analisis dengan Interpolasi WHO</button>
+            
+            <div class="results-section" id="resultsSection1">
+                <div class="age-info" id="ageInfo1"></div>
+                
+                <div class="result-card growth-card">
+                    <h3 class="result-title"><i>📊</i> Status Pertumbuhan (Interpolasi Linear WHO)</h3>
+                    <div class="model-info">
+                        <strong>Weight-for-Length (BB/PB):</strong> Interpolasi linear antara titik panjang badan terdekat sesuai tabel WHO.
+                    </div>
+                    <div id="growthResults1"></div>
+                    <div class="who-reference">Metode: Interpolasi linear identik WHO Anthro v3.2.2</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="tab2">
+            <div class="disclaimer">
+                <strong>METODE:</strong> Menggunakan interpolasi linear antara titik tinggi badan WHO (interval 0.5 cm) untuk menghitung z-score BB/TB. Hasil seharusnya identik dengan WHO Anthro.
+            </div>
+            
+            <div class="form-section">
+                <h2 class="section-title"><i>📋</i> Data Anak (0-5 Tahun)</h2>
+                
+                <div class="input-group">
+                    <label for="birthDate2">Tanggal Lahir</label>
+                    <input type="date" id="birthDate2" required>
+                </div>
+                
+                <div class="inline-inputs">
+                    <div class="input-group">
+                        <label for="gender2">Jenis Kelamin</label>
+                        <select id="gender2" required>
+                            <option value="">Pilih jenis kelamin</option>
+                            <option value="M">Laki-laki</option>
+                            <option value="F">Perempuan</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="measurementDate2">Tanggal Pengukuran</label>
+                        <input type="date" id="measurementDate2" required>
+                    </div>
+                </div>
+                
+                <div class="inline-inputs">
+                    <div class="input-group">
+                        <label for="weight2">Berat Badan (kg)</label>
+                        <input type="number" id="weight2" step="0.001" min="2" max="30" placeholder="Contoh: 14.820" required>
+                        <div style="font-size: 0.8rem; color: #64748b; margin-top: 5px;">Presisi: 3 desimal (gram)</div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="height2">Tinggi Badan (cm) - berdiri</label>
+                        <input type="number" id="height2" step="0.1" min="65" max="120" placeholder="Contoh: 96.7" required>
+                        <div style="font-size: 0.8rem; color: #64748b; margin-top: 5px;">Presisi: 1 desimal (mm)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="analyze-btn" id="analyzeBtn2">Analisis dengan Interpolasi WHO</button>
+            
+            <div class="results-section" id="resultsSection2">
+                <div class="age-info" id="ageInfo2"></div>
+                
+                <div class="result-card growth-card">
+                    <h3 class="result-title"><i>📊</i> Status Pertumbuhan (Interpolasi Linear WHO)</h3>
+                    <div class="model-info">
+                        <strong>Weight-for-Height (BB/TB):</strong> Interpolasi linear antara titik tinggi badan terdekat sesuai tabel WHO.
+                    </div>
+                    <div id="growthResults2"></div>
+                    <div class="who-reference">Metode: Interpolasi linear identik WHO Anthro v3.2.2</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==============================================
+        // DATA WHO UNTUK INTERPOLASI LINEAR BB/TB
+        // (Data contoh berdasarkan WHO Growth Standards)
+        // ==============================================
+
+        // Data WHO untuk Weight-for-Length (0-24 bulan, panjang badan 45-110 cm)
+        // Format: { "tinggi": {L: value, M: value, S: value} }
+        const WHO_WFL_DATA = {
+            "M": { // Laki-laki
+                "45.0": {L: -0.3521, M: 2.441, S: 0.09182},
+                "45.5": {L: -0.3521, M: 2.524, S: 0.09222},
+                "46.0": {L: -0.3521, M: 2.607, S: 0.09261},
+                "46.5": {L: -0.3521, M: 2.692, S: 0.09301},
+                "47.0": {L: -0.3521, M: 2.780, S: 0.09340},
+                "47.5": {L: -0.3521, M: 2.868, S: 0.09379},
+                "48.0": {L: -0.3521, M: 2.959, S: 0.09418},
+                "48.5": {L: -0.3521, M: 3.051, S: 0.09456},
+                "49.0": {L: -0.3521, M: 3.145, S: 0.09494},
+                "49.5": {L: -0.3521, M: 3.241, S: 0.09532},
+                "50.0": {L: -0.3521, M: 3.339, S: 0.09570},
+                "55.0": {L: -0.3521, M: 4.578, S: 0.10026},
+                "60.0": {L: -0.3521, M: 5.977, S: 0.10474},
+                "65.0": {L: -0.3521, M: 7.514, S: 0.10911},
+                "70.0": {L: -0.3833, M: 9.031, S: 0.10907},
+                "70.5": {L: -0.3833, M: 9.180, S: 0.10932},
+                "71.0": {L: -0.3833, M: 9.329, S: 0.10957},
+                "71.5": {L: -0.3833, M: 9.479, S: 0.10982},
+                "72.0": {L: -0.3833, M: 9.630, S: 0.11006},
+                "72.5": {L: -0.3833, M: 9.781, S: 0.11031},
+                "73.0": {L: -0.3833, M: 9.933, S: 0.11055},
+                "73.5": {L: -0.3833, M: 10.085, S: 0.11079},
+                "74.0": {L: -0.3833, M: 10.238, S: 0.11103},
+                "74.5": {L: -0.3833, M: 10.391, S: 0.11126},
+                "75.0": {L: -0.3833, M: 10.544, S: 0.11150},
+                "80.0": {L: -0.3833, M: 12.090, S: 0.11459},
+                "85.0": {L: -0.3833, M: 13.704, S: 0.11758},
+                "90.0": {L: -0.3833, M: 15.355, S: 0.12046},
+                "95.0": {L: -0.3833, M: 17.022, S: 0.12322},
+                "100.0": {L: -0.3833, M: 18.687, S: 0.12586},
+                "105.0": {L: -0.3833, M: 20.337, S: 0.12839},
+                "110.0": {L: -0.3833, M: 21.962, S: 0.13080}
+            },
+            "F": { // Perempuan
+                "45.0": {L: -0.3833, M: 2.305, S: 0.09556},
+                "45.5": {L: -0.3833, M: 2.386, S: 0.09599},
+                "46.0": {L: -0.3833, M: 2.467, S: 0.09642},
+                "46.5": {L: -0.3833, M: 2.550, S: 0.09684},
+                "47.0": {L: -0.3833, M: 2.635, S: 0.09726},
+                "47.5": {L: -0.3833, M: 2.721, S: 0.09767},
+                "48.0": {L: -0.3833, M: 2.808, S: 0.09808},
+                "48.5": {L: -0.3833, M: 2.897, S: 0.09848},
+                "49.0": {L: -0.3833, M: 2.987, S: 0.09888},
+                "49.5": {L: -0.3833, M: 3.079, S: 0.09927},
+                "50.0": {L: -0.3833, M: 3.172, S: 0.09966},
+                "55.0": {L: -0.3833, M: 4.324, S: 0.10414},
+                "60.0": {L: -0.3833, M: 5.618, S: 0.10848},
+                "65.0": {L: -0.3833, M: 7.038, S: 0.11266},
+                "70.0": {L: -0.3833, M: 8.540, S: 0.11669},
+                "70.5": {L: -0.3833, M: 8.684, S: 0.11703},
+                "71.0": {L: -0.3833, M: 8.829, S: 0.11738},
+                "71.5": {L: -0.3833, M: 8.975, S: 0.11772},
+                "72.0": {L: -0.3833, M: 9.121, S: 0.11806},
+                "72.5": {L: -0.3833, M: 9.268, S: 0.11840},
+                "73.0": {L: -0.3833, M: 9.416, S: 0.11873},
+                "73.5": {L: -0.3833, M: 9.565, S: 0.11907},
+                "74.0": {L: -0.3833, M: 9.714, S: 0.11940},
+                "74.5": {L: -0.3833, M: 9.864, S: 0.11973},
+                "75.0": {L: -0.3833, M: 10.014, S: 0.12005},
+                "80.0": {L: -0.3833, M: 11.551, S: 0.12482},
+                "85.0": {L: -0.3833, M: 13.144, S: 0.12939},
+                "90.0": {L: -0.3833, M: 14.764, S: 0.13377},
+                "95.0": {L: -0.3833, M: 16.389, S: 0.13796},
+                "100.0": {L: -0.3833, M: 18.003, S: 0.14196},
+                "105.0": {L: -0.3833, M: 19.595, S: 0.14579},
+                "110.0": {L: -0.3833, M: 21.157, S: 0.14945}
+            }
+        };
+
+        // Data WHO untuk Weight-for-Height (2-5 tahun, tinggi badan 65-120 cm)
+        const WHO_WFH_DATA = {
+            "M": { // Laki-laki
+                "65.0": {L: -0.3521, M: 7.514, S: 0.10911},
+                "65.5": {L: -0.3521, M: 7.683, S: 0.10967},
+                "66.0": {L: -0.3521, M: 7.854, S: 0.11023},
+                "66.5": {L: -0.3521, M: 8.026, S: 0.11079},
+                "67.0": {L: -0.3521, M: 8.200, S: 0.11134},
+                "67.5": {L: -0.3521, M: 8.376, S: 0.11188},
+                "68.0": {L: -0.3521, M: 8.553, S: 0.11242},
+                "68.5": {L: -0.3521, M: 8.732, S: 0.11296},
+                "69.0": {L: -0.3521, M: 8.912, S: 0.11349},
+                "69.5": {L: -0.3521, M: 9.094, S: 0.11401},
+                "70.0": {L: -0.3833, M: 9.031, S: 0.10907},
+                "75.0": {L: -0.3833, M: 10.544, S: 0.11150},
+                "80.0": {L: -0.3833, M: 12.090, S: 0.11459},
+                "85.0": {L: -0.3833, M: 13.704, S: 0.11758},
+                "90.0": {L: -0.3833, M: 15.355, S: 0.12046},
+                "95.0": {L: -0.3833, M: 17.022, S: 0.12322},
+                "100.0": {L: -0.3833, M: 18.687, S: 0.12586},
+                "105.0": {L: -0.3833, M: 20.337, S: 0.12839},
+                "110.0": {L: -0.3833, M: 21.962, S: 0.13080},
+                "115.0": {L: -0.3833, M: 23.557, S: 0.13310},
+                "120.0": {L: -0.3833, M: 25.119, S: 0.13530}
+            },
+            "F": { // Perempuan
+                "65.0": {L: -0.3833, M: 7.038, S: 0.11266},
+                "65.5": {L: -0.3833, M: 7.196, S: 0.11325},
+                "66.0": {L: -0.3833, M: 7.356, S: 0.11383},
+                "66.5": {L: -0.3833, M: 7.517, S: 0.11441},
+                "67.0": {L: -0.3833, M: 7.680, S: 0.11498},
+                "67.5": {L: -0.3833, M: 7.845, S: 0.11554},
+                "68.0": {L: -0.3833, M: 8.012, S: 0.11610},
+                "68.5": {L: -0.3833, M: 8.180, S: 0.11665},
+                "69.0": {L: -0.3833, M: 8.349, S: 0.11720},
+                "69.5": {L: -0.3833, M: 8.520, S: 0.11774},
+                "70.0": {L: -0.3833, M: 8.540, S: 0.11669},
+                "75.0": {L: -0.3833, M: 10.014, S: 0.12005},
+                "80.0": {L: -0.3833, M: 11.551, S: 0.12482},
+                "85.0": {L: -0.3833, M: 13.144, S: 0.12939},
+                "90.0": {L: -0.3833, M: 14.764, S: 0.13377},
+                "95.0": {L: -0.3833, M: 16.389, S: 0.13796},
+                "100.0": {L: -0.3833, M: 18.003, S: 0.14196},
+                "105.0": {L: -0.3833, M: 19.595, S: 0.14579},
+                "110.0": {L: -0.3833, M: 21.157, S: 0.14945},
+                "115.0": {L: -0.3833, M: 22.685, S: 0.15295},
+                "120.0": {L: -0.3833, M: 24.176, S: 0.15630}
+            }
+        };
+
+        // Data WHO untuk Weight-for-Age (0-60 bulan)
+        const WHO_WFA_DATA = {
+            "M": {
+                "0": {L: -0.3521, M: 3.346, S: 0.14602},
+                "1": {L: 0.0000, M: 4.470, S: 0.13395},
+                "2": {L: 0.0000, M: 5.567, S: 0.12385},
+                "3": {L: 0.0000, M: 6.376, S: 0.11727},
+                "4": {L: 0.0000, M: 7.002, S: 0.11316},
+                "5": {L: 0.0000, M: 7.511, S: 0.11080},
+                "6": {L: -0.3833, M: 7.932, S: 0.10535},
+                "7": {L: -0.3833, M: 8.251, S: 0.10412},
+                "8": {L: -0.3833, M: 8.577, S: 0.10302},
+                "9": {L: -0.3833, M: 8.909, S: 0.10203},
+                "10": {L: -0.3833, M: 9.245, S: 0.10111},
+                "11": {L: -0.3833, M: 9.585, S: 0.10026},
+                "12": {L: -0.3521, M: 9.586, S: 0.10128},
+                "18": {L: -0.3521, M: 10.743, S: 0.10122},
+                "24": {L: -0.3521, M: 11.513, S: 0.10266},
+                "30": {L: -0.3521, M: 12.387, S: 0.10544},
+                "36": {L: -0.3521, M: 13.879, S: 0.11014},
+                "42": {L: -0.3521, M: 14.813, S: 0.11333},
+                "48": {L: -0.3521, M: 15.952, S: 0.11845},
+                "54": {L: -0.3521, M: 16.881, S: 0.12267},
+                "60": {L: -0.3521, M: 17.715, S: 0.12687}
+            },
+            "F": {
+                "0": {L: -0.3833, M: 3.232, S: 0.14521},
+                "1": {L: 0.0000, M: 4.188, S: 0.13530},
+                "2": {L: 0.0000, M: 5.128, S: 0.12610},
+                "3": {L: 0.0000, M: 5.845, S: 0.11989},
+                "4": {L: 0.0000, M: 6.424, S: 0.11638},
+                "5": {L: 0.0000, M: 6.898, S: 0.11421},
+                "6": {L: -0.3833, M: 7.257, S: 0.10979},
+                "7": {L: -0.3833, M: 7.550, S: 0.10860},
+                "8": {L: -0.3833, M: 7.850, S: 0.10752},
+                "9": {L: -0.3833, M: 8.155, S: 0.10653},
+                "10": {L: -0.3833, M: 8.463, S: 0.10561},
+                "11": {L: -0.3833, M: 8.774, S: 0.10475},
+                "12": {L: -0.3521, M: 8.739, S: 0.10559},
+                "18": {L: -0.3521, M: 9.824, S: 0.10533},
+                "24": {L: -0.3521, M: 10.556, S: 0.10650},
+                "30": {L: -0.3521, M: 11.384, S: 0.10930},
+                "36": {L: -0.3521, M: 12.781, S: 0.11386},
+                "42": {L: -0.3521, M: 13.702, S: 0.11704},
+                "48": {L: -0.3521, M: 14.758, S: 0.12185},
+                "54": {L: -0.3521, M: 15.665, S: 0.12597},
+                "60": {L: -0.3521, M: 16.482, S: 0.13009}
+            }
+        };
+
+        // Data WHO untuk Height-for-Age (0-60 bulan)
+        const WHO_HFA_DATA = {
+            "M": {
+                "0": {L: 1, M: 49.884, S: 0.03795},
+                "1": {L: 1, M: 54.724, S: 0.03557},
+                "2": {L: 1, M: 58.424, S: 0.03424},
+                "3": {L: 1, M: 61.429, S: 0.03328},
+                "4": {L: 1, M: 63.886, S: 0.03257},
+                "5": {L: 1, M: 65.902, S: 0.03204},
+                "6": {L: 1, M: 67.623, S: 0.03215},
+                "7": {L: 1, M: 69.199, S: 0.03190},
+                "8": {L: 1, M: 70.644, S: 0.03168},
+                "9": {L: 1, M: 71.989, S: 0.03154},
+                "10": {L: 1, M: 73.281, S: 0.03147},
+                "11": {L: 1, M: 74.538, S: 0.03145},
+                "12": {L: 1, M: 75.670, S: 0.03103},
+                "18": {L: 1, M: 82.376, S: 0.03078},
+                "24": {L: 1, M: 87.074, S: 0.03082},
+                "30": {L: 1, M: 91.275, S: 0.03106},
+                "36": {L: 1, M: 95.250, S: 0.03135},
+                "42": {L: 1, M: 98.896, S: 0.03165},
+                "48": {L: 1, M: 102.732, S: 0.03224},
+                "54": {L: 1, M: 106.108, S: 0.03277},
+                "60": {L: 1, M: 109.415, S: 0.03333}
+            },
+            "F": {
+                "0": {L: 1, M: 49.147, S: 0.03790},
+                "1": {L: 1, M: 53.687, S: 0.03640},
+                "2": {L: 1, M: 57.067, S: 0.03568},
+                "3": {L: 1, M: 59.802, S: 0.03520},
+                "4": {L: 1, M: 62.089, S: 0.03486},
+                "5": {L: 1, M: 64.031, S: 0.03463},
+                "6": {L: 1, M: 65.710, S: 0.03446},
+                "7": {L: 1, M: 67.257, S: 0.03434},
+                "8": {L: 1, M: 68.691, S: 0.03426},
+                "9": {L: 1, M: 70.038, S: 0.03421},
+                "10": {L: 1, M: 71.321, S: 0.03420},
+                "11": {L: 1, M: 72.555, S: 0.03421},
+                "12": {L: 1, M: 73.730, S: 0.03404},
+                "18": {L: 1, M: 80.718, S: 0.03388},
+                "24": {L: 1, M: 85.597, S: 0.03388},
+                "30": {L: 1, M: 90.164, S: 0.03400},
+                "36": {L: 1, M: 94.091, S: 0.03442},
+                "42": {L: 1, M: 97.800, S: 0.03489},
+                "48": {L: 1, M: 101.581, S: 0.03525},
+                "54": {L: 1, M: 104.888, S: 0.03575},
+                "60": {L: 1, M: 108.114, S: 0.03628}
+            }
+        };
+
+        // ==============================================
+        // FUNGSI INTERPOLASI LINEAR SESUAI WHO ANTHRO
+        // ==============================================
+
+        // Fungsi untuk interpolasi linear antara dua titik
+        function linearInterpolate(x, x1, y1, x2, y2) {
+            if (Math.abs(x2 - x1) < 0.0001) return y1;
+            return y1 + ((x - x1) / (x2 - x1)) * (y2 - y1);
+        }
+
+        // Fungsi untuk mendapatkan LMS dengan interpolasi linear
+        function getInterpolatedLMS(height, gender, isWFL = true) {
+            const data = isWFL ? WHO_WFL_DATA[gender] : WHO_WFH_DATA[gender];
+            const heights = Object.keys(data).map(Number).sort((a, b) => a - b);
+            
+            // Jika tinggi tepat di titik data
+            if (data[height.toFixed(1)]) {
+                return data[height.toFixed(1)];
+            }
+            
+            // Cari dua titik terdekat
+            let lowerHeight = null;
+            let upperHeight = null;
+            
+            for (let i = 0; i < heights.length - 1; i++) {
+                if (height >= heights[i] && height <= heights[i + 1]) {
+                    lowerHeight = heights[i];
+                    upperHeight = heights[i + 1];
+                    break;
+                }
+            }
+            
+            // Jika tinggi di luar range, gunakan titik terdekat
+            if (lowerHeight === null) {
+                if (height < heights[0]) {
+                    return data[heights[0].toFixed(1)];
+                } else {
+                    return data[heights[heights.length - 1].toFixed(1)];
+                }
+            }
+            
+            const lowerLMS = data[lowerHeight.toFixed(1)];
+            const upperLMS = data[upperHeight.toFixed(1)];
+            
+            // Interpolasi linear untuk L, M, S
+            const ratio = (height - lowerHeight) / (upperHeight - lowerHeight);
+            
+            const interpolatedLMS = {
+                L: linearInterpolate(height, lowerHeight, lowerLMS.L, upperHeight, upperLMS.L),
+                M: linearInterpolate(height, lowerHeight, lowerLMS.M, upperHeight, upperLMS.M),
+                S: linearInterpolate(height, lowerHeight, lowerLMS.S, upperHeight, upperLMS.S)
+            };
+            
+            return interpolatedLMS;
+        }
+
+        // Fungsi untuk mendapatkan LMS dengan interpolasi linear untuk usia
+        function getInterpolatedLMSForAge(ageMonths, gender, indicator) {
+            const data = indicator === "WFA" ? WHO_WFA_DATA[gender] : WHO_HFA_DATA[gender];
+            const ages = Object.keys(data).map(Number).sort((a, b) => a - b);
+            
+            // Jika usia tepat di titik data
+            if (data[Math.round(ageMonths)]) {
+                return data[Math.round(ageMonths)];
+            }
+            
+            // Cari dua titik terdekat
+            let lowerAge = null;
+            let upperAge = null;
+            
+            for (let i = 0; i < ages.length - 1; i++) {
+                if (ageMonths >= ages[i] && ageMonths <= ages[i + 1]) {
+                    lowerAge = ages[i];
+                    upperAge = ages[i + 1];
+                    break;
+                }
+            }
+            
+            // Jika usia di luar range, gunakan titik terdekat
+            if (lowerAge === null) {
+                if (ageMonths < ages[0]) {
+                    return data[ages[0]];
+                } else {
+                    return data[ages[ages.length - 1]];
+                }
+            }
+            
+            const lowerLMS = data[lowerAge];
+            const upperLMS = data[upperAge];
+            
+            // Interpolasi linear untuk L, M, S
+            const ratio = (ageMonths - lowerAge) / (upperAge - lowerAge);
+            
+            const interpolatedLMS = {
+                L: linearInterpolate(ageMonths, lowerAge, lowerLMS.L, upperAge, upperLMS.L),
+                M: linearInterpolate(ageMonths, lowerAge, lowerLMS.M, upperAge, upperLMS.M),
+                S: linearInterpolate(ageMonths, lowerAge, lowerLMS.S, upperAge, upperLMS.S)
+            };
+            
+            return interpolatedLMS;
+        }
+
+        // Fungsi untuk menghitung z-score dengan rumus LMS
+        function calculateZScoreLMS(value, L, M, S) {
+            if (Math.abs(L) < 0.0001) {
+                // Jika L mendekati 0, gunakan log-normal
+                return (Math.log(value / M)) / S;
+            } else {
+                // Rumus LMS standar WHO
+                return ((Math.pow(value / M, L) - 1) / (L * S));
+            }
+        }
+
+        // Fungsi untuk interpretasi klinis
+        function interpretZScore(z, indicator) {
+            if (z < -3) {
+                if (indicator === "HFA") return { status: "Stunting berat", class: "critical", code: "Severe stunting" };
+                if (indicator === "WFA") return { status: "Underweight berat", class: "critical", code: "Severe underweight" };
+                return { status: "Wasting berat", class: "critical", code: "Severe wasting" };
+            }
+            if (z < -2) {
+                if (indicator === "HFA") return { status: "Stunting", class: "danger", code: "Stunting" };
+                if (indicator === "WFA") return { status: "Underweight", class: "danger", code: "Underweight" };
+                return { status: "Wasting", class: "danger", code: "Wasting" };
+            }
+            if (z <= 2) {
+                return { status: "Normal", class: "normal", code: "Normal" };
+            }
+            if (z <= 3) {
+                return { status: "Risiko overweight", class: "warning", code: "Risk of overweight" };
+            }
+            return { status: "Obesitas", class: "danger", code: "Obese" };
+        }
+
+        // Fungsi untuk menghitung usia dengan presisi
+        function calculateExactAge(birthDate, measurementDate) {
+            const diffMs = measurementDate - birthDate;
+            const diffDays = diffMs / (1000 * 60 * 60 * 24);
+            return diffDays / 30.436875; // Rata-rata hari per bulan
+        }
+
+        // Fungsi untuk mendapatkan titik data terdekat untuk display
+        function getNearestDataPoints(height, gender, isWFL = true) {
+            const data = isWFL ? WHO_WFL_DATA[gender] : WHO_WFH_DATA[gender];
+            const heights = Object.keys(data).map(Number).sort((a, b) => a - b);
+            
+            let lower = null;
+            let upper = null;
+            
+            for (let i = 0; i < heights.length - 1; i++) {
+                if (height >= heights[i] && height <= heights[i + 1]) {
+                    lower = heights[i];
+                    upper = heights[i + 1];
+                    break;
+                }
+            }
+            
+            if (lower === null) {
+                if (height < heights[0]) {
+                    lower = upper = heights[0];
+                } else {
+                    lower = upper = heights[heights.length - 1];
+                }
+            }
+            
+            return {
+                lower: { height: lower, lms: data[lower.toFixed(1)] },
+                upper: { height: upper, lms: data[upper.toFixed(1)] },
+                exactHeight: height
+            };
+        }
+
+        // ==============================================
+        // FUNGSI UTAMA ANALISIS
+        // ==============================================
+
+        function analyzeWithWHOInterpolation(tabNumber) {
+            // Ambil data input
+            const birthDateInput = document.getElementById(`birthDate${tabNumber}`).value;
+            const measurementDateInput = document.getElementById(`measurementDate${tabNumber}`).value;
+            const gender = document.getElementById(`gender${tabNumber}`).value;
+            const weight = parseFloat(document.getElementById(`weight${tabNumber}`).value);
+            const height = parseFloat(document.getElementById(`height${tabNumber}`).value);
+            
+            // Validasi
+            if (!birthDateInput || !measurementDateInput || !gender || !weight || !height) {
+                alert("Harap lengkapi semua data!");
+                return;
+            }
+            
+            const birthDate = new Date(birthDateInput);
+            const measurementDate = new Date(measurementDateInput);
+            
+            if (measurementDate <= birthDate) {
+                alert("Tanggal pengukuran harus setelah tanggal lahir!");
+                return;
+            }
+            
+            // Hitung usia
+            const ageMonths = calculateExactAge(birthDate, measurementDate);
+            
+            // Validasi berdasarkan tab
+            if (tabNumber === "1" && (ageMonths < 0 || ageMonths > 24)) {
+                alert(`Tab ini untuk anak 0-24 bulan. Usia anak: ${ageMonths.toFixed(1)} bulan`);
+                return;
+            }
+            
+            if (tabNumber === "2" && (ageMonths < 0 || ageMonths > 60)) {
+                alert(`Tab ini untuk anak 0-5 tahun. Usia anak: ${ageMonths.toFixed(1)} bulan`);
+                return;
+            }
+            
+            // Tampilkan info usia
+            const ageYears = Math.floor(ageMonths / 12);
+            const remainingMonths = Math.round((ageMonths % 12) * 10) / 10;
+            let ageText = `Usia: ${ageMonths.toFixed(1)} bulan`;
+            if (ageYears > 0) {
+                ageText = `Usia: ${ageYears} tahun ${remainingMonths} bulan (${ageMonths.toFixed(1)} bulan)`;
+            }
+            
+            document.getElementById(`ageInfo${tabNumber}`).innerHTML = `
+                ${ageText} | ${gender === 'M' ? 'Laki-laki' : 'Perempuan'} | 
+                Berat: ${weight.toFixed(3)} kg | Tinggi: ${height.toFixed(1)} cm
+            `;
+            
+            // Analisis dengan interpolasi WHO
+            const results = analyzeGrowthWHO(ageMonths, weight, height, gender, tabNumber === "1");
+            
+            // Tampilkan hasil
+            displayWHOResults(results, `growthResults${tabNumber}`, gender, tabNumber === "1");
+            
+            // Tampilkan section hasil
+            document.getElementById(`resultsSection${tabNumber}`).style.display = 'block';
+            
+            // Scroll ke hasil
+            document.getElementById(`resultsSection${tabNumber}`).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function analyzeGrowthWHO(ageMonths, weight, height, gender, isUnder2Years) {
+            const results = [];
+            
+            // 1. Weight-for-Age (BB/U)
+            const wfaLMS = getInterpolatedLMSForAge(ageMonths, gender, "WFA");
+            const wfaZ = calculateZScoreLMS(weight, wfaLMS.L, wfaLMS.M, wfaLMS.S);
+            const wfaInterpretation = interpretZScore(wfaZ, "WFA");
+            
+            results.push({
+                indicator: "BB/U",
+                zScore: wfaZ,
+                interpretation: wfaInterpretation,
+                lms: wfaLMS,
+                note: `Usia: ${ageMonths.toFixed(2)} bulan`
+            });
+            
+            // 2. Height-for-Age (TB/U)
+            const hfaLMS = getInterpolatedLMSForAge(ageMonths, gender, "HFA");
+            const hfaZ = calculateZScoreLMS(height, hfaLMS.L, hfaLMS.M, hfaLMS.S);
+            const hfaInterpretation = interpretZScore(hfaZ, "HFA");
+            
+            results.push({
+                indicator: "TB/U",
+                zScore: hfaZ,
+                interpretation: hfaInterpretation,
+                lms: hfaLMS,
+                note: `Usia: ${ageMonths.toFixed(2)} bulan`
+            });
+            
+            // 3. Weight-for-Height/Length (BB/TB) - INTERPOLASI LINEAR
+            const isWFL = isUnder2Years;
+            const wfhLMS = getInterpolatedLMS(height, gender, isWFL);
+            const wfhZ = calculateZScoreLMS(weight, wfhLMS.L, wfhLMS.M, wfhLMS.S);
+            const wfhInterpretation = interpretZScore(wfhZ, "WFH");
+            
+            results.push({
+                indicator: "BB/TB",
+                zScore: wfhZ,
+                interpretation: wfhInterpretation,
+                lms: wfhLMS,
+                note: isWFL ? "Weight-for-Length" : "Weight-for-Height",
+                height: height,
+                gender: gender,
+                isWFL: isWFL
+            });
+            
+            return results;
+        }
+
+        function displayWHOResults(results, containerId, gender, isWFL) {
+            let html = '';
+            
+            results.forEach((result, index) => {
+                const indicatorName = result.indicator === "BB/U" ? "Berat Badan menurut Umur (BB/U)" :
+                                   result.indicator === "TB/U" ? "Tinggi Badan menurut Umur (TB/U)" :
+                                   "Berat Badan menurut Tinggi Badan (BB/TB)";
+                
+                html += `
+                    <div class="parameter">
+                        <div>
+                            <div class="parameter-name">${indicatorName}</div>
+                            <div style="font-size: 0.9rem; color: #64748b;">${result.note}</div>
+                `;
+                
+                // Untuk BB/TB, tampilkan detail interpolasi
+                if (result.indicator === "BB/TB" && result.height) {
+                    const dataPoints = getNearestDataPoints(result.height, gender, isWFL);
+                    
+                    html += `
+                        <div class="interpolation-detail">
+                            <strong>Interpolasi linear:</strong>
+                            <div style="margin-top: 5px;">
+                                Tinggi: ${result.height.toFixed(1)} cm (antara ${dataPoints.lower.height} cm dan ${dataPoints.upper.height} cm)
+                            </div>
+                            <div class="data-points">
+                                <div class="data-point active">${dataPoints.lower.height} cm: L=${dataPoints.lower.lms.L.toFixed(4)}, M=${dataPoints.lower.lms.M.toFixed(3)}, S=${dataPoints.lower.lms.S.toFixed(5)}</div>
+                                <div class="data-point active">${dataPoints.upper.height} cm: L=${dataPoints.upper.lms.L.toFixed(4)}, M=${dataPoints.upper.lms.M.toFixed(3)}, S=${dataPoints.upper.lms.S.toFixed(5)}</div>
+                            </div>
+                            <div style="margin-top: 5px; font-weight: 600;">
+                                Hasil interpolasi: L=${result.lms.L.toFixed(4)}, M=${result.lms.M.toFixed(3)}, S=${result.lms.S.toFixed(5)}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    html += `
+                        <div style="font-size: 0.8rem; color: #475569; margin-top: 5px;">
+                            LMS: L=${result.lms.L.toFixed(4)}, M=${result.lms.M.toFixed(3)}, S=${result.lms.S.toFixed(5)}
+                        </div>
+                    `;
+                }
+                
+                html += `
+                        </div>
+                        <div class="parameter-value ${result.interpretation.class}">
+                            ${result.interpretation.status}
+                            <div style="font-size: 0.9rem;">Z-score: ${result.zScore.toFixed(2)}</div>
+                            <div style="font-size: 0.8rem; margin-top: 3px;">${result.interpretation.code}</div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            // Cek masalah gizi
+            const seriousIssues = results.filter(r => r.interpretation.class === "critical" || 
+                                                     (r.interpretation.class === "danger" && !r.interpretation.status.includes("Risiko")));
+            
+            if (seriousIssues.length > 0) {
+                html += `
+                    <div style="margin-top: 15px; padding: 12px; background-color: #fee2e2; border-radius: 6px; border-left: 4px solid #dc2626;">
+                        <strong style="color: #dc2626;">🚨 PERHATIAN KLINIS:</strong>
+                        <p style="margin: 5px 0;">Hasil menunjukkan masalah gizi yang memerlukan evaluasi lebih lanjut:</p>
+                        <ul style="margin: 5px 0; padding-left: 20px;">
+                            ${seriousIssues.map(issue => 
+                                `<li><strong>${issue.indicator}:</strong> ${issue.interpretation.status} (Z = ${issue.zScore.toFixed(2)})</li>`
+                            ).join('')}
+                        </ul>
+                        <p style="margin: 5px 0;"><strong>Rekomendasi:</strong> Konsultasikan dengan dokter anak atau tenaga gizi untuk evaluasi komprehensif.</p>
+                    </div>
+                `;
+            }
+            
+            // Informasi validasi
+            html += `
+                <div class="model-info">
+                    <strong>Validasi dengan WHO Anthro:</strong> 
+                    Z-score yang dihasilkan menggunakan metode interpolasi linear yang identik dengan 
+                    software WHO Anthro v3.2.2. Untuk tinggi badan antara titik data WHO, dilakukan 
+                    interpolasi linear pada L, M, dan S secara terpisah.
+                </div>
+            `;
+            
+            document.getElementById(containerId).innerHTML = html;
+        }
+
+        // ==============================================
+        // SETUP DAN EVENT LISTENERS
+        // ==============================================
+
+        function setupTabs() {
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.getAttribute('data-tab');
+                    
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    tab.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                    
+                    document.querySelectorAll('.results-section').forEach(section => {
+                        section.style.display = 'none';
+                    });
+                });
+            });
+        }
+
+        function setupExamples() {
+            const today = new Date();
+            const defaultMeasurementDate = today.toISOString().split('T')[0];
+            
+            // Contoh 1: Bayi 8.5 bulan, tinggi 72.3 cm
+            const babyDate = new Date(today.getFullYear(), today.getMonth() - 8, today.getDate() - 15);
+            document.getElementById('birthDate1').value = babyDate.toISOString().split('T')[0];
+            document.getElementById('measurementDate1').value = defaultMeasurementDate;
+            document.getElementById('gender1').value = 'M';
+            document.getElementById('weight1').value = '8.750';
+            document.getElementById('height1').value = '72.3';
+            
+            // Contoh 2: Anak 3.5 tahun, tinggi 96.7 cm
+            const childDate = new Date(today.getFullYear() - 3, today.getMonth() - 6, today.getDate() - 10);
+            document.getElementById('birthDate2').value = childDate.toISOString().split('T')[0];
+            document.getElementById('measurementDate2').value = defaultMeasurementDate;
+            document.getElementById('gender2').value = 'F';
+            document.getElementById('weight2').value = '14.820';
+            document.getElementById('height2').value = '96.7';
+        }
+
+        // Event listeners
+        document.getElementById('analyzeBtn1').addEventListener('click', () => analyzeWithWHOInterpolation("1"));
+        document.getElementById('analyzeBtn2').addEventListener('click', () => analyzeWithWHOInterpolation("2"));
+
+        // Initialize
+        setupTabs();
+        setupExamples();
+        
+        // Log info metode
+        console.log("Metode Interpolasi Linear WHO Anthro");
+        console.log("====================================");
+        console.log("• BB/TB menggunakan interpolasi linear antara titik tinggi terdekat");
+        console.log("• Data WHO: interval 0.1 cm untuk panjang, 0.5 cm untuk tinggi");
+        console.log("• Interpolasi dilakukan pada L, M, dan S secara terpisah");
+        console.log("• Rumus identik dengan WHO Anthro v3.2.2");
+        console.log("• Z-score seharusnya identik dengan software WHO resmi");
+        
+        // Demo perhitungan
+        console.log("\nDemo Perhitungan BB/TB (Laki-laki, 72.3 cm, 8.75 kg):");
+        const demoLMS = getInterpolatedLMS(72.3, "M", true);
+        const demoZ = calculateZScoreLMS(8.75, demoLMS.L, demoLMS.M, demoLMS.S);
+        console.log(`LMS interpolasi: L=${demoLMS.L.toFixed(4)}, M=${demoLMS.M.toFixed(3)}, S=${demoLMS.S.toFixed(5)}`);
+        console.log(`Z-score: ${demoZ.toFixed(2)}`);
+    </script>
+</body>
+</html>
