@@ -18,6 +18,7 @@
             --nutrition-color: #ff7b00;
             --geriatric-color: #5d4037;
             --geriatric-full-color: #795548;
+            --child-color: #00bcd4;
         }
         
         * {
@@ -248,6 +249,20 @@
         
         .geriatric-full-card .tool-link:hover {
             background-color: #6d4c41;
+        }
+        
+        /* Styling khusus untuk kartu Skreening Anak */
+        .child-card .tool-icon {
+            background-color: #e0f7fa;
+            color: var(--child-color);
+        }
+        
+        .child-card .tool-link {
+            background-color: var(--child-color);
+        }
+        
+        .child-card .tool-link:hover {
+            background-color: #0097a7;
         }
         
         /* Footer */
@@ -482,7 +497,7 @@
                         </div>
                     </div>
                     
-                    <!-- Alat 11: Geriatric FULL (BARU) -->
+                    <!-- Alat 11: Geriatric FULL -->
                     <div class="tool-card geriatric-full-card">
                         <div class="tool-icon">
                             <i class="fas fa-clipboard-check"></i>
@@ -491,6 +506,18 @@
                             <h3>Geriatric FULL (Lengkap)</h3>
                             <p>Alat screening geriatri lengkap dengan penilaian komprehensif multidomain termasuk kognitif, fisik, psikologis, dan sosial untuk evaluasi menyeluruh pasien lansia.</p>
                             <a href="https://hendrikkho-akupuntur.github.io/SahliRGB/GeriatricLengkap.html" target="_blank" class="tool-link">Akses Alat Lengkap</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Alat 12: Skreening Anak (BARU) -->
+                    <div class="tool-card child-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-child"></i>
+                        </div>
+                        <div class="tool-content">
+                            <h3>Skreening Anak</h3>
+                            <p>Alat screening komprehensif untuk anak, mencakup perkembangan fisik, motorik, kognitif, dan sosial emosional sesuai dengan tahap usia anak.</p>
+                            <a href="https://hendrikkho-akupuntur.github.io/SahliRGB/Skreening_anak.html" target="_blank" class="tool-link">Akses Alat</a>
                         </div>
                     </div>
                 </div>
@@ -537,6 +564,9 @@
                     if (this.classList.contains('geriatric-full-card')) {
                         icon.style.animation = 'pulse-grow 1.5s infinite';
                     }
+                    if (this.classList.contains('child-card')) {
+                        icon.style.animation = 'jump 1s infinite';
+                    }
                 });
                 
                 card.addEventListener('mouseleave', function() {
@@ -580,6 +610,12 @@
             0% { transform: scale(1); }
             50% { transform: scale(1.2); }
             100% { transform: scale(1); }
+        }
+        
+        /* Animasi khusus untuk ikon anak */
+        @keyframes jump {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
         }
     </style>
 </body>
