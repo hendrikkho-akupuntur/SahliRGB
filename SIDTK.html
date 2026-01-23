@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIDTK - Sistem Deteksi & Intervensi Tumbuh Kembang</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #2a6e8c;
+            --secondary: #8ab4c4;
+            --accent: #f5a623;
+            --light: #f8f9fa;
+            --dark: #333;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --motorik: #3498db;
+            --komunikasi: #2ecc71;
+            --sosial: #e74c3c;
+            --kognitif: #9b59b6;
+        }
+
+        body {
+            background-color: #f0f8ff;
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .clinical-warning {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            padding: 15px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #0c5460;
+            margin-bottom: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            height: 70px;
+            width: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+        }
+
+        .header-content h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .header-content p {
+            font-size: 1rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid var(--primary);
+        }
+
+        .card-title {
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #e0e0e0;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(42, 110, 140, 0.1);
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 20px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+        }
+
+        .radio-option input {
+            width: auto;
+            margin-right: 8px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .checkbox-group input {
+            width: auto;
+            margin-right: 8px;
+        }
+
+        .age-note {
+            background-color: #fff3cd;
+            border-left: 4px solid var(--warning);
+            padding: 12px 15px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .age-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .age-btn {
+            padding: 12px;
+            background-color: #f1f8ff;
+            border: 2px solid #d1e7ff;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .age-btn:hover {
+            background-color: #e3f2fd;
+            border-color: var(--secondary);
+        }
+
+        .age-btn.active {
+            background-color: var(--secondary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .kpsp-questions {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .question-instruction {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        .question-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            background-color: white;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .question-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .question-text {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .answer-options {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .answer-option {
+            display: flex;
+            align-items: center;
+            padding: 8px 15px;
+            background-color: #f1f8ff;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .answer-option:hover {
+            background-color: #e3f2fd;
+        }
+
+        .answer-option input {
+            margin-right: 8px;
+            width: auto;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #1e5a73;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+
+        .result-box {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+            display: none;
+            border-left: 5px solid var(--accent);
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .result-title {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        .result-status {
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        .status-sesuai {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .status-meragukan {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .status-penyimpangan {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        /* INTERVENTION CARD STYLES */
+        .intervention-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-top: 4px solid;
+        }
+
+        .intervention-card.motorik {
+            border-top-color: var(--motorik);
+            border-left: 4px solid var(--motorik);
+        }
+
+        .intervention-card.komunikasi {
+            border-top-color: var(--komunikasi);
+            border-left: 4px solid var(--komunikasi);
+        }
+
+        .intervention-card.sosial {
+            border-top-color: var(--sosial);
+            border-left: 4px solid var(--sosial);
+        }
+
+        .intervention-card.kognitif {
+            border-top-color: var(--kognitif);
+            border-left: 4px solid var(--kognitif);
+        }
+
+        .intervention-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .intervention-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .intervention-priority {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .priority-high {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .priority-medium {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .priority-low {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        /* INTERVENTION GRID */
+        .intervention-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .intervention-item {
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        .intervention-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .intervention-frequency {
+            background-color: #e9ecef;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        /* MONITORING TABLE */
+        .monitoring-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+
+        .monitoring-table th {
+            background-color: var(--primary);
+            color: white;
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .monitoring-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .monitoring-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .monitoring-table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-pending {
+            background-color: var(--warning);
+        }
+
+        .status-inprogress {
+            background-color: var(--primary);
+        }
+
+        .status-completed {
+            background-color: var(--success);
+        }
+
+        /* PRINT BUTTON */
+        .print-section {
+            margin-top: 30px;
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .footer {
+            background-color: var(--primary);
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer p {
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .footer-line {
+            height: 1px;
+            background-color: rgba(255, 255, 255, 0.2);
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .logo-container {
+                gap: 15px;
+            }
+            
+            .logo {
+                height: 50px;
+            }
+            
+            .age-group {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .answer-options {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .intervention-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .monitoring-table {
+                font-size: 0.9rem;
+            }
+            
+            .monitoring-table th,
+            .monitoring-table td {
+                padding: 8px 10px;
+            }
+        }
+
+        @media print {
+            .clinical-warning,
+            .card:not(.result-box),
+            .button-group,
+            .print-section,
+            .footer {
+                display: none !important;
+            }
+            
+            .result-box {
+                display: block !important;
+                box-shadow: none;
+                border: 1px solid #000;
+            }
+            
+            body {
+                background-color: white;
+                font-size: 12pt;
+            }
+            
+            .header-content h1 {
+                color: black;
+                text-shadow: none;
+            }
+            
+            header {
+                background: white;
+                color: black;
+                box-shadow: none;
+                border-bottom: 2px solid #000;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="clinical-warning">
+        <strong>📋 SIDTK - SISTEM DETEKSI & INTERVENSI TUMBANG</strong>
+        <p>Deteksi, Stimulasi Eksplisit, Intervensi Terarah, dan Monitoring Operasional Perkembangan Anak</p>
+    </div>
+
+    <header>
+        <div class="logo-container">
+            <img src="KKLP.jpg" alt="Logo KKLP" class="logo">
+            <img src="fkuph.jpg" alt="Logo FK UPH" class="logo">
+        </div>
+        <div class="header-content">
+            <h1><i class="fas fa-child"></i> SIDTK - Sistem Deteksi & Intervensi Tumbuh Kembang</h1>
+            <p>Deteksi Dini + Rencana Stimulasi Spesifik + Monitoring Terstruktur</p>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- DATA PASIEN -->
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-user-plus"></i> Data Pasien</h2>
+            <div class="form-group">
+                <label for="childName">Nama Anak</label>
+                <input type="text" id="childName" placeholder="Nama lengkap anak">
+            </div>
+            
+            <div class="form-group">
+                <label for="childAge">Usia Anak (bulan)</label>
+                <input type="number" id="childAge" min="0" max="72" placeholder="Usia dalam bulan (3-60)">
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="premature">
+                    <label for="premature">Anak prematur (usia ≤24 bulan)</label>
+                </div>
+                
+                <div id="correctedAgeNote" class="age-note" style="display: none;">
+                    <strong><i class="fas fa-info-circle"></i> Catatan untuk bayi prematur:</strong>
+                    <p style="margin: 5px 0 0 0; font-size: 0.85rem;">
+                        Gunakan <strong>usia koreksi</strong> untuk menentukan kelompok usia KPSP.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Jenis Kelamin</label>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" id="male" name="gender" value="Laki-laki" checked>
+                        <label for="male">Laki-laki</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="female" name="gender" value="Perempuan">
+                        <label for="female">Perempuan</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="examiner">Nama Pemeriksa</label>
+                <input type="text" id="examiner" placeholder="Nama tenaga kesehatan yang memeriksa">
+            </div>
+        </div>
+        
+        <!-- KELOMPOK USIA -->
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-calendar-alt"></i> Pilih Kelompok Usia KPSP</h2>
+            <p>Pilih kelompok usia sesuai dengan usia kronologis anak saat ini:</p>
+            <div class="age-group">
+                <div class="age-btn" data-age="3">3 Bulan</div>
+                <div class="age-btn" data-age="6">6 Bulan</div>
+                <div class="age-btn" data-age="9">9 Bulan</div>
+                <div class="age-btn" data-age="12">12 Bulan</div>
+                <div class="age-btn" data-age="15">15 Bulan</div>
+                <div class="age-btn" data-age="18">18 Bulan</div>
+                <div class="age-btn" data-age="21">21 Bulan</div>
+                <div class="age-btn" data-age="24">24 Bulan</div>
+                <div class="age-btn" data-age="30">30 Bulan</div>
+                <div class="age-btn" data-age="36">36 Bulan</div>
+            </div>
+        </div>
+        
+        <!-- PERTANYAAN KPSP -->
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-question-circle"></i> Pertanyaan KPSP</h2>
+            
+            <div class="question-instruction">
+                <strong><i class="fas fa-exclamation-circle"></i> Petunjuk Pengisian:</strong>
+                <p style="margin: 8px 0 0 0;">
+                    1. Jawab semua 10 pertanyaan dengan memilih "Ya", "Tidak", atau "Tidak Tahu"<br>
+                    2. <strong>Jawaban "Tidak Tahu" akan dinilai sebagai "Tidak"</strong> dalam perhitungan<br>
+                    3. SISTEM AKAN MEMBUAT RENCANA INTERVENSI SPESIFIK
+                </p>
+            </div>
+            
+            <div id="kpsp-container" class="kpsp-questions">
+                <p class="instruction-text">Pilih kelompok usia terlebih dahulu untuk memuat pertanyaan KPSP yang sesuai.</p>
+            </div>
+            
+            <div class="button-group">
+                <button class="btn btn-primary" id="checkBtn">
+                    <i class="fas fa-clipboard-check"></i> Analisis & Buat Rencana Intervensi
+                </button>
+                <button class="btn btn-secondary" id="resetBtn">
+                    <i class="fas fa-redo"></i> Ulangi Skrining
+                </button>
+            </div>
+        </div>
+        
+        <!-- HASIL SIDTK -->
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-file-medical-alt"></i> Hasil SIDTK Lengkap dengan Rencana Intervensi</h2>
+            <div id="resultBox" class="result-box">
+                <!-- HEADER -->
+                <div class="result-header">
+                    <h3 class="result-title" id="resultTitle">RENCANA INTERVENSI TUMBANG</h3>
+                    <div id="resultStatus" class="result-status">-</div>
+                </div>
+                
+                <!-- DATA PASIEN -->
+                <div id="resultContent">
+                    <!-- Data akan dimuat di sini -->
+                </div>
+                
+                <!-- ANALISIS DOMAIN -->
+                <div id="domainAnalysisBox" style="display: none;">
+                    <h4 style="color: var(--primary); margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #dee2e6;">
+                        <i class="fas fa-chart-bar"></i> Analisis Area Perkembangan
+                    </h4>
+                    <div id="domainResults" class="intervention-grid">
+                        <!-- Domain cards akan dimuat di sini -->
+                    </div>
+                </div>
+                
+                <!-- INTERPRETASI -->
+                <div id="interpretationBox" style="display: none; margin-top: 25px; padding: 20px; background-color: white; border-radius: 8px; border: 1px solid #dee2e6;">
+                    <h4 style="color: var(--primary); margin-bottom: 10px;"><i class="fas fa-stethoscope"></i> Interpretasi & Prioritas Intervensi</h4>
+                    <div id="interpretationContent"></div>
+                </div>
+                
+                <!-- RENCANA INTERVENSI SPESIFIK -->
+                <div id="interventionPlanBox" style="display: none; margin-top: 30px;">
+                    <h4 style="color: var(--primary); margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid var(--primary);">
+                        <i class="fas fa-hands-helping"></i> RENCANA INTERVENSI SPESIFIK
+                    </h4>
+                    <div id="interventionContent">
+                        <!-- Rencana intervensi akan dimuat di sini -->
+                    </div>
+                </div>
+                
+                <!-- MONITORING OPERASIONAL -->
+                <div id="monitoringPlanBox" style="display: none; margin-top: 30px;">
+                    <h4 style="color: var(--primary); margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid var(--primary);">
+                        <i class="fas fa-calendar-check"></i> MONITORING OPERASIONAL
+                    </h4>
+                    <table id="monitoringTable" class="monitoring-table">
+                        <!-- Monitoring table akan dimuat di sini -->
+                    </table>
+                </div>
+                
+                <!-- RUJUKAN -->
+                <div id="referralPlanBox" style="display: none; margin-top: 30px;">
+                    <h4 style="color: var(--primary); margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid var(--primary);">
+                        <i class="fas fa-hospital"></i> RENCANA RUJUKAN
+                    </h4>
+                    <div id="referralContent" style="background-color: white; padding: 20px; border-radius: 8px; border: 1px solid #dee2e6;">
+                        <!-- Rujukan akan dimuat di sini -->
+                    </div>
+                </div>
+                
+                <!-- PRINT BUTTON -->
+                <div class="print-section">
+                    <button class="btn btn-primary" onclick="window.print()">
+                        <i class="fas fa-print"></i> Cetak Rencana Intervensi
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p><i class="fas fa-user-md"></i> SIDTK - Dikembangkan oleh Prodi PPDS KKLP FK UPH - dr Hendrik</p>
+            <div class="footer-line"></div>
+            <p>© 2026 - Program Studi Spesialis Kedokteran Primer FK UPH</p>
+            <p style="font-size: 0.9rem; margin-top: 10px; opacity: 0.8;">
+                Sistem operasional untuk deteksi dan intervensi tumbuh kembang anak.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Data KPSP
+        const kpspData = {
+            "3": ["Dapat mengangkat kepala setinggi 45°?", "Dapat menggerakkan kepala dari kiri/kanan ke tengah?", "Dapat tersenyum spontan?", "Dapat mengeluarkan suara oo, aa, eh?", "Dapat menggerakkan tangan dan kaki secara aktif?", "Dapat mempertahankan posisi kepala saat ditarik ke posisi duduk?", "Dapat menatap wajah pengasuh?", "Dapat bereaksi terhadap suara bel/kerincing?", "Dapat menendang secara aktif?", "Dapat menggenggam benda yang ditaruh di tangannya?"],
+            "12": ["Dapat berdiri berpegangan?", "Dapat memasukkan benda ke dalam cangkir/gelas?", "Dapat mengucapkan 1-2 kata bermakna?", "Dapat meniru kegiatan sederhana?", "Dapat berjalan berpegangan?", "Dapat mengambil benda kecil dengan jari telunjuk dan ibu jari?", "Dapat menengok bila dipanggil namanya?", "Dapat minum dari gelas sendiri?", "Dapat duduk sendiri tanpa dibantu?", "Dapat mencoret-coret dengan alat tulis?"],
+            "24": ["Dapat berdiri dengan satu kaki tanpa berpegangan?", "Dapat menumpuk 6 kubus?", "Dapat menyebut 3-6 kata dengan jelas?", "Dapat menunjuk 7-8 bagian tubuhnya?", "Dapat mencuci dan mengeringkan tangan?", "Dapat melompat di tempat?", "Dapat meniru membuat garis lingkaran?", "Dapat menyebut nama lengkapnya?", "Dapat mengikuti perintah 2 langkah?", "Dapat memakai baju sendiri?"],
+            "36": ["Dapat berdiri dengan satu kaki selama 6 detik?", "Dapat meniru membuat lingkaran?", "Dapat menyebut nama lengkap dan umur?", "Dapat memakai baju dengan benar?", "Dapat bermain dengan 2-3 anak lain?", "Dapat melompat dengan satu kaki?", "Dapat menggambar orang dengan 3 bagian?", "Dapat menghitung sampai 3?", "Dapat mengikuti perintah kompleks?", "Dapat menggunakan kata 'saya' atau 'aku'?"]
+        };
+
+        // Mapping domain
+        const questionDomainMap = {
+            "3": ["motorik", "motorik", "sosial", "komunikasi", "motorik", "motorik", "sosial", "komunikasi", "motorik", "motorik"],
+            "12": ["motorik", "motorik", "komunikasi", "sosial", "motorik", "motorik", "komunikasi", "sosial", "motorik", "motorik"],
+            "24": ["motorik", "motorik", "komunikasi", "kognitif", "sosial", "motorik", "motorik", "kognitif", "kognitif", "sosial"],
+            "36": ["motorik", "motorik", "komunikasi", "sosial", "sosial", "motorik", "motorik", "kognitif", "kognitif", "komunikasi"]
+        };
+
+        // Data intervensi operasional
+        const interventionData = {
+            "motorik": {
+                "sesuai": [
+                    { activity: "Tummy time", frequency: "10-15 menit", times: "3x/hari", instruction: "Letakkan bayi telungkup, letakkan mainan menarik di depan", target: "Kontrol kepala 90°" },
+                    { activity: "Rolling practice", frequency: "5 menit", times: "4x/hari", instruction: "Bantu bayi berguling dengan mainan sebagai motivator", target: "Dapat rolling dua arah" },
+                    { activity: "Sitting support", frequency: "5-10 menit", times: "3x/hari", instruction: "Dudukkan dengan bantuan bantal, taruh mainan di depan", target: "Duduk stabil 30 detik" }
+                ],
+                "meragukan": [
+                    { activity: "INTENSIF: Head control training", frequency: "15 menit", times: "4x/hari", instruction: "Tummy time dengan bantal di dada, angkat kepala 45°", target: "Angkat kepala 45° selama 10 detik" },
+                    { activity: "ASSISTED: Rolling both sides", frequency: "10 menit", times: "3x/hari", instruction: "Bantu berguling kiri-kanan dengan sentuhan pada pinggul", target: "Berguling dengan bantuan minimal" },
+                    { activity: "SUPPORTED: Sitting position", frequency: "10 menit", times: "4x/hari", instruction: "Dudukkan dengan dukungan penuh, kurangi bantuan bertahap", target: "Duduk 10 detik dengan dukungan ringan" }
+                ],
+                "penyimpangan": [
+                    { activity: "SEGERA: PT evaluation", frequency: "Segera", times: "1x", instruction: "Rujuk fisioterapis untuk assessment tone & reflexes", target: "Evaluasi dalam 2 minggu" },
+                    { activity: "POSITIONING: 24/7 positioning", frequency: "Terus menerus", times: "Setiap posisi", instruction: "Posisi side-lying, supported sitting, prone dengan bantuan", target: "Optimal alignment" },
+                    { activity: "PASSIVE ROM", frequency: "10 menit", times: "3x/hari", instruction: "Gerakkan sendi lembut: shoulder, elbow, hip, knee flexion/extension", target: "Full ROM semua sendi" }
+                ]
+            },
+            "komunikasi": {
+                "sesuai": [
+                    { activity: "Responsive talking", frequency: "5-10 menit", times: "8-10x/hari", instruction: "Tanggapi setiap suara bayi dengan kata dan ekspresi", target: "Vocal turn-taking" },
+                    { activity: "Book reading", frequency: "5 menit", times: "2x/hari", instruction: "Baca buku dengan gambar besar, tunjuk dan sebut nama", target: "Mengikuti dengan mata" },
+                    { activity: "Singing with gestures", frequency: "3-5 menit", times: "3x/hari", instruction: "Nyanyi lagu dengan gerakan tangan (cicak-cicak, kepala pundak)", target: "Meniru 1 gerakan" }
+                ],
+                "meragukan": [
+                    { activity: "INTENSIF: Face-to-face interaction", frequency: "15 menit", times: "5x/hari", instruction: "Pertahankan kontak mata, buat suara berlebihan (oooo, aaaa)", target: "Kontak mata >3 detik" },
+                    { activity: "TARGETED: Name response", frequency: "Setiap panggilan", times: "20x/hari", instruction: "Panggil nama dari berbagai arah, tunggu 5 detik respons", target: "Menoleh 70% panggilan" },
+                    { activity: "STRUCTURED: Sound imitation", frequency: "10 menit", times: "4x/hari", instruction: "Buat suara sederhana (ma, ba, da), tunggu bayi meniru", target: "Meniru 1 suara konsonan" }
+                ],
+                "penyimpangan": [
+                    { activity: "URGENT: Hearing test", frequency: "Segera", times: "1x", instruction: "Rujuk audiologi untuk OAE/ABR/BERA", target: "Evaluasi dalam 1 minggu" },
+                    { activity: "IMMEDIATE: SLP referral", frequency: "Segera", times: "1x", instruction: "Rujuk terapis wicara untuk assessment komunikasi", target: "Konsultasi dalam 2 minggu" },
+                    { activity: "AAC INTRODUCTION", frequency: "10 menit", times: "6x/hari", instruction: "Perkenalkan gesture (mau, tidak, selesai) dengan konsisten", target: "Gunakan 1 gesture komunikatif" }
+                ]
+            }
+        };
+
+        // DOM Elements
+        const ageButtons = document.querySelectorAll('.age-btn');
+        const kpspContainer = document.getElementById('kpsp-container');
+        const checkBtn = document.getElementById('checkBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const resultBox = document.getElementById('resultBox');
+        const resultTitle = document.getElementById('resultTitle');
+        const resultStatus = document.getElementById('resultStatus');
+        const resultContent = document.getElementById('resultContent');
+        const domainAnalysisBox = document.getElementById('domainAnalysisBox');
+        const domainResults = document.getElementById('domainResults');
+        const interpretationBox = document.getElementById('interpretationBox');
+        const interpretationContent = document.getElementById('interpretationContent');
+        const interventionPlanBox = document.getElementById('interventionPlanBox');
+        const interventionContent = document.getElementById('interventionContent');
+        const monitoringPlanBox = document.getElementById('monitoringPlanBox');
+        const monitoringTable = document.getElementById('monitoringTable');
+        const referralPlanBox = document.getElementById('referralPlanBox');
+        const referralContent = document.getElementById('referralContent');
+        const childNameInput = document.getElementById('childName');
+        const childAgeInput = document.getElementById('childAge');
+        const examinerInput = document.getElementById('examiner');
+        const prematureCheckbox = document.getElementById('premature');
+        const correctedAgeNote = document.getElementById('correctedAgeNote');
+
+        let selectedAgeGroup = "3";
+
+        // Event Listeners
+        ageButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                ageButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                selectedAgeGroup = this.getAttribute('data-age');
+                loadKPSPQuestions(selectedAgeGroup);
+                childAgeInput.value = selectedAgeGroup;
+            });
+        });
+
+        prematureCheckbox.addEventListener('change', function() {
+            correctedAgeNote.style.display = this.checked ? 'block' : 'none';
+        });
+
+        document.querySelector('.age-btn[data-age="3"]').classList.add('active');
+        childAgeInput.value = "3";
+
+        childAgeInput.addEventListener('change', function() {
+            const age = parseInt(this.value);
+            if (!isNaN(age) && age >= 3 && age <= 36) {
+                const ageGroups = [3, 12, 24, 36];
+                let closest = ageGroups[0];
+                for (let i = 0; i < ageGroups.length; i++) {
+                    if (age <= ageGroups[i]) {
+                        closest = ageGroups[i];
+                        break;
+                    }
+                }
+                selectedAgeGroup = closest.toString();
+                childAgeInput.value = selectedAgeGroup;
+                ageButtons.forEach(btn => btn.classList.remove('active'));
+                document.querySelector(`.age-btn[data-age="${selectedAgeGroup}"]`).classList.add('active');
+                loadKPSPQuestions(selectedAgeGroup);
+            }
+        });
+
+        checkBtn.addEventListener('click', performSIDTKScreening);
+        resetBtn.addEventListener('click', resetForm);
+
+        // Fungsi untuk memuat pertanyaan KPSP
+        function loadKPSPQuestions(ageGroup) {
+            const questions = kpspData[ageGroup] || kpspData["3"];
+            kpspContainer.innerHTML = '';
+            
+            questions.forEach((question, index) => {
+                const questionItem = document.createElement('div');
+                questionItem.className = 'question-item';
+                questionItem.innerHTML = `
+                    <div class="question-text">
+                        <strong>Pertanyaan ${index + 1}:</strong> ${question}
+                    </div>
+                    <div class="answer-options">
+                        <div class="answer-option">
+                            <input type="radio" name="question${index}" id="q${index}_yes" value="ya" required>
+                            <label for="q${index}_yes">Ya</label>
+                        </div>
+                        <div class="answer-option">
+                            <input type="radio" name="question${index}" id="q${index}_no" value="tidak">
+                            <label for="q${index}_no">Tidak</label>
+                        </div>
+                        <div class="answer-option">
+                            <input type="radio" name="question${index}" id="q${index}_na" value="tidak tahu">
+                            <label for="q${index}_na">Tidak Tahu</label>
+                        </div>
+                    </div>
+                `;
+                kpspContainer.appendChild(questionItem);
+            });
+        }
+
+        // Fungsi utama SIDTK
+        function performSIDTKScreening() {
+            // Validasi
+            const childName = childNameInput.value.trim();
+            const childAge = childAgeInput.value;
+            const examiner = examinerInput.value.trim();
+            const gender = document.querySelector('input[name="gender"]:checked');
+            
+            if (!childName || !childAge || !gender || !examiner) {
+                alert("Harap lengkapi semua data pasien");
+                return;
+            }
+
+            const questions = kpspData[selectedAgeGroup] || kpspData["3"];
+            for (let i = 0; i < questions.length; i++) {
+                if (!document.querySelector(`input[name="question${i}"]:checked`)) {
+                    alert("Harap jawab semua 10 pertanyaan KPSP");
+                    return;
+                }
+            }
+
+            // Hitung hasil
+            let totalYa = 0;
+            for (let i = 0; i < questions.length; i++) {
+                const selectedOption = document.querySelector(`input[name="question${i}"]:checked`);
+                if (selectedOption && selectedOption.value === "ya") totalYa++;
+            }
+
+            // Tentukan status
+            let status, statusClass, statusText;
+            if (totalYa >= 9) {
+                status = "sesuai";
+                statusClass = "status-sesuai";
+                statusText = "SESUAI USIA";
+            } else if (totalYa >= 7) {
+                status = "meragukan";
+                statusClass = "status-meragukan";
+                statusText = "MERAGUKAN";
+            } else {
+                status = "penyimpangan";
+                statusClass = "status-penyimpangan";
+                statusText = "PENYIMPANGAN";
+            }
+
+            // Analisis Domain
+            const domainMap = questionDomainMap[selectedAgeGroup] || questionDomainMap["3"];
+            const domainData = {
+                motorik: { ya: 0, total: 0, questions: [] },
+                komunikasi: { ya: 0, total: 0, questions: [] },
+                sosial: { ya: 0, total: 0, questions: [] },
+                kognitif: { ya: 0, total: 0, questions: [] }
+            };
+
+            for (let i = 0; i < questions.length; i++) {
+                const selectedOption = document.querySelector(`input[name="question${i}"]:checked`);
+                const answer = selectedOption ? selectedOption.value : null;
+                const domain = domainMap[i];
+                
+                domainData[domain].total++;
+                if (answer === "ya") domainData[domain].ya++;
+            }
+
+            // Identifikasi domain bermasalah
+            const problemDomains = [];
+            for (const domain in domainData) {
+                const percentage = (domainData[domain].ya / domainData[domain].total) * 100;
+                if (percentage < 70) {
+                    problemDomains.push({
+                        name: domain,
+                        percentage: Math.round(percentage),
+                        ya: domainData[domain].ya,
+                        total: domainData[domain].total
+                    });
+                }
+            }
+            problemDomains.sort((a, b) => a.percentage - b.percentage);
+
+            // Format tanggal
+            const now = new Date();
+            const examDate = now.toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' });
+
+            // Tampilkan hasil
+            resultBox.style.display = 'block';
+            resultTitle.textContent = `RENCANA INTERVENSI - ${childName}`;
+            resultStatus.textContent = statusText;
+            resultStatus.className = `result-status ${statusClass}`;
+
+            // Data pasien
+            resultContent.innerHTML = `
+                <div style="background-color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #dee2e6;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                        <div><strong>Nama:</strong> ${childName}</div>
+                        <div><strong>Usia:</strong> ${childAge} bulan</div>
+                        <div><strong>Jenis Kelamin:</strong> ${gender.value}</div>
+                        <div><strong>Status:</strong> ${prematureCheckbox.checked ? 'Prematur' : 'Lahir cukup bulan'}</div>
+                        <div><strong>Tanggal:</strong> ${examDate}</div>
+                        <div><strong>Pemeriksa:</strong> ${examiner}</div>
+                    </div>
+                    <div style="background-color: #f8f9fa; padding: 15px; border-radius: 6px;">
+                        <strong>Hasil KPSP:</strong> ${totalYa}/10 jawaban "Ya" - ${statusText}
+                    </div>
+                </div>
+            `;
+
+            // Analisis Domain
+            if (problemDomains.length > 0) {
+                domainAnalysisBox.style.display = 'block';
+                domainResults.innerHTML = '';
+                
+                problemDomains.forEach((domain, index) => {
+                    const domainCard = document.createElement('div');
+                    domainCard.className = `intervention-card ${domain.name}`;
+                    domainCard.innerHTML = `
+                        <div class="intervention-header">
+                            <div class="intervention-title">
+                                <i class="${getDomainIcon(domain.name)}"></i>
+                                ${getDomainName(domain.name)}
+                            </div>
+                            <div class="intervention-priority ${index === 0 ? 'priority-high' : 'priority-medium'}">
+                                ${index === 0 ? 'PRIORITAS TINGGI' : 'PRIORITAS'}
+                            </div>
+                        </div>
+                        <div style="font-size: 2rem; font-weight: bold; color: ${getDomainColor(domain.name)}; margin: 10px 0;">
+                            ${domain.percentage}%
+                        </div>
+                        <div style="color: #666; margin-bottom: 15px;">
+                            ${domain.ya}/${domain.total} kriteria tercapai
+                        </div>
+                        <div style="height: 8px; background-color: #e9ecef; border-radius: 4px; overflow: hidden;">
+                            <div style="height: 100%; width: ${domain.percentage}%; background-color: ${getDomainColor(domain.name)};"></div>
+                        </div>
+                    `;
+                    domainResults.appendChild(domainCard);
+                });
+            }
+
+            // Interpretasi
+            interpretationBox.style.display = 'block';
+            let interpretationHTML = `
+                <p><strong>Status Perkembangan:</strong> ${getStatusDescription(status)}</p>
+            `;
+            
+            if (problemDomains.length > 0) {
+                interpretationHTML += `
+                    <p style="margin-top: 10px;"><strong>Area yang Memerlukan Intervensi:</strong></p>
+                    <ul>
+                        ${problemDomains.map(d => `<li><strong>${getDomainName(d.name)}</strong> (${d.percentage}% pencapaian)</li>`).join('')}
+                    </ul>
+                    <div style="background-color: #fff3cd; padding: 12px; border-radius: 6px; margin-top: 15px;">
+                        <strong><i class="fas fa-bullseye"></i> FOKUS UTAMA:</strong> ${getDomainName(problemDomains[0].name)}
+                    </div>
+                `;
+            } else {
+                interpretationHTML += `<p style="margin-top: 10px;"><strong>Semua area perkembangan menunjukkan pencapaian yang baik.</strong></p>`;
+            }
+            
+            interpretationContent.innerHTML = interpretationHTML;
+
+            // Rencana Intervensi Spesifik
+            if (problemDomains.length > 0) {
+                interventionPlanBox.style.display = 'block';
+                interventionContent.innerHTML = '';
+                
+                problemDomains.forEach((domain, index) => {
+                    const interventions = interventionData[domain.name]?.[status] || [];
+                    if (interventions.length > 0) {
+                        const domainSection = document.createElement('div');
+                        domainSection.className = `intervention-card ${domain.name}`;
+                        domainSection.style.marginBottom = '20px';
+                        
+                        let interventionsHTML = `
+                            <div class="intervention-header">
+                                <div class="intervention-title">
+                                    <i class="${getDomainIcon(domain.name)}"></i>
+                                    ${getDomainName(domain.name)} - INTERVENSI ${status === 'penyimpangan' ? 'INTENSIF' : 'TERFOKUS'}
+                                </div>
+                                <div class="intervention-priority ${index === 0 ? 'priority-high' : 'priority-medium'}">
+                                    ${index === 0 ? 'PRIORITAS 1' : 'PRIORITAS ' + (index + 1)}
+                                </div>
+                            </div>
+                            <div style="margin-top: 15px;">
+                        `;
+                        
+                        interventions.forEach((intervention, i) => {
+                            interventionsHTML += `
+                                <div class="intervention-item" style="margin-bottom: 15px; ${i < interventions.length - 1 ? 'border-bottom: 1px solid #eee; padding-bottom: 15px;' : ''}">
+                                    <div class="intervention-meta">
+                                        <div><strong>Aktivitas ${i + 1}:</strong> ${intervention.activity}</div>
+                                        <div class="intervention-frequency">${intervention.frequency} | ${intervention.times}</div>
+                                    </div>
+                                    <div style="margin-top: 8px;"><strong>Cara:</strong> ${intervention.instruction}</div>
+                                    <div style="margin-top: 5px; color: var(--primary);"><strong>Target:</strong> ${intervention.target}</div>
+                                </div>
+                            `;
+                        });
+                        
+                        interventionsHTML += `</div>`;
+                        domainSection.innerHTML = interventionsHTML;
+                        interventionContent.appendChild(domainSection);
+                    }
+                });
+            }
+
+            // Monitoring Operasional
+            monitoringPlanBox.style.display = 'block';
+            const monitoringDates = generateMonitoringDates(status, problemDomains.length > 0 ? problemDomains[0].name : null);
+            
+            let monitoringHTML = `
+                <thead>
+                    <tr>
+                        <th>Tanggal</th>
+                        <th>Aktivitas Monitoring</th>
+                        <th>Parameter</th>
+                        <th>Target</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+            `;
+            
+            monitoringDates.forEach((item, index) => {
+                monitoringHTML += `
+                    <tr>
+                        <td>${item.date}</td>
+                        <td>${item.activity}</td>
+                        <td>${item.parameter}</td>
+                        <td>${item.target}</td>
+                        <td>
+                            <span class="status-indicator status-pending"></span>
+                            Menunggu
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            monitoringHTML += `</tbody>`;
+            monitoringTable.innerHTML = monitoringHTML;
+
+            // Rencana Rujukan
+            if (status === "penyimpangan" || (status === "meragukan" && problemDomains.length > 0)) {
+                referralPlanBox.style.display = 'block';
+                let referralHTML = '';
+                
+                if (status === "penyimpangan") {
+                    referralHTML = `
+                        <div style="background-color: #f8d7da; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
+                            <strong><i class="fas fa-exclamation-triangle"></i> RUJUKAN SEGERA DIBUTUHKAN</strong>
+                            <p style="margin: 8px 0 0 0;">Segera rujuk ke dokter spesialis anak untuk evaluasi komprehensif.</p>
+                        </div>
+                    `;
+                }
+                
+                referralHTML += `<ul>`;
+                
+                if (problemDomains.find(d => d.name === 'motorik')) {
+                    referralHTML += `<li><strong>Fisioterapis</strong> - untuk evaluasi motorik dan rencana terapi</li>`;
+                }
+                if (problemDomains.find(d => d.name === 'komunikasi')) {
+                    referralHTML += `<li><strong>Terapis Wicara</strong> - untuk assessment komunikasi dan bahasa</li>`;
+                }
+                if (problemDomains.find(d => d.name === 'sosial')) {
+                    referralHTML += `<li><strong>Psikolog Anak</strong> - untuk evaluasi perkembangan sosial-emosional</li>`;
+                }
+                if (status === "penyimpangan") {
+                    referralHTML += `<li><strong>Dokter Spesialis Anak</strong> - untuk evaluasi medis komprehensif</li>`;
+                }
+                
+                referralHTML += `</ul>`;
+                referralContent.innerHTML = referralHTML;
+            }
+
+            // Scroll ke hasil
+            resultBox.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Helper functions
+        function getDomainName(domain) {
+            const names = {
+                motorik: "Motorik Kasar & Halus",
+                komunikasi: "Komunikasi & Bahasa",
+                sosial: "Sosial & Emosional",
+                kognitif: "Kognitif & Bermain"
+            };
+            return names[domain] || domain;
+        }
+
+        function getDomainIcon(domain) {
+            const icons = {
+                motorik: "fas fa-running",
+                komunikasi: "fas fa-comments",
+                sosial: "fas fa-users",
+                kognitif: "fas fa-brain"
+            };
+            return icons[domain] || "fas fa-question";
+        }
+
+        function getDomainColor(domain) {
+            const colors = {
+                motorik: "var(--motorik)",
+                komunikasi: "var(--komunikasi)",
+                sosial: "var(--sosial)",
+                kognitif: "var(--kognitif)"
+            };
+            return colors[domain] || "#666";
+        }
+
+        function getStatusDescription(status) {
+            switch(status) {
+                case "sesuai": return "Perkembangan sesuai usia. Lanjutkan stimulasi rutin.";
+                case "meragukan": return "Perkembangan meragukan. Diperlukan intervensi terfokus dan monitoring ketat.";
+                case "penyimpangan": return "Terdapat penyimpangan perkembangan. Diperlukan intervensi intensif dan rujukan segera.";
+                default: return "";
+            }
+        }
+
+        function generateMonitoringDates(status, primaryDomain) {
+            const now = new Date();
+            const dates = [];
+            
+            if (status === "sesuai") {
+                dates.push({
+                    date: "1 bulan",
+                    activity: "Evaluasi perkembangan umum",
+                    parameter: "Pencapaian milestone baru",
+                    target: "Perkembangan sesuai timeline"
+                });
+            } else if (status === "meragukan") {
+                dates.push({
+                    date: "2 minggu",
+                    activity: "Ulangi KPSP fokus area bermasalah",
+                    parameter: "Skor KPSP area " + getDomainName(primaryDomain),
+                    target: "Peningkatan ≥20% dari baseline"
+                });
+                dates.push({
+                    date: "1 bulan",
+                    activity: "Konsultasi dengan dokter umum",
+                    parameter: "Respons terhadap intervensi",
+                    target: "Perbaikan ≥50% area masalah"
+                });
+            } else { // penyimpangan
+                dates.push({
+                    date: "1 minggu",
+                    activity: "Mulai intervensi dini intensif",
+                    parameter: "Kepatuhan pelaksanaan intervensi",
+                    target: "100% aktivitas dilakukan"
+                });
+                dates.push({
+                    date: "2 minggu",
+                    activity: "Konsultasi spesialis anak",
+                    parameter: "Evaluasi multidisiplin awal",
+                    target: "Diagnosis dan rencana terapi"
+                });
+                dates.push({
+                    date: "1 bulan",
+                    activity: "Evaluasi progress intervensi",
+                    parameter: "Pencapaian target jangka pendek",
+                    target: "≥30% improvement dari baseline"
+                });
+            }
+            
+            return dates;
+        }
+
+        function resetForm() {
+            childNameInput.value = "";
+            childAgeInput.value = "3";
+            examinerInput.value = "";
+            prematureCheckbox.checked = false;
+            correctedAgeNote.style.display = 'none';
+            
+            document.querySelectorAll('input[name="gender"]').forEach(radio => {
+                radio.checked = false;
+            });
+            document.getElementById('male').checked = true;
+            
+            const inputs = kpspContainer.querySelectorAll('input[type="radio"]');
+            inputs.forEach(input => input.checked = false);
+            
+            resultBox.style.display = 'none';
+            domainAnalysisBox.style.display = 'none';
+            interpretationBox.style.display = 'none';
+            interventionPlanBox.style.display = 'none';
+            monitoringPlanBox.style.display = 'none';
+            referralPlanBox.style.display = 'none';
+            
+            ageButtons.forEach(btn => btn.classList.remove('active'));
+            document.querySelector('.age-btn[data-age="3"]').classList.add('active');
+            selectedAgeGroup = "3";
+            loadKPSPQuestions(selectedAgeGroup);
+        }
+
+        // Inisialisasi
+        loadKPSPQuestions(selectedAgeGroup);
+    </script>
+</body>
+</html>
