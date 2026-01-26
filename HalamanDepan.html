@@ -19,6 +19,7 @@
             --geriatric-color: #5d4037;
             --geriatric-full-color: #795548;
             --child-color: #00bcd4;
+            --heart-color: #d32f2f;
         }
         
         * {
@@ -265,6 +266,20 @@
             background-color: #0097a7;
         }
         
+        /* Styling khusus untuk kartu Skreening Coroner Jantung */
+        .heart-card .tool-icon {
+            background-color: #ffebee;
+            color: var(--heart-color);
+        }
+        
+        .heart-card .tool-link {
+            background-color: var(--heart-color);
+        }
+        
+        .heart-card .tool-link:hover {
+            background-color: #b71c1c;
+        }
+        
         /* Footer */
         footer {
             background-color: var(--dark);
@@ -509,7 +524,7 @@
                         </div>
                     </div>
                     
-                    <!-- Alat 12: Skreening Anak (BARU) -->
+                    <!-- Alat 12: Skreening Anak -->
                     <div class="tool-card child-card">
                         <div class="tool-icon">
                             <i class="fas fa-child"></i>
@@ -518,6 +533,18 @@
                             <h3>Skreening Anak</h3>
                             <p>Alat screening komprehensif untuk anak, mencakup perkembangan fisik, motorik, kognitif, dan sosial emosional sesuai dengan tahap usia anak.</p>
                             <a href="https://hendrikkho-akupuntur.github.io/SahliRGB/Skreening_anak.html" target="_blank" class="tool-link">Akses Alat</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Alat 13: Skreening Coroner Jantung (BARU) -->
+                    <div class="tool-card heart-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-heartbeat"></i>
+                        </div>
+                        <div class="tool-content">
+                            <h3>Skreening Coroner Jantung (WHO CAD Risk)</h3>
+                            <p>Alat screening risiko penyakit jantung koroner berdasarkan panduan WHO, untuk menilai faktor risiko dan memberikan rekomendasi pencegahan.</p>
+                            <a href="https://hendrikkho-akupuntur.github.io/SahliRGB/WHO_CADrisk.html" target="_blank" class="tool-link">Akses Alat</a>
                         </div>
                     </div>
                 </div>
@@ -566,6 +593,9 @@
                     }
                     if (this.classList.contains('child-card')) {
                         icon.style.animation = 'jump 1s infinite';
+                    }
+                    if (this.classList.contains('heart-card')) {
+                        icon.style.animation = 'heartbeat 1.2s infinite';
                     }
                 });
                 
@@ -616,6 +646,15 @@
         @keyframes jump {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-8px); }
+        }
+        
+        /* Animasi khusus untuk ikon jantung */
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+            75% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
     </style>
 </body>
