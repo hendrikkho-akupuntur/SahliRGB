@@ -45,19 +45,25 @@
             width: auto;
             border-radius: 5px;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            background-color: white;
+            padding: 5px;
+            object-fit: contain;
         }
         
-        .logo-placeholder {
+        .logo-fallback {
             width: 100px;
             height: 80px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.9);
             border-radius: 5px;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            color: rgba(255, 255, 255, 0.7);
+            color: #2c3e50;
             font-size: 12px;
             text-align: center;
+            padding: 5px;
+            font-weight: 600;
         }
         
         .title-container {
@@ -281,6 +287,13 @@
             font-size: 0.9rem;
         }
         
+        .cholesterol-info {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 5px;
+            font-style: italic;
+        }
+        
         @media (max-width: 768px) {
             .header {
                 flex-direction: column;
@@ -306,8 +319,17 @@
 <body>
     <div class="header">
         <div class="logo-container">
-            <div class="logo-placeholder">KKLP.jpg</div>
-            <div class="logo-placeholder">fkuph.jpg</div>
+            <img src="KKLP.jpg" alt="Logo KKLP" class="logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="logo-fallback" style="display: none;">
+                <i class="fas fa-stethoscope" style="font-size: 24px; margin-bottom: 5px;"></i>
+                KKLP
+            </div>
+            
+            <img src="fkuph.jpg" alt="Logo FK UPH" class="logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="logo-fallback" style="display: none;">
+                <i class="fas fa-university" style="font-size: 24px; margin-bottom: 5px;"></i>
+                FK UPH
+            </div>
         </div>
         <div class="title-container">
             <h1>Kalkulator Risiko Kardiovaskular</h1>
@@ -383,15 +405,16 @@
             
             <div id="lab-section" style="display: none;">
                 <div class="form-group">
-                    <label for="cholesterol">Kolesterol Total (mmol/L)</label>
+                    <label for="cholesterol">Kolesterol Total (mg/dL)</label>
                     <select id="cholesterol">
                         <option value="">Pilih Rentang Kolesterol</option>
-                        <option value="<4">&lt; 4 mmol/L</option>
-                        <option value="4-4.9">4-4.9 mmol/L</option>
-                        <option value="5-5.9">5-5.9 mmol/L</option>
-                        <option value="6-6.9">6-6.9 mmol/L</option>
-                        <option value="≥7">≥ 7 mmol/L</option>
+                        <option value="<155">&lt; 155 mg/dL (&lt;4.0 mmol/L)</option>
+                        <option value="155-189">155-189 mg/dL (4.0-4.9 mmol/L)</option>
+                        <option value="190-228">190-228 mg/dL (5.0-5.9 mmol/L)</option>
+                        <option value="229-267">229-267 mg/dL (6.0-6.9 mmol/L)</option>
+                        <option value="≥268">≥ 268 mg/dL (≥7.0 mmol/L)</option>
                     </select>
+                    <div class="cholesterol-info">Keterangan: 1 mmol/L = 38.67 mg/dL</div>
                 </div>
                 
                 <div class="form-group">
@@ -747,115 +770,115 @@
             }
         };
 
-        // Data LENGKAP dari sheet "lab" untuk SEMUA USIA
+        // Data lengkap dari sheet "lab" (dengan semua usia)
         const riskDataWithLab = {
             "70-74": {
                 "≥180": {
-                    "<4": {
+                    "<155": { // <4 mmol/L
                         "without-diabetes": { male: { "non-smoker": 24, "smoker": 30 }, female: { "non-smoker": 18, "smoker": 26 } },
                         "with-diabetes": { male: { "non-smoker": 32, "smoker": 41 }, female: { "non-smoker": 28, "smoker": 38 } }
                     },
-                    "4-4.9": {
+                    "155-189": { // 4-4.9 mmol/L
                         "without-diabetes": { male: { "non-smoker": 26, "smoker": 33 }, female: { "non-smoker": 19, "smoker": 27 } },
                         "with-diabetes": { male: { "non-smoker": 36, "smoker": 45 }, female: { "non-smoker": 29, "smoker": 40 } }
                     },
-                    "5-5.9": {
+                    "190-228": { // 5-5.9 mmol/L
                         "without-diabetes": { male: { "non-smoker": 29, "smoker": 36 }, female: { "non-smoker": 20, "smoker": 28 } },
                         "with-diabetes": { male: { "non-smoker": 39, "smoker": 49 }, female: { "non-smoker": 30, "smoker": 42 } }
                     },
-                    "6-6.9": {
+                    "229-267": { // 6-6.9 mmol/L
                         "without-diabetes": { male: { "non-smoker": 32, "smoker": 40 }, female: { "non-smoker": 21, "smoker": 30 } },
                         "with-diabetes": { male: { "non-smoker": 43, "smoker": 54 }, female: { "non-smoker": 32, "smoker": 44 } }
                     },
-                    "≥7": {
+                    "≥268": { // ≥7 mmol/L
                         "without-diabetes": { male: { "non-smoker": 35, "smoker": 44 }, female: { "non-smoker": 22, "smoker": 31 } },
                         "with-diabetes": { male: { "non-smoker": 47, "smoker": 59 }, female: { "non-smoker": 33, "smoker": 46 } }
                     }
                 },
                 "160-179": {
-                    "<4": {
+                    "<155": {
                         "without-diabetes": { male: { "non-smoker": 19, "smoker": 25 }, female: { "non-smoker": 16, "smoker": 22 } },
                         "with-diabetes": { male: { "non-smoker": 27, "smoker": 34 }, female: { "non-smoker": 23, "smoker": 33 } }
                     },
-                    "4-4.9": {
+                    "155-189": {
                         "without-diabetes": { male: { "non-smoker": 21, "smoker": 27 }, female: { "non-smoker": 16, "smoker": 23 } },
                         "with-diabetes": { male: { "non-smoker": 29, "smoker": 37 }, female: { "non-smoker": 25, "smoker": 34 } }
                     },
-                    "5-5.9": {
+                    "190-228": {
                         "without-diabetes": { male: { "non-smoker": 23, "smoker": 0 }, female: { "non-smoker": 17, "smoker": 24 } },
                         "with-diabetes": { male: { "non-smoker": 32, "smoker": 41 }, female: { "non-smoker": 26, "smoker": 36 } }
                     },
-                    "6-6.9": {
+                    "229-267": {
                         "without-diabetes": { male: { "non-smoker": 26, "smoker": 33 }, female: { "non-smoker": 18, "smoker": 25 } },
                         "with-diabetes": { male: { "non-smoker": 36, "smoker": 45 }, female: { "non-smoker": 27, "smoker": 38 } }
                     },
-                    "≥7": {
+                    "≥268": {
                         "without-diabetes": { male: { "non-smoker": 29, "smoker": 37 }, female: { "non-smoker": 18, "smoker": 26 } },
                         "with-diabetes": { male: { "non-smoker": 40, "smoker": 50 }, female: { "non-smoker": 28, "smoker": 40 } }
                     }
                 },
                 "140-159": {
-                    "<4": {
+                    "<155": {
                         "without-diabetes": { male: { "non-smoker": 16, "smoker": 20 }, female: { "non-smoker": 13, "smoker": 18 } },
                         "with-diabetes": { male: { "non-smoker": 22, "smoker": 28 }, female: { "non-smoker": 20, "smoker": 28 } }
                     },
-                    "4-4.9": {
+                    "155-189": {
                         "without-diabetes": { male: { "non-smoker": 17, "smoker": 22 }, female: { "non-smoker": 14, "smoker": 19 } },
                         "with-diabetes": { male: { "non-smoker": 24, "smoker": 31 }, female: { "non-smoker": 21, "smoker": 29 } }
                     },
-                    "5-5.9": {
+                    "190-228": {
                         "without-diabetes": { male: { "non-smoker": 19, "smoker": 25 }, female: { "non-smoker": 14, "smoker": 20 } },
                         "with-diabetes": { male: { "non-smoker": 26, "smoker": 34 }, female: { "non-smoker": 22, "smoker": 31 } }
                     },
-                    "6-6.9": {
+                    "229-267": {
                         "without-diabetes": { male: { "non-smoker": 21, "smoker": 27 }, female: { "non-smoker": 15, "smoker": 21 } },
                         "with-diabetes": { male: { "non-smoker": 29, "smoker": 38 }, female: { "non-smoker": 23, "smoker": 32 } }
                     },
-                    "≥7": {
+                    "≥268": {
                         "without-diabetes": { male: { "non-smoker": 23, "smoker": 30 }, female: { "non-smoker": 15, "smoker": 22 } },
                         "with-diabetes": { male: { "non-smoker": 33, "smoker": 42 }, female: { "non-smoker": 24, "smoker": 34 } }
                     }
                 },
                 "120-139": {
-                    "<4": {
+                    "<155": {
                         "without-diabetes": { male: { "non-smoker": 13, "smoker": 16 }, female: { "non-smoker": 11, "smoker": 15 } },
                         "with-diabetes": { male: { "non-smoker": 17, "smoker": 23 }, female: { "non-smoker": 17, "smoker": 23 } }
                     },
-                    "4-4.9": {
+                    "155-189": {
                         "without-diabetes": { male: { "non-smoker": 14, "smoker": 18 }, female: { "non-smoker": 11, "smoker": 16 } },
                         "with-diabetes": { male: { "non-smoker": 19, "smoker": 25 }, female: { "non-smoker": 17, "smoker": 25 } }
                     },
-                    "5-5.9": {
+                    "190-228": {
                         "without-diabetes": { male: { "non-smoker": 15, "smoker": 20 }, female: { "non-smoker": 12, "smoker": 17 } },
                         "with-diabetes": { male: { "non-smoker": 22, "smoker": 28 }, female: { "non-smoker": 18, "smoker": 26 } }
                     },
-                    "6-6.9": {
+                    "229-267": {
                         "without-diabetes": { male: { "non-smoker": 17, "smoker": 22 }, female: { "non-smoker": 12, "smoker": 18 } },
                         "with-diabetes": { male: { "non-smoker": 24, "smoker": 31 }, female: { "non-smoker": 19, "smoker": 27 } }
                     },
-                    "≥7": {
+                    "≥268": {
                         "without-diabetes": { male: { "non-smoker": 19, "smoker": 25 }, female: { "non-smoker": 13, "smoker": 19 } },
                         "with-diabetes": { male: { "non-smoker": 27, "smoker": 35 }, female: { "non-smoker": 20, "smoker": 29 } }
                     }
                 },
                 "<120": {
-                    "<4": {
+                    "<155": {
                         "without-diabetes": { male: { "non-smoker": 10, "smoker": 13 }, female: { "non-smoker": 9, "smoker": 13 } },
                         "with-diabetes": { male: { "non-smoker": 14, "smoker": 18 }, female: { "non-smoker": 14, "smoker": 20 } }
                     },
-                    "4-4.9": {
+                    "155-189": {
                         "without-diabetes": { male: { "non-smoker": 11, "smoker": 15 }, female: { "non-smoker": 9, "smoker": 13 } },
                         "with-diabetes": { male: { "non-smoker": 16, "smoker": 20 }, female: { "non-smoker": 15, "smoker": 21 } }
                     },
-                    "5-5.9": {
+                    "190-228": {
                         "without-diabetes": { male: { "non-smoker": 12, "smoker": 16 }, female: { "non-smoker": 10, "smoker": 14 } },
                         "with-diabetes": { male: { "non-smoker": 17, "smoker": 23 }, female: { "non-smoker": 15, "smoker": 22 } }
                     },
-                    "6-6.9": {
+                    "229-267": {
                         "without-diabetes": { male: { "non-smoker": 14, "smoker": 18 }, female: { "non-smoker": 10, "smoker": 15 } },
                         "with-diabetes": { male: { "non-smoker": 19, "smoker": 25 }, female: { "non-smoker": 16, "smoker": 23 } }
                     },
-                    "≥7": {
+                    "≥268": {
                         "without-diabetes": { male: { "non-smoker": 15, "smoker": 20 }, female: { "non-smoker": 11, "smoker": 16 } },
                         "with-diabetes": { male: { "non-smoker": 22, "smoker": 29 }, female: { "non-smoker": 17, "smoker": 24 } }
                     }
@@ -863,111 +886,111 @@
             },
             "65-69": {
                 "≥180": {
-                    "<4": {
+                    "<155": {
                         "without-diabetes": { male: { "non-smoker": 19, "smoker": 25 }, female: { "non-smoker": 14, "smoker": 21 } },
                         "with-diabetes": { male: { "non-smoker": 27, "smoker": 36 }, female: { "non-smoker": 23, "smoker": 34 } }
                     },
-                    "4-4.9": {
+                    "155-189": {
                         "without-diabetes": { male: { "non-smoker": 20, "smoker": 28 }, female: { "non-smoker": 15, "smoker": 23 } },
                         "with-diabetes": { male: { "non-smoker": 30, "smoker": 40 }, female: { "non-smoker": 24, "smoker": 36 } }
                     },
-                    "5-5.9": {
+                    "190-228": {
                         "without-diabetes": { male: { "non-smoker": 22, "smoker": 31 }, female: { "non-smoker": 16, "smoker": 24 } },
                         "with-diabetes": { male: { "non-smoker": 33, "smoker": 44 }, female: { "non-smoker": 25, "smoker": 38 } }
                     },
-                    "6-6.9": {
+                    "229-267": {
                         "without-diabetes": { male: { "non-smoker": 25, "smoker": 34 }, female: { "non-smoker": 16, "smoker": 25 } },
                         "with-diabetes": { male: { "non-smoker": 37, "smoker": 49 }, female: { "non-smoker": 27, "smoker": 40 } }
                     },
-                    "≥7": {
+                    "≥268": {
                         "without-diabetes": { male: { "non-smoker": 28, "smoker": 38 }, female: { "non-smoker": 17, "smoker": 27 } },
                         "with-diabetes": { male: { "non-smoker": 41, "smoker": 54 }, female: { "non-smoker": 28, "smoker": 43 } }
                     }
                 },
                 "160-179": {
-                    "<4": {
+                    "<155": {
                         "without-diabetes": { male: { "non-smoker": 15, "smoker": 20 }, female: { "non-smoker": 12, "smoker": 18 } },
                         "with-diabetes": { male: { "non-smoker": 21, "smoker": 29 }, female: { "non-smoker": 19, "smoker": 28 } }
                     },
-                    "4-4.9": {
+                    "155-189": {
                         "without-diabetes": { male: { "non-smoker": 16, "smoker": 22 }, female: { "non-smoker": 12, "smoker": 19 } },
                         "with-diabetes": { male: { "non-smoker": 24, "smoker": 32 }, female: { "non-smoker": 20, "smoker": 30 } }
                     },
-                    "5-5.9": {
+                    "190-228": {
                         "without-diabetes": { male: { "non-smoker": 18, "smoker": 25 }, female: { "non-smoker": 13, "smoker": 20 } },
                         "with-diabetes": { male: { "non-smoker": 26, "smoker": 36 }, female: { "non-smoker": 21, "smoker": 32 } }
                     },
-                    "6-6.9": {
+                    "229-267": {
                         "without-diabetes": { male: { "non-smoker": 20, "smoker": 27 }, female: { "non-smoker": 13, "smoker": 21 } },
                         "with-diabetes": { male: { "non-smoker": 30, "smoker": 40 }, female: { "non-smoker": 22, "smoker": 34 } }
                     },
-                    "≥7": {
+                    "≥268": {
                         "without-diabetes": { male: { "non-smoker": 22, "smoker": 31 }, female: { "non-smoker": 14, "smoker": 22 } },
                         "with-diabetes": { male: { "non-smoker": 33, "smoker": 45 }, female: { "non-smoker": 24, "smoker": 36 } }
                     }
                 },
                 "140-159": {
-                    "<4": {
+                    "<155": {
                         "without-diabetes": { male: { "non-smoker": 11, "smoker": 16 }, female: { "non-smoker": 9, "smoker": 15 } },
                         "with-diabetes": { male: { "non-smoker": 17, "smoker": 23 }, female: { "non-smoker": 15, "smoker": 24 } }
                     },
-                    "4-4.9": {
+                    "155-189": {
                         "without-diabetes": { male: { "non-smoker": 13, "smoker": 18 }, female: { "non-smoker": 10, "smoker": 15 } },
                         "with-diabetes": { male: { "non-smoker": 19, "smoker": 26 }, female: { "non-smoker": 16, "smoker": 35 } }
                     },
-                    "5-5.9": {
+                    "190-228": {
                         "without-diabetes": { male: { "non-smoker": 14, "smoker": 20 }, female: { "non-smoker": 10, "smoker": 16 } },
                         "with-diabetes": { male: { "non-smoker": 21, "smoker": 29 }, female: { "non-smoker": 17, "smoker": 37 } }
                     },
-                    "6-6.9": {
+                    "229-267": {
                         "without-diabetes": { male: { "non-smoker": 16, "smoker": 22 }, female: { "non-smoker": 11, "smoker": 17 } },
                         "with-diabetes": { male: { "non-smoker": 24, "smoker": 33 }, female: { "non-smoker": 18, "smoker": 28 } }
                     },
-                    "≥7": {
+                    "≥268": {
                         "without-diabetes": { male: { "non-smoker": 18, "smoker": 25 }, female: { "non-smoker": 12, "smoker": 18 } },
                         "with-diabetes": { male: { "non-smoker": 27, "smoker": 37 }, female: { "non-smoker": 19, "smoker": 30 } }
                     }
                 },
                 "120-139": {
-                    "<4": {
+                    "<155": {
                         "without-diabetes": { male: { "non-smoker": 9, "smoker": 12 }, female: { "non-smoker": 8, "smoker": 12 } },
                         "with-diabetes": { male: { "non-smoker": 13, "smoker": 19 }, female: { "non-smoker": 13, "smoker": 20 } }
                     },
-                    "4-4.9": {
+                    "155-189": {
                         "without-diabetes": { male: { "non-smoker": 10, "smoker": 14 }, female: { "non-smoker": 8, "smoker": 13 } },
                         "with-diabetes": { male: { "non-smoker": 15, "smoker": 21 }, female: { "non-smoker": 13, "smoker": 21 } }
                     },
-                    "5-5.9": {
+                    "190-228": {
                         "without-diabetes": { male: { "non-smoker": 11, "smoker": 15 }, female: { "non-smoker": 9, "smoker": 13 } },
                         "with-diabetes": { male: { "non-smoker": 17, "smoker": 23 }, female: { "non-smoker": 14, "smoker": 22 } }
                     },
-                    "6-6.9": {
+                    "229-267": {
                         "without-diabetes": { male: { "non-smoker": 12, "smoker": 17 }, female: { "non-smoker": 9, "smoker": 14 } },
                         "with-diabetes": { male: { "non-smoker": 19, "smoker": 26 }, female: { "non-smoker": 15, "smoker": 24 } }
                     },
-                    "≥7": {
+                    "≥268": {
                         "without-diabetes": { male: { "non-smoker": 14, "smoker": 20 }, female: { "non-smoker": 10, "smoker": 15 } },
                         "with-diabetes": { male: { "non-smoker": 21, "smoker": 30 }, female: { "non-smoker": 16, "smoker": 25 } }
                     }
                 },
                 "<120": {
-                    "<4": {
+                    "<155": {
                         "without-diabetes": { male: { "non-smoker": 7, "smoker": 10 }, female: { "non-smoker": 6, "smoker": 10 } },
                         "with-diabetes": { male: { "non-smoker": 10, "smoker": 15 }, female: { "non-smoker": 10, "smoker": 16 } }
                     },
-                    "4-4.9": {
+                    "155-189": {
                         "without-diabetes": { male: { "non-smoker": 8, "smoker": 11 }, female: { "non-smoker": 7, "smoker": 10 } },
                         "with-diabetes": { male: { "non-smoker": 12, "smoker": 16 }, female: { "non-smoker": 11, "smoker": 17 } }
                     },
-                    "5-5.9": {
+                    "190-228": {
                         "without-diabetes": { male: { "non-smoker": 9, "smoker": 12 }, female: { "non-smoker": 7, "smoker": 11 } },
                         "with-diabetes": { male: { "non-smoker": 13, "smoker": 19 }, female: { "non-smoker": 12, "smoker": 18 } }
                     },
-                    "6-6.9": {
+                    "229-267": {
                         "without-diabetes": { male: { "non-smoker": 10, "smoker": 14 }, female: { "non-smoker": 7, "smoker": 12 } },
                         "with-diabetes": { male: { "non-smoker": 15, "smoker": 21 }, female: { "non-smoker": 12, "smoker": 19 } }
                     },
-                    "≥7": {
+                    "≥268": {
                         "without-diabetes": { male: { "non-smoker": 11, "smoker": 16 }, female: { "non-smoker": 8, "smoker": 12 } },
                         "with-diabetes": { male: { "non-smoker": 17, "smoker": 24 }, female: { "non-smoker": 13, "smoker": 21 } }
                     }
@@ -975,111 +998,111 @@
             },
             "60-64": {
                 "≥180": {
-                    "<4": {
+                    "<155": {
                         "without-diabetes": { male: { "non-smoker": 14, "smoker": 21 }, female: { "non-smoker": 11, "smoker": 18 } },
                         "with-diabetes": { male: { "non-smoker": 22, "smoker": 32 }, female: { "non-smoker": 19, "smoker": 30 } }
                     },
-                    "4-4.9": {
+                    "155-189": {
                         "without-diabetes": { male: { "non-smoker": 16, "smoker": 23 }, female: { "non-smoker": 11, "smoker": 19 } },
                         "with-diabetes": { male: { "non-smoker": 25, "smoker": 35 }, female: { "non-smoker": 20, "smoker": 32 } }
                     },
-                    "5-5.9": {
+                    "190-228": {
                         "without-diabetes": { male: { "non-smoker": 17, "smoker": 26 }, female: { "non-smoker": 12, "smoker": 20 } },
                         "with-diabetes": { male: { "non-smoker": 27, "smoker": 40 }, female: { "non-smoker": 21, "smoker": 34 } }
                     },
-                    "6-6.9": {
+                    "229-267": {
                         "without-diabetes": { male: { "non-smoker": 19, "smoker": 29 }, female: { "non-smoker": 13, "smoker": 21 } },
                         "with-diabetes": { male: { "non-smoker": 31, "smoker": 33 }, female: { "non-smoker": 22, "smoker": 37 } }
                     },
-                    "≥7": {
+                    "≥268": {
                         "without-diabetes": { male: { "non-smoker": 22, "smoker": 33 }, female: { "non-smoker": 14, "smoker": 23 } },
                         "with-diabetes": { male: { "non-smoker": 35, "smoker": 44 }, female: { "non-smoker": 24, "smoker": 40 } }
                     }
                 },
                 "160-179": {
-                    "<4": {
+                    "<155": {
                         "without-diabetes": { male: { "non-smoker": 11, "smoker": 16 }, female: { "non-smoker": 9, "smoker": 14 } },
                         "with-diabetes": { male: { "non-smoker": 17, "smoker": 50 }, female: { "non-smoker": 15, "smoker": 25 } }
                     },
-                    "4-4.9": {
+                    "155-189": {
                         "without-diabetes": { male: { "non-smoker": 12, "smoker": 18 }, female: { "non-smoker": 9, "smoker": 15 } },
                         "with-diabetes": { male: { "non-smoker": 19, "smoker": 25 }, female: { "non-smoker": 16, "smoker": 26 } }
                     },
-                    "5-5.9": {
+                    "190-228": {
                         "without-diabetes": { male: { "non-smoker": 13, "smoker": 20 }, female: { "non-smoker": 10, "smoker": 16 } },
                         "with-diabetes": { male: { "non-smoker": 21, "smoker": 28 }, female: { "non-smoker": 17, "smoker": 28 } }
                     },
-                    "6-6.9": {
+                    "229-267": {
                         "without-diabetes": { male: { "non-smoker": 15, "smoker": 23 }, female: { "non-smoker": 10, "smoker": 17 } },
                         "with-diabetes": { male: { "non-smoker": 24, "smoker": 32 }, female: { "non-smoker": 18, "smoker": 31 } }
                     },
-                    "≥7": {
+                    "≥268": {
                         "without-diabetes": { male: { "non-smoker": 17, "smoker": 26 }, female: { "non-smoker": 11, "smoker": 19 } },
                         "with-diabetes": { male: { "non-smoker": 28, "smoker": 36 }, female: { "non-smoker": 20, "smoker": 33 } }
                     }
                 },
                 "140-159": {
-                    "<4": {
+                    "<155": {
                         "without-diabetes": { male: { "non-smoker": 8, "smoker": 12 }, female: { "non-smoker": 7, "smoker": 11 } },
                         "with-diabetes": { male: { "non-smoker": 13, "smoker": 41 }, female: { "non-smoker": 12, "smoker": 20 } }
                     },
-                    "4-4.9": {
+                    "155-189": {
                         "without-diabetes": { male: { "non-smoker": 9, "smoker": 14 }, female: { "non-smoker": 7, "smoker": 12 } },
                         "with-diabetes": { male: { "non-smoker": 15, "smoker": 20 }, female: { "non-smoker": 13, "smoker": 21 } }
                     },
-                    "5-5.9": {
+                    "190-228": {
                         "without-diabetes": { male: { "non-smoker": 10, "smoker": 15 }, female: { "non-smoker": 8, "smoker": 13 } },
                         "with-diabetes": { male: { "non-smoker": 17, "smoker": 22 }, female: { "non-smoker": 14, "smoker": 23 } }
                     },
-                    "6-6.9": {
+                    "229-267": {
                         "without-diabetes": { male: { "non-smoker": 12, "smoker": 18 }, female: { "non-smoker": 8, "smoker": 14 } },
                         "with-diabetes": { male: { "non-smoker": 19, "smoker": 25 }, female: { "non-smoker": 15, "smoker": 25 } }
                     },
-                    "≥7": {
+                    "≥268": {
                         "without-diabetes": { male: { "non-smoker": 13, "smoker": 20 }, female: { "non-smoker": 9, "smoker": 15 } },
                         "with-diabetes": { male: { "non-smoker": 22, "smoker": 28 }, female: { "non-smoker": 16, "smoker": 27 } }
                     }
                 },
                 "120-139": {
-                    "<4": {
+                    "<155": {
                         "without-diabetes": { male: { "non-smoker": 6, "smoker": 9 }, female: { "non-smoker": 5, "smoker": 9 } },
                         "with-diabetes": { male: { "non-smoker": 10, "smoker": 33 }, female: { "non-smoker": 10, "smoker": 16 } }
                     },
-                    "4-4.9": {
+                    "155-189": {
                         "without-diabetes": { male: { "non-smoker": 7, "smoker": 11 }, female: { "non-smoker": 6, "smoker": 10 } },
                         "with-diabetes": { male: { "non-smoker": 11, "smoker": 15 }, female: { "non-smoker": 10, "smoker": 17 } }
                     },
-                    "5-5.9": {
+                    "190-228": {
                         "without-diabetes": { male: { "non-smoker": 8, "smoker": 12 }, female: { "non-smoker": 6, "smoker": 10 } },
                         "with-diabetes": { male: { "non-smoker": 13, "smoker": 17 }, female: { "non-smoker": 11, "smoker": 19 } }
                     },
-                    "6-6.9": {
+                    "229-267": {
                         "without-diabetes": { male: { "non-smoker": 9, "smoker": 14 }, female: { "non-smoker": 7, "smoker": 11 } },
                         "with-diabetes": { male: { "non-smoker": 15, "smoker": 19 }, female: { "non-smoker": 12, "smoker": 20 } }
                     },
-                    "≥7": {
+                    "≥268": {
                         "without-diabetes": { male: { "non-smoker": 10, "smoker": 16 }, female: { "non-smoker": 7, "smoker": 12 } },
                         "with-diabetes": { male: { "non-smoker": 17, "smoker": 22 }, female: { "non-smoker": 13, "smoker": 22 } }
                     }
                 },
                 "<120": {
-                    "<4": {
+                    "<155": {
                         "without-diabetes": { male: { "non-smoker": 5, "smoker": 7 }, female: { "non-smoker": 4, "smoker": 7 } },
                         "with-diabetes": { male: { "non-smoker": 8, "smoker": 26 }, female: { "non-smoker": 8, "smoker": 13 } }
                     },
-                    "4-4.9": {
+                    "155-189": {
                         "without-diabetes": { male: { "non-smoker": 5, "smoker": 8 }, female: { "non-smoker": 5, "smoker": 8 } },
                         "with-diabetes": { male: { "non-smoker": 9, "smoker": 12 }, female: { "non-smoker": 8, "smoker": 14 } }
                     },
-                    "5-5.9": {
+                    "190-228": {
                         "without-diabetes": { male: { "non-smoker": 6, "smoker": 9 }, female: { "non-smoker": 5, "smoker": 8 } },
                         "with-diabetes": { male: { "non-smoker": 10, "smoker": 13 }, female: { "non-smoker": 9, "smoker": 15 } }
                     },
-                    "6-6.9": {
+                    "229-267": {
                         "without-diabetes": { male: { "non-smoker": 7, "smoker": 10 }, female: { "non-smoker": 5, "smoker": 9 } },
                         "with-diabetes": { male: { "non-smoker": 11, "smoker": 15 }, female: { "non-smoker": 9, "smoker": 16 } }
                     },
-                    "≥7": {
+                    "≥268": {
                         "without-diabetes": { male: { "non-smoker": 8, "smoker": 12 }, female: { "non-smoker": 6, "smoker": 10 } },
                         "with-diabetes": { male: { "non-smoker": 13, "smoker": 17 }, female: { "non-smoker": 10, "smoker": 18 } }
                     }
@@ -1087,111 +1110,111 @@
             },
             "55-59": {
                 "≥180": {
-                    "<4": {
+                    "<155": {
                         "without-diabetes": { male: { "non-smoker": 11, "smoker": 17 }, female: { "non-smoker": 8, "smoker": 15 } },
                         "with-diabetes": { male: { "non-smoker": 18, "smoker": 20 }, female: { "non-smoker": 15, "smoker": 27 } }
                     },
-                    "4-4.9": {
+                    "155-189": {
                         "without-diabetes": { male: { "non-smoker": 12, "smoker": 19 }, female: { "non-smoker": 9, "smoker": 16 } },
                         "with-diabetes": { male: { "non-smoker": 20, "smoker": 28 }, female: { "non-smoker": 16, "smoker": 29 } }
                     },
-                    "5-5.9": {
+                    "190-228": {
                         "without-diabetes": { male: { "non-smoker": 13, "smoker": 212 }, female: { "non-smoker": 9, "smoker": 17 } },
                         "with-diabetes": { male: { "non-smoker": 23, "smoker": 31 }, female: { "non-smoker": 17, "smoker": 31 } }
                     },
-                    "6-6.9": {
+                    "229-267": {
                         "without-diabetes": { male: { "non-smoker": 15, "smoker": 24 }, female: { "non-smoker": 10, "smoker": 18 } },
                         "with-diabetes": { male: { "non-smoker": 26, "smoker": 35 }, female: { "non-smoker": 19, "smoker": 34 } }
                     },
-                    "≥7": {
+                    "≥268": {
                         "without-diabetes": { male: { "non-smoker": 17, "smoker": 28 }, female: { "non-smoker": 1, "smoker": 20 } },
                         "with-diabetes": { male: { "non-smoker": 30, "smoker": 40 }, female: { "non-smoker": 20, "smoker": 37 } }
                     }
                 },
                 "160-179": {
-                    "<4": {
+                    "<155": {
                         "without-diabetes": { male: { "non-smoker": 8, "smoker": 13 }, female: { "non-smoker": 6, "smoker": 11 } },
                         "with-diabetes": { male: { "non-smoker": 14, "smoker": 46 }, female: { "non-smoker": 12, "smoker": 21 } }
                     },
-                    "4-4.9": {
+                    "155-189": {
                         "without-diabetes": { male: { "non-smoker": 9, "smoker": 14 }, female: { "non-smoker": 7, "smoker": 12 } },
                         "with-diabetes": { male: { "non-smoker": 15, "smoker": 22 }, female: { "non-smoker": 13, "smoker": 23 } }
                     },
-                    "5-5.9": {
+                    "190-228": {
                         "without-diabetes": { male: { "non-smoker": 10, "smoker": 16 }, female: { "non-smoker": 7, "smoker": 13 } },
                         "with-diabetes": { male: { "non-smoker": 17, "smoker": 24 }, female: { "non-smoker": 14, "smoker": 25 } }
                     },
-                    "6-6.9": {
+                    "229-267": {
                         "without-diabetes": { male: { "non-smoker": 11, "smoker": 18 }, female: { "non-smoker": 8, "smoker": 14 } },
                         "with-diabetes": { male: { "non-smoker": 20, "smoker": 28 }, female: { "non-smoker": 15, "smoker": 27 } }
                     },
-                    "≥7": {
+                    "≥268": {
                         "without-diabetes": { male: { "non-smoker": 13, "smoker": 21 }, female: { "non-smoker": 8, "smoker": 16 } },
                         "with-diabetes": { male: { "non-smoker": 23, "smoker": 32 }, female: { "non-smoker": 16, "smoker": 30 } }
                     }
                 },
                 "140-159": {
-                    "<4": {
+                    "<155": {
                         "without-diabetes": { male: { "non-smoker": 6, "smoker": 10 }, female: { "non-smoker": 5, "smoker": 9 } },
                         "with-diabetes": { male: { "non-smoker": 10, "smoker": 37 }, female: { "non-smoker": 9, "smoker": 17 } }
                     },
-                    "4-4.9": {
+                    "155-189": {
                         "without-diabetes": { male: { "non-smoker": 7, "smoker": 11 }, female: { "non-smoker": 5, "smoker": 10 } },
                         "with-diabetes": { male: { "non-smoker": 12, "smoker": 16 }, female: { "non-smoker": 10, "smoker": 18 } }
                     },
-                    "5-5.9": {
+                    "190-228": {
                         "without-diabetes": { male: { "non-smoker": 8, "smoker": 12 }, female: { "non-smoker": 6, "smoker": 10 } },
                         "with-diabetes": { male: { "non-smoker": 13, "smoker": 21 }, female: { "non-smoker": 11, "smoker": 20 } }
                     },
-                    "6-6.9": {
+                    "229-267": {
                         "without-diabetes": { male: { "non-smoker": 9, "smoker": 14 }, female: { "non-smoker": 6, "smoker": 11 } },
                         "with-diabetes": { male: { "non-smoker": 15, "smoker": 25 }, female: { "non-smoker": 12, "smoker": 22 } }
                     },
-                    "≥7": {
+                    "≥268": {
                         "without-diabetes": { male: { "non-smoker": 10, "smoker": 16 }, female: { "non-smoker": 7, "smoker": 12 } },
                         "with-diabetes": { male: { "non-smoker": 18, "smoker": 29 }, female: { "non-smoker": 13, "smoker": 24 } }
                     }
                 },
                 "120-139": {
-                    "<4": {
+                    "<155": {
                         "without-diabetes": { male: { "non-smoker": 5, "smoker": 7 }, female: { "non-smoker": 4, "smoker": 7 } },
                         "with-diabetes": { male: { "non-smoker": 8, "smoker": 12 }, female: { "non-smoker": 7, "smoker": 13 } }
                     },
-                    "4-4.9": {
+                    "155-189": {
                         "without-diabetes": { male: { "non-smoker": 5, "smoker": 8 }, female: { "non-smoker": 4, "smoker": 8 } },
                         "with-diabetes": { male: { "non-smoker": 9, "smoker": 14 }, female: { "non-smoker": 8, "smoker": 15 } }
                     },
-                    "5-5.9": {
+                    "190-228": {
                         "without-diabetes": { male: { "non-smoker": 6, "smoker": 9 }, female: { "non-smoker": 4, "smoker": 8 } },
                         "with-diabetes": { male: { "non-smoker": 10, "smoker": 16 }, female: { "non-smoker": 8, "smoker": 16 } }
                     },
-                    "6-6.9": {
+                    "229-267": {
                         "without-diabetes": { male: { "non-smoker": 6, "smoker": 11 }, female: { "non-smoker": 5, "smoker": 9 } },
                         "with-diabetes": { male: { "non-smoker": 11, "smoker": 19 }, female: { "non-smoker": 9, "smoker": 17 } }
                     },
-                    "≥7": {
+                    "≥268": {
                         "without-diabetes": { male: { "non-smoker": 7, "smoker": 12 }, female: { "non-smoker": 5, "smoker": 10 } },
                         "with-diabetes": { male: { "non-smoker": 13, "smoker": 22 }, female: { "non-smoker": 10, "smoker": 19 } }
                     }
                 },
                 "<120": {
-                    "<4": {
+                    "<155": {
                         "without-diabetes": { male: { "non-smoker": 3, "smoker": 5 }, female: { "non-smoker": 3, "smoker": 5 } },
                         "with-diabetes": { male: { "non-smoker": 6, "smoker": 9 }, female: { "non-smoker": 6, "smoker": 10 } }
                     },
-                    "4-4.9": {
+                    "155-189": {
                         "without-diabetes": { male: { "non-smoker": 4, "smoker": 6 }, female: { "non-smoker": 3, "smoker": 6 } },
                         "with-diabetes": { male: { "non-smoker": 7, "smoker": 11 }, female: { "non-smoker": 6, "smoker": 11 } }
                     },
-                    "5-5.9": {
+                    "190-228": {
                         "without-diabetes": { male: { "non-smoker": 4, "smoker": 7 }, female: { "non-smoker": 3, "smoker": 6 } },
                         "with-diabetes": { male: { "non-smoker": 7, "smoker": 12 }, female: { "non-smoker": 7, "smoker": 13 } }
                     },
-                    "6-6.9": {
+                    "229-267": {
                         "without-diabetes": { male: { "non-smoker": 5, "smoker": 8 }, female: { "non-smoker": 4, "smoker": 7 } },
                         "with-diabetes": { male: { "non-smoker": 9, "smoker": 14 }, female: { "non-smoker": 7, "smoker": 14 } }
                     },
-                    "≥7": {
+                    "≥268": {
                         "without-diabetes": { male: { "non-smoker": 5, "smoker": 9 }, female: { "non-smoker": 4, "smoker": 8 } },
                         "with-diabetes": { male: { "non-smoker": 10, "smoker": 17 }, female: { "non-smoker": 8, "smoker": 15 } }
                     }
@@ -1199,111 +1222,111 @@
             },
             "50-54": {
                 "≥180": {
-                    "<4": {
+                    "<155": {
                         "without-diabetes": { male: { "non-smoker": 9, "smoker": 14 }, female: { "non-smoker": 6, "smoker": 12 } },
                         "with-diabetes": { male: { "non-smoker": 15, "smoker": 25 }, female: { "non-smoker": 12, "smoker": 24 } }
                     },
-                    "4-4.9": {
+                    "155-189": {
                         "without-diabetes": { male: { "non-smoker": 9, "smoker": 15 }, female: { "non-smoker": 7, "smoker": 13 } },
                         "with-diabetes": { male: { "non-smoker": 17, "smoker": 28 }, female: { "non-smoker": 13, "smoker": 26 } }
                     },
-                    "5-5.9": {
+                    "190-228": {
                         "without-diabetes": { male: { "non-smoker": 10, "smoker": 18 }, female: { "non-smoker": 7, "smoker": 14 } },
                         "with-diabetes": { male: { "non-smoker": 19, "smoker": 32 }, female: { "non-smoker": 14, "smoker": 28 } }
                     },
-                    "6-6.9": {
+                    "229-267": {
                         "without-diabetes": { male: { "non-smoker": 12, "smoker": 20 }, female: { "non-smoker": 8, "smoker": 15 } },
                         "with-diabetes": { male: { "non-smoker": 22, "smoker": 36 }, female: { "non-smoker": 16, "smoker": 31 } }
                     },
-                    "≥7": {
+                    "≥268": {
                         "without-diabetes": { male: { "non-smoker": 13, "smoker": 23 }, female: { "non-smoker": 8, "smoker": 17 } },
                         "with-diabetes": { male: { "non-smoker": 25, "smoker": 42 }, female: { "non-smoker": 17, "smoker": 34 } }
                     }
                 },
                 "160-179": {
-                    "<4": {
+                    "<155": {
                         "without-diabetes": { male: { "non-smoker": 6, "smoker": 10 }, female: { "non-smoker": 5, "smoker": 9 } },
                         "with-diabetes": { male: { "non-smoker": 11, "smoker": 19 }, female: { "non-smoker": 9, "smoker": 18 } }
                     },
-                    "4-4.9": {
+                    "155-189": {
                         "without-diabetes": { male: { "non-smoker": 7, "smoker": 11 }, female: { "non-smoker": 5, "smoker": 10 } },
                         "with-diabetes": { male: { "non-smoker": 13, "smoker": 21 }, female: { "non-smoker": 10, "smoker": 20 } }
                     },
-                    "5-5.9": {
+                    "190-228": {
                         "without-diabetes": { male: { "non-smoker": 8, "smoker": 13 }, female: { "non-smoker": 5, "smoker": 11 } },
                         "with-diabetes": { male: { "non-smoker": 14, "smoker": 24 }, female: { "non-smoker": 11, "smoker": 22 } }
                     },
-                    "6-6.9": {
+                    "229-267": {
                         "without-diabetes": { male: { "non-smoker": 9, "smoker": 15 }, female: { "non-smoker": 6, "smoker": 12 } },
                         "with-diabetes": { male: { "non-smoker": 16, "smoker": 28 }, female: { "non-smoker": 12, "smoker": 24 } }
                     },
-                    "≥7": {
+                    "≥268": {
                         "without-diabetes": { male: { "non-smoker": 10, "smoker": 18 }, female: { "non-smoker": 6, "smoker": 13 } },
                         "with-diabetes": { male: { "non-smoker": 19, "smoker": 33 }, female: { "non-smoker": 13, "smoker": 27 } }
                     }
                 },
                 "140-159": {
-                    "<4": {
+                    "<155": {
                         "without-diabetes": { male: { "non-smoker": 4, "smoker": 7 }, female: { "non-smoker": 4, "smoker": 7 } },
                         "with-diabetes": { male: { "non-smoker": 8, "smoker": 14 }, female: { "non-smoker": 7, "smoker": 14 } }
                     },
-                    "4-4.9": {
+                    "155-189": {
                         "without-diabetes": { male: { "non-smoker": 5, "smoker": 8 }, female: { "non-smoker": 4, "smoker": 8 } },
                         "with-diabetes": { male: { "non-smoker": 9, "smoker": 16 }, female: { "non-smoker": 8, "smoker": 16 } }
                     },
-                    "5-5.9": {
+                    "190-228": {
                         "without-diabetes": { male: { "non-smoker": 6, "smoker": 10 }, female: { "non-smoker": 4, "smoker": 8 } },
                         "with-diabetes": { male: { "non-smoker": 10, "smoker": 18 }, female: { "non-smoker": 9, "smoker": 17 } }
                     },
-                    "6-6.9": {
+                    "229-267": {
                         "without-diabetes": { male: { "non-smoker": 6, "smoker": 11 }, female: { "non-smoker": 5, "smoker": 9 } },
                         "with-diabetes": { male: { "non-smoker": 12, "smoker": 21 }, female: { "non-smoker": 9, "smoker": 19 } }
                     },
-                    "≥7": {
+                    "≥268": {
                         "without-diabetes": { male: { "non-smoker": 7, "smoker": 13 }, female: { "non-smoker": 5, "smoker": 10 } },
                         "with-diabetes": { male: { "non-smoker": 14, "smoker": 25 }, female: { "non-smoker": 10, "smoker": 21 } }
                     }
                 },
                 "120-139": {
-                    "<4": {
+                    "<155": {
                         "without-diabetes": { male: { "non-smoker": 3, "smoker": 5 }, female: { "non-smoker": 3, "smoker": 5 } },
                         "with-diabetes": { male: { "non-smoker": 6, "smoker": 10 }, female: { "non-smoker": 6, "smoker": 11 } }
                     },
-                    "4-4.9": {
+                    "155-189": {
                         "without-diabetes": { male: { "non-smoker": 4, "smoker": 6 }, female: { "non-smoker": 3, "smoker": 6 } },
                         "with-diabetes": { male: { "non-smoker": 7, "smoker": 12 }, female: { "non-smoker": 6, "smoker": 12 } }
                     },
-                    "5-5.9": {
+                    "190-228": {
                         "without-diabetes": { male: { "non-smoker": 4, "smoker": 7 }, female: { "non-smoker": 3, "smoker": 6 } },
                         "with-diabetes": { male: { "non-smoker": 8, "smoker": 13 }, female: { "non-smoker": 7, "smoker": 13 } }
                     },
-                    "6-6.9": {
+                    "229-267": {
                         "without-diabetes": { male: { "non-smoker": 5, "smoker": 8 }, female: { "non-smoker": 3, "smoker": 7 } },
                         "with-diabetes": { male: { "non-smoker": 9, "smoker": 16 }, female: { "non-smoker": 7, "smoker": 15 } }
                     },
-                    "≥7": {
+                    "≥268": {
                         "without-diabetes": { male: { "non-smoker": 5, "smoker": 10 }, female: { "non-smoker": 4, "smoker": 8 } },
                         "with-diabetes": { male: { "non-smoker": 10, "smoker": 19 }, female: { "non-smoker": 8, "smoker": 17 } }
                     }
                 },
                 "<120": {
-                    "<4": {
+                    "<155": {
                         "without-diabetes": { male: { "non-smoker": 2, "smoker": 4 }, female: { "non-smoker": 2, "smoker": 4 } },
                         "with-diabetes": { male: { "non-smoker": 4, "smoker": 7 }, female: { "non-smoker": 4, "smoker": 8 } }
                     },
-                    "4-4.9": {
+                    "155-189": {
                         "without-diabetes": { male: { "non-smoker": 3, "smoker": 4 }, female: { "non-smoker": 2, "smoker": 4 } },
                         "with-diabetes": { male: { "non-smoker": 5, "smoker": 8 }, female: { "non-smoker": 5, "smoker": 9 } }
                     },
-                    "5-5.9": {
+                    "190-228": {
                         "without-diabetes": { male: { "non-smoker": 3, "smoker": 5 }, female: { "non-smoker": 2, "smoker": 5 } },
                         "with-diabetes": { male: { "non-smoker": 6, "smoker": 10 }, female: { "non-smoker": 5, "smoker": 10 } }
                     },
-                    "6-6.9": {
+                    "229-267": {
                         "without-diabetes": { male: { "non-smoker": 3, "smoker": 6 }, female: { "non-smoker": 3, "smoker": 5 } },
                         "with-diabetes": { male: { "non-smoker": 6, "smoker": 12 }, female: { "non-smoker": 5, "smoker": 12 } }
                     },
-                    "≥7": {
+                    "≥268": {
                         "without-diabetes": { male: { "non-smoker": 4, "smoker": 7 }, female: { "non-smoker": 3, "smoker": 6 } },
                         "with-diabetes": { male: { "non-smoker": 8, "smoker": 4 }, female: { "non-smoker": 6, "smoker": 13 } }
                     }
@@ -1311,111 +1334,111 @@
             },
             "45-49": {
                 "≥180": {
-                    "<4": {
+                    "<155": {
                         "without-diabetes": { male: { "non-smoker": 7, "smoker": 11 }, female: { "non-smoker": 5, "smoker": 10 } },
                         "with-diabetes": { male: { "non-smoker": 13, "smoker": 22 }, female: { "non-smoker": 10, "smoker": 21 } }
                     },
-                    "4-4.9": {
+                    "155-189": {
                         "without-diabetes": { male: { "non-smoker": 7, "smoker": 13 }, female: { "non-smoker": 5, "smoker": 11 } },
                         "with-diabetes": { male: { "non-smoker": 14, "smoker": 25 }, female: { "non-smoker": 11, "smoker": 23 } }
                     },
-                    "5-5.9": {
+                    "190-228": {
                         "without-diabetes": { male: { "non-smoker": 8, "smoker": 14 }, female: { "non-smoker": 6, "smoker": 12 } },
                         "with-diabetes": { male: { "non-smoker": 16, "smoker": 28 }, female: { "non-smoker": 12, "smoker": 25 } }
                     },
-                    "6-6.9": {
+                    "229-267": {
                         "without-diabetes": { male: { "non-smoker": 9, "smoker": 17 }, female: { "non-smoker": 6, "smoker": 13 } },
                         "with-diabetes": { male: { "non-smoker": 18, "smoker": 33 }, female: { "non-smoker": 13, "smoker": 28 } }
                     },
-                    "≥7": {
+                    "≥268": {
                         "without-diabetes": { male: { "non-smoker": 10, "smoker": 20 }, female: { "non-smoker": 7, "smoker": 14 } },
                         "with-diabetes": { male: { "non-smoker": 21, "smoker": 38 }, female: { "non-smoker": 15, "smoker": 32 } }
                     }
                 },
                 "160-179": {
-                    "<4": {
+                    "<155": {
                         "without-diabetes": { male: { "non-smoker": 5, "smoker": 8 }, female: { "non-smoker": 4, "smoker": 7 } },
                         "with-diabetes": { male: { "non-smoker": 9, "smoker": 16 }, female: { "non-smoker": 8, "smoker": 16 } }
                     },
-                    "4-4.9": {
+                    "155-189": {
                         "without-diabetes": { male: { "non-smoker": 5, "smoker": 9 }, female: { "non-smoker": 4, "smoker": 8 } },
                         "with-diabetes": { male: { "non-smoker": 10, "smoker": 18 }, female: { "non-smoker": 8, "smoker": 18 } }
                     },
-                    "5-5.9": {
+                    "190-228": {
                         "without-diabetes": { male: { "non-smoker": 6, "smoker": 10 }, female: { "non-smoker": 4, "smoker": 9 } },
                         "with-diabetes": { male: { "non-smoker": 11, "smoker": 21 }, female: { "non-smoker": 9, "smoker": 20 } }
                     },
-                    "6-6.9": {
+                    "229-267": {
                         "without-diabetes": { male: { "non-smoker": 6, "smoker": 12 }, female: { "non-smoker": 5, "smoker": 10 } },
                         "with-diabetes": { male: { "non-smoker": 13, "smoker": 24 }, female: { "non-smoker": 10, "smoker": 22 } }
                     },
-                    "≥7": {
+                    "≥268": {
                         "without-diabetes": { male: { "non-smoker": 8, "smoker": 14 }, female: { "non-smoker": 5, "smoker": 11 } },
                         "with-diabetes": { male: { "non-smoker": 16, "smoker": 29 }, female: { "non-smoker": 11, "smoker": 25 } }
                     }
                 },
                 "140-159": {
-                    "<4": {
+                    "<155": {
                         "without-diabetes": { male: { "non-smoker": 3, "smoker": 6 }, female: { "non-smoker": 3, "smoker": 5 } },
                         "with-diabetes": { male: { "non-smoker": 7, "smoker": 12 }, female: { "non-smoker": 6, "smoker": 12 } }
                     },
-                    "4-4.9": {
+                    "155-189": {
                         "without-diabetes": { male: { "non-smoker": 4, "smoker": 6 }, female: { "non-smoker": 3, "smoker": 6 } },
                         "with-diabetes": { male: { "non-smoker": 7, "smoker": 13 }, female: { "non-smoker": 6, "smoker": 13 } }
                     },
-                    "5-5.9": {
+                    "190-228": {
                         "without-diabetes": { male: { "non-smoker": 4, "smoker": 7 }, female: { "non-smoker": 3, "smoker": 7 } },
                         "with-diabetes": { male: { "non-smoker": 8, "smoker": 15 }, female: { "non-smoker": 7, "smoker": 15 } }
                     },
-                    "6-6.9": {
+                    "229-267": {
                         "without-diabetes": { male: { "non-smoker": 5, "smoker": 9 }, female: { "non-smoker": 3, "smoker": 7 } },
                         "with-diabetes": { male: { "non-smoker": 10, "smoker": 18 }, female: { "non-smoker": 7, "smoker": 17 } }
                     },
-                    "≥7": {
+                    "≥268": {
                         "without-diabetes": { male: { "non-smoker": 5, "smoker": 10 }, female: { "non-smoker": 4, "smoker": 8 } },
                         "with-diabetes": { male: { "non-smoker": 11, "smoker": 22 }, female: { "non-smoker": 8, "smoker": 19 } }
                     }
                 },
                 "120-139": {
-                    "<4": {
+                    "<155": {
                         "without-diabetes": { male: { "non-smoker": 2, "smoker": 4 }, female: { "non-smoker": 2, "smoker": 4 } },
                         "with-diabetes": { male: { "non-smoker": 5, "smoker": 8 }, female: { "non-smoker": 4, "smoker": 9 } }
                     },
-                    "4-4.9": {
+                    "155-189": {
                         "without-diabetes": { male: { "non-smoker": 3, "smoker": 5 }, female: { "non-smoker": 2, "smoker": 4 } },
                         "with-diabetes": { male: { "non-smoker": 5, "smoker": 9 }, female: { "non-smoker": 5, "smoker": 10 } }
                     },
-                    "5-5.9": {
+                    "190-228": {
                         "without-diabetes": { male: { "non-smoker": 3, "smoker": 5 }, female: { "non-smoker": 2, "smoker": 5 } },
                         "with-diabetes": { male: { "non-smoker": 6, "smoker": 11 }, female: { "non-smoker": 5, "smoker": 11 } }
                     },
-                    "6-6.9": {
+                    "229-267": {
                         "without-diabetes": { male: { "non-smoker": 3, "smoker": 6 }, female: { "non-smoker": 2, "smoker": 6 } },
                         "with-diabetes": { male: { "non-smoker": 7, "smoker": 13 }, female: { "non-smoker": 6, "smoker": 13 } }
                     },
-                    "≥7": {
+                    "≥268": {
                         "without-diabetes": { male: { "non-smoker": 4, "smoker": 8 }, female: { "non-smoker": 3, "smoker": 6 } },
                         "with-diabetes": { male: { "non-smoker": 8, "smoker": 16 }, female: { "non-smoker": 6, "smoker": 15 } }
                     }
                 },
                 "<120": {
-                    "<4": {
+                    "<155": {
                         "without-diabetes": { male: { "non-smoker": 2, "smoker": 3 }, female: { "non-smoker": 1, "smoker": 3 } },
                         "with-diabetes": { male: { "non-smoker": 3, "smoker": 6 }, female: { "non-smoker": 3, "smoker": 7 } }
                     },
-                    "4-4.9": {
+                    "155-189": {
                         "without-diabetes": { male: { "non-smoker": 2, "smoker": 3 }, female: { "non-smoker": 2, "smoker": 3 } },
                         "with-diabetes": { male: { "non-smoker": 4, "smoker": 7 }, female: { "non-smoker": 3, "smoker": 8 } }
                     },
-                    "5-5.9": {
+                    "190-228": {
                         "without-diabetes": { male: { "non-smoker": 2, "smoker": 4 }, female: { "non-smoker": 2, "smoker": 4 } },
                         "with-diabetes": { male: { "non-smoker": 4, "smoker": 8 }, female: { "non-smoker": 4, "smoker": 9 } }
                     },
-                    "6-6.9": {
+                    "229-267": {
                         "without-diabetes": { male: { "non-smoker": 2, "smoker": 4 }, female: { "non-smoker": 2, "smoker": 4 } },
                         "with-diabetes": { male: { "non-smoker": 5, "smoker": 10 }, female: { "non-smoker": 4, "smoker": 10 } }
                     },
-                    "≥7": {
+                    "≥268": {
                         "without-diabetes": { male: { "non-smoker": 3, "smoker": 5 }, female: { "non-smoker": 2, "smoker": 5 } },
                         "with-diabetes": { male: { "non-smoker": 6, "smoker": 12 }, female: { "non-smoker": 5, "smoker": 11 } }
                     }
@@ -1423,111 +1446,111 @@
             },
             "40-44": {
                 "≥180": {
-                    "<4": {
+                    "<155": {
                         "without-diabetes": { male: { "non-smoker": 5, "smoker": 9 }, female: { "non-smoker": 4, "smoker": 8 } },
                         "with-diabetes": { male: { "non-smoker": 11, "smoker": 19 }, female: { "non-smoker": 8, "smoker": 18 } }
                     },
-                    "4-4.9": {
+                    "155-189": {
                         "without-diabetes": { male: { "non-smoker": 6, "smoker": 10 }, female: { "non-smoker": 4, "smoker": 9 } },
                         "with-diabetes": { male: { "non-smoker": 12, "smoker": 22 }, female: { "non-smoker": 9, "smoker": 20 } }
                     },
-                    "5-5.9": {
+                    "190-228": {
                         "without-diabetes": { male: { "non-smoker": 6, "smoker": 12 }, female: { "non-smoker": 4, "smoker": 10 } },
                         "with-diabetes": { male: { "non-smoker": 13, "smoker": 25 }, female: { "non-smoker": 10, "smoker": 23 } }
                     },
-                    "6-6.9": {
+                    "229-267": {
                         "without-diabetes": { male: { "non-smoker": 7, "smoker": 14 }, female: { "non-smoker": 5, "smoker": 11 } },
                         "with-diabetes": { male: { "non-smoker": 15, "smoker": 29 }, female: { "non-smoker": 11, "smoker": 26 } }
                     },
-                    "≥7": {
+                    "≥268": {
                         "without-diabetes": { male: { "non-smoker": 8, "smoker": 17 }, female: { "non-smoker": 5, "smoker": 12 } },
                         "with-diabetes": { male: { "non-smoker": 18, "smoker": 35 }, female: { "non-smoker": 12, "smoker": 29 } }
                     }
                 },
                 "160-179": {
-                    "<4": {
+                    "<155": {
                         "without-diabetes": { male: { "non-smoker": 4, "smoker": 6 }, female: { "non-smoker": 3, "smoker": 6 } },
                         "with-diabetes": { male: { "non-smoker": 7, "smoker": 14 }, female: { "non-smoker": 6, "smoker": 14 } }
                     },
-                    "4-4.9": {
+                    "155-189": {
                         "without-diabetes": { male: { "non-smoker": 4, "smoker": 7 }, female: { "non-smoker": 3, "smoker": 7 } },
                         "with-diabetes": { male: { "non-smoker": 8, "smoker": 16 }, female: { "non-smoker": 7, "smoker": 15 } }
                     },
-                    "5-5.9": {
+                    "190-228": {
                         "without-diabetes": { male: { "non-smoker": 4, "smoker": 8 }, female: { "non-smoker": 3, "smoker": 7 } },
                         "with-diabetes": { male: { "non-smoker": 9, "smoker": 18 }, female: { "non-smoker": 7, "smoker": 17 } }
                     },
-                    "6-6.9": {
+                    "229-267": {
                         "without-diabetes": { male: { "non-smoker": 5, "smoker": 10 }, female: { "non-smoker": 3, "smoker": 8 } },
                         "with-diabetes": { male: { "non-smoker": 11, "smoker": 21 }, female: { "non-smoker": 8, "smoker": 19 } }
                     },
-                    "≥7": {
+                    "≥268": {
                         "without-diabetes": { male: { "non-smoker": 6, "smoker": 12 }, female: { "non-smoker": 4, "smoker": 9 } },
                         "with-diabetes": { male: { "non-smoker": 13, "smoker": 26 }, female: { "non-smoker": 9, "smoker": 22 } }
                     }
                 },
                 "140-159": {
-                    "<4": {
+                    "<155": {
                         "without-diabetes": { male: { "non-smoker": 2, "smoker": 4 }, female: { "non-smoker": 2, "smoker": 4 } },
                         "with-diabetes": { male: { "non-smoker": 5, "smoker": 10 }, female: { "non-smoker": 4, "smoker": 10 } }
                     },
-                    "4-4.9": {
+                    "155-189": {
                         "without-diabetes": { male: { "non-smoker": 3, "smoker": 5 }, female: { "non-smoker": 2, "smoker": 5 } },
                         "with-diabetes": { male: { "non-smoker": 6, "smoker": 11 }, female: { "non-smoker": 5, "smoker": 11 } }
                     },
-                    "5-5.9": {
+                    "190-228": {
                         "without-diabetes": { male: { "non-smoker": 3, "smoker": 6 }, female: { "non-smoker": 2, "smoker": 5 } },
                         "with-diabetes": { male: { "non-smoker": 6, "smoker": 13 }, female: { "non-smoker": 5, "smoker": 13 } }
                     },
-                    "6-6.9": {
+                    "229-267": {
                         "without-diabetes": { male: { "non-smoker": 3, "smoker": 7 }, female: { "non-smoker": 2, "smoker": 6 } },
                         "with-diabetes": { male: { "non-smoker": 8, "smoker": 15 }, female: { "non-smoker": 6, "smoker": 15 } }
                     },
-                    "≥7": {
+                    "≥268": {
                         "without-diabetes": { male: { "non-smoker": 4, "smoker": 8 }, female: { "non-smoker": 3, "smoker": 7 } },
                         "with-diabetes": { male: { "non-smoker": 9, "smoker": 19 }, female: { "non-smoker": 7, "smoker": 17 } }
                     }
                 },
                 "120-139": {
-                    "<4": {
+                    "<155": {
                         "without-diabetes": { male: { "non-smoker": 2, "smoker": 3 }, female: { "non-smoker": 1, "smoker": 3 } },
                         "with-diabetes": { male: { "non-smoker": 4, "smoker": 7 }, female: { "non-smoker": 3, "smoker": 7 } }
                     },
-                    "4-4.9": {
+                    "155-189": {
                         "without-diabetes": { male: { "non-smoker": 2, "smoker": 3 }, female: { "non-smoker": 1, "smoker": 3 } },
                         "with-diabetes": { male: { "non-smoker": 4, "smoker": 8 }, female: { "non-smoker": 3, "smoker": 8 } }
                     },
-                    "5-5.9": {
+                    "190-228": {
                         "without-diabetes": { male: { "non-smoker": 2, "smoker": 4 }, female: { "non-smoker": 2, "smoker": 4 } },
                         "with-diabetes": { male: { "non-smoker": 4, "smoker": 9 }, female: { "non-smoker": 4, "smoker": 10 } }
                     },
-                    "6-6.9": {
+                    "229-267": {
                         "without-diabetes": { male: { "non-smoker": 2, "smoker": 5 }, female: { "non-smoker": 2, "smoker": 4 } },
                         "with-diabetes": { male: { "non-smoker": 5, "smoker": 11 }, female: { "non-smoker": 4, "smoker": 11 } }
                     },
-                    "≥7": {
+                    "≥268": {
                         "without-diabetes": { male: { "non-smoker": 3, "smoker": 6 }, female: { "non-smoker": 2, "smoker": 5 } },
                         "with-diabetes": { male: { "non-smoker": 6, "smoker": 14 }, female: { "non-smoker": 5, "smoker": 13 } }
                     }
                 },
                 "<120": {
-                    "<4": {
+                    "<155": {
                         "without-diabetes": { male: { "non-smoker": 1, "smoker": 2 }, female: { "non-smoker": 1, "smoker": 2 } },
                         "with-diabetes": { male: { "non-smoker": 2, "smoker": 5 }, female: { "non-smoker": 2, "smoker": 5 } }
                     },
-                    "4-4.9": {
+                    "155-189": {
                         "without-diabetes": { male: { "non-smoker": 1, "smoker": 2 }, female: { "non-smoker": 1, "smoker": 3 } },
                         "with-diabetes": { male: { "non-smoker": 3, "smoker": 5 }, female: { "non-smoker": 3, "smoker": 6 } }
                     },
-                    "5-5.9": {
+                    "190-228": {
                         "without-diabetes": { male: { "non-smoker": 1, "smoker": 3 }, female: { "non-smoker": 1, "smoker": 3 } },
                         "with-diabetes": { male: { "non-smoker": 3, "smoker": 6 }, female: { "non-smoker": 3, "smoker": 7 } }
                     },
-                    "6-6.9": {
+                    "229-267": {
                         "without-diabetes": { male: { "non-smoker": 2, "smoker": 3 }, female: { "non-smoker": 1, "smoker": 3 } },
                         "with-diabetes": { male: { "non-smoker": 4, "smoker": 8 }, female: { "non-smoker": 3, "smoker": 8 } }
                     },
-                    "≥7": {
+                    "≥268": {
                         "without-diabetes": { male: { "non-smoker": 2, "smoker": 4 }, female: { "non-smoker": 1, "smoker": 4 } },
                         "with-diabetes": { male: { "non-smoker": 4, "smoker": 10 }, female: { "non-smoker": 4, "smoker": 9 } }
                     }
