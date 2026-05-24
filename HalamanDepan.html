@@ -20,6 +20,7 @@
             --geriatric-full-color: #795548;
             --child-color: #00bcd4;
             --heart-color: #d32f2f;
+            --echo-color: #1e88e5;
         }
         
         * {
@@ -280,6 +281,20 @@
             background-color: #b71c1c;
         }
         
+        /* Styling khusus untuk kartu Pemeriksaan Ekokardiografi */
+        .echo-card .tool-icon {
+            background-color: #e3f2fd;
+            color: var(--echo-color);
+        }
+        
+        .echo-card .tool-link {
+            background-color: var(--echo-color);
+        }
+        
+        .echo-card .tool-link:hover {
+            background-color: #1565c0;
+        }
+        
         /* Footer */
         footer {
             background-color: var(--dark);
@@ -392,7 +407,19 @@
                 <h2>Alat Bantu Screening Kesehatan</h2>
                 
                 <div class="tools-grid">
-                    <!-- Alat 1: Screening Buta Warna -->
+                    <!-- Alat 1: Pemeriksaan Ekokardiografi (Echo Jantung) -->
+                    <div class="tool-card echo-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-heartbeat"></i>
+                        </div>
+                        <div class="tool-content">
+                            <h3>Pemeriksaan Ekokardiografi (Echo Jantung)</h3>
+                            <p>Alat untuk menghitung Ejection Fraction (EF) jantung dengan metode M-Mode dan rumus Teichholz. Membantu menilai fungsi sistolik ventrikel kiri secara non-invasif.</p>
+                            <a href="https://hendrikkho-akupuntur.github.io/SahliRGB/echo.html" target="_blank" class="tool-link">Akses Alat</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Alat 2: Screening Buta Warna -->
                     <div class="tool-card">
                         <div class="tool-icon" style="background-color: #e9f7fb;">
                             <i class="fas fa-eye"></i>
@@ -404,7 +431,7 @@
                         </div>
                     </div>
                     
-                    <!-- Alat 2: Screening Remaja -->
+                    <!-- Alat 3: Screening Remaja -->
                     <div class="tool-card">
                         <div class="tool-icon" style="background-color: #fef7e0;">
                             <i class="fas fa-user-friends"></i>
@@ -416,7 +443,7 @@
                         </div>
                     </div>
                     
-                    <!-- Alat 3: Kalkulator IMT -->
+                    <!-- Alat 4: Kalkulator IMT -->
                     <div class="tool-card">
                         <div class="tool-icon" style="background-color: #f0f9ff;">
                             <i class="fas fa-weight-scale"></i>
@@ -428,7 +455,7 @@
                         </div>
                     </div>
                     
-                    <!-- Alat 4: Screening Depresi -->
+                    <!-- Alat 5: Screening Depresi -->
                     <div class="tool-card">
                         <div class="tool-icon" style="background-color: #f5f0ff;">
                             <i class="fas fa-brain"></i>
@@ -440,7 +467,7 @@
                         </div>
                     </div>
                     
-                    <!-- Alat 5: Screening Anemia -->
+                    <!-- Alat 6: Screening Anemia -->
                     <div class="tool-card">
                         <div class="tool-icon" style="background-color: #fff0f0;">
                             <i class="fas fa-tint"></i>
@@ -452,7 +479,7 @@
                         </div>
                     </div>
                     
-                    <!-- Alat 6: Screening Penglihatan -->
+                    <!-- Alat 7: Screening Penglihatan -->
                     <div class="tool-card">
                         <div class="tool-icon" style="background-color: #f0fff4;">
                             <i class="fas fa-eye-dropper"></i>
@@ -464,7 +491,7 @@
                         </div>
                     </div>
                     
-                    <!-- Alat 7: Screening Pendengaran -->
+                    <!-- Alat 8: Screening Pendengaran -->
                     <div class="tool-card">
                         <div class="tool-icon" style="background-color: #f0f8ff;">
                             <i class="fas fa-ear-deaf"></i>
@@ -476,7 +503,7 @@
                         </div>
                     </div>
                     
-                    <!-- Alat 8: Panduan Penggunaan Insulin -->
+                    <!-- Alat 9: Panduan Penggunaan Insulin -->
                     <div class="tool-card insulin-card">
                         <div class="tool-icon">
                             <i class="fas fa-syringe"></i>
@@ -488,7 +515,7 @@
                         </div>
                     </div>
                     
-                    <!-- Alat 9: Kalkulator Gizi -->
+                    <!-- Alat 10: Kalkulator Gizi -->
                     <div class="tool-card nutrition-card">
                         <div class="tool-icon">
                             <i class="fas fa-apple-alt"></i>
@@ -500,7 +527,7 @@
                         </div>
                     </div>
                     
-                    <!-- Alat 10: Geriatric -->
+                    <!-- Alat 11: Geriatric -->
                     <div class="tool-card geriatric-card">
                         <div class="tool-icon">
                             <i class="fas fa-user-md"></i>
@@ -512,7 +539,7 @@
                         </div>
                     </div>
                     
-                    <!-- Alat 11: Geriatric FULL -->
+                    <!-- Alat 12: Geriatric FULL -->
                     <div class="tool-card geriatric-full-card">
                         <div class="tool-icon">
                             <i class="fas fa-clipboard-check"></i>
@@ -524,7 +551,7 @@
                         </div>
                     </div>
                     
-                    <!-- Alat 12: Skreening Anak -->
+                    <!-- Alat 13: Skreening Anak -->
                     <div class="tool-card child-card">
                         <div class="tool-icon">
                             <i class="fas fa-child"></i>
@@ -536,7 +563,7 @@
                         </div>
                     </div>
                     
-                    <!-- Alat 13: Skreening Coroner Jantung (BARU) -->
+                    <!-- Alat 14: Skreening Coroner Jantung -->
                     <div class="tool-card heart-card">
                         <div class="tool-icon">
                             <i class="fas fa-heartbeat"></i>
@@ -596,6 +623,9 @@
                     }
                     if (this.classList.contains('heart-card')) {
                         icon.style.animation = 'heartbeat 1.2s infinite';
+                    }
+                    if (this.classList.contains('echo-card')) {
+                        icon.style.animation = 'pulse 1s infinite';
                     }
                 });
                 
