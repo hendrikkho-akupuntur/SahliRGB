@@ -128,7 +128,7 @@
         .calibration-bar {
             background-color: #e63946;
             height: 6px;
-            width: 200px; /* base width, will be adjusted by calibration factor */
+            width: 200px;
             border-radius: 4px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.2);
             transition: width 0.1s ease;
@@ -355,12 +355,14 @@
             display: block;
         }
 
+        /* Perbaikan untuk bagian promo-section */
         .promo-section, .colorblind-section {
             display: flex;
             align-items: center;
             gap: 30px;
             padding: 25px;
-            width: 100%;
+            border-radius: 15px;
+            flex-wrap: wrap;
         }
 
         .colorblind-section {
@@ -369,6 +371,55 @@
 
         .promo-section {
             background: linear-gradient(to right, #f8f9fa, #e7f5ff);
+        }
+
+        .promo-image {
+            flex: 0 0 auto;
+        }
+
+        .promo-image img {
+            width: 100%;
+            max-width: 120px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .promo-content {
+            flex: 1;
+            text-align: left;
+        }
+
+        .promo-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            color: #1e3c72;
+        }
+
+        .promo-content p {
+            margin-bottom: 15px;
+            color: #495057;
+        }
+
+        .promo-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: #339af0;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .promo-btn:hover {
+            background-color: #1c7ed6;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
 
         footer {
@@ -388,6 +439,12 @@
             .promo-section, .colorblind-section {
                 flex-direction: column;
                 text-align: center;
+            }
+            .promo-content {
+                text-align: center;
+            }
+            .promo-btn {
+                justify-content: center;
             }
             .calibration-line-container {
                 flex-direction: column;
@@ -510,7 +567,7 @@
             </div>
         </div>
 
-        <!-- KALIBRASI UKURAN (Full width) - Fitur utama yang diminta user -->
+        <!-- KALIBRASI UKURAN (Full width) -->
         <div class="full-width-section calibration-box">
             <h2 class="section-title"><i class="fas fa-ruler"></i> Kalibrasi Ukuran Layar (Garis Referensi 2 cm)</h2>
             <div class="instruction-box" style="background:#fff1e0;">
@@ -552,16 +609,23 @@
 
         <!-- Buta Warna & Promosi -->
         <div class="full-width-section colorblind-section">
-            <div class="colorblind-icon"><i class="fas fa-eye-dropper"></i></div>
+            <div class="colorblind-icon"><i class="fas fa-eye-dropper fa-3x"></i></div>
             <div class="colorblind-content">
                 <h3><i class="fas fa-palette"></i> Pemeriksaan Buta Warna Lengkap</h3>
                 <p>Metode Ishihara standar untuk deteksi buta warna. Akses alat tes buta warna kami yang lebih detail.</p>
-                <a href="https://hendrikkho-akupuntur.github.io/SahliRGB/ButaWarnaIshiara.html" class="promo-btn" target="_blank" style="background-color:#e63946; display:inline-block; margin-top:10px;"><i class="fas fa-flask"></i> Tes Buta Warna Lengkap</a>
+                <a href="https://hendrikkho-akupuntur.github.io/SahliRGB/ButaWarnaIshiara.html" class="promo-btn" target="_blank" style="background-color:#e63946;"><i class="fas fa-flask"></i> Tes Buta Warna Lengkap</a>
             </div>
         </div>
+
         <div class="full-width-section promo-section">
-            <div class="promo-image"><img src="Hendrik.jpg" alt="Dr. Hendrik" id="drHendrikPhoto" style="width:20%; border-radius: 8px;"></div>
-            <div class="promo-content"><h3><i class="fas fa-bone"></i> Nyeri Punggung / Kebas Saraf?</h3><p>Konsultasi akupuntur dengan Dr. Hendrik, terapi efektif untuk nyeri kronis.</p><a href="https://hendrikkho-akupuntur.github.io/profile/profile%20dr%20Hendrik%20akupuntur.html" class="promo-btn" target="_blank"><i class="fas fa-user-md"></i> Konsultasi Sekarang</a></div>
+            <div class="promo-image">
+                <img src="Hendrik.jpg" alt="Dr. Hendrik" id="drHendrikPhoto" style="width:100%; max-width:120px; border-radius: 12px;">
+            </div>
+            <div class="promo-content">
+                <h3><i class="fas fa-bone"></i> Nyeri Punggung / Kebas Saraf?</h3>
+                <p>Konsultasi akupuntur dengan Dr. Hendrik, terapi efektif untuk nyeri kronis.</p>
+                <a href="https://hendrikkho-akupuntur.github.io/profile/profile%20dr%20Hendrik%20akupuntur.html" class="promo-btn" target="_blank"><i class="fas fa-user-md"></i> Konsultasi Sekarang</a>
+            </div>
         </div>
     </div>
     <footer><p>Alat Skrining Mata - Dikembangkan Oleh Prodi PPDS KKLP FK UPH - dr Hendrik | Dengan Kalibrasi Ukuran Dinamis</p></footer>
@@ -581,7 +645,7 @@
         const availableLetters = ["C", "D", "E", "F", "L", "O", "P", "T", "Z"];
         
         // Variabel global
-        let calibrationScale = 1.0;      // faktor skala (1 = default, setelah kalibrasi berubah)
+        let calibrationScale = 1.0;
         let currentSnellenLetters = [];
         let currentTumblingDirections = [];
         let lastRowRead = -1;
@@ -596,39 +660,31 @@
         const resetCalibBtn = document.getElementById('resetCalibrationBtn');
         const calibrationStatusSpan = document.getElementById('calibrationStatus');
 
-        // Inisialisasi garis kalibrasi lebar awal 200px (base)
-        let baseCalibrationWidthPx = 200;   // lebar awal garis (px) sebelum faktor
+        let baseCalibrationWidthPx = 200;
         function updateCalibrationBarWidth() {
-            // lebar tampilan garis = baseWidth * calibrationScale
             let newWidthPx = baseCalibrationWidthPx * calibrationScale;
             calibrationBar.style.width = newWidthPx + 'px';
             calibrationStatusSpan.innerHTML = `✅ Skala kalibrasi aktif: ${calibrationScale.toFixed(3)}x | Panjang garis merah sekarang = 2 cm (setelah kalibrasi benar) | Huruf sudah discale.`;
         }
         
-        // Fungsi untuk menerapkan kalibrasi berdasarkan pengukuran fisik user
         function applyCalibrationFromMeasurement() {
             let measured = parseFloat(measuredCmInput.value);
             if (isNaN(measured) || measured <= 0) {
                 alert("Masukkan panjang terukur yang valid (dalam cm, >0)");
                 return;
             }
-            // Prinsip: baseline width = 200px sebelumnya terukur = measured cm. Agar menjadi 2 cm, faktor = 2 / measured
             const newScale = 2.0 / measured;
             if (newScale <= 0.1 || newScale > 5) {
                 alert("Nilai kalibrasi tidak wajar, periksa pengukuran Anda (rentang faktor 0.3-3 direkomendasikan)");
                 return;
             }
             calibrationScale = newScale;
-            // Update semua chart dengan skala baru
             regenerateAllChartsWithScale();
             updateCalibrationBarWidth();
-            // Simpan ke localStorage opsional
             localStorage.setItem('visusCalibrationScale', calibrationScale);
-            // Tampilkan sukses
             calibrationStatusSpan.innerHTML = `🔁 Kalibrasi berhasil! Faktor=${calibrationScale.toFixed(3)} | Panjang garis merah sekarang secara fisik = 2 cm (dengan asumsi ukuran awal tepat). Gunakan penggaris verifikasi.`;
         }
         
-        // Reset kalibrasi ke 1 (tidak ada scaling)
         function resetCalibration() {
             calibrationScale = 1.0;
             regenerateAllChartsWithScale();
@@ -637,14 +693,11 @@
             calibrationStatusSpan.innerHTML = `↺ Kalibrasi direset ke skala 1:1. Lakukan kalibrasi ulang dengan penggaris untuk akurasi.`;
         }
         
-        // Regenerate kedua chart (Snellen & Tumbling) dengan faktor skala terbaru
         function regenerateAllChartsWithScale() {
             generateSnellenChart();
             generateTumblingEChart();
-            // astigmatisma tidak bergantung skala, tidak perlu diubah
         }
         
-        // Generate Snellen dengan skala calibrationScale
         function generateSnellenChart() {
             snellenContainer.innerHTML = '';
             snellenData.forEach((rowData, rowIndex) => {
@@ -660,7 +713,6 @@
                     markRowAsRead(rowIndex, 'snellen');
                 });
                 const rowLetters = currentSnellenLetters[rowIndex] || rowData.letters;
-                // ukuran huruf dengan skala kalibrasi
                 const calibratedSize = rowData.size * calibrationScale;
                 rowLetters.forEach(letter => {
                     const letterDiv = document.createElement('div');
@@ -792,7 +844,6 @@
             visusResultSaved = true;
         }
         
-        // Setup event listener & initialize
         function setupEventListeners() {
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
@@ -846,7 +897,6 @@
             resetCalibBtn.addEventListener('click', resetCalibration);
         }
         
-        // coba muat skala dari localStorage
         function loadSavedCalibration() {
             let saved = localStorage.getItem('visusCalibrationScale');
             if(saved && !isNaN(parseFloat(saved))) {
@@ -855,7 +905,6 @@
             }
         }
         
-        // ganti logo lokal opsional
         function replaceLocalAssets() {
             const fkup = document.getElementById('fkupLogo');
             const kklp = document.getElementById('kklpLogo');
@@ -865,7 +914,6 @@
             const testDr = new Image(); testDr.onload = () => drPhoto.src = "Hendrik.jpg"; testDr.src = "Hendrik.jpg";
         }
         
-        // Init all
         function init() {
             generateRandomLetters();
             loadSavedCalibration();
