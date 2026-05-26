@@ -262,7 +262,7 @@
       margin-top: 0.8rem;
     }
 
-    /* Kop surat untuk cetak PDF */
+    /* Kop surat untuk cetak PDF - ukuran disesuaikan dengan file asli (771x180) */
     .letterhead-print {
       display: none;
     }
@@ -301,19 +301,34 @@
         margin-top: 0;
       }
       
+      /* Kop surat dengan ukuran proporsional sesuai file asli (771x180) */
       .letterhead-print {
         display: block;
         text-align: center;
         margin-bottom: 12px;
-        padding-bottom: 8px;
+        padding-bottom: 6px;
         border-bottom: 2px solid #1a4e6b;
       }
       
       .letterhead-print img {
+        display: block;
+        margin: 0 auto;
+        /* Ukuran asli file 771x180, kita tampilkan dengan lebar 100% tetapi batasi tinggi agar proporsional */
         max-width: 100%;
+        width: auto;
         height: auto;
-        max-height: 70px;
+        /* Tinggi disesuaikan dengan rasio asli 771:180 ≈ 4.28:1 */
+        max-height: none;
+        /* Agar tidak terlalu besar, kita atur lebar maksimal 80% dari konten */
+        max-width: 85%;
         object-fit: contain;
+      }
+      
+      /* Fallback jika img tidak ditemukan */
+      .letterhead-print div {
+        font-size: 12px;
+        color: gray;
+        padding: 10px;
       }
       
       .param-card, .two-columns, .results-panel-compact {
@@ -341,9 +356,9 @@
 </head>
 <body>
 <div class="card">
-  <!-- Kop surat untuk cetak -->
+  <!-- Kop surat untuk cetak - menggunakan ukuran proporsional dengan file asli -->
   <div class="letterhead-print" id="letterheadTemplate">
-    <img src="kop.jpg" alt="Kop Surat" onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<div style=\'font-size:11px; color:gray; padding:8px;\'>[kop.jpg tidak ditemukan]</div>'">
+    <img src="kop.jpg" alt="Kop Surat" style="display: block; margin: 0 auto; max-width: 100%; height: auto; width: auto;" onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<div style=\'font-size:12px; color:gray; padding:10px; text-align:center;\'>⚠️ Kop surat (kop.jpg) tidak ditemukan.<br>Pastikan file berada di folder yang sama.</div>'">
   </div>
 
   <div class="illustration">
@@ -450,7 +465,7 @@
       </div>
     </div>
 
-    <footer>🩺 LVEDD cut-off (wanita >5.6 cm, pria >6.0 cm) → kardiomegali. RV diameter normal &lt; 2.5 cm. dr Hendrik AmdAkup Sp.KKLP .</footer>
+    <footer>🩺 LVEDD cut-off (wanita >5.6 cm, pria >6.0 cm) → kardiomegali. RV diameter normal &lt; 2.5 cm. dr Hendrik Amd.Akup Sp.KKLP.</footer>
   </div>
 </div>
 
