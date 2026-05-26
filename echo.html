@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>Kalkulator EF M-Mode | dr. Hendrik | Parasternal Long Axis</title>
+  <title>Kalkulator EF & Dimensi Jantung | dr. Hendrik | M-Mode PLAX</title>
   <style>
     * {
       margin: 0;
@@ -21,18 +21,16 @@
       align-items: center;
     }
 
-    /* main card */
     .card {
-      max-width: 1100px;
+      max-width: 1200px;
       width: 100%;
       background: rgba(255, 255, 255, 0.96);
       border-radius: 2rem;
       box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0,0,0,0.05);
       overflow: hidden;
-      transition: all 0.2s;
     }
 
-    /* header illustration - gambar lokal Parasternal.png */
+    /* header illustration */
     .illustration {
       background: #0b2b3b;
       padding: 1.2rem 1.5rem 1rem 1.5rem;
@@ -44,7 +42,6 @@
       color: #ffdd99;
       font-size: 1.3rem;
       font-weight: 500;
-      letter-spacing: -0.2px;
       margin-bottom: 0.75rem;
     }
 
@@ -73,12 +70,10 @@
       font-style: italic;
     }
 
-    /* content area */
     .content {
       padding: 2rem 2rem 1.8rem 2rem;
     }
 
-    /* operator info */
     .operator-info {
       background: #eef3fc;
       padding: 0.5rem 1rem;
@@ -93,20 +88,18 @@
 
     .title-section {
       text-align: center;
-      margin-bottom: 1.8rem;
+      margin-bottom: 1.5rem;
     }
 
     .title-section h1 {
       font-size: 1.8rem;
       font-weight: 700;
       color: #1a4e6b;
-      letter-spacing: -0.3px;
     }
 
     .title-section p {
       color: #2c6979;
       margin-top: 0.4rem;
-      font-weight: 500;
       background: #eef3fc;
       display: inline-block;
       padding: 0.2rem 1rem;
@@ -114,74 +107,78 @@
       font-size: 0.85rem;
     }
 
-    /* form grid */
-    .input-grid {
+    /* form grids */
+    .param-grid {
       display: flex;
       flex-wrap: wrap;
-      gap: 2rem;
-      justify-content: center;
-      margin-bottom: 2rem;
+      gap: 1.5rem;
+      margin-bottom: 1.8rem;
+      justify-content: space-between;
     }
 
-    .input-box {
+    .param-card {
       flex: 1;
-      min-width: 200px;
+      min-width: 240px;
       background: #f8fafd;
-      padding: 1rem 1.5rem;
+      padding: 1rem 1.2rem;
       border-radius: 1.5rem;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.02), inset 0 1px 0 white;
       border: 1px solid #dce5ec;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
     }
 
-    .input-box label {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-weight: 700;
-      color: #0c4e6e;
-      margin-bottom: 0.6rem;
-      font-size: 1.1rem;
+    .param-card h3 {
+      font-size: 1rem;
+      color: #1a5d7a;
+      border-left: 4px solid #ffb347;
+      padding-left: 10px;
+      margin-bottom: 0.8rem;
     }
 
-    .input-box label span {
-      background: #1d6f9c;
-      color: white;
-      width: 28px;
-      height: 28px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 30px;
-      font-size: 0.9rem;
+    .input-row {
+      margin-bottom: 12px;
     }
 
-    .input-box input {
+    .input-row label {
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: #2c6979;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .input-row input, .input-row select {
       width: 100%;
-      padding: 12px 14px;
-      font-size: 1.2rem;
-      font-weight: 500;
+      padding: 8px 12px;
       border: 2px solid #cbdde9;
-      border-radius: 1.2rem;
+      border-radius: 1rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: 0.2s;
       background: white;
-      transition: all 0.2s;
-      font-family: monospace;
-      letter-spacing: 0.5px;
     }
 
-    .input-box input:focus {
+    .input-row input:focus, .input-row select:focus {
       outline: none;
       border-color: #ff9f4a;
       box-shadow: 0 0 0 3px rgba(255, 159, 74, 0.2);
     }
 
-    .input-box .unit {
-      font-size: 0.75rem;
+    .info-note {
+      font-size: 0.7rem;
       color: #5f7d95;
-      margin-top: 6px;
-      text-align: right;
+      margin-top: 4px;
     }
 
-    /* results panel */
+    .warning-badge {
+      background: #fff0e0;
+      border-radius: 20px;
+      padding: 6px 10px;
+      font-size: 0.75rem;
+      margin-top: 8px;
+      border-left: 3px solid #ff914d;
+    }
+
+    /* hasil LVEDV / EF area */
     .results-panel {
       background: linear-gradient(110deg, #eef2f7 0%, #e4ebf2 100%);
       border-radius: 1.8rem;
@@ -194,7 +191,6 @@
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
-      justify-content: space-between;
       margin-bottom: 1.2rem;
     }
 
@@ -202,79 +198,53 @@
       flex: 1;
       background: white;
       border-radius: 1.4rem;
-      padding: 1rem 0.8rem;
+      padding: 0.8rem;
       text-align: center;
-      box-shadow: 0 5px 12px rgba(0,0,0,0.05);
-      transition: transform 0.1s ease;
     }
 
     .res-label {
-      font-size: 0.85rem;
-      text-transform: uppercase;
+      font-size: 0.8rem;
       font-weight: 600;
-      letter-spacing: 0.5px;
       color: #2b6c8f;
     }
 
     .res-value {
-      font-size: 2rem;
+      font-size: 1.8rem;
       font-weight: 800;
-      margin: 0.3rem 0;
       color: #1a2f3f;
-      font-family: 'Courier New', monospace;
-    }
-
-    .res-unit {
-      font-size: 0.7rem;
-      color: #6c8eaa;
+      font-family: monospace;
     }
 
     .ef-interpret {
-      margin-top: 0.8rem;
-      font-size: 0.9rem;
       background: #ffffffc9;
-      padding: 0.6rem 1rem;
+      padding: 0.5rem 1rem;
       border-radius: 1.8rem;
       text-align: center;
+      font-size: 0.85rem;
     }
 
     .formula-info {
       background: #fff5e8;
-      padding: 0.8rem 1rem;
+      padding: 0.7rem 1rem;
       border-radius: 1.2rem;
       font-size: 0.75rem;
       border-left: 5px solid #ffb347;
-      margin-top: 1.2rem;
-      font-family: monospace;
-      color: #2c4a5e;
-    }
-
-    /* print button */
-    .print-btn-container {
-      text-align: right;
-      margin-bottom: 1rem;
+      margin-top: 1rem;
     }
 
     .btn-print {
       background-color: #1d6f9c;
       border: none;
       color: white;
-      padding: 10px 24px;
+      padding: 8px 20px;
       border-radius: 40px;
       font-weight: 600;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       cursor: pointer;
-      transition: all 0.2s;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      font-family: inherit;
-    }
-
-    .btn-print:hover {
-      background-color: #0e577c;
-      transform: scale(1.02);
+      margin-bottom: 1rem;
     }
 
     footer {
@@ -286,21 +256,22 @@
       margin-top: 0.5rem;
     }
 
-    /* styling untuk cetak PDF - ukuran gambar diperkecil agar muat 1 halaman */
+    /* Kop surat untuk cetak PDF - hidden secara default, muncul saat print */
+    .letterhead-print {
+      display: none;
+    }
+
     @media print {
       body {
         background: white;
-        padding: 0.2cm;
+        padding: 0;
         margin: 0;
       }
       .card {
         box-shadow: none;
         border-radius: 0;
         max-width: 100%;
-        margin: 0 auto;
-      }
-      .btn-print-container {
-        display: none;
+        margin: 0;
       }
       .btn-print {
         display: none;
@@ -308,308 +279,292 @@
       .print-hide {
         display: none;
       }
-      .illustration {
-        background: #f0f4f8;
-        border-bottom: 2px solid #aaa;
-        padding: 0.8rem 1rem;
-      }
-      /* Perkecil ukuran gambar saat print */
-      .image-container {
-        padding: 4px;
-        background: none;
-        max-width: 60%; /* batasi lebar kontainer gambar */
-        margin: 0 auto;
-      }
       .image-container img {
-        max-width: 100%;
-        height: auto;
-        max-height: 140px; /* tinggi maksimal saat print */
-        width: auto;
+        max-width: 45%;
+        max-height: 110px;
         object-fit: contain;
       }
-      .caption {
-        font-size: 0.65rem;
-        margin-top: 4px;
+      /* Tampilkan kop surat saat print */
+      .letterhead-print {
+        display: block;
+        text-align: center;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #ccc;
+        padding-bottom: 10px;
       }
-      .content {
-        padding: 1rem;
+      .letterhead-print img {
+        max-width: 100%;
+        height: auto;
+        max-height: 100px;
+        object-fit: contain;
+      }
+      .param-card {
+        break-inside: avoid;
+      }
+      .results-panel {
+        break-inside: avoid;
       }
       .operator-info {
         font-size: 0.8rem;
-        margin-bottom: 0.5rem;
-      }
-      .title-section h1 {
-        font-size: 1.4rem;
-      }
-      .input-box {
-        padding: 0.6rem 1rem;
-      }
-      .input-box input {
-        padding: 6px 10px;
-        font-size: 1rem;
-      }
-      .results-panel {
-        padding: 0.8rem;
-        margin: 0.5rem 0;
-      }
-      .res-value {
-        font-size: 1.4rem;
-      }
-      .res-label {
-        font-size: 0.7rem;
-      }
-      .formula-info {
-        font-size: 0.65rem;
-        padding: 0.5rem;
-      }
-      footer {
-        font-size: 0.6rem;
-        padding-top: 0.5rem;
-      }
-      /* pastikan tidak ada page break di dalam card */
-      .card {
-        page-break-inside: avoid;
-        break-inside: avoid;
-      }
-      body, .card, .content {
-        break-inside: avoid;
-        page-break-inside: avoid;
-      }
-    }
-
-    @media (max-width: 680px) {
-      body {
-        padding: 1rem;
-      }
-      .content {
-        padding: 1.5rem;
-      }
-      .res-value {
-        font-size: 1.5rem;
-      }
-      .input-box {
-        min-width: 100%;
-      }
-      .print-btn-container {
-        text-align: center;
       }
     }
   </style>
 </head>
 <body>
 <div class="card">
-  <!-- Bagian Atas: Gambar M-mode (Parasternal.png dari folder lokal) -->
+  <!-- Kop surat yang akan muncul hanya saat print (letakkan di awal card agar muncul sebelum konten) -->
+  <div class="letterhead-print">
+    <img src="kop.jpg" alt="Kop Surat" onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<div style=\'font-size:12px; color:gray;\'>[kop.jpg tidak ditemukan]</div>'">
+  </div>
+
   <div class="illustration">
     <h2>📐 M‑Mode · Parasternal Long Axis View (PLAX)</h2>
     <div class="image-container">
-      <img src="Parasternal.png" alt="Parasternal Long Axis M-Mode View" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22400%22%20height%3D%22200%22%20viewBox%3D%220%200%20400%20200%22%3E%3Crect%20width%3D%22400%22%20height%3D%22200%22%20fill%3D%22%23333%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%20fill%3D%22white%22%3EParasternal.png%20not%20found%3C%2Ftext%3E%3C%2Fsvg%3E';">
+      <img src="Parasternal.png" alt="Parasternal Long Axis M-Mode" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22400%22%20height%3D%22200%22%20viewBox%3D%220%200%20400%20200%22%3E%3Crect%20width%3D%22400%22%20height%3D%22200%22%20fill%3D%22%23333%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20fill%3D%22white%22%3EParasternal.png%3C%2Ftext%3E%3C%2Fsvg%3E';">
     </div>
-    <div class="caption">📷 Gambar referensi: M-Mode pada pandangan Parasternal Long Axis (LV: ventrikel kiri, LVIDd/s diukur dari septum ke dinding posterior)</div>
+    <div class="caption">M-Mode pada pandangan Parasternal Long Axis — LV & RV diameters</div>
   </div>
 
   <div class="content">
-    <!-- Tombol print untuk PDF -->
-    <div class="print-btn-container">
-      <button class="btn-print" id="printButton" title="Simpan sebagai PDF / Cetak">🖨️ Cetak / Simpan PDF</button>
-    </div>
-
-    <!-- Operator sesuai permintaan -->
-    <div class="operator-info">
-      👨‍⚕️ Operator: dr Hendrik Amd.Akup Sp.KKLP
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+      <div class="operator-info">👨‍⚕️ Operator: dr Hendrik Amd.Akup Sp.KKLP</div>
+      <button class="btn-print" id="printButton">🖨️ Cetak / Simpan PDF</button>
     </div>
 
     <div class="title-section">
-      <h1>⚡ Kalkulator Ejection Fraction (EF)</h1>
-      <p>Metode M‑Mode · Rumus Teichholz (Cube)</p>
+      <h1>⚡ Kalkulator EF & Dimensi Jantung</h1>
+      <p>Metode M‑Mode · Teichholz + Evaluasi Kardiomegali & RV</p>
     </div>
 
-    <!-- Input LVIDd dan LVIDs -->
-    <div class="input-grid">
-      <div class="input-box">
-        <label><span>❶</span> LVIDd (end‑diastolic)</label>
-        <input type="number" id="lvidD" value="5.0" step="0.1" placeholder="contoh: 5.0">
-        <div class="unit">📏 sentimeter (cm) · diastolik</div>
+    <!-- Data Pasien: Nama dan Tanggal Lahir -->
+    <div class="param-grid">
+      <div class="param-card">
+        <h3>👤 Data Pasien</h3>
+        <div class="input-row">
+          <label>Nama Pasien</label>
+          <input type="text" id="patientName" placeholder="contoh: Ani Susanti" value="">
+        </div>
+        <div class="input-row">
+          <label>Tanggal Lahir</label>
+          <input type="date" id="patientDob" value="">
+        </div>
+        <div class="info-note">Data akan tercantum pada cetakan PDF</div>
       </div>
-      <div class="input-box">
-        <label><span>❷</span> LVIDs (end‑systolic)</label>
-        <input type="number" id="lvidS" value="3.2" step="0.1" placeholder="contoh: 3.2">
-        <div class="unit">📏 sentimeter (cm) · sistolik</div>
+
+      <!-- LVEDD + gender -->
+      <div class="param-card">
+        <h3>📏 LVEDD (Left Ventricular End-Diastolic Diameter)</h3>
+        <div class="input-row">
+          <label>LVEDD (cm) *</label>
+          <input type="number" id="lveddInput" value="5.2" step="0.1" placeholder="contoh: 5.2">
+          <div class="info-note">Diameter ventrikel kiri saat diastol (normal dewasa: ~3.9–5.6 cm wanita, 4.2–5.9 cm pria)</div>
+        </div>
+        <div class="input-row">
+          <label>Jenis Kelamin Pasien</label>
+          <select id="genderSelect">
+            <option value="wanita">Wanita</option>
+            <option value="pria">Pria</option>
+          </select>
+        </div>
+        <div id="cardiomegaliWarning" class="warning-badge" style="background:#fff0e0;">⚖️ Status: Menunggu input LVEDD</div>
+      </div>
+
+      <!-- Diameter Ventrikel Kanan -->
+      <div class="param-card">
+        <h3>📐 Right Ventricle Diameter (RVD)</h3>
+        <div class="input-row">
+          <label>Diameter Ventrikel Kanan (cm) *</label>
+          <input type="number" id="rvdInput" value="2.4" step="0.1" placeholder="contoh: 2.4">
+          <div class="info-note">Nilai normal basal RV diameter < 2.5–3.0 cm (umumnya < 4.1 cm pada proyeksi khusus, namun cut-off ringan > 2.5-3.0 cm dianggap borderline/dilatasi)</div>
+        </div>
+        <div id="rvWarning" class="warning-badge" style="background:#eef2ff;">💓 Status RV: -</div>
       </div>
     </div>
 
-    <!-- Panel hasil perhitungan -->
+    <!-- Input LVIDd & LVIDs untuk EF -->
+    <div class="param-grid">
+      <div class="param-card">
+        <h3>📊 M-Mode LV Dimensions (EF Teichholz)</h3>
+        <div class="input-row">
+          <label>LVIDd (cm) — end-diastolic</label>
+          <input type="number" id="lvidD" value="5.0" step="0.1">
+        </div>
+        <div class="input-row">
+          <label>LVIDs (cm) — end-systolic</label>
+          <input type="number" id="lvidS" value="3.2" step="0.1">
+        </div>
+        <div class="info-note">LV internal diameter diastole/sistole (Teichholz formula)</div>
+      </div>
+    </div>
+
+    <!-- Hasil EF + EDV/ESV -->
     <div class="results-panel">
       <div class="result-cards">
-        <div class="res-item">
-          <div class="res-label">EDV (Volume Diastolik)</div>
-          <div class="res-value" id="edvValue">--</div>
-          <div class="res-unit">mL</div>
-        </div>
-        <div class="res-item">
-          <div class="res-label">ESV (Volume Sistolik)</div>
-          <div class="res-value" id="esvValue">--</div>
-          <div class="res-unit">mL</div>
-        </div>
-        <div class="res-item">
-          <div class="res-label">Ejection Fraction</div>
-          <div class="res-value" id="efValue">--</div>
-          <div class="res-unit">%</div>
-        </div>
+        <div class="res-item"><div class="res-label">EDV</div><div class="res-value" id="edvValue">--</div><div>mL</div></div>
+        <div class="res-item"><div class="res-label">ESV</div><div class="res-value" id="esvValue">--</div><div>mL</div></div>
+        <div class="res-item"><div class="res-label">Ejection Fraction</div><div class="res-value" id="efValue">--</div><div>%</div></div>
       </div>
-      <div id="efInterpret" class="ef-interpret" style="font-weight: 500;">⏳ Masukkan nilai LVIDd dan LVIDs</div>
+      <div id="efInterpret" class="ef-interpret">⏳ Masukkan LVIDd & LVIDs</div>
     </div>
 
-    <!-- Menampilkan rumus yang dipakai sesuai upload -->
     <div class="formula-info">
-      <strong>📐 Rumus yang digunakan (Teichholz M‑Mode) :</strong><br>
-      EDV = [7.0 / (2.4 + LVIDd)] × (LVIDd)<sup>3</sup> &nbsp;&nbsp; | &nbsp;&nbsp;
-      ESV = [7.0 / (2.4 + LVIDs)] × (LVIDs)<sup>3</sup><br>
-      EF (%) = [(EDV − ESV) / EDV] × 100<br>
-      <span style="color:#b4621a;">※ Volume dalam mL, dimensi linear dalam cm. Metode Teichholz akurat untuk LV normal hingga dilatasi sedang.</span>
+      <strong>📐 Rumus EF (Teichholz):</strong> EDV = 7.0/(2.4+LVIDd) × LVIDd³ ; ESV = 7.0/(2.4+LVIDs) × LVIDs³ ; EF(%) = (EDV-ESV)/EDV×100 <br>
+      <strong>🫀 Kardiomegali:</strong> LVEDD > 5.6 cm (wanita) atau > 6.0 cm (pria) → kardiomegali / LV dilatasi.<br>
+      <strong>📏 RV Dilation:</strong> Diameter ventrikel kanan normal < 2.5-3.0 cm, dianggap melebar jika ≥ 2.5-3.0 cm tergantung referensi; cut-off ≥ 3.0 cm abnormal.
     </div>
-    <footer>
-      🫀 Berdasarkan panduan ASE • M‑Mode parasternal long axis • Input LVIDd (diastole) dan LVIDs (sistole)
-    </footer>
+    <footer>🩺 Panduan klinis: LVEDD cut-off berdasarkan ACC/AHA; RV diameter basal mengacu pada ASE. Hasil hanya untuk edukasi.</footer>
   </div>
 </div>
 
 <script>
-  // Elemen DOM
-  const inputD = document.getElementById('lvidD');
-  const inputS = document.getElementById('lvidS');
+  // DOM elements
+  const lvidDInput = document.getElementById('lvidD');
+  const lvidSInput = document.getElementById('lvidS');
   const edvSpan = document.getElementById('edvValue');
   const esvSpan = document.getElementById('esvValue');
   const efSpan = document.getElementById('efValue');
   const efInterpretDiv = document.getElementById('efInterpret');
+  
+  // LVEDD + gender
+  const lveddInput = document.getElementById('lveddInput');
+  const genderSelect = document.getElementById('genderSelect');
+  const cardiomegaliDiv = document.getElementById('cardiomegaliWarning');
+  
+  // RV Diameter
+  const rvdInput = document.getElementById('rvdInput');
+  const rvWarningDiv = document.getElementById('rvWarning');
 
-  // Fungsi menghitung EDV berdasarkan rumus cube Teichholz
+  // Data pasien (tidak mempengaruhi perhitungan, hanya untuk tampilan cetak)
+  // tetap disediakan untuk kelengkapan
+
+  // --- Fungsi Teichholz EDV ---
   function hitungEDV(lvid_d) {
     if (isNaN(lvid_d) || lvid_d <= 0) return null;
     const denominator = 2.4 + lvid_d;
     const fraction = 7.0 / denominator;
-    const cube = Math.pow(lvid_d, 3);
-    return fraction * cube;
+    return fraction * Math.pow(lvid_d, 3);
   }
-
-  // Fungsi menghitung ESV berdasarkan rumus cube Teichholz
   function hitungESV(lvid_s) {
     if (isNaN(lvid_s) || lvid_s <= 0) return null;
     const denominator = 2.4 + lvid_s;
     const fraction = 7.0 / denominator;
-    const cube = Math.pow(lvid_s, 3);
-    return fraction * cube;
+    return fraction * Math.pow(lvid_s, 3);
   }
 
-  // Menghitung EF dan update tampilan
-  function updateCalculation() {
-    let rawD = inputD.value.trim();
-    let rawS = inputS.value.trim();
-    let lvidD = parseFloat(rawD);
-    let lvidS = parseFloat(rawS);
-
-    let isValid = true;
-    if (isNaN(lvidD) || lvidD <= 0) {
-      isValid = false;
-      edvSpan.innerText = 'Invalid';
-    }
-    if (isNaN(lvidS) || lvidS <= 0) {
-      isValid = false;
-      esvSpan.innerText = 'Invalid';
-    }
-
-    if (!isValid) {
+  // Update EF dan interpretasi
+  function updateEF() {
+    let lvidD = parseFloat(lvidDInput.value);
+    let lvidS = parseFloat(lvidSInput.value);
+    if (isNaN(lvidD) || lvidD <= 0 || isNaN(lvidS) || lvidS <= 0) {
       edvSpan.innerText = '---';
       esvSpan.innerText = '---';
       efSpan.innerText = '---';
-      efInterpretDiv.innerHTML = '⚠️ Masukkan nilai positif (contoh: LVIDd = 4.5 cm, LVIDs = 3.0 cm)';
+      efInterpretDiv.innerHTML = '⚠️ Masukkan LVIDd & LVIDs > 0';
       return;
     }
-
     let edv = hitungEDV(lvidD);
     let esv = hitungESV(lvidS);
-
     if (edv === null || esv === null) {
       edvSpan.innerText = 'Error';
       esvSpan.innerText = 'Error';
       efSpan.innerText = '---';
-      efInterpretDiv.innerHTML = '❌ Periksa kembali input (nilai harus > 0)';
+      efInterpretDiv.innerHTML = '❌ Periksa nilai input';
       return;
     }
-
     let ef = ((edv - esv) / edv) * 100;
     if (ef < 0) ef = 0;
     if (ef > 100) ef = 100;
-
     edvSpan.innerText = edv.toFixed(1);
     esvSpan.innerText = esv.toFixed(1);
     efSpan.innerText = ef.toFixed(1);
-
-    let interpretText = '';
+    
     let badgeColor = '';
-    if (ef >= 55) {
-      interpretText = '✅ EF Normal (≥55%) — Fungsi sistolik baik.';
-      badgeColor = '#2c7a4d';
-    } else if (ef >= 45 && ef < 55) {
-      interpretText = '⚠️ EF Borderline (45-54%) — Fungsi sistolik ringan menurun. Pertimbangkan evaluasi lebih lanjut.';
-      badgeColor = '#e68a2e';
-    } else if (ef >= 35 && ef < 45) {
-      interpretText = '🔻 EF Menurun sedang (35-44%) — Disfungsi sistolik sedang.';
-      badgeColor = '#c95a0f';
-    } else if (ef < 35) {
-      interpretText = '🩺 EF sangat rendah (<35%) — Disfungsi sistolik berat. Konsultasi kardiologi.';
-      badgeColor = '#ac3e2f';
-    } else {
-      interpretText = 'Hasil EF tidak dapat diinterpretasi secara standar.';
-    }
-
+    let interpretText = '';
+    if (ef >= 55) { interpretText = '✅ EF Normal (≥55%)'; badgeColor = '#2c7a4d'; }
+    else if (ef >= 45) { interpretText = '⚠️ EF Borderline (45-54%)'; badgeColor = '#e68a2e'; }
+    else if (ef >= 35) { interpretText = '🔻 EF Menurun sedang (35-44%)'; badgeColor = '#c95a0f'; }
+    else { interpretText = '🩺 EF sangat rendah (<35%)'; badgeColor = '#ac3e2f'; }
+    
     let warningMsg = '';
-    if (lvidD < 3.5 && lvidD > 0) {
-      warningMsg = ' (⚠️ LVIDd sangat kecil, hasil volume mungkin underestimate)';
-    }
-    if (lvidS > lvidD) {
-      warningMsg = ' (⚠️ LVIDs lebih besar dari LVIDd, periksa nilai diastolik & sistolik)';
-    }
-
-    efInterpretDiv.innerHTML = `<span style="background: ${badgeColor}; color:white; padding:4px 12px; border-radius:40px;">EF ${ef.toFixed(1)}%</span> ${interpretText}${warningMsg}`;
+    if (lvidS > lvidD) warningMsg = ' (⚠️ LVIDs > LVIDd)';
+    efInterpretDiv.innerHTML = `<span style="background:${badgeColor}; color:white; padding:4px 12px; border-radius:40px;">EF ${ef.toFixed(1)}%</span> ${interpretText}${warningMsg}`;
   }
 
-  // Event listener untuk perubahan input
-  inputD.addEventListener('input', updateCalculation);
-  inputS.addEventListener('input', updateCalculation);
+  // Update Cardiomegali berdasarkan LVEDD dan Gender
+  function updateCardiomegali() {
+    let lvedd = parseFloat(lveddInput.value);
+    if (isNaN(lvedd) || lvedd <= 0) {
+      cardiomegaliDiv.innerHTML = '⚠️ LVEDD: masukkan nilai dalam cm';
+      cardiomegaliDiv.style.background = '#ffe0e0';
+      return;
+    }
+    const gender = genderSelect.value;
+    let isCardiomegali = false;
+    let threshold = '';
+    if (gender === 'wanita') {
+      if (lvedd > 5.6) isCardiomegali = true;
+      threshold = '5.6 cm (wanita)';
+    } else {
+      if (lvedd > 6.0) isCardiomegali = true;
+      threshold = '6.0 cm (pria)';
+    }
+    if (isCardiomegali) {
+      cardiomegaliDiv.innerHTML = `⚠️ KARDIOMEGALI / LV DILATASI: LVEDD = ${lvedd.toFixed(1)} cm melebihi batas normal (${threshold}). Evaluasi lebih lanjut.`;
+      cardiomegaliDiv.style.background = '#ffded5';
+      cardiomegaliDiv.style.borderLeftColor = '#c7362b';
+    } else {
+      cardiomegaliDiv.innerHTML = `✅ LVEDD normal: ${lvedd.toFixed(1)} cm (batas normal ≤ ${threshold}). Tidak kardiomegali.`;
+      cardiomegaliDiv.style.background = '#e0f3e8';
+      cardiomegaliDiv.style.borderLeftColor = '#2e8b57';
+    }
+  }
 
-  // Fungsi cetak / simpan PDF
-  const printBtn = document.getElementById('printButton');
-  printBtn.addEventListener('click', () => {
-    window.print();
-  });
+  // Update Right Ventricle warning (normal < 2.5-3.0 cm) : kita beri peringatan jika ≥ 2.5 cm borderline, ≥ 3.0 definite dilation
+  function updateRVStatus() {
+    let rvd = parseFloat(rvdInput.value);
+    if (isNaN(rvd) || rvd <= 0) {
+      rvWarningDiv.innerHTML = '📏 Masukkan diameter ventrikel kanan (cm)';
+      rvWarningDiv.style.background = '#f0f0fa';
+      return;
+    }
+    if (rvd < 2.5) {
+      rvWarningDiv.innerHTML = `✅ Diameter RV normal: ${rvd.toFixed(1)} cm (< 2.5 cm). Ukuran baik.`;
+      rvWarningDiv.style.background = '#e0f3e8';
+    } else if (rvd >= 2.5 && rvd < 3.0) {
+      rvWarningDiv.innerHTML = `⚠️ Batas atas normal / borderline dilatasi RV: ${rvd.toFixed(1)} cm (2.5–3.0 cm). Pertimbangkan korelasi klinis.`;
+      rvWarningDiv.style.background = '#fff0d6';
+    } else if (rvd >= 3.0) {
+      rvWarningDiv.innerHTML = `⚠️⚠️ DILATASI VENTRIKEL KANAN: ${rvd.toFixed(1)} cm ≥ 3.0 cm. Abnormal, evaluasi lebih lanjut (hipertensi pulmonal, regurgitasi trikuspid, dll).`;
+      rvWarningDiv.style.background = '#ffd9d4';
+    } else {
+      rvWarningDiv.innerHTML = `Nilai RV: ${rvd.toFixed(1)} cm.`;
+    }
+  }
 
-  // Saat halaman dimuat
+  // Fungsi refresh semua update dari berbagai input
+  function refreshAll() {
+    updateEF();
+    updateCardiomegali();
+    updateRVStatus();
+  }
+
+  // Event listeners
+  lvidDInput.addEventListener('input', refreshAll);
+  lvidSInput.addEventListener('input', refreshAll);
+  lveddInput.addEventListener('input', refreshAll);
+  genderSelect.addEventListener('change', refreshAll);
+  rvdInput.addEventListener('input', refreshAll);
+
+  // Print to PDF (kop surat sudah ada di media print)
+  document.getElementById('printButton').addEventListener('click', () => window.print());
+
+  // Initial load
   window.addEventListener('DOMContentLoaded', () => {
-    if (inputD.value === '') inputD.value = '5.0';
-    if (inputS.value === '') inputS.value = '3.2';
-    updateCalculation();
-  });
-
-  // Validasi blur
-  inputD.addEventListener('blur', function() {
-    let val = parseFloat(this.value);
-    if (isNaN(val) || val <= 0) {
-      this.value = '';
-      updateCalculation();
-    } else {
-      this.value = val.toFixed(2);
-      updateCalculation();
-    }
-  });
-  inputS.addEventListener('blur', function() {
-    let val = parseFloat(this.value);
-    if (isNaN(val) || val <= 0) {
-      this.value = '';
-      updateCalculation();
-    } else {
-      this.value = val.toFixed(2);
-      updateCalculation();
-    }
+    if (lvidDInput.value === '') lvidDInput.value = '5.0';
+    if (lvidSInput.value === '') lvidSInput.value = '3.2';
+    if (lveddInput.value === '') lveddInput.value = '5.2';
+    if (rvdInput.value === '') rvdInput.value = '2.4';
+    refreshAll();
   });
 </script>
 </body>
