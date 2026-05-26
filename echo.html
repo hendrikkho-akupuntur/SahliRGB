@@ -33,22 +33,22 @@
     /* header illustration */
     .illustration {
       background: #0b2b3b;
-      padding: 1.2rem 1.5rem 1rem 1.5rem;
+      padding: 1rem 1.5rem 0.8rem 1.5rem;
       border-bottom: 4px solid #ffb347;
       text-align: center;
     }
 
     .illustration h2 {
       color: #ffdd99;
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       font-weight: 500;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.5rem;
     }
 
     .image-container {
       background: #07222e;
-      border-radius: 24px;
-      padding: 8px;
+      border-radius: 20px;
+      padding: 6px;
       display: inline-block;
       max-width: 100%;
       margin: 0 auto;
@@ -59,99 +59,100 @@
       height: auto;
       display: block;
       margin: 0 auto;
-      border-radius: 16px;
+      border-radius: 14px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      max-height: 140px;
     }
 
     .caption {
-      font-size: 0.8rem;
+      font-size: 0.7rem;
       color: #bbd4e3;
-      margin-top: 10px;
+      margin-top: 6px;
       font-style: italic;
     }
 
     .content {
-      padding: 2rem 2rem 1.8rem 2rem;
+      padding: 1.5rem 1.8rem 1.2rem 1.8rem;
     }
 
     .operator-info {
       background: #eef3fc;
-      padding: 0.5rem 1rem;
+      padding: 0.4rem 1rem;
       border-radius: 2rem;
       display: inline-block;
-      margin-bottom: 1rem;
+      margin-bottom: 0.8rem;
       font-weight: 600;
       color: #1a4e6b;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       border: 1px solid #cbdae6;
     }
 
     .title-section {
       text-align: center;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
     }
 
     .title-section h1 {
-      font-size: 1.8rem;
+      font-size: 1.5rem;
       font-weight: 700;
       color: #1a4e6b;
     }
 
     .title-section p {
       color: #2c6979;
-      margin-top: 0.4rem;
+      margin-top: 0.2rem;
       background: #eef3fc;
       display: inline-block;
-      padding: 0.2rem 1rem;
+      padding: 0.15rem 1rem;
       border-radius: 60px;
-      font-size: 0.85rem;
+      font-size: 0.75rem;
     }
 
     /* form grids */
     .param-grid {
       display: flex;
       flex-wrap: wrap;
-      gap: 1.5rem;
-      margin-bottom: 1.8rem;
+      gap: 1.2rem;
+      margin-bottom: 1.2rem;
       justify-content: space-between;
     }
 
     .param-card {
       flex: 1;
-      min-width: 240px;
+      min-width: 220px;
       background: #f8fafd;
-      padding: 1rem 1.2rem;
-      border-radius: 1.5rem;
+      padding: 0.8rem 1rem;
+      border-radius: 1.2rem;
       border: 1px solid #dce5ec;
       box-shadow: 0 2px 6px rgba(0,0,0,0.02);
     }
 
     .param-card h3 {
-      font-size: 1rem;
+      font-size: 0.9rem;
       color: #1a5d7a;
       border-left: 4px solid #ffb347;
-      padding-left: 10px;
-      margin-bottom: 0.8rem;
+      padding-left: 8px;
+      margin-bottom: 0.6rem;
     }
 
     .input-row {
-      margin-bottom: 12px;
+      margin-bottom: 8px;
     }
 
     .input-row label {
       font-weight: 600;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: #2c6979;
       display: block;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
     }
 
     .input-row input, .input-row select {
       width: 100%;
-      padding: 8px 12px;
+      padding: 6px 10px;
       border: 2px solid #cbdde9;
       border-radius: 1rem;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       font-weight: 500;
       transition: 0.2s;
       background: white;
@@ -164,157 +165,185 @@
     }
 
     .info-note {
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       color: #5f7d95;
-      margin-top: 4px;
+      margin-top: 3px;
     }
 
     .warning-badge {
       background: #fff0e0;
       border-radius: 20px;
-      padding: 6px 10px;
-      font-size: 0.75rem;
-      margin-top: 8px;
+      padding: 5px 8px;
+      font-size: 0.7rem;
+      margin-top: 6px;
       border-left: 3px solid #ff914d;
     }
 
-    /* hasil LVEDV / EF area */
-    .results-panel {
-      background: linear-gradient(110deg, #eef2f7 0%, #e4ebf2 100%);
-      border-radius: 1.8rem;
-      padding: 1.5rem;
-      margin: 1rem 0 1.5rem;
-      border: 1px solid #cbdae6;
-    }
-
-    .result-cards {
+    /* 2 kolom untuk M-Mode LV Dimensions dan Hasil EF */
+    .two-columns {
       display: flex;
       flex-wrap: wrap;
-      gap: 1rem;
+      gap: 1.2rem;
       margin-bottom: 1.2rem;
     }
-
-    .res-item {
+    .col-left {
       flex: 1;
-      background: white;
-      border-radius: 1.4rem;
-      padding: 0.8rem;
-      text-align: center;
+      min-width: 220px;
     }
-
-    .res-label {
-      font-size: 0.8rem;
+    .col-right {
+      flex: 1;
+      min-width: 220px;
+    }
+    .results-panel-compact {
+      background: linear-gradient(110deg, #eef2f7 0%, #e4ebf2 100%);
+      border-radius: 1.2rem;
+      padding: 0.8rem 1rem;
+      border: 1px solid #cbdae6;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .result-cards-compact {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .res-item-compact {
+      background: white;
+      border-radius: 1rem;
+      padding: 0.5rem;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .res-label-compact {
+      font-size: 0.7rem;
       font-weight: 600;
       color: #2b6c8f;
+      letter-spacing: 0.3px;
     }
-
-    .res-value {
-      font-size: 1.8rem;
+    .res-value-compact {
+      font-size: 1.6rem;
       font-weight: 800;
       color: #1a2f3f;
       font-family: monospace;
+      line-height: 1.2;
     }
-
-    .ef-interpret {
+    .ef-interpret-compact {
       background: #ffffffc9;
-      padding: 0.5rem 1rem;
-      border-radius: 1.8rem;
-      text-align: center;
-      font-size: 0.85rem;
-    }
-
-    .formula-info {
-      background: #fff5e8;
-      padding: 0.7rem 1rem;
+      padding: 0.4rem 0.6rem;
       border-radius: 1.2rem;
+      text-align: center;
       font-size: 0.75rem;
-      border-left: 5px solid #ffb347;
-      margin-top: 1rem;
+      margin-top: 0.5rem;
     }
 
     .btn-print {
       background-color: #1d6f9c;
       border: none;
       color: white;
-      padding: 8px 20px;
+      padding: 6px 18px;
       border-radius: 40px;
       font-weight: 600;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      margin-bottom: 1rem;
+      gap: 6px;
+      margin-bottom: 0.5rem;
     }
 
     footer {
       text-align: center;
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       color: #68869e;
       border-top: 1px solid #d4e0e8;
-      padding-top: 1rem;
-      margin-top: 0.5rem;
+      padding-top: 0.6rem;
+      margin-top: 0.8rem;
     }
 
-    /* Kop surat untuk cetak PDF - hidden secara default, muncul saat print */
+    /* Kop surat untuk cetak PDF */
     .letterhead-print {
       display: none;
     }
 
+    /* Style untuk cetak PDF dengan margin 0 dan kop surat di setiap halaman */
     @media print {
+      @page {
+        margin: 0cm;
+        size: A4;
+      }
+      
       body {
         background: white;
         padding: 0;
         margin: 0;
       }
+      
       .card {
         box-shadow: none;
         border-radius: 0;
         max-width: 100%;
         margin: 0;
+        padding-top: 0;
       }
+      
       .btn-print {
         display: none;
       }
-      .print-hide {
+      
+      .illustration {
         display: none;
       }
-      .image-container img {
-        max-width: 45%;
-        max-height: 110px;
-        object-fit: contain;
+      
+      .content {
+        padding: 0.6cm 0.8cm 0.6cm 0.8cm;
+        margin-top: 0;
       }
-      /* Tampilkan kop surat saat print */
+      
       .letterhead-print {
         display: block;
         text-align: center;
-        margin-bottom: 20px;
-        border-bottom: 2px solid #ccc;
-        padding-bottom: 10px;
+        margin-bottom: 12px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #1a4e6b;
       }
+      
       .letterhead-print img {
         max-width: 100%;
         height: auto;
-        max-height: 100px;
+        max-height: 70px;
         object-fit: contain;
       }
-      .param-card {
+      
+      .param-card, .two-columns, .results-panel-compact {
         break-inside: avoid;
+        page-break-inside: avoid;
       }
-      .results-panel {
-        break-inside: avoid;
-      }
+      
       .operator-info {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
+      }
+      
+      .image-container {
+        display: none;
+      }
+      
+      .warning-badge {
+        font-size: 0.65rem;
+      }
+      
+      .res-value-compact {
+        font-size: 1.3rem;
       }
     }
   </style>
 </head>
 <body>
 <div class="card">
-  <!-- Kop surat yang akan muncul hanya saat print (letakkan di awal card agar muncul sebelum konten) -->
-  <div class="letterhead-print">
-    <img src="kop.jpg" alt="Kop Surat" onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<div style=\'font-size:12px; color:gray;\'>[kop.jpg tidak ditemukan]</div>'">
+  <!-- Kop surat untuk cetak -->
+  <div class="letterhead-print" id="letterheadTemplate">
+    <img src="kop.jpg" alt="Kop Surat" onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<div style=\'font-size:11px; color:gray; padding:8px;\'>[kop.jpg tidak ditemukan]</div>'">
   </div>
 
   <div class="illustration">
@@ -353,66 +382,75 @@
 
       <!-- LVEDD + gender -->
       <div class="param-card">
-        <h3>📏 LVEDD (Left Ventricular End-Diastolic Diameter)</h3>
+        <h3>📏 LVEDD (LV End-Diastolic Diameter)</h3>
         <div class="input-row">
           <label>LVEDD (cm) *</label>
           <input type="number" id="lveddInput" value="5.2" step="0.1" placeholder="contoh: 5.2">
-          <div class="info-note">Diameter ventrikel kiri saat diastol (normal dewasa: ~3.9–5.6 cm wanita, 4.2–5.9 cm pria)</div>
+          <div class="info-note">Normal: wan < 5.6 | pria < 6.0 cm</div>
         </div>
         <div class="input-row">
-          <label>Jenis Kelamin Pasien</label>
+          <label>Jenis Kelamin</label>
           <select id="genderSelect">
             <option value="wanita">Wanita</option>
             <option value="pria">Pria</option>
           </select>
         </div>
-        <div id="cardiomegaliWarning" class="warning-badge" style="background:#fff0e0;">⚖️ Status: Menunggu input LVEDD</div>
+        <div id="cardiomegaliWarning" class="warning-badge">⚖️ Status: Menunggu input LVEDD</div>
       </div>
 
       <!-- Diameter Ventrikel Kanan -->
       <div class="param-card">
         <h3>📐 Right Ventricle Diameter (RVD)</h3>
         <div class="input-row">
-          <label>Diameter Ventrikel Kanan (cm) *</label>
+          <label>Diameter RV (cm) *</label>
           <input type="number" id="rvdInput" value="2.4" step="0.1" placeholder="contoh: 2.4">
-          <div class="info-note">Nilai normal basal RV diameter < 2.5–3.0 cm (umumnya < 4.1 cm pada proyeksi khusus, namun cut-off ringan > 2.5-3.0 cm dianggap borderline/dilatasi)</div>
+          <div class="info-note">Normal < 2.5 cm | borderline 2.5-3.0 | dilatasi ≥ 3.0</div>
         </div>
-        <div id="rvWarning" class="warning-badge" style="background:#eef2ff;">💓 Status RV: -</div>
+        <div id="rvWarning" class="warning-badge">💓 Status RV: -</div>
       </div>
     </div>
 
-    <!-- Input LVIDd & LVIDs untuk EF -->
-    <div class="param-grid">
-      <div class="param-card">
-        <h3>📊 M-Mode LV Dimensions (EF Teichholz)</h3>
-        <div class="input-row">
-          <label>LVIDd (cm) — end-diastolic</label>
-          <input type="number" id="lvidD" value="5.0" step="0.1">
+    <!-- 2 Kolom: M-Mode LV Dimensions (kiri) dan Hasil EDV/ESV/EF (kanan) -->
+    <div class="two-columns">
+      <div class="col-left">
+        <div class="param-card" style="height: 100%;">
+          <h3>📊 M-Mode LV Dimensions (EF Teichholz)</h3>
+          <div class="input-row">
+            <label>LVIDd (cm) — end-diastolic</label>
+            <input type="number" id="lvidD" value="5.0" step="0.1">
+          </div>
+          <div class="input-row">
+            <label>LVIDs (cm) — end-systolic</label>
+            <input type="number" id="lvidS" value="3.2" step="0.1">
+          </div>
+          <div class="info-note">LV internal diameter (Teichholz formula → EDV, ESV, EF)</div>
         </div>
-        <div class="input-row">
-          <label>LVIDs (cm) — end-systolic</label>
-          <input type="number" id="lvidS" value="3.2" step="0.1">
+      </div>
+      <div class="col-right">
+        <div class="results-panel-compact">
+          <div class="result-cards-compact">
+            <div class="res-item-compact">
+              <div class="res-label-compact">EDV (Volume Diastolik)</div>
+              <div class="res-value-compact" id="edvValue">--</div>
+              <div style="font-size: 0.7rem;">mL</div>
+            </div>
+            <div class="res-item-compact">
+              <div class="res-label-compact">ESV (Volume Sistolik)</div>
+              <div class="res-value-compact" id="esvValue">--</div>
+              <div style="font-size: 0.7rem;">mL</div>
+            </div>
+            <div class="res-item-compact">
+              <div class="res-label-compact">Ejection Fraction</div>
+              <div class="res-value-compact" id="efValue">--</div>
+              <div style="font-size: 0.7rem;">%</div>
+            </div>
+          </div>
+          <div id="efInterpret" class="ef-interpret-compact">⏳ Masukkan LVIDd & LVIDs</div>
         </div>
-        <div class="info-note">LV internal diameter diastole/sistole (Teichholz formula)</div>
       </div>
     </div>
 
-    <!-- Hasil EF + EDV/ESV -->
-    <div class="results-panel">
-      <div class="result-cards">
-        <div class="res-item"><div class="res-label">EDV</div><div class="res-value" id="edvValue">--</div><div>mL</div></div>
-        <div class="res-item"><div class="res-label">ESV</div><div class="res-value" id="esvValue">--</div><div>mL</div></div>
-        <div class="res-item"><div class="res-label">Ejection Fraction</div><div class="res-value" id="efValue">--</div><div>%</div></div>
-      </div>
-      <div id="efInterpret" class="ef-interpret">⏳ Masukkan LVIDd & LVIDs</div>
-    </div>
-
-    <div class="formula-info">
-      <strong>📐 Rumus EF (Teichholz):</strong> EDV = 7.0/(2.4+LVIDd) × LVIDd³ ; ESV = 7.0/(2.4+LVIDs) × LVIDs³ ; EF(%) = (EDV-ESV)/EDV×100 <br>
-      <strong>🫀 Kardiomegali:</strong> LVEDD > 5.6 cm (wanita) atau > 6.0 cm (pria) → kardiomegali / LV dilatasi.<br>
-      <strong>📏 RV Dilation:</strong> Diameter ventrikel kanan normal < 2.5-3.0 cm, dianggap melebar jika ≥ 2.5-3.0 cm tergantung referensi; cut-off ≥ 3.0 cm abnormal.
-    </div>
-    <footer>🩺 Panduan klinis: LVEDD cut-off berdasarkan ACC/AHA; RV diameter basal mengacu pada ASE. dr Hendrik AmdAkup Sp.KKLP.</footer>
+    <footer>🩺 LVEDD cut-off (wanita >5.6 cm, pria >6.0 cm) → kardiomegali. RV diameter normal &lt; 2.5 cm. dr Hendrik AmdAkup Sp.KKLP .</footer>
   </div>
 </div>
 
@@ -434,10 +472,7 @@
   const rvdInput = document.getElementById('rvdInput');
   const rvWarningDiv = document.getElementById('rvWarning');
 
-  // Data pasien (tidak mempengaruhi perhitungan, hanya untuk tampilan cetak)
-  // tetap disediakan untuk kelengkapan
-
-  // --- Fungsi Teichholz EDV ---
+  // --- Fungsi Teichholz EDV/ESV ---
   function hitungEDV(lvid_d) {
     if (isNaN(lvid_d) || lvid_d <= 0) return null;
     const denominator = 2.4 + lvid_d;
@@ -487,10 +522,10 @@
     
     let warningMsg = '';
     if (lvidS > lvidD) warningMsg = ' (⚠️ LVIDs > LVIDd)';
-    efInterpretDiv.innerHTML = `<span style="background:${badgeColor}; color:white; padding:4px 12px; border-radius:40px;">EF ${ef.toFixed(1)}%</span> ${interpretText}${warningMsg}`;
+    efInterpretDiv.innerHTML = `<span style="background:${badgeColor}; color:white; padding:2px 10px; border-radius:30px; font-size:0.7rem;">EF ${ef.toFixed(1)}%</span> ${interpretText}${warningMsg}`;
   }
 
-  // Update Cardiomegali berdasarkan LVEDD dan Gender
+  // Update Cardiomegali
   function updateCardiomegali() {
     let lvedd = parseFloat(lveddInput.value);
     if (isNaN(lvedd) || lvedd <= 0) {
@@ -509,39 +544,38 @@
       threshold = '6.0 cm (pria)';
     }
     if (isCardiomegali) {
-      cardiomegaliDiv.innerHTML = `⚠️ KARDIOMEGALI / LV DILATASI: LVEDD = ${lvedd.toFixed(1)} cm melebihi batas normal (${threshold}). Evaluasi lebih lanjut.`;
+      cardiomegaliDiv.innerHTML = `⚠️ KARDIOMEGALI: LVEDD = ${lvedd.toFixed(1)} cm > ${threshold}`;
       cardiomegaliDiv.style.background = '#ffded5';
       cardiomegaliDiv.style.borderLeftColor = '#c7362b';
     } else {
-      cardiomegaliDiv.innerHTML = `✅ LVEDD normal: ${lvedd.toFixed(1)} cm (batas normal ≤ ${threshold}). Tidak kardiomegali.`;
+      cardiomegaliDiv.innerHTML = `✅ LVEDD normal: ${lvedd.toFixed(1)} cm (≤ ${threshold})`;
       cardiomegaliDiv.style.background = '#e0f3e8';
       cardiomegaliDiv.style.borderLeftColor = '#2e8b57';
     }
   }
 
-  // Update Right Ventricle warning (normal < 2.5-3.0 cm) : kita beri peringatan jika ≥ 2.5 cm borderline, ≥ 3.0 definite dilation
+  // Update RV
   function updateRVStatus() {
     let rvd = parseFloat(rvdInput.value);
     if (isNaN(rvd) || rvd <= 0) {
-      rvWarningDiv.innerHTML = '📏 Masukkan diameter ventrikel kanan (cm)';
+      rvWarningDiv.innerHTML = '📏 Masukkan diameter RV (cm)';
       rvWarningDiv.style.background = '#f0f0fa';
       return;
     }
     if (rvd < 2.5) {
-      rvWarningDiv.innerHTML = `✅ Diameter RV normal: ${rvd.toFixed(1)} cm (< 2.5 cm). Ukuran baik.`;
+      rvWarningDiv.innerHTML = `✅ Diameter RV normal: ${rvd.toFixed(1)} cm (< 2.5 cm)`;
       rvWarningDiv.style.background = '#e0f3e8';
     } else if (rvd >= 2.5 && rvd < 3.0) {
-      rvWarningDiv.innerHTML = `⚠️ Batas atas normal / borderline dilatasi RV: ${rvd.toFixed(1)} cm (2.5–3.0 cm). Pertimbangkan korelasi klinis.`;
+      rvWarningDiv.innerHTML = `⚠️ Borderline dilatasi RV: ${rvd.toFixed(1)} cm (2.5–3.0 cm)`;
       rvWarningDiv.style.background = '#fff0d6';
     } else if (rvd >= 3.0) {
-      rvWarningDiv.innerHTML = `⚠️⚠️ DILATASI VENTRIKEL KANAN: ${rvd.toFixed(1)} cm ≥ 3.0 cm. Abnormal, evaluasi lebih lanjut (hipertensi pulmonal, regurgitasi trikuspid, dll).`;
+      rvWarningDiv.innerHTML = `⚠️⚠️ DILATASI RV: ${rvd.toFixed(1)} cm ≥ 3.0 cm`;
       rvWarningDiv.style.background = '#ffd9d4';
     } else {
-      rvWarningDiv.innerHTML = `Nilai RV: ${rvd.toFixed(1)} cm.`;
+      rvWarningDiv.innerHTML = `Nilai RV: ${rvd.toFixed(1)} cm`;
     }
   }
 
-  // Fungsi refresh semua update dari berbagai input
   function refreshAll() {
     updateEF();
     updateCardiomegali();
@@ -555,8 +589,10 @@
   genderSelect.addEventListener('change', refreshAll);
   rvdInput.addEventListener('input', refreshAll);
 
-  // Print to PDF (kop surat sudah ada di media print)
-  document.getElementById('printButton').addEventListener('click', () => window.print());
+  // Print
+  document.getElementById('printButton').addEventListener('click', () => {
+    window.print();
+  });
 
   // Initial load
   window.addEventListener('DOMContentLoaded', () => {
