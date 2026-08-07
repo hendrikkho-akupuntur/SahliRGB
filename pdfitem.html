@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gabungkan PDF - dengan Sortir</title>
+  <!-- PDF-Lib & FileSaver -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <style>
+    * { box-sizing: border-box; font-family: system-ui, 'Segoe UI', Roboto, sans-serif; }
+    body {
+      background: linear-gradient(145deg, #f0f5fa 0%, #dce8f2 100%);
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .card {
+      background: rgba(255,255,255,0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 48px;
+      padding: 40px 32px;
+      max-width: 1000px;
+      width: 100%;
+      box-shadow: 0 25px 50px -12px rgba(0,20,40,0.3), 0 0 0 1px rgba(255,255,255,0.5);
+      border: 1px solid rgba(255,255,255,0.6);
+    }
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 600;
+      color: #0b2b3d;
+      margin-top: 0;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .subhead {
+      color: #2c5775;
+      font-size: 1rem;
+      font-weight: 400;
+      margin-top: -4px;
+      margin-bottom: 24px;
+      border-left: 4px solid #3b82f6;
+      padding-left: 16px;
+      background: rgba(59,130,246,0.06);
+      border-radius: 0 12px 12px 0;
+    }
+    .drop-zone {
+      background: rgba(255,255,255,0.5);
+      border: 2.5px dashed #b6d0e0;
+      border-radius: 32px;
+      padding: 40px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      margin-bottom: 20px;
+    }
+    .drop-zone:hover, .drop-zone.dragover {
+      background: rgba(255,255,255,0.8);
+      border-color: #3b82f6;
+      transform: scale(1.01);
+    }
+    .drop-zone.dragover {
+      box-shadow: 0 0 0 6px rgba(59,130,246,0.15);
+    }
+    .drop-zone-icon { font-size: 3.8rem; display: block; margin-bottom: 8px; color: #1e4a6b; }
+    .drop-zone-text { font-size: 1.2rem; font-weight: 500; color: #1e3a5f; }
+    .drop-zone-sub { color: #3b6b8c; font-size: 0.95rem; margin-top: 6px; }
+
+    /* toolbar sort */
+    .sort-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px 18px;
+      background: rgba(255,255,255,0.5);
+      padding: 12px 20px;
+      border-radius: 60px;
+      margin: 8px 0 16px 0;
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,0.6);
+    }
+    .sort-toolbar label {
+      font-weight: 500;
+      color: #1a4057;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .sort-toolbar select, .sort-toolbar button {
+      background: white;
+      border: 1px solid #cbdde8;
+      border-radius: 40px;
+      padding: 8px 18px;
+      font-weight: 500;
+      color: #0f344b;
+      cursor: pointer;
+      transition: 0.15s;
+      font-size: 0.9rem;
+    }
+    .sort-toolbar select:hover, .sort-toolbar button:hover {
+      background: #f0f7fe;
+      border-color: #7fa3bd;
+    }
+    .sort-toolbar .sort-btn-group {
+      display: flex;
+      gap: 8px;
+      margin-left: auto;
+    }
+    .sort-toolbar .sort-btn-group button {
+      background: transparent;
+      border: 1px solid #cbdde8;
+      padding: 6px 16px;
+      border-radius: 40px;
+    }
+    .sort-toolbar .sort-btn-group button.active-sort {
+      background: #1a4b6d;
+      color: white;
+      border-color: #1a4b6d;
+    }
+    .badge-sort {
+      background: #1e4a6b;
+      color: white;
+      border-radius: 40px;
+      padding: 2px 14px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin-left: 6px;
+    }
+
+    .file-list {
+      background: rgba(255,255,255,0.6);
+      backdrop-filter: blur(4px);
+      border-radius: 24px;
+      padding: 8px 12px;
+      margin: 12px 0 20px 0;
+      border: 1px solid rgba(255,255,255,0.8);
+      max-height: 280px;
+      overflow-y: auto;
+    }
+    .file-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(0,0,0,0.04);
+      border-radius: 12px;
+    }
+    .file-item:last-child { border-bottom: none; }
+    .file-item:hover { background: rgba(255,255,255,0.4); }
+    .file-name {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 450;
+      color: #0a2a3b;
+      max-width: 60%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .file-name span.badge-pdf {
+      background: #dbeafe;
+      padding: 2px 12px;
+      border-radius: 40px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #1e4b6e;
+    }
+    .file-meta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      color: #2f5f7a;
+      font-size: 0.8rem;
+    }
+    .file-meta .file-size { background: rgba(0,0,0,0.02); padding: 2px 12px; border-radius: 30px; }
+    .file-meta .file-date { color: #3f6f8f; }
+    .btn-remove {
+      background: transparent;
+      border: none;
+      color: #a03a3a;
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 30px;
+      transition: 0.1s;
+    }
+    .btn-remove:hover { background: #fee2e2; }
+
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 16px;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .btn {
+      border: none;
+      background: white;
+      padding: 14px 28px;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid rgba(0,0,0,0.04);
+      color: #1a3b4f;
+    }
+    .btn-primary {
+      background: #1a4b6d;
+      color: white;
+      border: none;
+      box-shadow: 0 12px 24px -10px rgba(26,75,109,0.3);
+    }
+    .btn-primary:hover:not(:disabled) {
+      background: #0f3b57;
+      transform: translateY(-2px);
+    }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .btn-outline { background: transparent; border: 1.5px solid #b6d0e0; }
+    .btn-outline:hover:not(:disabled) { background: rgba(0,0,0,0.02); border-color: #7fa1bb; }
+    .btn-danger { color: #b23b3b; border-color: #f5d6d6; }
+    .btn-danger:hover:not(:disabled) { background: #fff0f0; border-color: #d99; }
+
+    .status {
+      margin-top: 20px;
+      background: rgba(0,0,0,0.02);
+      padding: 14px 20px;
+      border-radius: 40px;
+      font-size: 0.95rem;
+      color: #1f4a66;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border: 1px solid rgba(255,255,255,0.5);
+      min-height: 56px;
+    }
+    .status-indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: 20px;
+      background: #9bb7cc;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+    .status-indicator.success { background: #16a34a; }
+    .status-indicator.warning { background: #eab308; }
+    .status-indicator.error { background: #dc2626; }
+
+    .footer-note {
+      margin-top: 20px;
+      font-size: 0.8rem;
+      color: #4e748b;
+      text-align: center;
+      border-top: 1px solid rgba(0,0,0,0.04);
+      padding-top: 18px;
+    }
+    @media (max-width: 700px) {
+      .card { padding: 24px 16px; }
+      .sort-toolbar { flex-direction: column; align-items: stretch; }
+      .sort-toolbar .sort-btn-group { margin-left: 0; justify-content: center; }
+      .btn-group { flex-direction: column; align-items: stretch; }
+      .btn { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+<div class="card">
+  <h1><span>📄</span> Gabung PDF <span style="font-size: 1rem; font-weight: 400; color: #2c5775; margin-left: 8px;">+ sortir</span></h1>
+  <div class="subhead">Seret & lepas PDF, lalu atur urutan dengan sortir berdasarkan nama atau tanggal modifikasi.</div>
+
+  <!-- Drop Zone -->
+  <div id="dropZone" class="drop-zone">
+    <span class="drop-zone-icon">📂</span>
+    <div class="drop-zone-text">Seret file PDF ke sini</div>
+    <div class="drop-zone-sub">atau klik untuk memilih file</div>
+    <input type="file" id="fileInput" accept=".pdf,application/pdf" multiple style="display: none;">
+  </div>
+
+  <!-- Toolbar Sortir -->
+  <div class="sort-toolbar" id="sortToolbar">
+    <label>📌 Urutkan berdasarkan
+      <select id="sortBySelect">
+        <option value="name">Nama</option>
+        <option value="date">Tanggal Modifikasi</option>
+      </select>
+    </label>
+    <div class="sort-btn-group">
+      <button id="sortAscBtn" class="active-sort">⬆ Asc</button>
+      <button id="sortDescBtn">⬇ Desc</button>
+    </div>
+    <span style="margin-left: auto; font-size: 0.85rem; color: #2f5f7a;" id="sortInfo">Arah: Asc</span>
+  </div>
+
+  <!-- Daftar file -->
+  <div id="fileListContainer" class="file-list" style="display: none;">
+    <div style="display: flex; justify-content: space-between; padding: 6px 8px; border-bottom: 1px solid rgba(0,0,0,0.05);">
+      <span style="font-weight: 500; color: #1a3b4f;">📋 Daftar file</span>
+      <span id="fileCount" class="badge-sort">0</span>
+    </div>
+    <div id="fileList"></div>
+  </div>
+
+  <!-- Tombol -->
+  <div class="btn-group">
+    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+      <button id="mergeBtn" class="btn btn-primary" disabled>🔄 Gabungkan PDF</button>
+      <button id="clearBtn" class="btn btn-outline" disabled>✕ Kosongkan</button>
+    </div>
+    <button id="downloadBtn" class="btn btn-outline" disabled style="background:#e6f0f8;">⬇️ Download hasil</button>
+  </div>
+
+  <!-- Status -->
+  <div id="status" class="status">
+    <span class="status-indicator" id="statusIndicator"></span>
+    <span id="statusMessage">Tunggu, belum ada file.</span>
+  </div>
+  <div class="footer-note">⚡ Proses sepenuhnya di browser — file tidak dikirim ke server.</div>
+</div>
+
+<script>
+  (function() {
+    // ----- state -----
+    let pdfFiles = []; // array { name, size, file, lastModified }
+    let mergedPdfBytes = null;
+    let isMerging = false;
+    let sortBy = 'name';     // 'name' atau 'date'
+    let sortAsc = true;      // true = ascending
+
+    // ----- DOM refs -----
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const fileListContainer = document.getElementById('fileListContainer');
+    const fileListEl = document.getElementById('fileList');
+    const fileCountSpan = document.getElementById('fileCount');
+    const mergeBtn = document.getElementById('mergeBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const statusMessage = document.getElementById('statusMessage');
+    const statusIndicator = document.getElementById('statusIndicator');
+    const sortBySelect = document.getElementById('sortBySelect');
+    const sortAscBtn = document.getElementById('sortAscBtn');
+    const sortDescBtn = document.getElementById('sortDescBtn');
+    const sortInfo = document.getElementById('sortInfo');
+
+    // ----- helper: sort & render -----
+    function sortFiles() {
+      const field = sortBy === 'name' ? 'name' : 'lastModified';
+      pdfFiles.sort((a, b) => {
+        let valA = a[field];
+        let valB = b[field];
+        if (typeof valA === 'string') valA = valA.toLowerCase();
+        if (typeof valB === 'string') valB = valB.toLowerCase();
+        if (valA < valB) return sortAsc ? -1 : 1;
+        if (valA > valB) return sortAsc ? 1 : -1;
+        return 0;
+      });
+    }
+
+    function renderFileList() {
+      fileListEl.innerHTML = '';
+      if (pdfFiles.length === 0) {
+        fileListContainer.style.display = 'none';
+        return;
+      }
+      fileListContainer.style.display = 'block';
+      pdfFiles.forEach((item, index) => {
+        const div = document.createElement('div');
+        div.className = 'file-item';
+        const sizeKB = (item.size / 1024).toFixed(1);
+        const sizeStr = sizeKB > 1024 ? (item.size / (1024*1024)).toFixed(1) + ' MB' : sizeKB + ' KB';
+        const dateObj = new Date(item.lastModified);
+        const dateStr = dateObj.toLocaleDateString('id-ID') + ' ' + dateObj.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'});
+
+        div.innerHTML = `
+          <div class="file-name">
+            <span>📄</span>
+            <span style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${item.name}</span>
+            <span class="badge-pdf">PDF</span>
+          </div>
+          <div class="file-meta">
+            <span class="file-size">${sizeStr}</span>
+            <span class="file-date">🕒 ${dateStr}</span>
+            <button class="btn-remove" data-index="${index}" title="Hapus file">✕</button>
+          </div>
+        `;
+        fileListEl.appendChild(div);
+      });
+
+      // event listener untuk tombol hapus
+      document.querySelectorAll('.btn-remove').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const idx = parseInt(btn.getAttribute('data-index'), 10);
+          if (!isNaN(idx)) removeFileAtIndex(idx);
+        });
+      });
+
+      fileCountSpan.textContent = pdfFiles.length;
+    }
+
+    function removeFileAtIndex(index) {
+      if (isMerging) return;
+      pdfFiles.splice(index, 1);
+      mergedPdfBytes = null;
+      sortFiles(); // tetap terurut
+      renderFileList();
+      updateUI();
+      setStatus('info', `File dihapus. ${pdfFiles.length} file tersisa.`);
+    }
+
+    // ----- update UI -----
+    function updateUI() {
+      const count = pdfFiles.length;
+      mergeBtn.disabled = count === 0 || isMerging;
+      clearBtn.disabled = count === 0 || isMerging;
+      downloadBtn.disabled = mergedPdfBytes === null || isMerging;
+
+      if (count === 0 && mergedPdfBytes === null) {
+        setStatus('info', 'Belum ada file PDF. Seret atau klik untuk menambah.');
+      } else if (count > 0 && mergedPdfBytes === null) {
+        setStatus('info', `${count} file siap. Urutan: ${sortBy === 'name' ? 'Nama' : 'Tanggal'} ${sortAsc ? 'Asc' : 'Desc'}. Klik "Gabungkan PDF".`);
+      } else if (mergedPdfBytes !== null) {
+        setStatus('success', `✅ Berhasil menggabungkan ${count} file PDF. Klik "Download hasil".`);
+      }
+      // update indikator sort
+      sortInfo.textContent = `Arah: ${sortAsc ? 'Asc' : 'Desc'}`;
+      sortAscBtn.classList.toggle('active-sort', sortAsc);
+      sortDescBtn.classList.toggle('active-sort', !sortAsc);
+    }
+
+    function setStatus(type, msg) {
+      statusMessage.textContent = msg;
+      statusIndicator.className = 'status-indicator';
+      if (type === 'success') statusIndicator.classList.add('success');
+      else if (type === 'error') statusIndicator.classList.add('error');
+      else if (type === 'warning') statusIndicator.classList.add('warning');
+    }
+
+    // ----- handle files (tambah) -----
+    function handleFiles(fileList) {
+      if (isMerging) return;
+      const files = Array.from(fileList).filter(f => f.type === 'application/pdf' || f.name.toLowerCase().endsWith('.pdf'));
+      if (files.length === 0) {
+        setStatus('error', 'Hanya file PDF yang didukung.');
+        return;
+      }
+      let added = 0;
+      for (const file of files) {
+        pdfFiles.push({
+          name: file.name,
+          size: file.size,
+          file: file,
+          lastModified: file.lastModified,
+        });
+        added++;
+      }
+      if (added > 0) {
+        mergedPdfBytes = null;
+        sortFiles(); // urutkan
+        renderFileList();
+        updateUI();
+        setStatus('info', `${added} file PDF ditambahkan. Total: ${pdfFiles.length} file.`);
+      }
+    }
+
+    // ----- merge PDF -----
+    async function mergePdfs() {
+      if (pdfFiles.length === 0) {
+        setStatus('error', 'Tidak ada file PDF untuk digabung.');
+        return;
+      }
+      if (isMerging) return;
+      isMerging = true;
+      mergeBtn.disabled = true;
+      clearBtn.disabled = true;
+      downloadBtn.disabled = true;
+      setStatus('warning', '⏳ Menggabungkan PDF... mohon tunggu.');
+
+      try {
+        const { PDFDocument } = PDFLib;
+        const newPdf = await PDFDocument.create();
+        // pastikan urutan sesuai state (sudah terurut)
+        for (const item of pdfFiles) {
+          const arrayBuffer = await item.file.arrayBuffer();
+          const pdfDoc = await PDFDocument.load(arrayBuffer);
+          const pages = await newPdf.copyPages(pdfDoc, pdfDoc.getPageIndices());
+          pages.forEach(page => newPdf.addPage(page));
+        }
+        const pdfBytes = await newPdf.save();
+        mergedPdfBytes = pdfBytes;
+        setStatus('success', `✅ Gabungan berhasil! (${pdfFiles.length} file)`);
+        downloadBtn.disabled = false;
+      } catch (error) {
+        console.error(error);
+        setStatus('error', `❌ Gagal menggabung: ${error.message || 'error tidak dikenal'}`);
+        mergedPdfBytes = null;
+      } finally {
+        isMerging = false;
+        mergeBtn.disabled = pdfFiles.length === 0;
+        clearBtn.disabled = pdfFiles.length === 0;
+        if (mergedPdfBytes) downloadBtn.disabled = false;
+        updateUI();
+      }
+    }
+
+    // ----- download -----
+    function downloadMerged() {
+      if (!mergedPdfBytes) {
+        setStatus('error', 'Tidak ada hasil gabungan. Gabungkan dulu!');
+        return;
+      }
+      try {
+        const blob = new Blob([mergedPdfBytes], { type: 'application/pdf' });
+        const fileName = `gabungan_${new Date().toISOString().slice(0,10)}.pdf`;
+        saveAs(blob, fileName);
+        setStatus('success', `⬇️ Download "${fileName}" berhasil!`);
+      } catch (e) {
+        setStatus('error', `Gagal download: ${e.message}`);
+      }
+    }
+
+    // ----- event listeners -----
+    // drag & drop
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+    dropZone.addEventListener('dragleave', () => { dropZone.classList.remove('dragover'); });
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      if (e.dataTransfer.files) handleFiles(e.dataTransfer.files);
+    });
+    dropZone.addEventListener('click', () => { if (!isMerging) fileInput.click(); });
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files) handleFiles(e.target.files);
+      fileInput.value = '';
+    });
+
+    // sortir
+    sortBySelect.addEventListener('change', (e) => {
+      sortBy = e.target.value;
+      sortFiles();
+      renderFileList();
+      updateUI();
+    });
+    sortAscBtn.addEventListener('click', () => {
+      sortAsc = true;
+      sortFiles();
+      renderFileList();
+      updateUI();
+    });
+    sortDescBtn.addEventListener('click', () => {
+      sortAsc = false;
+      sortFiles();
+      renderFileList();
+      updateUI();
+    });
+
+    mergeBtn.addEventListener('click', mergePdfs);
+    clearBtn.addEventListener('click', () => {
+      if (isMerging) return;
+      pdfFiles = [];
+      mergedPdfBytes = null;
+      renderFileList();
+      updateUI();
+      setStatus('info', 'Semua file dihapus.');
+      downloadBtn.disabled = true;
+    });
+    downloadBtn.addEventListener('click', downloadMerged);
+
+    // inisialisasi
+    sortFiles();
+    renderFileList();
+    updateUI();
+    setStatus('info', 'Seret file PDF atau klik untuk memilih.');
+  })();
+</script>
+</body>
+</html>
