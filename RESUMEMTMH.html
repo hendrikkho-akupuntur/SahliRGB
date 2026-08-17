@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PDF Resume — Urutkan Nama Pasien</title>
+<style>
+  body{font-family:Arial,sans-serif;background:#f4f6f8;margin:0;color:#1f2937}
+  .wrap{max-width:1050px;margin:30px auto;padding:0 18px}
+  h1{margin-bottom:6px}.sub{color:#667085;margin-top:0}
+  .drop{border:2px dashed #98a2b3;border-radius:16px;background:white;padding:42px;text-align:center;cursor:pointer}
+  .drop.drag{background:#eef6ff;border-color:#2563eb}
+  button{border:0;border-radius:10px;padding:11px 16px;font-weight:600;cursor:pointer}
+  .primary{background:#2563eb;color:white}.secondary{background:#e5e7eb}
+  .toolbar{display:flex;gap:10px;align-items:center;margin:18px 0;flex-wrap:wrap}
+  .status{padding:10px 14px;background:white;border-radius:10px}
+  table{width:100%;border-collapse:collapse;background:white;border-radius:12px;overflow:hidden}
+  th,td{padding:9px 10px;border-bottom:1px solid #eee;text-align:left}
+  th{background:#f8fafc}.num{width:65px}.old{color:#667085}
+  .ok{color:#067647;font-weight:600}.warn{color:#b54708;font-weight:600}
+  .small{font-size:13px;color:#667085}
+  .hidden{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>PDF Resume — Urutkan Nama Pasien</h1>
+  <p class="sub">Drag & drop PDF → program membaca nama setelah “NAMA PASIEN” → mengurutkan A–Z → membuat PDF baru.</p>
+
+  <div id="drop" class="drop">
+    <strong>Tarik PDF ke sini</strong><br>
+    <span class="small">atau klik untuk memilih file</span>
+    <input id="file" type="file" accept="application/pdf" class="hidden">
+  </div>
+
+  <div class="toolbar">
+    <button id="sortBtn" class="secondary" disabled>↕ Urutkan A–Z</button>
+    <button id="downloadBtn" class="primary" disabled>⬇ Buat & Download PDF</button>
+<button id="excelBtn" class="secondary" disabled>📊 Buat & Download Excel</button>
+    <span id="status" class="status">Belum ada PDF.</span>
+  </div>
+
+  <div id="info" class="small"></div>
+  <div style="margin-top:14px">
+    <table id="table" class="hidden">
+      <thead><tr><th class="num">Urutan</th><th>Nama pasien</th><th>Halaman asli</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <p class="small" style="margin-top:20px">
+    Catatan privasi: pemrosesan dilakukan di browser pada komputer Anda. File tidak dikirim ke server aplikasi ini.
+    PDF yang teksnya dapat diseleksi akan paling akurat; bila PDF berupa scan gambar tanpa OCR, nama tidak dapat dibaca otomatis. Tombol Excel membuat file .xlsx berisi Urutan, Nama pasien, dan Halaman asli.
+  </p>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+  "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+const drop = document.getElementById('drop');
+const fileInput = document.getElementById('file');
+const sortBtn = document.getElementById('sortBtn');
+const downloadBtn = document.getElementById('downloadBtn');
+const excelBtn = document.getElementById('excelBtn');
+const statusEl = document.getElementById('status');
+const info = document.getElementById('info');
+const table = document.getElementById('table');
+const tbody = table.querySelector('tbody');
+
+let sourceBytes = null;
+let records = [];
+
+drop.onclick = () => fileInput.click();
+fileInput.onchange = e => { if(e.target.files[0]) loadPDF(e.target.files[0]); };
+
+['dragenter','dragover'].forEach(ev => drop.addEventListener(ev, e => {
+  e.preventDefault(); drop.classList.add('drag');
+}));
+['dragleave','drop'].forEach(ev => drop.addEventListener(ev, e => {
+  e.preventDefault(); drop.classList.remove('drag');
+}));
+drop.addEventListener('drop', e => {
+  const f = e.dataTransfer.files[0];
+  if(f && f.type === 'application/pdf') loadPDF(f);
+  else alert('Silakan masukkan file PDF.');
+});
+
+function normalizeName(s){
+  return s
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .toUpperCase().replace(/\s+/g,' ').trim();
+}
+
+function extractName(items){
+  const lines = [];
+  let current = '';
+  for(const it of items){
+    const s = (it.str || '').trim();
+    if(!s) continue;
+    // PDF text items can be fragmented; retain normal spaces.
+    if(current && Math.abs((it.transform?.[5] || 0) - (lastY || 0)) > 3){
+      lines.push(current.trim()); current='';
+    }
+    current += (current ? ' ' : '') + s;
+    lastY = it.transform?.[5] || lastY;
+  }
+  if(current) lines.push(current.trim());
+
+  const labelIdx = lines.findIndex(x => normalizeName(x) === 'NAMA PASIEN');
+  if(labelIdx < 0) return null;
+
+  // In this resume format, the patient name is normally the first
+  // non-label line after NAMA PASIEN. Ignore date/MRN-like lines.
+  for(let j=labelIdx+1; j<Math.min(labelIdx+7, lines.length); j++){
+    const c = lines[j].trim();
+    if(!c || /^[:\-]+$/.test(c)) continue;
+    if(/TGL LAHIR|MRN\/NIK/i.test(c)) continue;
+    if(/\b\d{5,}\b/.test(c)) continue;
+    if(/^\d{1,2}\s+[A-Z]+\s+\d{4}/i.test(c)) continue;
+    return c.replace(/^[:\-]\s*/,'').trim();
+  }
+  return null;
+}
+
+let lastY = 0;
+
+async function loadPDF(file){
+  try{
+    records=[]; sourceBytes = new Uint8Array(await file.arrayBuffer());
+    statusEl.textContent = 'Membaca PDF...';
+    const pdf = await pdfjsLib.getDocument({data: sourceBytes.slice()}).promise;
+    info.textContent = `${file.name} • ${pdf.numPages} halaman`;
+    for(let i=1;i<=pdf.numPages;i++){
+      lastY=0;
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      const name = extractName(content.items);
+      records.push({name, page:i});
+      statusEl.textContent = `Membaca halaman ${i}/${pdf.numPages}...`;
+    }
+    sortRecords();
+    const failed = records.filter(r=>!r.name).length;
+    statusEl.innerHTML = failed
+      ? `<span class="warn">${failed} halaman tidak berhasil membaca nama.</span>`
+      : `<span class="ok">${records.length} halaman berhasil dibaca.</span>`;
+    sortBtn.disabled = false;
+    downloadBtn.disabled = records.length === 0 || failed > 0;
+    excelBtn.disabled = records.length === 0 || failed > 0;
+    render();
+  }catch(err){
+    console.error(err);
+    statusEl.textContent='Gagal membaca PDF: '+err.message;
+    downloadBtn.disabled=true;
+  }
+}
+
+function sortRecords(){
+  records.sort((a,b)=>{
+    const A=normalizeName(a.name||'ZZZZZZ');
+    const B=normalizeName(b.name||'ZZZZZZ');
+    return A.localeCompare(B,'id',{numeric:true,sensitivity:'base'});
+  });
+}
+
+sortBtn.onclick=()=>{ sortRecords(); render(); };
+
+function render(){
+  table.classList.remove('hidden');
+  tbody.innerHTML='';
+  records.forEach((r,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${i+1}</td><td>${escapeHtml(r.name||'⚠ TIDAK TERBACA')}</td><td class="old">${r.page}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+}
+
+excelBtn.onclick=()=>{
+  try{
+    if(!records.length){
+      alert('Belum ada data pasien.');
+      return;
+    }
+
+    statusEl.textContent='Membuat file Excel...';
+
+    // Susun data sesuai urutan A-Z yang tampil di tabel.
+    const rows = records.map((r,i)=>({
+      "Urutan": i+1,
+      "Nama pasien": r.name || "",
+      "Halaman asli": r.page
+    }));
+
+    // Sheet utama
+    const ws = XLSX.utils.json_to_sheet(rows);
+
+    // Lebar kolom agar nyaman dibaca
+    ws['!cols'] = [
+      {wch:10},
+      {wch:42},
+      {wch:16}
+    ];
+
+    // Sheet kontrol
+    const controlRows = [
+      ["Item","Nilai"],
+      ["Jumlah halaman PDF", records.length],
+      ["Nama berhasil dibaca", records.filter(r=>r.name).length],
+      ["Nama gagal dibaca", records.filter(r=>!r.name).length],
+      ["Urutan","A-Z"]
+    ];
+    const wsControl = XLSX.utils.aoa_to_sheet(controlRows);
+    wsControl['!cols'] = [{wch:28},{wch:20}];
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Urutan Pasien");
+    XLSX.utils.book_append_sheet(wb, wsControl, "Kontrol");
+
+    XLSX.writeFile(wb, "urutan_nama_pasien.xlsx");
+
+    statusEl.innerHTML='<span class="ok">Excel berhasil dibuat.</span>';
+  }catch(err){
+    console.error(err);
+    statusEl.textContent='Gagal membuat Excel: '+err.message;
+    alert('Gagal membuat Excel: '+err.message);
+  }
+};
+
+downloadBtn.onclick=async()=>{
+  try{
+    downloadBtn.disabled=true;
+    if(typeof PDFLib === 'undefined') throw new Error('Library PDF tidak berhasil dimuat. Pastikan koneksi internet aktif saat membuka HTML ini.');
+    if(!sourceBytes || sourceBytes.byteLength===0) throw new Error('Data PDF sumber kosong. Silakan masukkan ulang PDF.');
+    statusEl.textContent='Membuka PDF sumber...';
+
+    const src = await PDFLib.PDFDocument.load(sourceBytes.slice());
+    const out = await PDFLib.PDFDocument.create();
+    const indices = records.map(r=>r.page-1);
+    const copied = [];
+    for(let i=0;i<indices.length;i++){
+      const pages = await out.copyPages(src, [indices[i]]);
+      copied.push(pages[0]);
+      out.addPage(pages[0]);
+      if(i % 10 === 0 || i === indices.length-1){
+        statusEl.textContent=`Menyusun halaman ${i+1}/${indices.length}...`;
+        await new Promise(requestAnimationFrame);
+      }
+    }
+
+    statusEl.textContent='Menyimpan PDF...';
+    const bytes = await out.save({useObjectStreams:false});
+    const blob = new Blob([bytes],{type:'application/pdf'});
+    const url = URL.createObjectURL(blob);
+
+    // Buat link download yang benar-benar dimasukkan ke halaman.
+    const oldLink=document.getElementById('manualDownload');
+    if(oldLink) oldLink.remove();
+
+    const a=document.createElement('a');
+    a.id='manualDownload';
+    a.href=url;
+    a.download='resume_urut_nama_A-Z.pdf';
+    a.textContent='⬇ Klik di sini untuk download PDF';
+    a.style.display='inline-block';
+    a.style.marginLeft='10px';
+    a.style.color='#2563eb';
+    a.style.fontWeight='600';
+    document.querySelector('.toolbar').appendChild(a);
+
+    // Coba mulai download otomatis.
+    a.click();
+
+    // Jangan revoke URL terlalu cepat; PDF besar bisa membutuhkan waktu.
+    setTimeout(()=>URL.revokeObjectURL(url), 10*60*1000);
+
+    statusEl.innerHTML='<span class="ok">PDF selesai dibuat.</span> Jika belum ter-download otomatis, klik link biru.';
+  }catch(err){
+    console.error(err);
+    statusEl.textContent='Gagal membuat PDF: '+err.message;
+  }finally{
+    downloadBtn.disabled=false;
+  }
+};
+</script>
+</body>
+</html>
