@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sort PDF Berdasarkan Nama Pasien</title>
+<style>
+  *{box-sizing:border-box}
+  body{font-family:Arial,Helvetica,sans-serif;background:#f4f6f8;margin:0;color:#1f2937}
+  .wrap{max-width:1100px;margin:30px auto;padding:0 18px}
+  .card{background:#fff;border-radius:14px;padding:22px;box-shadow:0 4px 18px rgba(0,0,0,.08);margin-bottom:18px}
+  h1{margin:0 0 8px;font-size:26px}
+  .muted{color:#6b7280;font-size:14px}
+  .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:18px}
+  input[type=file],select,button{font:inherit}
+  input[type=file]{padding:10px;border:1px solid #d1d5db;border-radius:8px;background:#fff;max-width:100%}
+  select{padding:10px 12px;border:1px solid #d1d5db;border-radius:8px;background:#fff}
+  button{border:0;border-radius:8px;padding:11px 16px;cursor:pointer;font-weight:600}
+  .primary{background:#2563eb;color:#fff}
+  .secondary{background:#e5e7eb;color:#111827}
+  button:disabled{opacity:.5;cursor:not-allowed}
+  .status{margin-top:14px;padding:12px;border-radius:8px;background:#eef2ff;color:#3730a3;display:none}
+  .progress{height:8px;background:#e5e7eb;border-radius:99px;overflow:hidden;margin-top:12px;display:none}
+  .bar{height:100%;width:0;background:#2563eb;transition:width .2s}
+  table{width:100%;border-collapse:collapse;margin-top:15px;font-size:14px}
+  th,td{padding:9px 10px;border-bottom:1px solid #e5e7eb;text-align:left}
+  th{background:#f9fafb;position:sticky;top:0}
+  .table-wrap{max-height:520px;overflow:auto;border:1px solid #e5e7eb;border-radius:8px}
+  .badge{display:inline-block;padding:3px 8px;border-radius:99px;background:#ecfdf5;color:#047857;font-size:12px}
+  .warning{background:#fff7ed;color:#9a3412}
+  .error{background:#fef2f2;color:#b91c1c}
+  .small{font-size:12px}
+  .right{margin-left:auto}
+  code{background:#f3f4f6;padding:2px 5px;border-radius:4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <h1>Sort PDF Berdasarkan Nama Pasien</h1>
+    <div class="muted">
+      Cocok untuk PDF seperti <b>Resume Medis Rawat Jalan BPJS</b> yang memiliki satu pasien per halaman.
+      Program membaca teks pada setiap halaman, mencari bagian <code>NAMA PASIEN :</code>, lalu mengurutkan seluruh halaman berdasarkan nama.
+    </div>
+
+    <div class="controls">
+      <input id="pdfInput" type="file" accept="application/pdf">
+      <select id="order">
+        <option value="asc">Nama A → Z</option>
+        <option value="desc">Nama Z → A</option>
+      </select>
+      <button id="sortBtn" class="primary" disabled>Sort PDF</button>
+      <button id="downloadBtn" class="secondary" disabled>Download PDF Hasil</button>
+      <span id="pageInfo" class="right muted"></span>
+    </div>
+
+    <div id="status" class="status"></div>
+    <div id="progress" class="progress"><div id="bar" class="bar"></div></div>
+  </div>
+
+  <div class="card">
+    <h2 style="margin-top:0">Daftar Pasien</h2>
+    <div class="muted">Setelah PDF diproses, daftar di bawah menunjukkan urutan halaman sebelum dan sesudah sorting.</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Urutan</th>
+            <th>Halaman Asli</th>
+            <th>Nama Pasien</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="patientTable">
+          <tr><td colspan="4" class="muted">Belum ada PDF yang diproses.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card small">
+    <b>Catatan:</b>
+    <ul>
+      <li>File diproses langsung di browser, sehingga PDF tidak perlu dikirim ke server.</li>
+      <li>Untuk PDF yang teksnya dapat diseleksi, hasil sorting biasanya akurat.</li>
+      <li>Jika halaman merupakan scan gambar tanpa text layer/OCR, nama pasien tidak dapat dibaca oleh metode ini dan akan ditandai <b>Tidak terbaca</b>.</li>
+      <li>Halaman yang nama pasiennya tidak terbaca ditempatkan di bagian akhir agar tidak hilang.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- PDF.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs" type="module"></script>
+<script type="module">
+  import * as pdfjsLib from "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs";
+
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs";
+
+  const pdfInput = document.getElementById("pdfInput");
+  const sortBtn = document.getElementById("sortBtn");
+  const downloadBtn = document.getElementById("downloadBtn");
+  const order = document.getElementById("order");
+  const status = document.getElementById("status");
+  const progress = document.getElementById("progress");
+  const bar = document.getElementById("bar");
+  const patientTable = document.getElementById("patientTable");
+  const pageInfo = document.getElementById("pageInfo");
+
+  let sourceBytes = null;
+  let pageRecords = [];
+  let sortedRecords = [];
+  let sortedPdfBytes = null;
+
+  function showStatus(msg, type="info"){
+    status.style.display = "block";
+    status.textContent = msg;
+    status.className = "status " + (type === "error" ? "error" : type === "warning" ? "warning" : "");
+  }
+
+  function normalizeName(name){
+    if (!name) return "";
+
+    let cleaned = name
+      .replace(/[|]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim()
+      .replace(/^[\s:;\-,]+|[\s:;\-,]+$/g, "");
+
+    // Field yang TIDAK BOLEH dianggap sebagai nama pasien.
+    const forbidden = [
+      /^NAMA(?:\s+PASIEN)?$/i,
+      /^TGL\s*LAHIR/i,
+      /^TANGGAL\s+LAHIR/i,
+      /^JENIS\s+KELAMIN/i,
+      /^NO\.?\s*SEP/i,
+      /^NO\.?\s*KARTU/i,
+      /^NO\.?\s*RUJUKAN/i,
+      /^MRN\s*\/?\s*NIK/i,
+      /^ALAMAT/i,
+      /^ASAL\s+FKTP/i,
+      /^TANGGAL\s+RUJUKAN/i,
+      /^KELUHAN\s+UTAMA/i
+    ];
+
+    if (forbidden.some(re => re.test(cleaned))) return "";
+
+    // Potong jika field berikut ikut tertarik.
+    cleaned = cleaned.split(
+      /\s+(?=ASAL\s+FKTP|JENIS\s+KELAMIN|TGL\s*LAHIR|TANGGAL\s+RUJUKAN|NO\.?\s*SEP|NO\.?\s*KARTU|NO\.?\s*RUJUKAN|MRN\s*\/?\s*NIK|ALAMAT|KELUHAN\s+UTAMA)\s*:?\s*/i
+    )[0].trim();
+
+    if (!/[A-Za-zÀ-ÿ]/.test(cleaned)) return "";
+    if (cleaned.length < 2 || cleaned.length > 100) return "";
+
+    return cleaned.toUpperCase();
+  }
+
+  function extractPatientNameFromItems(items){
+    /*
+      Parser utama menggunakan POSISI/KOORDINAT teks.
+      Ini penting karena pada sebagian halaman PDF, text layer dibaca
+      berdasarkan posisi kolom sehingga hasilnya menjadi seperti:
+
+        NAMA PASIEN
+        TGL LAHIR /UMUR
+        MRN/NIK
+        ROSWITA BR NABABAN
+        ...
+
+      Jadi kita tidak boleh mengandalkan urutan teks saja.
+    */
+
+    if (!items || !items.length) return "";
+
+    const words = items
+      .filter(it => it.str && it.str.trim())
+      .map(it => {
+        const tr = it.transform || [];
+        return {
+          str: it.str.trim(),
+          x: Number(tr[4] || 0),
+          y: Number(tr[5] || 0),
+          w: Number(it.width || 0),
+          h: Math.abs(Number(tr[3] || 10))
+        };
+      });
+
+    if (!words.length) return "";
+
+    // Kelompokkan item menjadi baris visual berdasarkan koordinat Y.
+    const lines = [];
+    for (const w of words) {
+      const tol = Math.max(2.5, Math.min(6, w.h * 0.55));
+      let line = lines.find(l => Math.abs(l.y - w.y) <= tol);
+      if (!line) {
+        line = {y:w.y, items:[]};
+        lines.push(line);
+      }
+      line.items.push(w);
+    }
+
+    lines.forEach(l => l.items.sort((a,b) => a.x - b.x));
+    lines.sort((a,b) => b.y - a.y);
+
+    const labelRe = /NAMA\s+PASIEN/i;
+
+    // Field berikutnya menjadi batas.
+    const fieldRe = /^(ASAL\s+FKTP|JENIS\s+KELAMIN|TGL\s*LAHIR(?:\s*\/\s*UMUR)?|TANGGAL\s+RUJUKAN|NO\.?\s*SEP|NO\.?\s*KARTU(?:\s*BPJS)?|NO\.?\s*RUJUKAN|MRN\s*\/?\s*NIK|ALAMAT|KELUHAN\s+UTAMA)/i;
+
+    /*
+      A. Kasus ideal:
+         NAMA PASIEN : YUSNA ELVIRA ASAL FKTP :
+      Label dan value ada di baris yang sama.
+    */
+    for (const line of lines) {
+      const joined = line.items.map(x => x.str).join(" ");
+      const idx = joined.search(labelRe);
+      if (idx < 0) continue;
+
+      // Cari item pertama yang mengandung kata PASIEN.
+      let labelItemIndex = line.items.findIndex(x => /NAMA\s+PASIEN/i.test(x.str));
+      if (labelItemIndex >= 0) {
+        const labelItem = line.items[labelItemIndex];
+
+        // Semua item di kanan label.
+        let candidate = line.items
+          .slice(labelItemIndex + 1)
+          .map(x => x.str)
+          .join(" ");
+
+        candidate = candidate
+          .replace(/^[:\-]\s*/, "")
+          .replace(/\s+(?:ASAL\s+FKTP|JENIS\s+KELAMIN|TGL\s*LAHIR.*)$/i, "");
+
+        const result = normalizeName(candidate);
+        if (result) return result;
+      }
+
+      /*
+        B. Label terpisah:
+           item "NAMA", item "PASIEN", item ":" lalu nama.
+      */
+      const nameIdx = line.items.findIndex(x => /^NAMA$/i.test(x.str));
+      if (nameIdx >= 0) {
+        let patientIdx = line.items.findIndex((x,i) => i > nameIdx && /^PASIEN$/i.test(x.str));
+        if (patientIdx >= 0) {
+          const candidate = line.items.slice(patientIdx + 1)
+            .map(x => x.str)
+            .join(" ")
+            .replace(/^[:\-]\s*/, "")
+            .split(/\s+(?:ASAL\s+FKTP|JENIS\s+KELAMIN|TGL\s*LAHIR|NO\.?\s*SEP|MRN\s*\/?\s*NIK)/i)[0];
+
+          const result = normalizeName(candidate);
+          if (result) return result;
+        }
+      }
+    }
+
+    /*
+      C. Kasus sulit dari PDF pengguna:
+         label "NAMA PASIEN" berada pada satu kolom,
+         sedangkan value nama berada pada baris/kolom lain.
+
+      Cari koordinat label lalu cari teks terdekat secara vertikal,
+      terutama pada area kanan label atau tepat di bawahnya.
+    */
+    const nameLabel = [];
+    for (const line of lines) {
+      const idx = line.items.findIndex(x => /NAMA\s+PASIEN/i.test(x.str));
+      if (idx >= 0) {
+        const item = line.items[idx];
+        nameLabel.push({
+          x:item.x,
+          right:item.x + item.w,
+          y:line.y,
+          line
+        });
+      } else {
+        const n = line.items.findIndex(x => /^NAMA$/i.test(x.str));
+        const p = line.items.findIndex(x => /^PASIEN$/i.test(x.str));
+        if (n >= 0 && p > n) {
+          const a=line.items[n], b=line.items[p];
+          nameLabel.push({
+            x:a.x,
+            right:b.x+b.w,
+            y:line.y,
+            line
+          });
+        }
+      }
+    }
+
+    for (const lab of nameLabel) {
+      const candidates = [];
+
+      for (const line of lines) {
+        const dy = Math.abs(line.y - lab.y);
+
+        // Hanya area header yang sangat dekat dengan label.
+        if (dy > 90) continue;
+
+        for (const w of line.items) {
+          if (/^(NAMA|PASIEN|ASAL|FKTP|TGL|LAHIR|UMUR|MRN|NIK|ALAMAT|JENIS|KELAMIN|NO\.?|SEP|RUJUKAN|KARTU|BPJS)$/i.test(w.str)) continue;
+          if (fieldRe.test(w.str)) continue;
+
+          // Nama biasanya berada di kanan label atau sedikit di bawahnya.
+          const rightOfLabel = w.x >= lab.right - 5;
+          const belowLabel = (lab.y - w.y) >= -5 && (lab.y - w.y) <= 55;
+
+          if (rightOfLabel || belowLabel) {
+            const text = w.str;
+            if (/[A-Za-zÀ-ÿ]/.test(text) && !/^\d+$/.test(text)) {
+              candidates.push({
+                text,
+                score:
+                  (rightOfLabel ? 100 : 0) +
+                  Math.max(0, 60 - dy) +
+                  (w.x >= lab.right ? 15 : 0)
+              });
+            }
+          }
+        }
+      }
+
+      candidates.sort((a,b) => b.score-a.score);
+
+      // Coba kandidat individual.
+      for (const c of candidates) {
+        const result = normalizeName(c.text);
+        if (result) {
+          // Hindari mengambil kata yang jelas merupakan label rumah sakit.
+          if (!/^(RESUME|MEDIS|RAWAT|JALAN|BPJS|RUMAH|SAKIT|KOTA|MEDAN)$/i.test(result)) {
+            return result;
+          }
+        }
+      }
+
+      /*
+        Jika nama tersusun dari beberapa text item, ambil beberapa kandidat
+        yang berdekatan secara horizontal pada baris yang sama.
+      */
+      const nearbyLines = lines
+        .filter(l => Math.abs(l.y - lab.y) <= 55)
+        .sort((a,b) => Math.abs(a.y-lab.y)-Math.abs(b.y-lab.y));
+
+      for (const line of nearbyLines) {
+        const rightItems = line.items.filter(w => w.x >= lab.right - 5);
+        if (!rightItems.length) continue;
+
+        const candidate = rightItems.map(w => w.str).join(" ")
+          .split(/\s+(?:ASAL\s+FKTP|JENIS\s+KELAMIN|TGL\s*LAHIR|NO\.?\s*SEP|MRN\s*\/?\s*NIK|ALAMAT)/i)[0];
+
+        const result = normalizeName(candidate);
+        if (result && result.split(" ").length >= 1) return result;
+      }
+    }
+
+    /*
+      D. Fallback terakhir: gunakan seluruh text extraction.
+      Ini menangani PDF yang text layer-nya normal.
+    */
+    const text = items.map(x => x.str || "").join(" ").replace(/\s+/g," ");
+
+    let m = text.match(
+      /NAMA\s+PASIEN\s*:?\s*(.+?)(?=\s+(?:ASAL\s+FKTP|JENIS\s+KELAMIN|TGL\s*LAHIR|TANGGAL\s+RUJUKAN|NO\.?\s*SEP|MRN\s*\/?\s*NIK|ALAMAT|NO\.?\s*RUJUKAN)\b|$)/i
+    );
+
+    if (m) {
+      const result = normalizeName(m[1]);
+      if (result) return result;
+    }
+
+    return "";
+  }
+
+  // Parser teks biasa tetap dipertahankan sebagai fallback kompatibilitas.
+  function extractPatientName(text){
+    if (!text) return "";
+    const m = text.match(
+      /NAMA\s+PASIEN\s*:?\s*(.+?)(?=\s+(?:ASAL\s+FKTP|JENIS\s+KELAMIN|TGL\s*LAHIR|TANGGAL\s+RUJUKAN|NO\.?\s*SEP|MRN\s*\/?\s*NIK|ALAMAT|NO\.?\s*RUJUKAN)\b|$)/i
+    );
+    return m ? normalizeName(m[1]) : "";
+  }
+
+  function renderTable(records){
+    if (!records.length){
+      patientTable.innerHTML = '<tr><td colspan="4" class="muted">Belum ada data.</td></tr>';
+      return;
+    }
+    patientTable.innerHTML = records.map((r,i) => `
+      <tr>
+        <td>${i+1}</td>
+        <td>${r.originalPage}</td>
+        <td><b>${escapeHtml(r.name || "TIDAK TERBACA")}</b></td>
+        <td>
+          <span class="badge ${r.name ? "" : "warning"}">
+            ${r.name ? "Nama terbaca" : "Nama tidak terbaca"}
+          </span>
+        </td>
+      </tr>
+    `).join("");
+  }
+
+  function escapeHtml(s){
+    return s.replace(/[&<>"']/g, c => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+    }[c]));
+  }
+
+  async function readPdf(){
+    const file = pdfInput.files[0];
+    if (!file) return;
+
+    sortedPdfBytes = null;
+    downloadBtn.disabled = true;
+    sortBtn.disabled = true;
+    pageRecords = [];
+
+    try{
+      sourceBytes = new Uint8Array(await file.arrayBuffer());
+
+      // copy karena PDF.js dapat melakukan operasi yang mengubah buffer internal
+      const loadingTask = pdfjsLib.getDocument({data: sourceBytes.slice()});
+      const pdf = await loadingTask.promise;
+
+      pageInfo.textContent = `${pdf.numPages} halaman`;
+      showStatus(`Membaca nama pasien dari ${pdf.numPages} halaman...`);
+      progress.style.display = "block";
+      bar.style.width = "0%";
+
+      let readErrors = 0;
+
+      for(let i=1; i<=pdf.numPages; i++){
+        let name = "";
+        let detectedBy = "Tidak terbaca";
+
+        try{
+          const page = await pdf.getPage(i);
+          const content = await page.getTextContent();
+
+          // Gunakan parser berbasis koordinat terlebih dahulu.
+          // Ini mengatasi halaman yang text layer-nya tersusun vertikal/kolom.
+          try{
+            name = extractPatientNameFromItems(content.items);
+            if (name) detectedBy = "Koordinat";
+          }catch(innerErr){
+            console.warn(`Halaman ${i}: parser koordinat gagal`, innerErr);
+            name = "";
+          }
+
+          // Fallback ke parser text biasa (join seluruh item apa adanya).
+          if (!name) {
+            const joinedText = content.items.map(item => item.str || "").join(" ");
+            name = extractPatientName(joinedText);
+            if (name) detectedBy = "Fallback teks";
+          }
+        }catch(pageErr){
+          // Jangan biarkan satu halaman bermasalah menghentikan seluruh proses.
+          console.error(`Gagal membaca halaman ${i}`, pageErr);
+          readErrors++;
+        }
+
+        pageRecords.push({
+          originalPage: i,
+          name,
+          detectedBy: name ? detectedBy : "Tidak terbaca"
+        });
+
+        bar.style.width = `${Math.round(i/pdf.numPages*100)}%`;
+        if(i % 5 === 0) await new Promise(r => setTimeout(r, 0));
+      }
+
+      renderTable(pageRecords);
+      sortBtn.disabled = false;
+
+      const unreadable = pageRecords.filter(r => !r.name).length;
+      if(readErrors){
+        showStatus(`Selesai membaca ${pdf.numPages} halaman. ${readErrors} halaman gagal diproses (error) dan ${unreadable} halaman total belum terbaca namanya. Halaman tersebut TIDAK akan diberi nama secara tebakan.`, "warning");
+      } else if(unreadable){
+        showStatus(`Selesai membaca ${pdf.numPages} halaman. ${unreadable} halaman masih belum terbaca. Halaman tersebut TIDAK akan diberi nama secara tebakan.`, "warning");
+      } else {
+        showStatus(`Selesai membaca ${pdf.numPages} halaman. Semua nama pasien berhasil ditemukan.`);
+      }
+    }catch(err){
+      console.error(err);
+      showStatus("Gagal membaca PDF: " + err.message, "error");
+    }
+  }
+
+  async function sortPdf(){
+    if(!sourceBytes || !pageRecords.length) return;
+
+    try{
+      sortBtn.disabled = true;
+      downloadBtn.disabled = true;
+      showStatus("Mengurutkan halaman berdasarkan nama pasien...");
+      progress.style.display = "block";
+      bar.style.width = "10%";
+
+      const direction = order.value === "asc" ? 1 : -1;
+
+      sortedRecords = [...pageRecords].sort((a,b) => {
+        // Nama yang tidak terbaca selalu diletakkan paling akhir.
+        if(!a.name && !b.name) return a.originalPage - b.originalPage;
+        if(!a.name) return 1;
+        if(!b.name) return -1;
+        return a.name.localeCompare(b.name, "id", {
+          sensitivity: "base",
+          numeric: true
+        }) * direction;
+      });
+
+      renderTable(sortedRecords);
+
+      // pdf-lib di-load dinamis agar halaman HTML tetap ringan.
+      // Hanya dimuat sekali walau tombol Sort ditekan / urutan diganti berkali-kali.
+      if (!window.PDFLib) {
+        await new Promise((resolve,reject) => {
+          const script = document.createElement("script");
+          script.src = "https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js";
+          script.onload = resolve;
+          script.onerror = () => reject(new Error("Gagal memuat PDF-Lib. Periksa koneksi internet."));
+          document.head.appendChild(script);
+        });
+      }
+
+      const { PDFDocument } = window.PDFLib;
+      const srcDoc = await PDFDocument.load(sourceBytes);
+      const outDoc = await PDFDocument.create();
+
+      const indices = sortedRecords.map(r => r.originalPage - 1);
+      const copiedPages = await outDoc.copyPages(srcDoc, indices);
+
+      copiedPages.forEach((p,i) => {
+        outDoc.addPage(p);
+        bar.style.width = `${10 + Math.round((i+1)/copiedPages.length*85)}%`;
+      });
+
+      sortedPdfBytes = await outDoc.save();
+      bar.style.width = "100%";
+
+      downloadBtn.disabled = false;
+      sortBtn.disabled = false;
+      showStatus(`Berhasil. ${sortedRecords.length} halaman telah diurutkan berdasarkan nama pasien.`);
+    }catch(err){
+      console.error(err);
+      sortBtn.disabled = false;
+      showStatus("Gagal membuat PDF hasil: " + err.message, "error");
+    }
+  }
+
+  function downloadPdf(){
+    if(!sortedPdfBytes) return;
+
+    const blob = new Blob([sortedPdfBytes], {type:"application/pdf"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+
+    const original = pdfInput.files[0]?.name || "dokumen.pdf";
+    const base = original.replace(/\.pdf$/i,"");
+    const direction = order.value === "asc" ? "AZ" : "ZA";
+
+    a.href = url;
+    a.download = `${base}_SORT_NAMA_${direction}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  pdfInput.addEventListener("change", readPdf);
+  sortBtn.addEventListener("click", sortPdf);
+  downloadBtn.addEventListener("click", downloadPdf);
+  order.addEventListener("change", () => {
+    if(pageRecords.length){
+      sortedPdfBytes = null;
+      downloadBtn.disabled = true;
+      sortPdf();
+    }
+  });
+</script>
+</body>
+</html>
