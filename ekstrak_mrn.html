@@ -145,8 +145,8 @@
     <p class="sub">
       Unggah PDF hasil gabungan (satu pasien per halaman, format resume medis BPJS).
       Alat ini membaca setiap halaman, menemukan baris <code>MRN/NIK :</code>,
-      lalu mengambil <strong>Nama Pasien</strong> dan <strong>Nomor MRN</strong> yang mengikutinya.
-      Berfungsi untuk PDF lain selama susunan labelnya sama.
+      lalu mengambil <strong>Nama Pasien</strong>, <strong>Nomor MRN</strong>, dan
+      <strong>Nama Dokter</strong> (dari tanda tangan di kanan bawah). Berfungsi untuk PDF lain selama susunan labelnya sama.
     </p>
   </header>
 
@@ -179,7 +179,7 @@
     <div class="tablewrap">
       <table>
         <thead>
-          <tr><th class="no">No</th><th>Nama Pasien</th><th>MRN</th><th>Sumber</th></tr>
+          <tr><th class="no">No</th><th>Nama Pasien</th><th>MRN</th><th>Dokter</th><th>Sumber</th></tr>
         </thead>
         <tbody id="resultsBody"></tbody>
       </table>
@@ -192,8 +192,9 @@
 
   <footer>
     Pola yang dicari: baris label <code>MRN/NIK :</code> diikuti nama pasien (huruf kapital),
-    lalu baris <code>NOMOR_MRN / NOMOR_NIK</code>. Jika format sumber PDF berbeda dari itu,
-    baris tersebut akan ditandai "Gagal" dan bisa dicek manual di file aslinya.
+    lalu baris <code>NOMOR_MRN / NOMOR_NIK</code>. Nama dokter diambil dari teks dalam tanda kurung
+    tepat sebelum baris <code>Dokter Penanggung Jawab Pelayanan</code> (tanda tangan di kanan bawah halaman).
+    Jika format sumber PDF berbeda dari itu, baris tersebut akan ditandai "Gagal" dan bisa dicek manual di file aslinya.
   </footer>
 
 </div>
@@ -222,6 +223,9 @@ let extractedRows = []; // {no, nama, mrn, sumber, ok}
 
 // Regex: label "MRN/NIK :" lalu nama (huruf/spasi/koma/titik/apostrof/strip) lalu "digit / digit"
 const MRN_PATTERN = /MRN\/NIK\s*:\s*([A-Z][A-Z .,'\-]+?)\s+(\d{6,20})\s*\/\s*(\d{6,20})/;
+
+// Regex: nama dokter dalam tanda kurung, tepat sebelum "Dokter Penanggung Jawab Pelayanan"
+const DOCTOR_PATTERN = /\(\s*((?:DR\.|dr\.?)\s*.*?)\)\s*Dokter Penanggung Jawab/i;
 
 function fmtBytes(b){
   if(b < 1024) return b + ' B';
@@ -297,6 +301,8 @@ async function processFile(file, fileIndex){
     const page = await pdf.getPage(p);
     const flat = await extractTextLines(page);
     const match = flat.match(MRN_PATTERN);
+    const docMatch = flat.match(DOCTOR_PATTERN);
+    const dokter = docMatch ? docMatch[1].trim().replace(/\s{2,}/g,' ').replace(/,\s*$/,'') : '';
 
     if(match){
       okCount++;
@@ -304,16 +310,20 @@ async function processFile(file, fileIndex){
         no: extractedRows.length + 1,
         nama: match[1].trim().replace(/\s{2,}/g,' '),
         mrn: match[2].trim(),
+        dokter: dokter || '(tidak terbaca)',
         sumber: `${file.name} · hal. ${p}`,
-        ok: true
+        ok: true,
+        dokterOk: !!docMatch
       });
     }else{
       extractedRows.push({
         no: extractedRows.length + 1,
         nama: '(tidak terbaca)',
         mrn: '(tidak terbaca)',
+        dokter: dokter || '(tidak terbaca)',
         sumber: `${file.name} · hal. ${p}`,
-        ok: false
+        ok: false,
+        dokterOk: !!docMatch
       });
     }
 
@@ -358,6 +368,7 @@ function renderResults(){
       <td class="no">${row.no}</td>
       <td>${escapeHtml(row.nama)}</td>
       <td class="mrn">${escapeHtml(row.mrn)}</td>
+      <td>${escapeHtml(row.dokter)}</td>
       <td style="color:var(--muted);font-size:12.5px;">${escapeHtml(row.sumber)}</td>
     `;
     resultsBody.appendChild(tr);
@@ -383,11 +394,12 @@ exportBtn.addEventListener('click', () => {
   const data = extractedRows.map(r => ({
     'No': r.no,
     'Nama Pasien': r.nama,
-    'No MR': r.mrn
+    'No MR': r.mrn,
+    'Dokter': r.dokter
   }));
 
   const ws = XLSX.utils.json_to_sheet(data);
-  ws['!cols'] = [{wch:6},{wch:34},{wch:20}];
+  ws['!cols'] = [{wch:6},{wch:34},{wch:20},{wch:36}];
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, 'Data Pasien');
 
