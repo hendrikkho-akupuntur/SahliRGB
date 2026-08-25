@@ -21,6 +21,155 @@
       align-items: center;
     }
 
+    /* ===== PASSWORD OVERLAY ===== */
+    #passwordOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(10px);
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      z-index: 99999;
+      transition: opacity 0.5s ease;
+    }
+    
+    #passwordOverlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+      display: flex !important;
+    }
+    
+    .password-box {
+      background: white;
+      padding: 45px 40px;
+      border-radius: 24px;
+      max-width: 440px;
+      width: 92%;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.4);
+      text-align: center;
+      animation: fadeInUp 0.6s ease;
+      position: relative;
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    
+    .password-box .lock-icon {
+      font-size: 54px;
+      margin-bottom: 12px;
+      display: block;
+    }
+    
+    .password-box h2 {
+      color: #2c3e50;
+      margin-bottom: 6px;
+      font-size: 1.6rem;
+    }
+    
+    .password-box .subtitle {
+      color: #7f8c8d;
+      font-size: 0.9rem;
+      margin-bottom: 22px;
+    }
+    
+    .password-box .input-wrapper {
+      position: relative;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    
+    .password-box input {
+      width: 100%;
+      padding: 16px 20px;
+      border: 2px solid #dfe6e9;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      transition: border-color 0.3s, box-shadow 0.3s;
+      background: white;
+      color: #2d3436;
+      outline: none;
+      text-align: center;
+      letter-spacing: 3px;
+      font-weight: 600;
+    }
+    
+    .password-box input:focus {
+      outline: none;
+      border-color: #1a4e6b;
+      box-shadow: 0 0 0 4px rgba(26, 78, 107, 0.15);
+    }
+    
+    .password-box input::placeholder {
+      letter-spacing: 1px;
+      font-weight: normal;
+      color: #b2bec3;
+    }
+    
+    .password-box .password-error {
+      color: #e74c3c;
+      font-size: 0.85rem;
+      min-height: 28px;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    
+    .password-box .btn-unlock {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #1d6f9c, #0b2b3b);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      letter-spacing: 1px;
+    }
+    
+    .password-box .btn-unlock:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(29, 111, 156, 0.4);
+    }
+    
+    .password-box .btn-unlock:active {
+      transform: scale(0.98);
+    }
+    
+    .password-box .help-text {
+      margin-top: 16px;
+      font-size: 0.75rem;
+      color: #b2bec3;
+    }
+    
+    .password-box .help-text strong {
+      color: #1d6f9c;
+    }
+
+    /* Lock main content */
+    #mainContent {
+      pointer-events: none;
+      opacity: 0.3;
+      transition: opacity 0.5s ease;
+    }
+    
+    #mainContent.unlocked {
+      pointer-events: auto;
+      opacity: 1;
+    }
+
     .card {
       max-width: 1200px;
       width: 100%;
@@ -267,6 +416,15 @@
       display: none;
     }
 
+    /* Disabled state */
+    .btn:disabled, 
+    input:disabled,
+    select:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
     /* Style untuk cetak PDF dengan margin 0 dan kop surat di setiap halaman */
     @media print {
       @page {
@@ -301,7 +459,6 @@
         margin-top: 0;
       }
       
-      /* Kop surat dengan ukuran proporsional sesuai file asli (771x180) */
       .letterhead-print {
         display: block;
         text-align: center;
@@ -313,18 +470,13 @@
       .letterhead-print img {
         display: block;
         margin: 0 auto;
-        /* Ukuran asli file 771x180, kita tampilkan dengan lebar 100% tetapi batasi tinggi agar proporsional */
         max-width: 100%;
         width: auto;
         height: auto;
-        /* Tinggi disesuaikan dengan rasio asli 771:180 ≈ 4.28:1 */
-        max-height: none;
-        /* Agar tidak terlalu besar, kita atur lebar maksimal 80% dari konten */
         max-width: 85%;
         object-fit: contain;
       }
       
-      /* Fallback jika img tidak ditemukan */
       .letterhead-print div {
         font-size: 12px;
         color: gray;
@@ -355,268 +507,391 @@
   </style>
 </head>
 <body>
-<div class="card">
-  <!-- Kop surat untuk cetak - menggunakan ukuran proporsional dengan file asli -->
-  <div class="letterhead-print" id="letterheadTemplate">
-    <img src="kop.jpg" alt="Kop Surat" style="display: block; margin: 0 auto; max-width: 100%; height: auto; width: auto;" onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<div style=\'font-size:12px; color:gray; padding:10px; text-align:center;\'>⚠️ Kop surat (kop.jpg) tidak ditemukan.<br>Pastikan file berada di folder yang sama.</div>'">
+  <!-- ===== PASSWORD OVERLAY ===== -->
+  <div id="passwordOverlay">
+    <div class="password-box">
+      <span class="lock-icon">🔐</span>
+      <h2>Akses Terbatas</h2>
+      <p class="subtitle">Masukkan password untuk mengakses aplikasi</p>
+      
+      <div class="input-wrapper">
+        <input type="password" id="passwordInput" placeholder="Masukkan password..." autofocus>
+      </div>
+      
+      <div class="password-error" id="passwordError"></div>
+      
+      <button class="btn-unlock" id="unlockBtn">🔓 Buka Akses</button>
+      
+      <div class="help-text">
+        Password: <strong>Hubungi dr Hendrik Sp.KKLP</strong>
+      </div>
+    </div>
   </div>
 
-  <div class="illustration">
-    <h2>📐 M‑Mode · Parasternal Long Axis View (PLAX)</h2>
-    <div class="image-container">
-      <img src="Parasternal.png" alt="Parasternal Long Axis M-Mode" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22400%22%20height%3D%22200%22%20viewBox%3D%220%200%20400%20200%22%3E%3Crect%20width%3D%22400%22%20height%3D%22200%22%20fill%3D%22%23333%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20fill%3D%22white%22%3EParasternal.png%3C%2Ftext%3E%3C%2Fsvg%3E';">
-    </div>
-    <div class="caption">M-Mode pada pandangan Parasternal Long Axis — LV & RV diameters</div>
-  </div>
-
-  <div class="content">
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
-      <div class="operator-info">👨‍⚕️ Operator: dr Hendrik Amd.Akup Sp.KKLP</div>
-      <button class="btn-print" id="printButton">🖨️ Cetak / Simpan PDF</button>
+  <!-- ===== MAIN CONTENT ===== -->
+  <div class="card" id="mainContent">
+    <!-- Kop surat untuk cetak - menggunakan ukuran proporsional dengan file asli -->
+    <div class="letterhead-print" id="letterheadTemplate">
+      <img src="kop.jpg" alt="Kop Surat" style="display: block; margin: 0 auto; max-width: 100%; height: auto; width: auto;" onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<div style=\'font-size:12px; color:gray; padding:10px; text-align:center;\'>⚠️ Kop surat (kop.jpg) tidak ditemukan.<br>Pastikan file berada di folder yang sama.</div>'">
     </div>
 
-    <div class="title-section">
-      <h1>⚡ Kalkulator EF & Dimensi Jantung</h1>
-      <p>Metode M‑Mode · Teichholz + Evaluasi Kardiomegali & RV</p>
+    <div class="illustration">
+      <h2>📐 M‑Mode · Parasternal Long Axis View (PLAX)</h2>
+      <div class="image-container">
+        <img src="Parasternal.png" alt="Parasternal Long Axis M-Mode" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22400%22%20height%3D%22200%22%20viewBox%3D%220%200%20400%20200%22%3E%3Crect%20width%3D%22400%22%20height%3D%22200%22%20fill%3D%22%23333%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20fill%3D%22white%22%3EParasternal.png%3C%2Ftext%3E%3C%2Fsvg%3E';">
+      </div>
+      <div class="caption">M-Mode pada pandangan Parasternal Long Axis — LV & RV diameters</div>
     </div>
 
-    <!-- Data Pasien: Nama dan Tanggal Lahir -->
-    <div class="param-grid">
-      <div class="param-card">
-        <h3>👤 Data Pasien</h3>
-        <div class="input-row">
-          <label>Nama Pasien</label>
-          <input type="text" id="patientName" placeholder="contoh: Ani Susanti" value="">
-        </div>
-        <div class="input-row">
-          <label>Tanggal Lahir</label>
-          <input type="date" id="patientDob" value="">
-        </div>
-        <div class="info-note">Data akan tercantum pada cetakan PDF</div>
+    <div class="content">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+        <div class="operator-info">👨‍⚕️ Operator: dr Hendrik Amd.Akup Sp.KKLP</div>
+        <button class="btn-print" id="printButton">🖨️ Cetak / Simpan PDF</button>
       </div>
 
-      <!-- LVEDD + gender -->
-      <div class="param-card">
-        <h3>📏 LVEDD (LV End-Diastolic Diameter)</h3>
-        <div class="input-row">
-          <label>LVEDD (cm) *</label>
-          <input type="number" id="lveddInput" value="5.2" step="0.1" placeholder="contoh: 5.2">
-          <div class="info-note">Normal: wan < 5.6 | pria < 6.0 cm</div>
-        </div>
-        <div class="input-row">
-          <label>Jenis Kelamin</label>
-          <select id="genderSelect">
-            <option value="wanita">Wanita</option>
-            <option value="pria">Pria</option>
-          </select>
-        </div>
-        <div id="cardiomegaliWarning" class="warning-badge">⚖️ Status: Menunggu input LVEDD</div>
+      <div class="title-section">
+        <h1>⚡ Kalkulator EF & Dimensi Jantung</h1>
+        <p>Metode M‑Mode · Teichholz + Evaluasi Kardiomegali & RV</p>
       </div>
 
-      <!-- Diameter Ventrikel Kanan -->
-      <div class="param-card">
-        <h3>📐 Right Ventricle Diameter (RVD)</h3>
-        <div class="input-row">
-          <label>Diameter RV (cm) *</label>
-          <input type="number" id="rvdInput" value="2.4" step="0.1" placeholder="contoh: 2.4">
-          <div class="info-note">Normal < 2.5 cm | borderline 2.5-3.0 | dilatasi ≥ 3.0</div>
-        </div>
-        <div id="rvWarning" class="warning-badge">💓 Status RV: -</div>
-      </div>
-    </div>
-
-    <!-- 2 Kolom: M-Mode LV Dimensions (kiri) dan Hasil EDV/ESV/EF (kanan) -->
-    <div class="two-columns">
-      <div class="col-left">
-        <div class="param-card" style="height: 100%;">
-          <h3>📊 M-Mode LV Dimensions (EF Teichholz)</h3>
+      <!-- Data Pasien: Nama dan Tanggal Lahir -->
+      <div class="param-grid">
+        <div class="param-card">
+          <h3>👤 Data Pasien</h3>
           <div class="input-row">
-            <label>LVIDd (cm) — end-diastolic</label>
-            <input type="number" id="lvidD" value="5.0" step="0.1">
+            <label>Nama Pasien</label>
+            <input type="text" id="patientName" placeholder="contoh: Ani Susanti" value="">
           </div>
           <div class="input-row">
-            <label>LVIDs (cm) — end-systolic</label>
-            <input type="number" id="lvidS" value="3.2" step="0.1">
+            <label>Tanggal Lahir</label>
+            <input type="date" id="patientDob" value="">
           </div>
-          <div class="info-note">LV internal diameter (Teichholz formula → EDV, ESV, EF)</div>
+          <div class="info-note">Data akan tercantum pada cetakan PDF</div>
+        </div>
+
+        <!-- LVEDD + gender -->
+        <div class="param-card">
+          <h3>📏 LVEDD (LV End-Diastolic Diameter)</h3>
+          <div class="input-row">
+            <label>LVEDD (cm) *</label>
+            <input type="number" id="lveddInput" value="5.2" step="0.1" placeholder="contoh: 5.2">
+            <div class="info-note">Normal: wan < 5.6 | pria < 6.0 cm</div>
+          </div>
+          <div class="input-row">
+            <label>Jenis Kelamin</label>
+            <select id="genderSelect">
+              <option value="wanita">Wanita</option>
+              <option value="pria">Pria</option>
+            </select>
+          </div>
+          <div id="cardiomegaliWarning" class="warning-badge">⚖️ Status: Menunggu input LVEDD</div>
+        </div>
+
+        <!-- Diameter Ventrikel Kanan -->
+        <div class="param-card">
+          <h3>📐 Right Ventricle Diameter (RVD)</h3>
+          <div class="input-row">
+            <label>Diameter RV (cm) *</label>
+            <input type="number" id="rvdInput" value="2.4" step="0.1" placeholder="contoh: 2.4">
+            <div class="info-note">Normal < 2.5 cm | borderline 2.5-3.0 | dilatasi ≥ 3.0</div>
+          </div>
+          <div id="rvWarning" class="warning-badge">💓 Status RV: -</div>
         </div>
       </div>
-      <div class="col-right">
-        <div class="results-panel-compact">
-          <div class="result-cards-compact">
-            <div class="res-item-compact">
-              <div class="res-label-compact">EDV (Volume Diastolik)</div>
-              <div class="res-value-compact" id="edvValue">--</div>
-              <div style="font-size: 0.7rem;">mL</div>
+
+      <!-- 2 Kolom: M-Mode LV Dimensions (kiri) dan Hasil EDV/ESV/EF (kanan) -->
+      <div class="two-columns">
+        <div class="col-left">
+          <div class="param-card" style="height: 100%;">
+            <h3>📊 M-Mode LV Dimensions (EF Teichholz)</h3>
+            <div class="input-row">
+              <label>LVIDd (cm) — end-diastolic</label>
+              <input type="number" id="lvidD" value="5.0" step="0.1">
             </div>
-            <div class="res-item-compact">
-              <div class="res-label-compact">ESV (Volume Sistolik)</div>
-              <div class="res-value-compact" id="esvValue">--</div>
-              <div style="font-size: 0.7rem;">mL</div>
+            <div class="input-row">
+              <label>LVIDs (cm) — end-systolic</label>
+              <input type="number" id="lvidS" value="3.2" step="0.1">
             </div>
-            <div class="res-item-compact">
-              <div class="res-label-compact">Ejection Fraction</div>
-              <div class="res-value-compact" id="efValue">--</div>
-              <div style="font-size: 0.7rem;">%</div>
-            </div>
+            <div class="info-note">LV internal diameter (Teichholz formula → EDV, ESV, EF)</div>
           </div>
-          <div id="efInterpret" class="ef-interpret-compact">⏳ Masukkan LVIDd & LVIDs</div>
+        </div>
+        <div class="col-right">
+          <div class="results-panel-compact">
+            <div class="result-cards-compact">
+              <div class="res-item-compact">
+                <div class="res-label-compact">EDV (Volume Diastolik)</div>
+                <div class="res-value-compact" id="edvValue">--</div>
+                <div style="font-size: 0.7rem;">mL</div>
+              </div>
+              <div class="res-item-compact">
+                <div class="res-label-compact">ESV (Volume Sistolik)</div>
+                <div class="res-value-compact" id="esvValue">--</div>
+                <div style="font-size: 0.7rem;">mL</div>
+              </div>
+              <div class="res-item-compact">
+                <div class="res-label-compact">Ejection Fraction</div>
+                <div class="res-value-compact" id="efValue">--</div>
+                <div style="font-size: 0.7rem;">%</div>
+              </div>
+            </div>
+            <div id="efInterpret" class="ef-interpret-compact">⏳ Masukkan LVIDd & LVIDs</div>
+          </div>
         </div>
       </div>
+
+      <footer>🩺 LVEDD cut-off (wanita >5.6 cm, pria >6.0 cm) → kardiomegali. RV diameter normal &lt; 2.5 cm. dr Hendrik Amd.Akup Sp.KKLP.</footer>
     </div>
-
-    <footer>🩺 LVEDD cut-off (wanita >5.6 cm, pria >6.0 cm) → kardiomegali. RV diameter normal &lt; 2.5 cm. dr Hendrik Amd.Akup Sp.KKLP.</footer>
   </div>
-</div>
 
-<script>
-  // DOM elements
-  const lvidDInput = document.getElementById('lvidD');
-  const lvidSInput = document.getElementById('lvidS');
-  const edvSpan = document.getElementById('edvValue');
-  const esvSpan = document.getElementById('esvValue');
-  const efSpan = document.getElementById('efValue');
-  const efInterpretDiv = document.getElementById('efInterpret');
-  
-  // LVEDD + gender
-  const lveddInput = document.getElementById('lveddInput');
-  const genderSelect = document.getElementById('genderSelect');
-  const cardiomegaliDiv = document.getElementById('cardiomegaliWarning');
-  
-  // RV Diameter
-  const rvdInput = document.getElementById('rvdInput');
-  const rvWarningDiv = document.getElementById('rvWarning');
+  <script>
+    // ============================================================
+    //  PASSWORD PROTECTION
+    // ============================================================
+    (function() {
+      const PASSWORD = "Hendrik123";
+      let isUnlocked = false;
 
-  // --- Fungsi Teichholz EDV/ESV ---
-  function hitungEDV(lvid_d) {
-    if (isNaN(lvid_d) || lvid_d <= 0) return null;
-    const denominator = 2.4 + lvid_d;
-    const fraction = 7.0 / denominator;
-    return fraction * Math.pow(lvid_d, 3);
-  }
-  function hitungESV(lvid_s) {
-    if (isNaN(lvid_s) || lvid_s <= 0) return null;
-    const denominator = 2.4 + lvid_s;
-    const fraction = 7.0 / denominator;
-    return fraction * Math.pow(lvid_s, 3);
-  }
+      const passwordOverlay = document.getElementById('passwordOverlay');
+      const passwordInput = document.getElementById('passwordInput');
+      const unlockBtn = document.getElementById('unlockBtn');
+      const passwordError = document.getElementById('passwordError');
+      const mainContent = document.getElementById('mainContent');
 
-  // Update EF dan interpretasi
-  function updateEF() {
-    let lvidD = parseFloat(lvidDInput.value);
-    let lvidS = parseFloat(lvidSInput.value);
-    if (isNaN(lvidD) || lvidD <= 0 || isNaN(lvidS) || lvidS <= 0) {
-      edvSpan.innerText = '---';
-      esvSpan.innerText = '---';
-      efSpan.innerText = '---';
-      efInterpretDiv.innerHTML = '⚠️ Masukkan LVIDd & LVIDs > 0';
-      return;
-    }
-    let edv = hitungEDV(lvidD);
-    let esv = hitungESV(lvidS);
-    if (edv === null || esv === null) {
-      edvSpan.innerText = 'Error';
-      esvSpan.innerText = 'Error';
-      efSpan.innerText = '---';
-      efInterpretDiv.innerHTML = '❌ Periksa nilai input';
-      return;
-    }
-    let ef = ((edv - esv) / edv) * 100;
-    if (ef < 0) ef = 0;
-    if (ef > 100) ef = 100;
-    edvSpan.innerText = edv.toFixed(1);
-    esvSpan.innerText = esv.toFixed(1);
-    efSpan.innerText = ef.toFixed(1);
+      passwordInput.addEventListener('focus', function(e) {});
+
+      passwordInput.addEventListener('keydown', function(e) {
+        e.stopPropagation();
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          attemptUnlock();
+        }
+      });
+
+      passwordInput.addEventListener('input', function(e) {
+        if (passwordError.textContent) {
+          passwordError.textContent = '';
+        }
+      });
+
+      function attemptUnlock() {
+        const entered = passwordInput.value.trim();
+        if (entered === PASSWORD) {
+          isUnlocked = true;
+          passwordOverlay.classList.add('hidden');
+          passwordError.textContent = '';
+          enableAllButtons(true);
+          mainContent.classList.add('unlocked');
+          setTimeout(() => {
+            const firstInput = document.querySelector('.param-card input');
+            if (firstInput) firstInput.focus();
+          }, 200);
+        } else {
+          passwordError.textContent = '❌ Password salah! Silakan coba lagi.';
+          passwordInput.value = '';
+          passwordInput.focus();
+          const box = document.querySelector('.password-box');
+          box.style.animation = 'none';
+          setTimeout(() => {
+            box.style.animation = 'fadeInUp 0.5s ease';
+          }, 10);
+        }
+      }
+
+      function enableAllButtons(enabled) {
+        const selectors = 'button, input, select, .btn-print';
+        document.querySelectorAll(selectors).forEach(el => {
+          el.disabled = !enabled;
+          el.style.pointerEvents = enabled ? 'auto' : 'none';
+          el.style.opacity = enabled ? '1' : '0.5';
+        });
+      }
+
+      unlockBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        attemptUnlock();
+      });
+
+      passwordInput.addEventListener('click', function(e) {
+        e.stopPropagation();
+        this.focus();
+      });
+
+      passwordOverlay.addEventListener('click', function(e) {
+        if (e.target === this) {
+          passwordInput.focus();
+        }
+      });
+
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          passwordInput.focus();
+        }, 300);
+      });
+
+      // Lock main content initially
+      mainContent.classList.remove('unlocked');
+      enableAllButtons(false);
+
+      const observer = new MutationObserver(function() {
+        if (passwordOverlay.classList.contains('hidden')) {
+          mainContent.classList.add('unlocked');
+        }
+      });
+      observer.observe(passwordOverlay, { attributes: true, attributeFilter: ['class'] });
+
+      window.unlockApp = attemptUnlock;
+    })();
+
+    // ============================================================
+    //  MAIN APPLICATION
+    // ============================================================
+    // DOM elements
+    const lvidDInput = document.getElementById('lvidD');
+    const lvidSInput = document.getElementById('lvidS');
+    const edvSpan = document.getElementById('edvValue');
+    const esvSpan = document.getElementById('esvValue');
+    const efSpan = document.getElementById('efValue');
+    const efInterpretDiv = document.getElementById('efInterpret');
     
-    let badgeColor = '';
-    let interpretText = '';
-    if (ef >= 55) { interpretText = '✅ EF Normal (≥55%)'; badgeColor = '#2c7a4d'; }
-    else if (ef >= 45) { interpretText = '⚠️ EF Borderline (45-54%)'; badgeColor = '#e68a2e'; }
-    else if (ef >= 35) { interpretText = '🔻 EF Menurun sedang (35-44%)'; badgeColor = '#c95a0f'; }
-    else { interpretText = '🩺 EF sangat rendah (<35%)'; badgeColor = '#ac3e2f'; }
+    // LVEDD + gender
+    const lveddInput = document.getElementById('lveddInput');
+    const genderSelect = document.getElementById('genderSelect');
+    const cardiomegaliDiv = document.getElementById('cardiomegaliWarning');
     
-    let warningMsg = '';
-    if (lvidS > lvidD) warningMsg = ' (⚠️ LVIDs > LVIDd)';
-    efInterpretDiv.innerHTML = `<span style="background:${badgeColor}; color:white; padding:2px 10px; border-radius:30px; font-size:0.7rem;">EF ${ef.toFixed(1)}%</span> ${interpretText}${warningMsg}`;
-  }
+    // RV Diameter
+    const rvdInput = document.getElementById('rvdInput');
+    const rvWarningDiv = document.getElementById('rvWarning');
 
-  // Update Cardiomegali
-  function updateCardiomegali() {
-    let lvedd = parseFloat(lveddInput.value);
-    if (isNaN(lvedd) || lvedd <= 0) {
-      cardiomegaliDiv.innerHTML = '⚠️ LVEDD: masukkan nilai dalam cm';
-      cardiomegaliDiv.style.background = '#ffe0e0';
-      return;
+    // --- Fungsi Teichholz EDV/ESV ---
+    function hitungEDV(lvid_d) {
+      if (isNaN(lvid_d) || lvid_d <= 0) return null;
+      const denominator = 2.4 + lvid_d;
+      const fraction = 7.0 / denominator;
+      return fraction * Math.pow(lvid_d, 3);
     }
-    const gender = genderSelect.value;
-    let isCardiomegali = false;
-    let threshold = '';
-    if (gender === 'wanita') {
-      if (lvedd > 5.6) isCardiomegali = true;
-      threshold = '5.6 cm (wanita)';
-    } else {
-      if (lvedd > 6.0) isCardiomegali = true;
-      threshold = '6.0 cm (pria)';
+    function hitungESV(lvid_s) {
+      if (isNaN(lvid_s) || lvid_s <= 0) return null;
+      const denominator = 2.4 + lvid_s;
+      const fraction = 7.0 / denominator;
+      return fraction * Math.pow(lvid_s, 3);
     }
-    if (isCardiomegali) {
-      cardiomegaliDiv.innerHTML = `⚠️ KARDIOMEGALI: LVEDD = ${lvedd.toFixed(1)} cm > ${threshold}`;
-      cardiomegaliDiv.style.background = '#ffded5';
-      cardiomegaliDiv.style.borderLeftColor = '#c7362b';
-    } else {
-      cardiomegaliDiv.innerHTML = `✅ LVEDD normal: ${lvedd.toFixed(1)} cm (≤ ${threshold})`;
-      cardiomegaliDiv.style.background = '#e0f3e8';
-      cardiomegaliDiv.style.borderLeftColor = '#2e8b57';
+
+    // Update EF dan interpretasi
+    function updateEF() {
+      let lvidD = parseFloat(lvidDInput.value);
+      let lvidS = parseFloat(lvidSInput.value);
+      if (isNaN(lvidD) || lvidD <= 0 || isNaN(lvidS) || lvidS <= 0) {
+        edvSpan.innerText = '---';
+        esvSpan.innerText = '---';
+        efSpan.innerText = '---';
+        efInterpretDiv.innerHTML = '⚠️ Masukkan LVIDd & LVIDs > 0';
+        return;
+      }
+      let edv = hitungEDV(lvidD);
+      let esv = hitungESV(lvidS);
+      if (edv === null || esv === null) {
+        edvSpan.innerText = 'Error';
+        esvSpan.innerText = 'Error';
+        efSpan.innerText = '---';
+        efInterpretDiv.innerHTML = '❌ Periksa nilai input';
+        return;
+      }
+      let ef = ((edv - esv) / edv) * 100;
+      if (ef < 0) ef = 0;
+      if (ef > 100) ef = 100;
+      edvSpan.innerText = edv.toFixed(1);
+      esvSpan.innerText = esv.toFixed(1);
+      efSpan.innerText = ef.toFixed(1);
+      
+      let badgeColor = '';
+      let interpretText = '';
+      if (ef >= 55) { interpretText = '✅ EF Normal (≥55%)'; badgeColor = '#2c7a4d'; }
+      else if (ef >= 45) { interpretText = '⚠️ EF Borderline (45-54%)'; badgeColor = '#e68a2e'; }
+      else if (ef >= 35) { interpretText = '🔻 EF Menurun sedang (35-44%)'; badgeColor = '#c95a0f'; }
+      else { interpretText = '🩺 EF sangat rendah (<35%)'; badgeColor = '#ac3e2f'; }
+      
+      let warningMsg = '';
+      if (lvidS > lvidD) warningMsg = ' (⚠️ LVIDs > LVIDd)';
+      efInterpretDiv.innerHTML = `<span style="background:${badgeColor}; color:white; padding:2px 10px; border-radius:30px; font-size:0.7rem;">EF ${ef.toFixed(1)}%</span> ${interpretText}${warningMsg}`;
     }
-  }
 
-  // Update RV
-  function updateRVStatus() {
-    let rvd = parseFloat(rvdInput.value);
-    if (isNaN(rvd) || rvd <= 0) {
-      rvWarningDiv.innerHTML = '📏 Masukkan diameter RV (cm)';
-      rvWarningDiv.style.background = '#f0f0fa';
-      return;
+    // Update Cardiomegali
+    function updateCardiomegali() {
+      let lvedd = parseFloat(lveddInput.value);
+      if (isNaN(lvedd) || lvedd <= 0) {
+        cardiomegaliDiv.innerHTML = '⚠️ LVEDD: masukkan nilai dalam cm';
+        cardiomegaliDiv.style.background = '#ffe0e0';
+        return;
+      }
+      const gender = genderSelect.value;
+      let isCardiomegali = false;
+      let threshold = '';
+      if (gender === 'wanita') {
+        if (lvedd > 5.6) isCardiomegali = true;
+        threshold = '5.6 cm (wanita)';
+      } else {
+        if (lvedd > 6.0) isCardiomegali = true;
+        threshold = '6.0 cm (pria)';
+      }
+      if (isCardiomegali) {
+        cardiomegaliDiv.innerHTML = `⚠️ KARDIOMEGALI: LVEDD = ${lvedd.toFixed(1)} cm > ${threshold}`;
+        cardiomegaliDiv.style.background = '#ffded5';
+        cardiomegaliDiv.style.borderLeftColor = '#c7362b';
+      } else {
+        cardiomegaliDiv.innerHTML = `✅ LVEDD normal: ${lvedd.toFixed(1)} cm (≤ ${threshold})`;
+        cardiomegaliDiv.style.background = '#e0f3e8';
+        cardiomegaliDiv.style.borderLeftColor = '#2e8b57';
+      }
     }
-    if (rvd < 2.5) {
-      rvWarningDiv.innerHTML = `✅ Diameter RV normal: ${rvd.toFixed(1)} cm (< 2.5 cm)`;
-      rvWarningDiv.style.background = '#e0f3e8';
-    } else if (rvd >= 2.5 && rvd < 3.0) {
-      rvWarningDiv.innerHTML = `⚠️ Borderline dilatasi RV: ${rvd.toFixed(1)} cm (2.5–3.0 cm)`;
-      rvWarningDiv.style.background = '#fff0d6';
-    } else if (rvd >= 3.0) {
-      rvWarningDiv.innerHTML = `⚠️⚠️ DILATASI RV: ${rvd.toFixed(1)} cm ≥ 3.0 cm`;
-      rvWarningDiv.style.background = '#ffd9d4';
-    } else {
-      rvWarningDiv.innerHTML = `Nilai RV: ${rvd.toFixed(1)} cm`;
+
+    // Update RV
+    function updateRVStatus() {
+      let rvd = parseFloat(rvdInput.value);
+      if (isNaN(rvd) || rvd <= 0) {
+        rvWarningDiv.innerHTML = '📏 Masukkan diameter RV (cm)';
+        rvWarningDiv.style.background = '#f0f0fa';
+        return;
+      }
+      if (rvd < 2.5) {
+        rvWarningDiv.innerHTML = `✅ Diameter RV normal: ${rvd.toFixed(1)} cm (< 2.5 cm)`;
+        rvWarningDiv.style.background = '#e0f3e8';
+      } else if (rvd >= 2.5 && rvd < 3.0) {
+        rvWarningDiv.innerHTML = `⚠️ Borderline dilatasi RV: ${rvd.toFixed(1)} cm (2.5–3.0 cm)`;
+        rvWarningDiv.style.background = '#fff0d6';
+      } else if (rvd >= 3.0) {
+        rvWarningDiv.innerHTML = `⚠️⚠️ DILATASI RV: ${rvd.toFixed(1)} cm ≥ 3.0 cm`;
+        rvWarningDiv.style.background = '#ffd9d4';
+      } else {
+        rvWarningDiv.innerHTML = `Nilai RV: ${rvd.toFixed(1)} cm`;
+      }
     }
-  }
 
-  function refreshAll() {
-    updateEF();
-    updateCardiomegali();
-    updateRVStatus();
-  }
+    function refreshAll() {
+      updateEF();
+      updateCardiomegali();
+      updateRVStatus();
+    }
 
-  // Event listeners
-  lvidDInput.addEventListener('input', refreshAll);
-  lvidSInput.addEventListener('input', refreshAll);
-  lveddInput.addEventListener('input', refreshAll);
-  genderSelect.addEventListener('change', refreshAll);
-  rvdInput.addEventListener('input', refreshAll);
+    // Event listeners
+    lvidDInput.addEventListener('input', refreshAll);
+    lvidSInput.addEventListener('input', refreshAll);
+    lveddInput.addEventListener('input', refreshAll);
+    genderSelect.addEventListener('change', refreshAll);
+    rvdInput.addEventListener('input', refreshAll);
 
-  // Print
-  document.getElementById('printButton').addEventListener('click', () => {
-    window.print();
-  });
+    // Print
+    document.getElementById('printButton').addEventListener('click', () => {
+      window.print();
+    });
 
-  // Initial load
-  window.addEventListener('DOMContentLoaded', () => {
-    if (lvidDInput.value === '') lvidDInput.value = '5.0';
-    if (lvidSInput.value === '') lvidSInput.value = '3.2';
-    if (lveddInput.value === '') lveddInput.value = '5.2';
-    if (rvdInput.value === '') rvdInput.value = '2.4';
-    refreshAll();
-  });
-</script>
+    // Initial load
+    window.addEventListener('DOMContentLoaded', () => {
+      if (lvidDInput.value === '') lvidDInput.value = '5.0';
+      if (lvidSInput.value === '') lvidSInput.value = '3.2';
+      if (lveddInput.value === '') lveddInput.value = '5.2';
+      if (rvdInput.value === '') rvdInput.value = '2.4';
+      refreshAll();
+    });
+  </script>
 </body>
 </html>
