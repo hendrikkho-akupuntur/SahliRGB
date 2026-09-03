@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resep Online · dr. Hendrik</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body{
+    background:#e8e2da;
+    display:flex;
+    justify-content:center;
+    min-height:100vh;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    padding:24px 16px;
+    color:#1f1c18;
+  }
+  .app{ width:100%; max-width:480px; }
+  .card{
+    background:#ffffff;
+    border-radius:14px;
+    border:1px solid #cbbfb3;
+    box-shadow:0 10px 28px rgba(0,0,0,0.10);
+    padding:22px 20px;
+    margin-bottom:16px;
+  }
+  .header-praktek{
+    text-align:center;
+    border-bottom:2px solid #b8a99a;
+    padding-bottom:12px;
+    margin-bottom:16px;
+  }
+  .header-praktek .judul{
+    font-size:19px;
+    font-weight:700;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+  }
+  .header-praktek .dokter{
+    font-size:16px;
+    font-weight:700;
+    margin-top:3px;
+  }
+  .header-praktek .sip{
+    font-size:11px;
+    color:#4a3f37;
+    margin-top:4px;
+    font-weight:600;
+  }
+  .header-praktek .alamat{
+    font-size:12px;
+    color:#4a3f37;
+    font-style:italic;
+    margin-top:2px;
+  }
+  h2.section-title{
+    font-size:14px;
+    font-weight:700;
+    letter-spacing:0.5px;
+    color:#1f1c18;
+    margin-bottom:10px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .field{
+    margin-bottom:12px;
+  }
+  .field label{
+    display:block;
+    font-size:11px;
+    font-weight:700;
+    color:#4a3f37;
+    text-transform:uppercase;
+    letter-spacing:0.4px;
+    margin-bottom:4px;
+  }
+  .field input[type="text"],
+  .field input[type="number"]{
+    width:100%;
+    border:1px solid #cbbfb3;
+    border-radius:10px;
+    padding:10px 12px;
+    font-size:14px;
+    font-family:inherit;
+    background:#fdfcfa;
+    outline:none;
+  }
+  .field input:focus{
+    border-color:#7d6b5a;
+    box-shadow:0 0 0 3px rgba(125,107,90,0.12);
+  }
+  .radio-row{
+    display:flex;
+    gap:18px;
+    padding:10px 2px 2px;
+  }
+  .radio-row label{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:14px;
+    font-weight:400;
+    text-transform:none;
+    cursor:pointer;
+  }
+  .radio-row input{
+    width:16px; height:16px;
+    accent-color:#7d6b5a;
+  }
+  .row-2{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+  }
+
+  .item-obat{
+    background:#fcf9f5;
+    border:1px solid #e2d6ca;
+    border-radius:12px;
+    padding:14px 14px 10px;
+    margin-bottom:12px;
+    position:relative;
+  }
+  .item-obat .no-badge{
+    position:absolute;
+    top:-9px; left:12px;
+    background:#7d6b5a;
+    color:#fff;
+    font-size:11px;
+    font-weight:700;
+    padding:2px 9px;
+    border-radius:20px;
+  }
+  .item-obat .field{ margin-bottom:10px; }
+  .item-obat .field:last-of-type{ margin-bottom:0; }
+  .item-obat .caveat-input{
+    font-family:'Caveat', cursive;
+    font-size:20px;
+    font-weight:600;
+  }
+  .btn-hapus-obat{
+    position:absolute;
+    top:8px; right:8px;
+    background:#ede5db;
+    border:1px solid #d6c9bc;
+    color:#5f4d3d;
+    width:24px; height:24px;
+    border-radius:50%;
+    font-size:12px;
+    font-weight:700;
+    cursor:pointer;
+    line-height:1;
+  }
+  .btn-hapus-obat:hover{ background:#e0d3c4; }
+
+  .btn-tambah-obat{
+    width:100%;
+    background:#f6f2ec;
+    border:1.5px dashed #c4b6a8;
+    border-radius:10px;
+    padding:10px;
+    font-size:13px;
+    font-weight:700;
+    color:#5f4d3d;
+    cursor:pointer;
+    font-family:inherit;
+  }
+  .btn-tambah-obat:hover{ background:#efe7db; }
+
+  .actions{
+    display:flex;
+    gap:10px;
+  }
+  .btn-reset{
+    flex:0 0 auto;
+    background:#ede5db;
+    border:1px solid #cdbfb2;
+    border-radius:30px;
+    padding:12px 18px;
+    font-size:13px;
+    font-weight:700;
+    color:#3d352e;
+    cursor:pointer;
+    font-family:inherit;
+  }
+  .btn-reset:hover{ background:#e0d3c4; }
+  .btn-simpan-pdf{
+    flex:1;
+    background:#5f554a;
+    border:none;
+    border-radius:30px;
+    padding:12px 18px;
+    font-size:14px;
+    font-weight:700;
+    color:#fff;
+    cursor:pointer;
+    box-shadow:0 4px 10px rgba(80,70,60,0.18);
+    font-family:inherit;
+    letter-spacing:0.3px;
+  }
+  .btn-simpan-pdf:hover{ background:#3d352e; }
+  .btn-simpan-pdf:disabled{ opacity:0.6; cursor:not-allowed; box-shadow:none; }
+
+  .note{
+    font-size:11px;
+    color:#8a7c6e;
+    text-align:center;
+    margin-top:10px;
+    line-height:1.5;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="card">
+    <div class="header-praktek">
+      <div class="judul">Praktek Dokter</div>
+      <div class="dokter">dr. Hendrik</div>
+      <div class="sip">No. SIP : 400.7.22.2/2555/SIP/DPMPTSP/MDN/3.1/04/2025</div>
+      <div class="alamat">JL. Sosro No. 104 B · Medan</div>
+    </div>
+
+    <h2 class="section-title">Data Pasien</h2>
+    <div class="field">
+      <label for="namaPasien">Nama Lengkap</label>
+      <input type="text" id="namaPasien" placeholder="cth: Fitler Aritonang">
+    </div>
+    <div class="row-2">
+      <div class="field">
+        <label>Jenis Kelamin</label>
+        <div class="radio-row">
+          <label><input type="radio" name="jk" value="Laki-laki"> Laki-laki</label>
+          <label><input type="radio" name="jk" value="Perempuan"> Perempuan</label>
+        </div>
+      </div>
+      <div class="field">
+        <label for="umurPasien">Umur</label>
+        <input type="text" id="umurPasien" placeholder="cth: 32 tahun">
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 class="section-title">
+      <span>Resep Obat</span>
+      <button class="btn-tambah-obat" id="tambahObatBtn" style="width:auto; padding:6px 14px;">+ Tambah</button>
+    </h2>
+    <div id="listObatContainer"></div>
+  </div>
+
+  <div class="card">
+    <div class="actions">
+      <button class="btn-reset" id="resetBtn">↺ Reset</button>
+      <button class="btn-simpan-pdf" id="simpanPdfBtn">💾 Simpan PDF</button>
+    </div>
+    <div class="note">PDF dibuat langsung sebagai dokumen teks (bukan hasil screenshot), sehingga teks tidak pernah terpotong dan tombol tidak akan ikut tercetak.</div>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  const container   = document.getElementById('listObatContainer');
+  const namaInput   = document.getElementById('namaPasien');
+  const umurInput   = document.getElementById('umurPasien');
+  const radioJk     = document.querySelectorAll('input[name="jk"]');
+  const simpanBtn   = document.getElementById('simpanPdfBtn');
+  const resetBtn    = document.getElementById('resetBtn');
+  const tambahBtn   = document.getElementById('tambahObatBtn');
+
+  let obatCounter = 0;
+
+  function renumber() {
+    container.querySelectorAll('.item-obat').forEach((item, idx) => {
+      item.querySelector('.no-badge').textContent = idx + 1;
+    });
+  }
+
+  function createObatItem() {
+    obatCounter++;
+    const div = document.createElement('div');
+    div.className = 'item-obat';
+    div.innerHTML = `
+      <span class="no-badge">${obatCounter}</span>
+      <button type="button" class="btn-hapus-obat" title="Hapus">✕</button>
+      <div class="field">
+        <label>Nama Obat</label>
+        <input type="text" class="caveat-input obat-nama" placeholder="cth: Simvastatin 10mg">
+      </div>
+      <div class="row-2">
+        <div class="field" style="margin-bottom:0;">
+          <label>Aturan Pakai</label>
+          <input type="text" class="caveat-input obat-aturan" placeholder="cth: 3x1 sehari">
+        </div>
+        <div class="field" style="margin-bottom:0;">
+          <label>Jumlah</label>
+          <input type="text" class="caveat-input obat-jumlah" placeholder="cth: 10 tablet">
+        </div>
+      </div>
+    `;
+    div.querySelector('.btn-hapus-obat').addEventListener('click', function () {
+      if (container.children.length <= 1) {
+        div.querySelectorAll('input').forEach(inp => inp.value = '');
+        return;
+      }
+      container.removeChild(div);
+      renumber();
+    });
+    return div;
+  }
+
+  function resetObatList() {
+    container.innerHTML = '';
+    obatCounter = 0;
+    container.appendChild(createObatItem());
+  }
+
+  function tambahItemObat() {
+    container.appendChild(createObatItem());
+    renumber();
+  }
+
+  function resetSemua() {
+    namaInput.value = '';
+    umurInput.value = '';
+    radioJk.forEach(r => r.checked = false);
+    resetObatList();
+  }
+
+  function getObatData() {
+    const items = [];
+    container.querySelectorAll('.item-obat').forEach(item => {
+      const nama    = item.querySelector('.obat-nama').value.trim();
+      const aturan  = item.querySelector('.obat-aturan').value.trim();
+      const jumlah  = item.querySelector('.obat-jumlah').value.trim();
+      if (nama || aturan || jumlah) {
+        items.push({ nama: nama || '-', aturan: aturan || '-', jumlah: jumlah || '-' });
+      }
+    });
+    return items;
+  }
+
+  function getJkSelected() {
+    let val = '';
+    radioJk.forEach(r => { if (r.checked) val = r.value; });
+    return val;
+  }
+
+  function todayIndo() {
+    const bulan = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+    const d = new Date();
+    return `${d.getDate()} ${bulan[d.getMonth()]} ${d.getFullYear()}`;
+  }
+
+  // ================== GENERATE PDF (vector text, bukan screenshot) ==================
+  function generatePDF() {
+    const nama   = namaInput.value.trim();
+    const umur   = umurInput.value.trim();
+    const jk     = getJkSelected();
+    const items  = getObatData();
+
+    if (!nama) {
+      alert('Nama pasien belum diisi.');
+      namaInput.focus();
+      return;
+    }
+    if (items.length === 0) {
+      alert('Belum ada obat yang diisi.');
+      return;
+    }
+
+    const { jsPDF } = window.jspdf;
+
+    const pageW    = 110;   // mm, lebar kertas resep (1/3 folio)
+    const pageH    = 210;   // mm, tinggi kertas resep standar
+    const marginX  = 10;
+    const contentW = pageW - marginX * 2;
+
+    const doc = new jsPDF({ unit: 'mm', format: [pageW, pageH], orientation: 'portrait' });
+
+    let y = 0;
+
+    // Halaman baru hanya dibuka kalau isi benar-benar melebihi satu lembar resep
+    // (jarang terjadi, hanya kalau daftar obatnya sangat banyak)
+    function ensureSpace(need) {
+      if (y + need > pageH - 12) {
+        doc.addPage([pageW, pageH]);
+        y = 12;
+      }
+    }
+
+    function centerText(text, yy, size, style) {
+      doc.setFont('times', style || 'normal');
+      doc.setFontSize(size);
+      doc.text(text, pageW / 2, yy, { align: 'center' });
+    }
+
+    // ---- HEADER ----
+    y = 14;
+    centerText('PRAKTEK DOKTER', y, 15, 'bold');
+    y += 6;
+    centerText('dr. Hendrik', y, 13, 'bold');
+    y += 5.5;
+    doc.setFont('times', 'bold');
+    doc.setFontSize(8);
+    const sipLines = doc.splitTextToSize('No. SIP : 400.7.22.2/2555/SIP/DPMPTSP/MDN/3.1/04/2025', contentW);
+    sipLines.forEach(line => { doc.text(line, pageW / 2, y, { align: 'center' }); y += 3.6; });
+    doc.setFont('times', 'italic');
+    doc.setFontSize(9.5);
+    doc.text('JL. Sosro No. 104 B · Medan', pageW / 2, y, { align: 'center' });
+    y += 4;
+
+    doc.setDrawColor(184, 169, 154);
+    doc.setLineWidth(0.5);
+    doc.line(marginX, y, pageW - marginX, y);
+    y += 7;
+
+    // ---- DATA PASIEN ----
+    const boxTop = y;
+    doc.setFont('times', 'normal');
+    doc.setFontSize(10.5);
+
+    const namaLines = doc.splitTextToSize(`Nama   : ${nama}`, contentW - 6);
+    const umurLine   = `Umur    : ${umur || '-'}`;
+    const jkLine     = `Kelamin : ${jk || '-'}`;
+
+    const lineH = 5.2;
+    const boxLines = namaLines.length + 2;
+    const boxH = boxLines * lineH + 6;
+
+    doc.setFillColor(246, 242, 236);
+    doc.setDrawColor(221, 210, 198);
+    doc.roundedRect(marginX, boxTop, contentW, boxH, 3, 3, 'FD');
+
+    let ty = boxTop + 6.5;
+    doc.setFont('courier', 'bold');
+    doc.setFontSize(10);
+    namaLines.forEach((line, i) => {
+      doc.text(i === 0 ? line : '           ' + line.replace(/^Nama\s*:\s*/, ''), marginX + 4, ty);
+      ty += lineH;
+    });
+    doc.text(jkLine, marginX + 4, ty);
+    ty += lineH;
+    doc.text(umurLine, marginX + 4, ty);
+
+    y = boxTop + boxH + 8;
+
+    // ---- RESEP OBAT ----
+    doc.setFont('times', 'bold');
+    doc.setFontSize(12.5);
+    doc.text('R/  Resep Obat', marginX, y);
+    y += 2;
+    doc.setDrawColor(214, 201, 188);
+    doc.setLineWidth(0.35);
+    doc.line(marginX, y, pageW - marginX, y);
+    y += 7;
+
+    items.forEach((it, idx) => {
+      doc.setFont('times', 'bold');
+      doc.setFontSize(12);
+      const namaObatLines = doc.splitTextToSize(`${idx + 1}. ${it.nama}`, contentW - 4);
+
+      doc.setFont('times', 'normal');
+      doc.setFontSize(9.5);
+      const detailLines = doc.splitTextToSize(`Aturan pakai: ${it.aturan}    |    Jumlah: ${it.jumlah}`, contentW - 8);
+
+      const blockH = namaObatLines.length * 5.6 + detailLines.length * 4.4 + 7;
+      ensureSpace(blockH);
+
+      doc.setFillColor(252, 249, 245);
+      doc.setDrawColor(226, 214, 202);
+      doc.setLineWidth(0.3);
+      doc.roundedRect(marginX, y - 4.5, contentW, blockH - 1, 2.5, 2.5, 'FD');
+
+      doc.setFont('times', 'bold');
+      doc.setFontSize(12);
+      namaObatLines.forEach(line => { doc.text(line, marginX + 4, y); y += 5.6; });
+
+      doc.setFont('times', 'italic');
+      doc.setFontSize(9.5);
+      detailLines.forEach(line => { doc.text(line, marginX + 8, y); y += 4.4; });
+
+      y += 4.5;
+    });
+
+    // ---- FOOTER: tanggal & tanda tangan ----
+    ensureSpace(28);
+    y += 4;
+    doc.setDrawColor(214, 201, 188);
+    doc.setLineWidth(0.35);
+    doc.line(marginX, y, pageW - marginX, y);
+    y += 8;
+
+    doc.setFont('times', 'normal');
+    doc.setFontSize(9.5);
+    doc.text(`Medan, ${todayIndo()}`, pageW - marginX, y, { align: 'right' });
+
+    const safeName = nama.replace(/[^a-zA-Z0-9]+/g, '_');
+    doc.save(`Resep_${safeName}_dr_Hendrik.pdf`);
+  }
+
+  function simpanPDF() {
+    const btn = simpanBtn;
+    btn.disabled = true;
+    btn.textContent = '⏳ Memproses...';
+    try {
+      generatePDF();
+    } catch (err) {
+      console.error('PDF error:', err);
+      alert('Gagal membuat PDF: ' + err.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '💾 Simpan PDF';
+    }
+  }
+
+  tambahBtn.addEventListener('click', tambahItemObat);
+  resetBtn.addEventListener('click', resetSemua);
+  simpanBtn.addEventListener('click', simpanPDF);
+
+  resetObatList();
+})();
+</script>
+</body>
+</html>
