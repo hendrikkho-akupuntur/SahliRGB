@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Skrining Audiometri Mobile - KKLP FK UPH</title>
     <style>
@@ -79,143 +79,6 @@
             padding: 25px;
         }
         
-        /* ===== PASSWORD OVERLAY ===== */
-        #passwordOverlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(10px);
-            display: flex !important;
-            align-items: center;
-            justify-content: center;
-            z-index: 99999;
-            transition: opacity 0.5s ease;
-        }
-        
-        #passwordOverlay.hidden {
-            opacity: 0;
-            pointer-events: none;
-            display: flex !important;
-        }
-        
-        .password-box {
-            background: white;
-            padding: 45px 40px;
-            border-radius: 24px;
-            max-width: 440px;
-            width: 92%;
-            box-shadow: 0 40px 80px rgba(0,0,0,0.4);
-            text-align: center;
-            animation: fadeInUp 0.6s ease;
-            position: relative;
-        }
-        
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(40px) scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-        
-        .password-box .lock-icon {
-            font-size: 54px;
-            margin-bottom: 12px;
-            display: block;
-        }
-        
-        .password-box h2 {
-            color: #2c3e50;
-            margin-bottom: 6px;
-            font-size: 1.6rem;
-        }
-        
-        .password-box .subtitle {
-            color: #7f8c8d;
-            font-size: 0.9rem;
-            margin-bottom: 22px;
-        }
-        
-        .password-box .input-wrapper {
-            position: relative;
-            width: 100%;
-            margin-bottom: 10px;
-        }
-        
-        .password-box input {
-            width: 100%;
-            padding: 16px 20px;
-            border: 2px solid #dfe6e9;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            transition: border-color 0.3s, box-shadow 0.3s;
-            background: white;
-            color: #2d3436;
-            outline: none;
-            text-align: center;
-            letter-spacing: 3px;
-            font-weight: 600;
-        }
-        
-        .password-box input:focus {
-            outline: none;
-            border-color: #4a6fa5;
-            box-shadow: 0 0 0 4px rgba(74, 111, 165, 0.15);
-        }
-        
-        .password-box input::placeholder {
-            letter-spacing: 1px;
-            font-weight: normal;
-            color: #b2bec3;
-        }
-        
-        .password-box .password-error {
-            color: #e74c3c;
-            font-size: 0.85rem;
-            min-height: 28px;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-        
-        .password-box .btn-unlock {
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, #4a6fa5, #2c3e7a);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            letter-spacing: 1px;
-        }
-        
-        .password-box .btn-unlock:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(74, 111, 165, 0.4);
-        }
-        
-        .password-box .btn-unlock:active {
-            transform: scale(0.98);
-        }
-        
-        .password-box .help-text {
-            margin-top: 16px;
-            font-size: 0.75rem;
-            color: #b2bec3;
-        }
-        
-        .password-box .help-text strong {
-            color: #4a6fa5;
-        }
-        
         .warning-box {
             background: #fff3cd;
             border-left: 4px solid #ffc107;
@@ -265,7 +128,6 @@
             display: block;
         }
         
-        /* ===== EAR SELECTOR ===== */
         .ear-selector {
             display: flex;
             gap: 10px;
@@ -740,7 +602,6 @@
             pointer-events: none;
         }
 
-        /* Ear test indicator */
         .ear-test-indicator {
             display: inline-block;
             padding: 4px 12px;
@@ -762,33 +623,11 @@
     </style>
 </head>
 <body>
-    <!-- ===== PASSWORD OVERLAY ===== -->
-    <div id="passwordOverlay">
-        <div class="password-box">
-            <span class="lock-icon">🔐</span>
-            <h2>Akses Terbatas</h2>
-            <p class="subtitle">Masukkan password untuk mengakses aplikasi</p>
-            
-            <div class="input-wrapper">
-                <input type="password" id="passwordInput" placeholder="Masukkan password..." autofocus>
-            </div>
-            
-            <div class="password-error" id="passwordError"></div>
-            
-            <button class="btn-unlock" id="unlockBtn">🔓 Buka Akses</button>
-            
-            <div class="help-text">
-                Password: <strong>Hubungi dr Hendrik Sp.KKLP</strong>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== MAIN CONTENT ===== -->
     <div class="container" id="mainContent">
         <div class="header">
             <div class="logo-container">
-                <img src="fkuph.jpg" alt="FK UPH" class="logo" id="fkLogo">
-                <img src="KKLP.jpg" alt="KKLP" class="logo logo-kklp" id="kklpLogo">
+                <img src="./Skrining Audiometri Mobile - KKLP FK UPH_files/fkuph.jpg" alt="FK UPH" class="logo" id="fkLogo">
+                <img src="./Skrining Audiometri Mobile - KKLP FK UPH_files/KKLP.jpg" alt="KKLP" class="logo logo-kklp" id="kklpLogo">
             </div>
             <div class="title-container">
                 <h1>Skrining Audiometri Mobile</h1>
@@ -801,7 +640,6 @@
                 <strong>Peringatan:</strong> Alat ini hanya untuk skrining awal. Hasil tidak menggantikan diagnosis medis oleh Spesialis kedokteran Keluarga Anda
             </div>
             
-            <!-- ===== EAR SELECTOR ===== -->
             <div style="margin-bottom: 5px;">
                 <label style="font-weight: 600; color: #495057; display: block; margin-bottom: 8px;">👂 Pilih Telinga yang Diuji:</label>
                 <div class="ear-selector">
@@ -814,7 +652,6 @@
                 </div>
             </div>
             
-            <!-- ===== EAR INDICATOR ===== -->
             <div class="ear-indicator">
                 <span class="label">📍 Telinga Aktif:</span>
                 <span class="value" id="activeEarDisplay">KIRI</span>
@@ -860,11 +697,11 @@
                 <div class="current-test-info">
                     <div>
                         <strong>Pengujian Aktif:</strong>
-                        <span id="currentFrequency">-</span> Hz pada 
-                        <span id="currentDB">-</span> dB
+                        <span id="currentFrequency">8000</span> Hz pada 
+                        <span id="currentDB">2 dB</span> dB
                         <span style="margin-left: 10px; font-size: 0.85rem; color: #6c757d;" id="earTestLabel">(Telinga Kiri)</span>
                     </div>
-                    <div class="test-status" id="testStatus">Status: Mulai dari 2 dB</div>
+                    <div class="test-status" id="testStatus" style="color: rgb(74, 111, 165);">Status: Memainkan 2 dB di TELINGA KIRI</div>
                 </div>
                 <div class="threshold-recorder">
                     🔄 <strong>Mode Pencarian Threshold:</strong> Mulai dari 2 dB, naik 3 dB setiap klik "BELUM DENGAR"
@@ -876,22 +713,16 @@
             </div>
             
             <h3 style="margin-bottom: 15px; color: #495057;">Pilih Frekuensi untuk Diuji:</h3>
-            <div class="frequency-grid" id="frequencyGrid">
-                <!-- Frekuensi akan di-generate oleh JavaScript -->
-            </div>
+            <div class="frequency-grid" id="frequencyGrid"></div>
             
             <div class="results-section">
                 <div class="results-card">
                     <h3>Hasil Skrining (Threshold Akhir) - <span id="resultEarLabel">Kiri</span></h3>
-                    <div class="result-grid" id="resultGrid">
-                        <!-- Hasil akan di-generate oleh JavaScript -->
-                    </div>
+                    <div class="result-grid" id="resultGrid"></div>
                     
                     <div class="conclusion-box" id="conclusionBox">
                         <div class="conclusion-title">Kesimpulan Sementara:</div>
-                        <div class="conclusion-text" id="conclusionText">
-                            Belum ada data. Silakan lakukan tes terlebih dahulu.
-                        </div>
+                        <div class="conclusion-text" id="conclusionText">Belum ada data. Silakan lakukan tes terlebih dahulu.</div>
                     </div>
                 </div>
                 
@@ -934,103 +765,6 @@
     </div>
 
     <script>
-        // ============================================================
-        //  PASSWORD PROTECTION
-        // ============================================================
-        (function() {
-            const PASSWORD = "Hendrik123";
-            let isUnlocked = false;
-
-            const passwordOverlay = document.getElementById('passwordOverlay');
-            const passwordInput = document.getElementById('passwordInput');
-            const unlockBtn = document.getElementById('unlockBtn');
-            const passwordError = document.getElementById('passwordError');
-
-            passwordInput.addEventListener('focus', function(e) {});
-
-            passwordInput.addEventListener('keydown', function(e) {
-                e.stopPropagation();
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    attemptUnlock();
-                }
-            });
-
-            passwordInput.addEventListener('input', function(e) {
-                if (passwordError.textContent) {
-                    passwordError.textContent = '';
-                }
-            });
-
-            function attemptUnlock() {
-                const entered = passwordInput.value.trim();
-                if (entered === PASSWORD) {
-                    isUnlocked = true;
-                    passwordOverlay.classList.add('hidden');
-                    passwordError.textContent = '';
-                    enableAllButtons(true);
-                    setTimeout(() => {
-                        const firstFreq = document.querySelector('.frequency-btn');
-                        if (firstFreq) firstFreq.focus();
-                    }, 200);
-                } else {
-                    passwordError.textContent = '❌ Password salah! Silakan coba lagi.';
-                    passwordInput.value = '';
-                    passwordInput.focus();
-                    const box = document.querySelector('.password-box');
-                    box.style.animation = 'none';
-                    setTimeout(() => {
-                        box.style.animation = 'fadeInUp 0.5s ease';
-                    }, 10);
-                }
-            }
-
-            function enableAllButtons(enabled) {
-                const selectors = 'button, .frequency-btn, .ear-btn, .mode-btn, input[type="range"]';
-                document.querySelectorAll(selectors).forEach(el => {
-                    el.disabled = !enabled;
-                    el.style.pointerEvents = enabled ? 'auto' : 'none';
-                    el.style.opacity = enabled ? '1' : '0.5';
-                });
-            }
-
-            unlockBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                attemptUnlock();
-            });
-
-            passwordInput.addEventListener('click', function(e) {
-                e.stopPropagation();
-                this.focus();
-            });
-
-            passwordOverlay.addEventListener('click', function(e) {
-                if (e.target === this) {
-                    passwordInput.focus();
-                }
-            });
-
-            window.addEventListener('load', function() {
-                setTimeout(function() {
-                    passwordInput.focus();
-                }, 300);
-            });
-
-            document.getElementById('mainContent').style.pointerEvents = 'none';
-            document.getElementById('mainContent').style.opacity = '0.3';
-            enableAllButtons(false);
-
-            const observer = new MutationObserver(function() {
-                if (passwordOverlay.classList.contains('hidden')) {
-                    document.getElementById('mainContent').style.pointerEvents = 'auto';
-                    document.getElementById('mainContent').style.opacity = '1';
-                }
-            });
-            observer.observe(passwordOverlay, { attributes: true, attributeFilter: ['class'] });
-
-            window.unlockApp = attemptUnlock;
-        })();
-
         // ============================================================
         //  MAIN APPLICATION
         // ============================================================
@@ -1088,9 +822,7 @@
                 return this.currentEar === 'left' ? 'LEFT' : 'RIGHT';
             }
             
-            // === PANNING UNTUK STEREO ===
             getPanValue() {
-                // -1 = kiri penuh, 0 = tengah, 1 = kanan penuh
                 return this.currentEar === 'left' ? -1 : 1;
             }
             
@@ -1478,7 +1210,6 @@
                 const dbLevel = this.currentTestingDB;
                 const duration = parseInt(this.durationSlider.value);
                 
-                // Konversi dB ke gain
                 const gainValue = Math.pow(10, (dbLevel - 60) / 20);
                 
                 if (!this.audioContext) {
@@ -1490,41 +1221,31 @@
                     this.audioContext.resume();
                 }
                 
-                // === STEREO PANNING ===
-                // Buat oscillator dan gain
                 this.oscillator = this.audioContext.createOscillator();
                 this.gainNode = this.audioContext.createGain();
-                
-                // Buat panner node untuk stereo panning
                 this.pannerNode = this.audioContext.createStereoPanner();
                 
-                // Set pan value: -1 (kiri) atau 1 (kanan)
                 const panValue = this.getPanValue();
                 this.pannerNode.pan.value = panValue;
                 
-                // Setup oscillator
                 this.oscillator.type = 'sine';
                 this.oscillator.frequency.value = frequency;
                 
-                // Setup gain envelope (fade in/out)
                 const currentTime = this.audioContext.currentTime;
                 this.gainNode.gain.setValueAtTime(0, currentTime);
                 this.gainNode.gain.linearRampToValueAtTime(gainValue, currentTime + 0.1);
                 this.gainNode.gain.setValueAtTime(gainValue, currentTime + duration - 0.1);
                 this.gainNode.gain.linearRampToValueAtTime(0, currentTime + duration);
                 
-                // === ROUTING: oscillator -> gain -> panner -> destination ===
                 this.oscillator.connect(this.gainNode);
                 this.gainNode.connect(this.pannerNode);
                 this.pannerNode.connect(this.audioContext.destination);
                 
-                // Start and stop
                 this.oscillator.start();
                 this.oscillator.stop(currentTime + duration);
                 
                 this.isPlaying = true;
                 
-                // Update status dengan info telinga
                 const earLabel = this.getEarLabel();
                 this.testStatus.textContent = `Status: Memainkan ${dbLevel} dB di TELINGA ${earLabel.toUpperCase()}`;
                 
