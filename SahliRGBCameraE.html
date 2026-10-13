@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kalkulator Hemoglobin dengan Kamera</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./Kalkulator Hemoglobin dengan Kamera_files/all.min.css">
     <style>
         * {
             margin: 0;
@@ -26,163 +26,6 @@
             padding: 30px;
         }
 
-        /* ===== PASSWORD OVERLAY ===== */
-        #passwordOverlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(10px);
-            display: flex !important;
-            align-items: center;
-            justify-content: center;
-            z-index: 99999;
-            transition: opacity 0.5s ease;
-        }
-        
-        #passwordOverlay.hidden {
-            opacity: 0;
-            pointer-events: none;
-            display: flex !important;
-        }
-        
-        .password-box {
-            background: white;
-            padding: 45px 40px;
-            border-radius: 24px;
-            max-width: 440px;
-            width: 92%;
-            box-shadow: 0 40px 80px rgba(0,0,0,0.4);
-            text-align: center;
-            animation: fadeInUp 0.6s ease;
-            position: relative;
-        }
-        
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(40px) scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-        
-        .password-box .lock-icon {
-            font-size: 54px;
-            margin-bottom: 12px;
-            display: block;
-        }
-        
-        .password-box h2 {
-            color: #2c3e50;
-            margin-bottom: 6px;
-            font-size: 1.6rem;
-        }
-        
-        .password-box .subtitle {
-            color: #7f8c8d;
-            font-size: 0.9rem;
-            margin-bottom: 22px;
-        }
-        
-        .password-box .input-wrapper {
-            position: relative;
-            width: 100%;
-            margin-bottom: 10px;
-        }
-        
-        .password-box input {
-            width: 100%;
-            padding: 16px 20px;
-            border: 2px solid #dfe6e9;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            transition: border-color 0.3s, box-shadow 0.3s;
-            background: white;
-            color: #2d3436;
-            outline: none;
-            text-align: center;
-            letter-spacing: 3px;
-            font-weight: 600;
-        }
-        
-        .password-box input:focus {
-            outline: none;
-            border-color: #3498db;
-            box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.15);
-        }
-        
-        .password-box input::placeholder {
-            letter-spacing: 1px;
-            font-weight: normal;
-            color: #b2bec3;
-        }
-        
-        .password-box .password-error {
-            color: #e74c3c;
-            font-size: 0.85rem;
-            min-height: 28px;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-        
-        .password-box .btn-unlock {
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, #3498db, #2980b9);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            letter-spacing: 1px;
-        }
-        
-        .password-box .btn-unlock:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(52, 152, 219, 0.4);
-        }
-        
-        .password-box .btn-unlock:active {
-            transform: scale(0.98);
-        }
-        
-        .password-box .help-text {
-            margin-top: 16px;
-            font-size: 0.75rem;
-            color: #b2bec3;
-        }
-        
-        .password-box .help-text strong {
-            color: #3498db;
-        }
-        
-        .btn:disabled, 
-        .tab-button:disabled,
-        .camera-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            pointer-events: none;
-        }
-
-        /* Lock main content */
-        #mainContent {
-            pointer-events: none;
-            opacity: 0.3;
-            transition: opacity 0.5s ease;
-        }
-        
-        #mainContent.unlocked {
-            pointer-events: auto;
-            opacity: 1;
-        }
-        
         .header-section {
             display: flex;
             align-items: center;
@@ -361,14 +204,6 @@
             height: 100%;
             object-fit: cover;
             transition: transform 0.3s ease;
-        }
-        
-        .zoom-controls {
-            display: none !important;
-        }
-        
-        .coordinates-display {
-            display: none !important;
         }
         
         .selection-point {
@@ -799,10 +634,6 @@
             50% { opacity: 0.5; }
         }
         
-        .pinch-zoom-message {
-            display: none !important;
-        }
-        
         @media (max-width: 768px) {
             .container {
                 padding: 15px;
@@ -858,7 +689,6 @@
             color: white !important;
         }
 
-        /* Logo placeholder */
         .logo-placeholder {
             width: 80px;
             height: 80px;
@@ -877,39 +707,17 @@
     </style>
 </head>
 <body>
-    <!-- ===== PASSWORD OVERLAY ===== -->
-    <div id="passwordOverlay">
-        <div class="password-box">
-            <span class="lock-icon">🔐</span>
-            <h2>Akses Terbatas</h2>
-            <p class="subtitle">Masukkan password untuk mengakses aplikasi</p>
-            
-            <div class="input-wrapper">
-                <input type="password" id="passwordInput" placeholder="Masukkan password..." autofocus>
-            </div>
-            
-            <div class="password-error" id="passwordError"></div>
-            
-            <button class="btn-unlock" id="unlockBtn">🔓 Buka Akses</button>
-            
-            <div class="help-text">
-                Password: <strong>hubungi dr Hendrik Sp.KKLP</strong>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== MAIN CONTENT ===== -->
     <div class="container" id="mainContent">
         <div class="header-section">
             <div class="logo-title-container">
                 <div class="logos-container">
                     <div class="logo-wrapper">
-                        <img src="fkuph.jpg" alt="Logo FK UPH" class="logo" id="fkLogo">
+                        <img src="./Kalkulator Hemoglobin dengan Kamera_files/fkuph.jpg" alt="Logo FK UPH" class="logo" id="fkLogo">
                         <div class="logo-text logo-fk">FK UPH</div>
                     </div>
                     
                     <div class="logo-wrapper">
-                        <img src="KKLP.jpg" alt="Logo KKLP" class="logo" id="kklpLogo">
+                        <img src="./Kalkulator Hemoglobin dengan Kamera_files/KKLP.jpg" alt="Logo KKLP" class="logo" id="kklpLogo">
                         <div class="logo-text logo-ppds">PPDS KKLP</div>
                     </div>
                 </div>
@@ -1065,10 +873,8 @@
                     <div class="result-title">
                         <i class="fas fa-heartbeat"></i> Hasil Perhitungan Hemoglobin
                     </div>
-                    <div id="result">--</div>
-                    <div class="interpretation" id="interpretation">
-                        Masukkan nilai RGB dan klik "Hitung Hemoglobin" untuk melihat hasil
-                    </div>
+                    <div id="result">19.98<span class="unit">g/dL</span></div>
+                    <div class="interpretation" id="interpretation" style="background-color: rgb(234, 239, 255); color: rgb(41, 128, 185);">Nilai hemoglobin tinggi. Disarankan untuk berkonsultasi dengan dokter.</div>
                 </div>
             </div>
             
@@ -1082,9 +888,9 @@
                     <p>Nilai RGB dapat diperoleh dari hasil ekstraksi citra darah menggunakan teknik pengolahan citra digital. Masukkan nilai RGB antara 0-255 untuk mendapatkan estimasi hemoglobin.</p>
                     <p><strong>Interpretasi hasil hemoglobin (g/dL):</strong></p>
                     <ul style="padding-left: 20px; margin-top: 10px;">
-                        <li>< 13.5 (pria) / < 12.0 (wanita): Anemia</li>
+                        <li>&lt; 13.5 (pria) / &lt; 12.0 (wanita): Anemia</li>
                         <li>13.5-17.5 (pria) / 12.0-15.5 (wanita): Normal</li>
-                        <li>> 17.5 (pria) / > 15.5 (wanita): Tinggi</li>
+                        <li>&gt; 17.5 (pria) / &gt; 15.5 (wanita): Tinggi</li>
                     </ul>
                     <div class="instructions">
                         <h3><i class="fas fa-lightbulb"></i> Cara Kerja Deteksi Warna:</h3>
@@ -1101,108 +907,9 @@
 
     <script>
         // ============================================================
-        //  PASSWORD PROTECTION
-        // ============================================================
-        (function() {
-            const PASSWORD = "Hendrik123";
-            let isUnlocked = false;
-
-            const passwordOverlay = document.getElementById('passwordOverlay');
-            const passwordInput = document.getElementById('passwordInput');
-            const unlockBtn = document.getElementById('unlockBtn');
-            const passwordError = document.getElementById('passwordError');
-            const mainContent = document.getElementById('mainContent');
-
-            passwordInput.addEventListener('focus', function(e) {});
-
-            passwordInput.addEventListener('keydown', function(e) {
-                e.stopPropagation();
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    attemptUnlock();
-                }
-            });
-
-            passwordInput.addEventListener('input', function(e) {
-                if (passwordError.textContent) {
-                    passwordError.textContent = '';
-                }
-            });
-
-            function attemptUnlock() {
-                const entered = passwordInput.value.trim();
-                if (entered === PASSWORD) {
-                    isUnlocked = true;
-                    passwordOverlay.classList.add('hidden');
-                    passwordError.textContent = '';
-                    enableAllButtons(true);
-                    mainContent.classList.add('unlocked');
-                    setTimeout(() => {
-                        const firstButton = document.querySelector('.tab-button');
-                        if (firstButton) firstButton.focus();
-                    }, 200);
-                } else {
-                    passwordError.textContent = '❌ Password salah! Silakan coba lagi.';
-                    passwordInput.value = '';
-                    passwordInput.focus();
-                    const box = document.querySelector('.password-box');
-                    box.style.animation = 'none';
-                    setTimeout(() => {
-                        box.style.animation = 'fadeInUp 0.5s ease';
-                    }, 10);
-                }
-            }
-
-            function enableAllButtons(enabled) {
-                const selectors = 'button, .tab-button, .camera-btn, input[type="range"], input[type="number"]';
-                document.querySelectorAll(selectors).forEach(el => {
-                    el.disabled = !enabled;
-                    el.style.pointerEvents = enabled ? 'auto' : 'none';
-                    el.style.opacity = enabled ? '1' : '0.5';
-                });
-            }
-
-            unlockBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                attemptUnlock();
-            });
-
-            passwordInput.addEventListener('click', function(e) {
-                e.stopPropagation();
-                this.focus();
-            });
-
-            passwordOverlay.addEventListener('click', function(e) {
-                if (e.target === this) {
-                    passwordInput.focus();
-                }
-            });
-
-            window.addEventListener('load', function() {
-                setTimeout(function() {
-                    passwordInput.focus();
-                }, 300);
-            });
-
-            // Lock main content initially
-            mainContent.classList.remove('unlocked');
-            enableAllButtons(false);
-
-            const observer = new MutationObserver(function() {
-                if (passwordOverlay.classList.contains('hidden')) {
-                    mainContent.classList.add('unlocked');
-                }
-            });
-            observer.observe(passwordOverlay, { attributes: true, attributeFilter: ['class'] });
-
-            window.unlockApp = attemptUnlock;
-        })();
-
-        // ============================================================
         //  MAIN APPLICATION
         // ============================================================
         // Mendapatkan elemen-elemen DOM
-        // Camera elements
         const cameraVideo = document.getElementById('cameraVideo');
         const canvas = document.getElementById('canvas');
         const capturedImage = document.getElementById('capturedImage');
@@ -1217,7 +924,6 @@
         const coordinatesSpan = document.getElementById('coordinates');
         const flashIndicator = document.getElementById('flashIndicator');
         
-        // Manual input elements
         const redValue = document.getElementById('redValue');
         const redSlider = document.getElementById('redSlider');
         const redDisplay = document.getElementById('redDisplay');
@@ -1233,15 +939,12 @@
         const calculateBtn = document.getElementById('calculateBtn');
         const resetBtn = document.getElementById('resetBtn');
         
-        // Result elements
         const resultElement = document.getElementById('result');
         const interpretationElement = document.getElementById('interpretation');
         
-        // Tab elements
         const tabButtons = document.querySelectorAll('.tab-button');
         const tabContents = document.querySelectorAll('.tab-content');
         
-        // Variables for camera
         let stream = null;
         let isCameraActive = false;
         let imageCaptured = false;
@@ -1253,7 +956,6 @@
         let initialTouchDistance = null;
         let initialZoomLevel = 1;
         
-        // Fungsi untuk mengganti tab
         tabButtons.forEach(button => {
             button.addEventListener('click', () => {
                 const tabId = button.getAttribute('data-tab');
@@ -1270,13 +972,8 @@
             });
         });
         
-        // ================ CAMERA FUNCTIONS ================
-        
         async function startCamera() {
             try {
-                const devices = await navigator.mediaDevices.enumerateDevices();
-                const videoDevices = devices.filter(device => device.kind === 'videoinput');
-                
                 const constraints = { 
                     video: { 
                         facingMode: 'environment',
@@ -1513,8 +1210,6 @@
             resetZoom();
         }
         
-        // ================ MANUAL INPUT FUNCTIONS ================
-        
         function updateSlider(inputElement, sliderElement, displayElement) {
             const value = parseInt(inputElement.value);
             if (value < 0) inputElement.value = 0;
@@ -1533,8 +1228,6 @@
             calculateHemoglobin();
         }
         
-        // ================ HEMOGLOBIN CALCULATION ================
-        
         function calculateHemoglobin() {
             let R, G, B;
             
@@ -1548,7 +1241,6 @@
                 B = parseFloat(blueValue.value);
             }
             
-            // Persamaan: Hb = 19.9810419682248 + (-0.018171709319968 * RED) + (-0.0575018090319132 * GREEN) + (-0.000218039589785796 * BLUE)
             const Hb = 19.9810419682248 + (-0.018171709319968 * R) + (-0.0575018090319132 * G) + (-0.000218039589785796 * B);
             
             const roundedHb = Math.round(Hb * 100) / 100;
@@ -1594,8 +1286,6 @@
             
             calculateHemoglobin();
         }
-        
-        // ================ EVENT LISTENERS ================
         
         startCameraBtn.addEventListener('click', startCamera);
         flashToggleBtn.addEventListener('click', toggleFlash);
