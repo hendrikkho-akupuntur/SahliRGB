@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tes Pendengaran Mandiri</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh; padding: 20px; color: #333;
+        }
+        .container {
+            max-width: 720px; margin: 0 auto; background: white;
+            border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(to right, #4a6fa5, #3a5980);
+            color: white; padding: 20px; display: flex;
+            align-items: center; gap: 15px; flex-wrap: wrap;
+            justify-content: center;
+        }
+        .title-container { flex: 1; min-width: 200px; }
+        .header h1 { font-size: 1.5rem; margin-bottom: 3px; text-align: center; }
+        .header p { opacity: 0.9; font-size: 0.85rem; text-align: center; }
+        .content { padding: 22px; }
+
+        .warning-box {
+            background: #fff3cd; border-left: 4px solid #ffc107;
+            padding: 14px; margin-bottom: 20px; border-radius: 5px;
+            font-size: 0.9rem; display: flex; align-items: flex-start;
+        }
+        .warning-box::before { content: "ℹ️"; margin-right: 10px; font-size: 1.2rem; }
+
+        .intro-box {
+            background: #e7f3ff; border-left: 5px solid #4a6fa5;
+            padding: 18px; border-radius: 10px; margin-bottom: 20px;
+            font-size: 0.95rem; line-height: 1.6;
+        }
+        .intro-box h3 { color: #2c3e50; margin-bottom: 10px; }
+        .intro-box ol { padding-left: 22px; }
+        .intro-box li { margin-bottom: 6px; }
+
+        .start-section { text-align: center; padding: 20px 0; }
+        .start-btn {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            color: white; border: none; padding: 22px 40px;
+            font-size: 1.3rem; font-weight: 700; border-radius: 15px;
+            cursor: pointer; box-shadow: 0 8px 25px rgba(40,167,69,0.4);
+            transition: all 0.3s; width: 100%; max-width: 400px;
+        }
+        .start-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(40,167,69,0.5); }
+        .start-btn:active { transform: scale(0.98); }
+
+        .test-panel { display: none; }
+        .test-panel.active { display: block; }
+
+        .progress-bar {
+            background: #e9ecef; height: 12px; border-radius: 20px;
+            overflow: hidden; margin-bottom: 8px;
+        }
+        .progress-fill {
+            background: linear-gradient(to right, #4a6fa5, #667eea);
+            height: 100%; width: 0%; transition: width 0.4s ease;
+        }
+        .progress-text {
+            text-align: center; font-size: 0.85rem;
+            color: #6c757d; margin-bottom: 20px;
+        }
+
+        .ear-badge-big {
+            text-align: center; padding: 15px; border-radius: 15px;
+            font-size: 1.4rem; font-weight: 700; color: white;
+            margin-bottom: 20px; letter-spacing: 1px;
+        }
+        .ear-badge-big.left { background: linear-gradient(135deg, #17a2b8, #138496); }
+        .ear-badge-big.right { background: linear-gradient(135deg, #28a745, #1e7e34); }
+
+        .test-instruction {
+            text-align: center; padding: 25px 15px;
+            background: #f8f9fa; border-radius: 15px;
+            margin-bottom: 20px; border: 2px dashed #dee2e6;
+        }
+        .test-instruction h2 {
+            color: #2c3e50; font-size: 1.25rem; margin-bottom: 10px;
+        }
+        .test-instruction p {
+            color: #6c757d; font-size: 0.95rem; line-height: 1.5;
+        }
+
+        .play-indicator {
+            text-align: center; padding: 30px 15px;
+            background: #e7f3ff; border-radius: 15px;
+            margin-bottom: 20px; border-left: 5px solid #4a6fa5;
+        }
+        .play-indicator.playing {
+            background: #d4edda; border-left-color: #28a745;
+            animation: pulse 1.2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.65; }
+        }
+        .play-icon { font-size: 3rem; margin-bottom: 10px; }
+        .play-text { font-weight: 700; color: #2c3e50; font-size: 1.05rem; }
+        .play-subtext { font-size: 0.85rem; color: #6c757d; margin-top: 6px; }
+
+        .patient-buttons {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 15px; margin-bottom: 20px;
+        }
+        .patient-btn {
+            padding: 28px 15px; border: none; border-radius: 15px;
+            font-size: 1.15rem; font-weight: 700; cursor: pointer;
+            transition: all 0.3s; color: white;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center; gap: 8px;
+        }
+        .patient-btn .emoji { font-size: 2rem; }
+        .patient-btn.yes { background: linear-gradient(135deg, #28a745, #1e7e34); }
+        .patient-btn.no { background: linear-gradient(135deg, #dc3545, #a71d2a); }
+        .patient-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .patient-btn:active { transform: scale(0.97); }
+        .patient-btn:disabled {
+            opacity: 0.4; cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .replay-btn {
+            width: 100%; padding: 15px; background: #6c757d;
+            color: white; border: none; border-radius: 10px;
+            font-size: 1rem; font-weight: 600; cursor: pointer;
+            transition: all 0.3s;
+        }
+        .replay-btn:hover { background: #5a6268; }
+
+        .result-panel { display: none; }
+        .result-panel.active { display: block; }
+
+        .result-big-card {
+            text-align: center; padding: 30px 20px;
+            border-radius: 20px; margin-bottom: 25px;
+        }
+        .result-big-card.normal {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            border: 3px solid #28a745;
+        }
+        .result-big-card.suspect {
+            background: linear-gradient(135deg, #fff3cd, #ffe69c);
+            border: 3px solid #ffc107;
+        }
+        .result-big-card.abnormal {
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+            border: 3px solid #dc3545;
+        }
+        .result-icon { font-size: 4rem; margin-bottom: 12px; }
+        .result-title {
+            font-size: 1.6rem; font-weight: 800;
+            margin-bottom: 12px; color: #2c3e50;
+        }
+        .result-subtitle {
+            font-size: 1rem; color: #495057; line-height: 1.6;
+            max-width: 500px; margin: 0 auto;
+        }
+
+        .consult-box {
+            background: #e7f3ff; border-left: 5px solid #4a6fa5;
+            padding: 20px; border-radius: 12px; margin-bottom: 20px;
+        }
+        .consult-box h4 { color: #2c3e50; margin-bottom: 10px; font-size: 1.1rem; }
+        .consult-box p { color: #495057; font-size: 0.95rem; line-height: 1.6; margin-bottom: 15px; }
+
+        .wa-btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            gap: 10px; background: linear-gradient(135deg, #25D366, #128C7E);
+            color: white; padding: 16px 25px; border-radius: 12px;
+            font-size: 1.05rem; font-weight: 700; text-decoration: none;
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+            transition: all 0.3s; width: 100%; border: none; cursor: pointer;
+        }
+        .wa-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(37, 211, 102, 0.5); }
+
+        .detail-section {
+            background: #f8f9fa; padding: 18px; border-radius: 12px;
+            margin-bottom: 18px;
+        }
+        .detail-section h4 { color: #495057; margin-bottom: 12px; font-size: 1rem; }
+        .ear-summary {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .ear-summary-item {
+            padding: 15px; border-radius: 10px;
+            background: white; border: 2px solid #dee2e6; text-align: center;
+        }
+        .ear-summary-item.left { border-left: 5px solid #17a2b8; }
+        .ear-summary-item.right { border-left: 5px solid #28a745; }
+        .ear-summary-item .ear-name {
+            font-weight: 700; color: #495057;
+            font-size: 0.9rem; margin-bottom: 6px;
+        }
+        .ear-summary-item .ear-status {
+            font-weight: 700; font-size: 1rem;
+        }
+        .ear-summary-item .ear-status.ok { color: #28a745; }
+        .ear-summary-item .ear-status.warn { color: #ffc107; }
+        .ear-summary-item .ear-status.bad { color: #dc3545; }
+
+        .action-buttons {
+            display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap;
+        }
+        .btn {
+            flex: 1; min-width: 130px; padding: 15px;
+            border: none; border-radius: 10px;
+            font-size: 1rem; font-weight: 600;
+            cursor: pointer; transition: all 0.3s;
+        }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn-primary { background: linear-gradient(to right, #4a6fa5, #3a5980); color: white; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+
+        .footer {
+            margin-top: 25px; padding: 18px; text-align: center;
+            background: #f8f9fa; border-radius: 12px;
+            color: #6c757d; font-size: 0.85rem;
+            border-top: 1px solid #dee2e6;
+        }
+        .footer p { margin: 4px 0; }
+        .copyright { font-style: italic; color: #4a6fa5; font-weight: 600; margin-top: 8px; }
+
+        @media (max-width: 500px) {
+            .patient-buttons { grid-template-columns: 1fr; }
+            .ear-summary { grid-template-columns: 1fr; }
+            .header h1 { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title-container">
+                <h1>Tes Pendengaran Mandiri</h1>
+                <p>Skrining awal pendengaran</p>
+            </div>
+        </div>
+
+        <div class="content">
+
+            <!-- ===== HALAMAN AWAL ===== -->
+            <div class="start-section" id="startSection">
+                <div class="warning-box">
+                    Tes ini <strong>bukan pengganti pemeriksaan dokter</strong>. Hasil hanya untuk skrining awal.
+                </div>
+
+                <div class="intro-box">
+                    <h3>📋 Cara Menggunakan:</h3>
+                    <ol>
+                        <li>Pakai <strong>headset/earphone</strong> yang nyaman.</li>
+                        <li>Cari tempat yang <strong>tenang</strong>, tanpa suara bising.</li>
+                        <li>Tes akan berjalan otomatis: <strong>telinga kiri dulu</strong>, lalu <strong>telinga kanan</strong>.</li>
+                        <li>Setiap kali mendengar suara, tekan <strong>"DENGAR"</strong>.</li>
+                        <li>Jika tidak mendengar, tekan <strong>"TIDAK DENGAR"</strong>.</li>
+                        <li>Tes selesai dalam ±3–5 menit. Hasil akan muncul otomatis.</li>
+                    </ol>
+                </div>
+
+                <button class="start-btn" id="startBtn">▶️ Mulai Tes Pendengaran</button>
+            </div>
+
+            <!-- ===== HALAMAN TES ===== -->
+            <div class="test-panel" id="testPanel">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-text" id="progressText">Langkah 1 dari 8</div>
+
+                <div class="ear-badge-big left" id="earBadgeBig">
+                    🎧 TELINGA KIRI
+                </div>
+
+                <div class="test-instruction">
+                    <h2 id="instructionTitle">Dengarkan suara berikutnya...</h2>
+                    <p id="instructionText">Pastikan headset terpasang di telinga yang benar.</p>
+                </div>
+
+                <div class="play-indicator" id="playIndicator">
+                    <div class="play-icon">🔊</div>
+                    <div class="play-text" id="playText">Suara sedang diputar...</div>
+                    <div class="play-subtext">Dengarkan dengan saksama</div>
+                </div>
+
+                <div class="patient-buttons">
+                    <button class="patient-btn yes" id="yesBtn" disabled>
+                        <span class="emoji">✓</span>
+                        <span>DENGAR</span>
+                    </button>
+                    <button class="patient-btn no" id="noBtn" disabled>
+                        <span class="emoji">✗</span>
+                        <span>TIDAK DENGAR</span>
+                    </button>
+                </div>
+
+                <button class="replay-btn" id="replayBtn" disabled>🔁 Putar Ulang Suara</button>
+            </div>
+
+            <!-- ===== HALAMAN HASIL ===== -->
+            <div class="result-panel" id="resultPanel">
+                <div class="result-big-card normal" id="resultBigCard">
+                    <div class="result-icon" id="resultIcon">✅</div>
+                    <div class="result-title" id="resultTitle">Pendengaran Normal</div>
+                    <div class="result-subtitle" id="resultSubtitle">Tidak ditemukan tanda gangguan pendengaran.</div>
+                </div>
+
+                <div class="detail-section">
+                    <h4>Ringkasan Per Telinga</h4>
+                    <div class="ear-summary">
+                        <div class="ear-summary-item left">
+                            <div class="ear-name">👈 Telinga Kiri</div>
+                            <div class="ear-status ok" id="leftStatus">Normal</div>
+                        </div>
+                        <div class="ear-summary-item right">
+                            <div class="ear-name">👉 Telinga Kanan</div>
+                            <div class="ear-status ok" id="rightStatus">Normal</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="consult-box" id="consultBox">
+                    <h4>💬 Konsultasi dengan Dokter</h4>
+                    <p id="consultText">Jika Anda memiliki keluhan pendengaran atau ingin memastikan hasil, silakan hubungi:</p>
+                    <a class="wa-btn" id="waBtn" href="#" target="_blank">
+                        <span style="font-size:1.3rem;">📱</span>
+                        <span>Chat dr. Hendrik Sp.KKLP via WhatsApp</span>
+                    </a>
+                    <p style="text-align:center;margin-top:10px;font-size:0.85rem;color:#6c757d;">
+                        Nomor: 085270410547
+                    </p>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" id="restartBtn">🔄 Ulangi Tes</button>
+                    <button class="btn btn-primary" id="saveBtn">💾 Simpan Hasil</button>
+                </div>
+            </div>
+
+            <div class="footer">
+                <p class="copyright">© dr. Hendrik Sp.KKLP</p>
+                <p style="font-size:0.75rem;margin-top:8px;color:#adb5bd;">Versi Pasien 1.0 - 2024</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class PatientAudiometry {
+            constructor() {
+                // ===== KONFIGURASI INTERNAL (tidak ditampilkan ke pasien) =====
+                this.FREQUENCIES = [500, 1000, 2000, 4000];
+                this.START_DB = 20;
+                this.STEP_DB = 5;
+                this.MAX_DB = 90;
+                this.NORMAL_THRESHOLD = 25;
+                this.ASYMMETRY_DB = 10;
+
+                // ===== STATE =====
+                this.currentEar = 'left';
+                this.currentFreqIndex = 0;
+                this.currentDB = this.START_DB;
+                this.thresholds = { left: {}, right: {} };
+                this.testInProgress = false;
+                this.audioContext = null;
+                this.oscillator = null;
+                this.gainNode = null;
+                this.pannerNode = null;
+                this.autoPlayTimeout = null;
+
+                this.initDOM();
+                this.bindEvents();
+            }
+
+            initDOM() {
+                this.startSection = document.getElementById('startSection');
+                this.testPanel = document.getElementById('testPanel');
+                this.resultPanel = document.getElementById('resultPanel');
+                this.startBtn = document.getElementById('startBtn');
+
+                this.progressFill = document.getElementById('progressFill');
+                this.progressText = document.getElementById('progressText');
+                this.earBadgeBig = document.getElementById('earBadgeBig');
+                this.instructionTitle = document.getElementById('instructionTitle');
+                this.instructionText = document.getElementById('instructionText');
+                this.playIndicator = document.getElementById('playIndicator');
+                this.playText = document.getElementById('playText');
+
+                this.yesBtn = document.getElementById('yesBtn');
+                this.noBtn = document.getElementById('noBtn');
+                this.replayBtn = document.getElementById('replayBtn');
+
+                this.resultBigCard = document.getElementById('resultBigCard');
+                this.resultIcon = document.getElementById('resultIcon');
+                this.resultTitle = document.getElementById('resultTitle');
+                this.resultSubtitle = document.getElementById('resultSubtitle');
+                this.leftStatus = document.getElementById('leftStatus');
+                this.rightStatus = document.getElementById('rightStatus');
+                this.consultText = document.getElementById('consultText');
+                this.waBtn = document.getElementById('waBtn');
+
+                this.restartBtn = document.getElementById('restartBtn');
+                this.saveBtn = document.getElementById('saveBtn');
+            }
+
+            bindEvents() {
+                this.startBtn.addEventListener('click', () => this.startTest());
+                this.yesBtn.addEventListener('click', () => this.handleHeard());
+                this.noBtn.addEventListener('click', () => this.handleNotHeard());
+                this.replayBtn.addEventListener('click', () => this.playTone());
+                this.restartBtn.addEventListener('click', () => this.restart());
+                this.saveBtn.addEventListener('click', () => this.saveResults());
+            }
+
+            initAudio() {
+                if (!this.audioContext) {
+                    try {
+                        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    } catch (e) {
+                        alert('Browser Anda tidak mendukung audio. Gunakan Chrome atau Edge terbaru.');
+                        return false;
+                    }
+                }
+                if (this.audioContext.state === 'suspended') this.audioContext.resume();
+                return true;
+            }
+
+            startTest() {
+                if (!this.initAudio()) return;
+
+                this.currentEar = 'left';
+                this.currentFreqIndex = 0;
+                this.currentDB = this.START_DB;
+                this.thresholds = { left: {}, right: {} };
+
+                this.startSection.style.display = 'none';
+                this.resultPanel.classList.remove('active');
+                this.testPanel.classList.add('active');
+
+                this.showCurrentTest();
+            }
+
+            getTotalSteps() {
+                return this.FREQUENCIES.length * 2;
+            }
+
+            getCurrentStep() {
+                return this.currentFreqIndex + (this.currentEar === 'right' ? this.FREQUENCIES.length : 0) + 1;
+            }
+
+            showCurrentTest() {
+                this.updateProgress();
+                this.updateEarBadge();
+                this.updateInstruction();
+
+                this.playIndicator.classList.remove('playing');
+                this.playText.textContent = 'Bersiap...';
+                this.playIndicator.querySelector('.play-icon').textContent = '🎧';
+
+                this.yesBtn.disabled = true;
+                this.noBtn.disabled = true;
+                this.replayBtn.disabled = true;
+
+                if (this.autoPlayTimeout) clearTimeout(this.autoPlayTimeout);
+                this.autoPlayTimeout = setTimeout(() => {
+                    this.playTone();
+                }, 1000);
+            }
+
+            updateProgress() {
+                const step = this.getCurrentStep();
+                const total = this.getTotalSteps();
+                const percent = ((step - 1) / total) * 100;
+                this.progressFill.style.width = percent + '%';
+                this.progressText.textContent = `Langkah ${step} dari ${total}`;
+            }
+
+            updateEarBadge() {
+                if (this.currentEar === 'left') {
+                    this.earBadgeBig.textContent = '🎧 TELINGA KIRI';
+                    this.earBadgeBig.className = 'ear-badge-big left';
+                } else {
+                    this.earBadgeBig.textContent = '🎧 TELINGA KANAN';
+                    this.earBadgeBig.className = 'ear-badge-big right';
+                }
+            }
+
+            updateInstruction() {
+                const earText = this.currentEar === 'left' ? 'kiri' : 'kanan';
+
+                if (this.currentDB === this.START_DB) {
+                    this.instructionTitle.textContent = `Dengarkan suara di telinga ${earText}...`;
+                    this.instructionText.textContent = 'Jika Anda mendengar suara, tekan "DENGAR". Jika tidak, tekan "TIDAK DENGAR".';
+                } else {
+                    this.instructionTitle.textContent = `Suara diperbesar di telinga ${earText}...`;
+                    this.instructionText.textContent = 'Apakah Anda sekarang mendengar suara? Tekan tombol yang sesuai.';
+                }
+            }
+
+            playTone() {
+                if (!this.initAudio()) return;
+
+                this.stopTone();
+
+                const frequency = this.FREQUENCIES[this.currentFreqIndex];
+                const dbLevel = this.currentDB;
+                const duration = 2.5;
+
+                const gainValue = Math.max(0.0001, Math.min(0.9, Math.pow(10, (dbLevel - 75) / 20)));
+
+                this.oscillator = this.audioContext.createOscillator();
+                this.gainNode = this.audioContext.createGain();
+                this.pannerNode = this.audioContext.createStereoPanner();
+
+                this.pannerNode.pan.value = this.currentEar === 'left' ? -1 : 1;
+                this.oscillator.type = 'sine';
+                this.oscillator.frequency.value = frequency;
+
+                const t = this.audioContext.currentTime;
+                this.gainNode.gain.setValueAtTime(0, t);
+                this.gainNode.gain.linearRampToValueAtTime(gainValue, t + 0.15);
+                this.gainNode.gain.setValueAtTime(gainValue, t + duration - 0.15);
+                this.gainNode.gain.linearRampToValueAtTime(0, t + duration);
+
+                this.oscillator.connect(this.gainNode);
+                this.gainNode.connect(this.pannerNode);
+                this.pannerNode.connect(this.audioContext.destination);
+
+                this.oscillator.start();
+                this.oscillator.stop(t + duration);
+
+                this.playIndicator.classList.add('playing');
+                this.playIndicator.querySelector('.play-icon').textContent = '🔊';
+                this.playText.textContent = 'Suara sedang diputar...';
+
+                setTimeout(() => {
+                    this.playIndicator.classList.remove('playing');
+                    this.playIndicator.querySelector('.play-icon').textContent = '🎧';
+                    this.playText.textContent = 'Apakah Anda mendengar suara?';
+                    this.yesBtn.disabled = false;
+                    this.noBtn.disabled = false;
+                    this.replayBtn.disabled = false;
+                }, duration * 1000);
+            }
+
+            stopTone() {
+                if (this.oscillator) {
+                    try { this.oscillator.stop(); this.oscillator.disconnect(); } catch(e) {}
+                    this.oscillator = null;
+                }
+                if (this.gainNode) { try { this.gainNode.disconnect(); } catch(e) {} this.gainNode = null; }
+                if (this.pannerNode) { try { this.pannerNode.disconnect(); } catch(e) {} this.pannerNode = null; }
+            }
+
+            handleHeard() {
+                const freq = this.FREQUENCIES[this.currentFreqIndex];
+                this.thresholds[this.currentEar][freq] = this.currentDB;
+                this.moveToNext();
+            }
+
+            handleNotHeard() {
+                this.currentDB += this.STEP_DB;
+
+                if (this.currentDB > this.MAX_DB) {
+                    const freq = this.FREQUENCIES[this.currentFreqIndex];
+                    this.thresholds[this.currentEar][freq] = this.MAX_DB;
+                    this.moveToNext();
+                    return;
+                }
+
+                this.updateInstruction();
+                this.yesBtn.disabled = true;
+                this.noBtn.disabled = true;
+                this.replayBtn.disabled = true;
+                this.showCurrentTest();
+            }
+
+            moveToNext() {
+                this.stopTone();
+
+                this.currentDB = this.START_DB;
+                this.currentFreqIndex++;
+
+                if (this.currentFreqIndex >= this.FREQUENCIES.length) {
+                    if (this.currentEar === 'left') {
+                        this.currentEar = 'right';
+                        this.currentFreqIndex = 0;
+                        this.askSwitchEar();
+                    } else {
+                        this.finishTest();
+                    }
+                } else {
+                    this.showCurrentTest();
+                }
+            }
+
+            askSwitchEar() {
+                this.testPanel.classList.remove('active');
+                this.startSection.style.display = 'block';
+                this.startSection.innerHTML = `
+                    <div class="intro-box" style="text-align:center;">
+                        <h3 style="font-size:1.4rem;margin-bottom:15px;">🎧 Telinga Kiri Selesai</h3>
+                        <p style="font-size:1.05rem;line-height:1.7;margin-bottom:20px;">
+                            Silakan <strong>pindahkan headset ke telinga KANAN</strong>.<br>
+                            Pastikan headset terpasang dengan benar sebelum melanjutkan.
+                        </p>
+                        <button class="start-btn" id="continueRightBtn" style="max-width:100%;">
+                            👉 Lanjutkan ke Telinga Kanan
+                        </button>
+                    </div>
+                `;
+                document.getElementById('continueRightBtn').addEventListener('click', () => {
+                    this.startSection.style.display = 'none';
+                    this.testPanel.classList.add('active');
+                    this.showCurrentTest();
+                });
+            }
+
+            finishTest() {
+                this.stopTone();
+                this.testPanel.classList.remove('active');
+                this.resultPanel.classList.add('active');
+                this.showResults();
+            }
+
+            analyzeResults() {
+                const left = this.thresholds.left;
+                const right = this.thresholds.right;
+
+                const leftAbnormal = Object.values(left).some(v => v > this.NORMAL_THRESHOLD);
+                const rightAbnormal = Object.values(right).some(v => v > this.NORMAL_THRESHOLD);
+
+                let asymmetricFreqs = [];
+                this.FREQUENCIES.forEach(freq => {
+                    const l = left[freq];
+                    const r = right[freq];
+                    if (l !== undefined && r !== undefined) {
+                        if (Math.abs(l - r) >= this.ASYMMETRY_DB) {
+                            asymmetricFreqs.push(freq);
+                        }
+                    }
+                });
+                const hasAsymmetry = asymmetricFreqs.length > 0;
+
+                let overall;
+                if (leftAbnormal || rightAbnormal) {
+                    overall = 'abnormal';
+                } else if (hasAsymmetry) {
+                    overall = 'suspect';
+                } else {
+                    overall = 'normal';
+                }
+
+                return {
+                    overall,
+                    leftAbnormal,
+                    rightAbnormal,
+                    hasAsymmetry,
+                    asymmetricFreqs
+                };
+            }
+
+            getEarStatus(ear, analysis) {
+                const thresholds = this.thresholds[ear];
+                const abnormal = Object.values(thresholds).some(v => v > this.NORMAL_THRESHOLD);
+                if (abnormal) return 'bad';
+                if (analysis.hasAsymmetry) {
+                    const other = ear === 'left' ? 'right' : 'left';
+                    const asymmetricHere = this.FREQUENCIES.some(freq => {
+                        const a = this.thresholds[ear][freq];
+                        const b = this.thresholds[other][freq];
+                        return a !== undefined && b !== undefined && Math.abs(a - b) >= this.ASYMMETRY_DB;
+                    });
+                    if (asymmetricHere) return 'warn';
+                }
+                return 'ok';
+            }
+
+            showResults() {
+                const analysis = this.analyzeResults();
+
+                if (analysis.overall === 'normal') {
+                    this.resultBigCard.className = 'result-big-card normal';
+                    this.resultIcon.textContent = '✅';
+                    this.resultTitle.textContent = 'Pendengaran Normal';
+                    this.resultSubtitle.textContent = 'Tidak ditemukan tanda gangguan pendengaran pada kedua telinga. Tetap jaga kesehatan telinga Anda.';
+                    this.consultText.textContent = 'Jika Anda tetap memiliki keluhan (telinga berdenging, sulit mendengar di keramaian, dll), silakan konsultasi:';
+                } else if (analysis.overall === 'suspect') {
+                    this.resultBigCard.className = 'result-big-card suspect';
+                    this.resultIcon.textContent = '⚠️';
+                    this.resultTitle.textContent = 'Perlu Perhatian';
+                    this.resultSubtitle.textContent = 'Ditemukan perbedaan pendengaran antara telinga kiri dan kanan. Meskipun masih dalam batas normal, hal ini sebaiknya dikonsultasikan.';
+                    this.consultText.textContent = 'Disarankan untuk berkonsultasi dengan dokter:';
+                } else {
+                    this.resultBigCard.className = 'result-big-card abnormal';
+                    this.resultIcon.textContent = '🔴';
+                    this.resultTitle.textContent = 'Perlu Pemeriksaan Lanjutan';
+                    this.resultSubtitle.textContent = 'Ditemukan tanda kemungkinan gangguan pendengaran. Segera konsultasikan dengan dokter.';
+                    this.consultText.textContent = 'Segera hubungi dokter untuk pemeriksaan lebih lanjut:';
+                }
+
+                const leftState = this.getEarStatus('left', analysis);
+                const rightState = this.getEarStatus('right', analysis);
+
+                this.leftStatus.className = 'ear-status ' + (leftState === 'ok' ? 'ok' : leftState === 'warn' ? 'warn' : 'bad');
+                this.leftStatus.textContent = leftState === 'ok' ? '✓ Normal' : leftState === 'warn' ? '⚠ Perlu Perhatian' : '✗ Perlu Pemeriksaan';
+
+                this.rightStatus.className = 'ear-status ' + (rightState === 'ok' ? 'ok' : rightState === 'warn' ? 'warn' : 'bad');
+                this.rightStatus.textContent = rightState === 'ok' ? '✓ Normal' : rightState === 'warn' ? '⚠ Perlu Perhatian' : '✗ Perlu Pemeriksaan';
+
+                const waMessage = this.buildWhatsAppMessage(analysis);
+                const waNumber = '085270410547'.replace(/^0/, '62');
+                this.waBtn.href = `https://wa.me/${waNumber}?text=${encodeURIComponent(waMessage)}`;
+            }
+
+            buildWhatsAppMessage(analysis) {
+                let msg = `Halo dr. Hendrik Sp.KKLP,\n\n`;
+                msg += `Saya baru saja melakukan *Tes Pendengaran Mandiri*.\n\n`;
+
+                if (analysis.overall === 'normal') {
+                    msg += `Hasil: *Pendengaran Normal* ✅\n`;
+                } else if (analysis.overall === 'suspect') {
+                    msg += `Hasil: *Perlu Perhatian* ⚠️\n`;
+                    msg += `(Terdapat perbedaan pendengaran antara telinga kiri dan kanan)\n`;
+                } else {
+                    msg += `Hasil: *Perlu Pemeriksaan Lanjutan* 🔴\n`;
+                }
+
+                msg += `\nTelinga Kiri: ${this.getEarStatus('left', analysis) === 'ok' ? 'Normal' : this.getEarStatus('left', analysis) === 'warn' ? 'Perlu Perhatian' : 'Perlu Pemeriksaan'}\n`;
+                msg += `Telinga Kanan: ${this.getEarStatus('right', analysis) === 'ok' ? 'Normal' : this.getEarStatus('right', analysis) === 'warn' ? 'Perlu Perhatian' : 'Perlu Pemeriksaan'}\n`;
+
+                msg += `\nSaya ingin berkonsultasi lebih lanjut mengenai hasil tes ini.\n\nTerima kasih. 🙏`;
+                return msg;
+            }
+
+            saveResults() {
+                const analysis = this.analyzeResults();
+                const dateStr = new Date().toLocaleString('id-ID');
+
+                let report = `LAPORAN TES PENDENGARAN MANDIRI\n`;
+                report += `=====================================\n`;
+                report += `Tanggal: ${dateStr}\n`;
+                report += `Aplikasi: Tes Pendengaran Mandiri\n\n`;
+
+                report += `HASIL SKRINING:\n`;
+                report += `-------------------------------------\n`;
+                let overallText = analysis.overall === 'normal' ? 'Pendengaran Normal' :
+                                  analysis.overall === 'suspect' ? 'Perlu Perhatian (Asimetri)' :
+                                  'Perlu Pemeriksaan Lanjutan';
+                report += `Status: ${overallText}\n\n`;
+
+                report += `STATUS PER TELINGA:\n`;
+                report += `- Telinga Kiri: ${this.getEarStatus('left', analysis) === 'ok' ? 'Normal' : this.getEarStatus('left', analysis) === 'warn' ? 'Perlu Perhatian' : 'Perlu Pemeriksaan'}\n`;
+                report += `- Telinga Kanan: ${this.getEarStatus('right', analysis) === 'ok' ? 'Normal' : this.getEarStatus('right', analysis) === 'warn' ? 'Perlu Perhatian' : 'Perlu Pemeriksaan'}\n\n`;
+
+                report += `REKOMENDASI:\n`;
+                report += `-------------------------------------\n`;
+                if (analysis.overall === 'normal') {
+                    report += `Tidak ditemukan tanda gangguan pendengaran.\n`;
+                    report += `Jika tetap ada keluhan, konsultasikan dengan dokter.\n`;
+                } else {
+                    report += `Disarankan konsultasi dengan:\n`;
+                    report += `dr. Hendrik Sp.KKLP\n`;
+                    report += `WhatsApp: 085270410547\n`;
+                }
+
+                report += `\n=====================================\n`;
+                report += `© dr. Hendrik Sp.KKLP\n`;
+
+                const blob = new Blob([report], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `hasil-tes-pendengaran-${new Date().toISOString().slice(0, 10)}.txt`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                alert('Hasil tes telah diunduh. Simpan file ini untuk konsultasi.');
+            }
+
+            restart() {
+                this.stopTone();
+                if (this.autoPlayTimeout) clearTimeout(this.autoPlayTimeout);
+
+                this.currentEar = 'left';
+                this.currentFreqIndex = 0;
+                this.currentDB = this.START_DB;
+                this.thresholds = { left: {}, right: {} };
+
+                this.resultPanel.classList.remove('active');
+                this.testPanel.classList.remove('active');
+                this.startSection.style.display = 'block';
+
+                this.startSection.innerHTML = `
+                    <div class="warning-box">
+                        Tes ini <strong>bukan pengganti pemeriksaan dokter</strong>. Hasil hanya untuk skrining awal.
+                    </div>
+                    <div class="intro-box">
+                        <h3>📋 Cara Menggunakan:</h3>
+                        <ol>
+                            <li>Pakai <strong>headset/earphone</strong> yang nyaman.</li>
+                            <li>Cari tempat yang <strong>tenang</strong>, tanpa suara bising.</li>
+                            <li>Tes akan berjalan otomatis: <strong>telinga kiri dulu</strong>, lalu <strong>telinga kanan</strong>.</li>
+                            <li>Setiap kali mendengar suara, tekan <strong>"DENGAR"</strong>.</li>
+                            <li>Jika tidak mendengar, tekan <strong>"TIDAK DENGAR"</strong>.</li>
+                            <li>Tes selesai dalam ±3–5 menit. Hasil akan muncul otomatis.</li>
+                        </ol>
+                    </div>
+                    <button class="start-btn" id="startBtn">▶️ Mulai Tes Pendengaran</button>
+                `;
+                document.getElementById('startBtn').addEventListener('click', () => this.startTest());
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            new PatientAudiometry();
+        });
+    </script>
+</body>
+</html>
