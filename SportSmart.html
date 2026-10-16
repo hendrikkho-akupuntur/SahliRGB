@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SportSmart — Kenali Tubuh Anda, Berolahraga Lebih Bijak</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f2f5f3;--card:#fff;--tx:#10231f;--mut:#566963;--bd:#d6e0db;--ta:#0e6b5c;--tb:#c2410c;--tc:#3447a8;--ok:#15803d;--wr:#a16207;--or:#c2410c;--rd:#b91c1c;--in:#eaf0ed;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1815;--card:#16241f;--tx:#e8f1ed;--mut:#9db3ab;--bd:#294039;--ta:#4fd1b8;--tb:#fb923c;--tc:#8fa2ff;--ok:#4ade80;--wr:#facc15;--or:#fb923c;--rd:#f87171;--in:#1c2f29;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0e1815;--card:#16241f;--tx:#e8f1ed;--mut:#9db3ab;--bd:#294039;--ta:#4fd1b8;--tb:#fb923c;--tc:#8fa2ff;--ok:#4ade80;--wr:#facc15;--or:#fb923c;--rd:#f87171;--in:#1c2f29;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.55 "Avenir Next","Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:560px;margin:0 auto;padding:16px 16px 48px}
+h1,h2,h3{line-height:1.15;margin:0 0 .5em;letter-spacing:-.02em}
+h1{font-size:2.1rem;font-weight:800}h2{font-size:1.5rem;font-weight:800}h3{font-size:1.05rem;font-weight:700}
+p{margin:0 0 .8em}.mut{color:var(--mut);font-size:.92rem}
+.top{display:flex;align-items:center;gap:10px;min-height:44px;margin-bottom:8px}
+.top b{font-weight:800;letter-spacing:-.02em}
+button,select,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+.back{border:1px solid var(--bd);background:var(--card);border-radius:10px;padding:8px 12px;min-height:44px}
+.hero{margin:12px 0 20px}.hero p{font-size:1.05rem;color:var(--mut);max-width:34ch}
+.big{display:block;width:100%;text-align:left;border:0;border-radius:18px;padding:20px 18px;margin-bottom:12px;color:#fff;min-height:112px}
+.big small{display:block;opacity:.92;font-size:.9rem;margin-top:4px;font-weight:400}
+.big strong{font-size:1.25rem;font-weight:800;letter-spacing:-.01em;display:block}
+.big em{font-style:normal;font-size:.8rem;opacity:.9;display:block;margin-top:8px}
+.A{background:#0e6b5c}.B{background:#b4380a}.C{background:#3447a8}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;margin-bottom:12px}
+.q{padding:12px 0;border-top:1px solid var(--bd)}.q:first-of-type{border-top:0}
+.q p{margin-bottom:8px}
+.yn{display:flex;gap:8px}
+.yn label,.chip{flex:1;text-align:center;border:1px solid var(--bd);border-radius:10px;padding:10px;background:var(--in);cursor:pointer;min-height:44px;display:flex;align-items:center;justify-content:center}
+.yn input,.chips input{position:absolute;opacity:0;pointer-events:none}
+.yn input:checked+span{font-weight:800}
+.yn label:has(input:checked){border-color:var(--ta);box-shadow:inset 0 0 0 1px var(--ta)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}.chip{flex:0 0 auto;padding:10px 14px}
+.chips label:has(input:checked){border-color:var(--tb);box-shadow:inset 0 0 0 1px var(--tb);font-weight:800}
+.chk{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-top:1px solid var(--bd)}
+.chk input{width:22px;height:22px;margin-top:2px;flex:0 0 auto}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:0;border-radius:12px;padding:12px 18px;min-height:48px;font-weight:700;color:#fff;text-decoration:none;background:var(--ta)}
+.btn.b{background:var(--tb)}.btn.c{background:var(--tc)}.btn.g{background:transparent;color:var(--tx);border:1px solid var(--bd)}
+.btn.full{width:100%}
+.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1}
+label.f{display:block;font-size:.85rem;color:var(--mut);margin:0 0 10px}
+input[type=number],input[type=date],select,textarea{width:100%;border:1px solid var(--bd);background:var(--in);border-radius:10px;padding:10px;min-height:44px;margin-top:4px}
+input[type=range]{width:100%;margin-top:6px}
+.res{border-radius:14px;padding:16px;margin:14px 0;border:2px solid var(--bd);background:var(--card)}
+.res h3{font-size:1.2rem}
+.res.g{border-color:var(--ok)}.res.y{border-color:var(--wr)}.res.o{border-color:var(--or)}.res.r{border-color:var(--rd)}
+.res.g h3{color:var(--ok)}.res.y h3{color:var(--wr)}.res.o h3{color:var(--or)}.res.r h3{color:var(--rd)}
+details{border-top:1px solid var(--bd);padding:10px 0}details:first-of-type{border-top:0}
+summary{font-weight:700;cursor:pointer;min-height:32px}
+ul{padding-left:1.2em;margin:.4em 0}li{margin-bottom:.3em}
+.tabs{display:flex;gap:6px;margin-bottom:12px}
+.tabs button{flex:1;border:1px solid var(--bd);background:var(--card);border-radius:10px;padding:10px 4px;min-height:44px;font-weight:700}
+.tabs button[aria-selected=true]{background:var(--tc);border-color:var(--tc);color:#fff}
+.big-n{font-size:2.4rem;font-weight:800;letter-spacing:-.03em;line-height:1}
+.stat{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat div{background:var(--in);border-radius:12px;padding:12px}
+.stat b{display:block;font-size:1.4rem}
+.log{display:flex;justify-content:space-between;gap:8px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--bd)}
+.log button{border:1px solid var(--bd);background:transparent;border-radius:8px;min-width:44px;min-height:44px}
+.bars{display:flex;align-items:flex-end;gap:8px;height:130px;margin:10px 0 4px}
+.bars div{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;font-size:.75rem;color:var(--mut)}
+.bars i{display:block;width:100%;background:var(--tc);border-radius:6px 6px 0 0;min-height:2px}
+.disc{font-size:.8rem;color:var(--mut);border-top:1px solid var(--bd);margin-top:24px;padding-top:12px}
+.tbl{overflow-x:auto}table{border-collapse:collapse;width:100%}td,th{text-align:left;padding:6px 8px;border-top:1px solid var(--bd)}
+:focus-visible{outline:3px solid var(--tc);outline-offset:2px}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="top"><button class="back" id="back" hidden onclick="go('home')" aria-label="Kembali ke beranda">Beranda</button><b id="ttl">SportSmart</b></div>
+
+<section id="home">
+  <div class="hero"><h1>Kenali tubuh Anda, berolahraga lebih bijak.</h1><p>Pilih yang paling sesuai dengan kondisi Anda saat ini.</p></div>
+  <button class="big A" onclick="go('a')"><strong>Saya baru mau mulai olahraga</strong><small>Jogging, gym, bersepeda, atau olahraga lain.</small><em>Skrining kesiapan · Gejala yang perlu dievaluasi · Edukasi pemula</em></button>
+  <button class="big B" onclick="go('b')"><strong>Saya punya keluhan saat olahraga</strong><small>Nyeri lutut, bahu, tumit, pergelangan kaki, atau lainnya.</small><em>Skrining gejala · Tingkat urgensi · Hubungi dokter</em></button>
+  <button class="big C" onclick="go('c')"><strong>Saya ingin meningkatkan performa</strong><small>Untuk Anda yang sudah rutin berolahraga.</small><em>Kalkulator pace · Catatan latihan · Profil &amp; perkembangan</em></button>
+</section>
+
+<section id="a" hidden>
+  <h2>Siapkah Anda mulai berolahraga?</h2>
+  <p class="mut">Jawab dengan jujur. Hasilnya adalah panduan awal, bukan diagnosis.</p>
+  <div class="card" id="aq"></div>
+  <button class="btn full" onclick="resA()">Lihat hasil</button>
+  <div id="ares"></div>
+  <h3 style="margin-top:22px">Edukasi untuk pemula</h3>
+  <div class="card">
+    <details open><summary>Mulai pelan, naik bertahap</summary><p>Mulai 3 kali seminggu, 20–30 menit, dengan intensitas ringan sampai sedang. Naikkan durasi atau jarak sedikit demi sedikit, tidak lebih dari sekitar 10% per minggu.</p></details>
+    <details><summary>Tes bicara</summary><p>Intensitas sedang berarti Anda masih bisa berbicara dalam kalimat pendek, tetapi tidak bisa bernyanyi. Jika tidak bisa bicara sama sekali, kurangi kecepatan.</p></details>
+    <details><summary>Pemanasan dan pendinginan</summary><p>Lakukan 5–10 menit gerakan ringan (jalan cepat, ayunan lengan dan kaki) sebelum latihan, dan 5 menit melambat sesudahnya.</p></details>
+    <details><summary>Sepatu, cairan, dan istirahat</summary><ul><li>Pilih sepatu yang pas dan sesuai jenis olahraga.</li><li>Minum cukup sebelum, selama, dan sesudah latihan.</li><li>Beri jeda satu hari antar sesi di minggu-minggu awal. Tidur cukup membantu pemulihan.</li></ul></details>
+    <details><summary>Kapan harus berhenti dan mencari bantuan</summary><p>Hentikan latihan bila muncul nyeri dada, sesak berat, pusing berat, atau hampir pingsan, lalu segera cari pertolongan medis. Nyeri otot ringan 1–2 hari setelah latihan baru adalah hal yang wajar.</p></details>
+  </div>
+</section>
+
+<section id="b" hidden>
+  <h2>Keluhan saat olahraga</h2>
+  <p class="mut">Jawab beberapa pertanyaan untuk mengetahui seberapa cepat keluhan Anda perlu dievaluasi.</p>
+  <div class="card"><h3>1. Bagian tubuh yang sakit</h3><div class="chips" id="bregion"></div></div>
+  <div class="card"><h3>2. Seberapa berat nyerinya? <span id="pv">3</span>/10</h3><input type="range" id="pain" min="0" max="10" value="3" oninput="pv.textContent=this.value" aria-label="Skala nyeri 0 sampai 10"></div>
+  <div class="card"><h3>3. Centang yang Anda alami</h3><div id="bchk"></div></div>
+  <button class="btn b full" onclick="resB()">Tentukan urgensi</button>
+  <div id="bres"></div>
+</section>
+
+<section id="c" hidden>
+  <h2>Tingkatkan performa</h2>
+  <div class="tabs" role="tablist"><button role="tab" aria-selected="true" onclick="tab(0)">Pace</button><button role="tab" aria-selected="false" onclick="tab(1)">Catatan</button><button role="tab" aria-selected="false" onclick="tab(2)">Profil</button></div>
+
+  <div id="t0">
+    <div class="card">
+      <h3>Kalkulator pace</h3>
+      <label class="f">Jarak (km)<input type="number" id="pd" inputmode="decimal" step="0.01" min="0" placeholder="mis. 5"></label>
+      <div class="row">
+        <label class="f">Jam<input type="number" id="th" inputmode="numeric" min="0" placeholder="0"></label>
+        <label class="f">Menit<input type="number" id="tm" inputmode="numeric" min="0" placeholder="30"></label>
+        <label class="f">Detik<input type="number" id="ts" inputmode="numeric" min="0" placeholder="0"></label>
+      </div>
+      <button class="btn c full" onclick="calcPace()">Hitung pace dari waktu</button>
+      <p class="mut" style="margin:14px 0 6px">Atau isi jarak dan target pace per km:</p>
+      <div class="row">
+        <label class="f">Menit<input type="number" id="pm" inputmode="numeric" min="0" placeholder="5"></label>
+        <label class="f">Detik<input type="number" id="ps" inputmode="numeric" min="0" placeholder="30"></label>
+      </div>
+      <button class="btn g full" onclick="calcTime()">Hitung waktu dari pace</button>
+      <div id="pres"></div>
+    </div>
+  </div>
+
+  <div id="t1" hidden>
+    <div class="card">
+      <h3>Catat latihan</h3>
+      <div class="row"><label class="f">Tanggal<input type="date" id="ld"></label>
+      <label class="f">Jenis<select id="lt"><option>Lari</option><option>Jalan</option><option>Sepeda</option><option>Gym</option><option>Renang</option><option>Lainnya</option></select></label></div>
+      <div class="row"><label class="f">Jarak (km)<input type="number" id="lk" inputmode="decimal" step="0.01" min="0" placeholder="opsional"></label>
+      <label class="f">Durasi (menit)<input type="number" id="lm" inputmode="numeric" min="1" placeholder="45"></label></div>
+      <label class="f">Terasa seberapa berat (1 ringan – 10 maksimal): <b id="rv">5</b><input type="range" id="lr" min="1" max="10" value="5" oninput="rv.textContent=this.value"></label>
+      <label class="f">Catatan<textarea id="ln" rows="2" placeholder="Kondisi tubuh, cuaca, rute…"></textarea></label>
+      <button class="btn c full" onclick="addLog()">Simpan catatan</button>
+      <p class="mut" id="lmsg" role="status"></p>
+    </div>
+    <div class="card"><h3>Riwayat</h3><div id="llist"></div></div>
+  </div>
+
+  <div id="t2" hidden>
+    <div class="card"><h3>Minggu ini</h3><div class="stat" id="pstat"></div><p class="mut" id="pnote" style="margin-top:10px"></p></div>
+    <div class="card"><h3>Perkembangan 6 minggu (menit latihan)</h3><div class="bars" id="pbars"></div><div id="ptype"></div></div>
+  </div>
+</section>
+
+<p class="disc">SportSmart adalah alat edukasi dan tidak menggantikan pemeriksaan, diagnosis, atau saran dokter. Bila ragu atau gejala memburuk, segera periksakan diri. Data catatan latihan hanya tersimpan di peramban ponsel Anda.</p>
+</div>
+
+<script>
+const DOKTER={nama:"dokter",wa:"",tel:""}; // isi nomor WA (format 62812…) atau telepon agar tombol langsung menuju kontak dokter
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const TT={home:"SportSmart",a:"Mulai olahraga",b:"Keluhan",c:"Performa"};
+function go(id){document.querySelectorAll("section").forEach(s=>s.hidden=s.id!==id);$("#back").hidden=id==="home";$("#ttl").textContent=TT[id];scrollTo(0,0);if(id==="c")tab(0)}
+
+/* ---------- A ---------- */
+const AQ=[
+["Pernah merasa nyeri atau tertekan di dada saat beraktivitas, atau saat istirahat?",2],
+["Pernah pusing berat, hampir pingsan, atau sesak napas tidak wajar pada aktivitas ringan?",2],
+["Pernah diberi tahu dokter bahwa Anda punya penyakit jantung atau tekanan darah tinggi?",1],
+["Punya masalah tulang, sendi, atau otot yang memburuk saat bergerak?",1],
+["Sedang hamil, baru melahirkan, atau punya penyakit kronis (mis. diabetes, asma yang belum terkontrol)?",1],
+["Berusia di atas 40 tahun, belum rutin berolahraga, dan ingin langsung latihan berat?",1],
+["Merokok, berat badan berlebih, atau ada keluarga dekat meninggal mendadak karena penyakit jantung sebelum usia 55 tahun?",1],
+["Pernah dilarang dokter untuk berolahraga, atau sedang sakit/demam?",1]];
+$("#aq").innerHTML=AQ.map((q,i)=>`<div class="q"><p>${esc(q[0])}</p><div class="yn"><label><input type="radio" name="a${i}" value="1"><span>Ya</span></label><label><input type="radio" name="a${i}" value="0"><span>Tidak</span></label></div></div>`).join("");
+function resA(){
+  let hi=0,md=0,miss=0;
+  AQ.forEach((q,i)=>{const v=document.querySelector(`input[name=a${i}]:checked`);if(!v)miss++;else if(v.value==="1"){q[1]===2?hi++:md++}});
+  let c,t,d;
+  if(miss){c="y";t="Jawaban belum lengkap";d=`Masih ada ${miss} pertanyaan yang belum dijawab.`}
+  else if(hi){c="r";t="Periksa ke dokter sebelum mulai";d="Gejala seperti nyeri dada atau pusing berat saat beraktivitas perlu dievaluasi dulu sebelum Anda berolahraga. Jika gejala muncul saat ini atau berat, segera cari pertolongan medis."}
+  else if(md){c="o";t="Sebaiknya konsultasi dulu";d="Ada kondisi yang perlu dipertimbangkan. Konsultasikan ke dokter agar jenis dan intensitas olahraga bisa disesuaikan. Sambil menunggu, aktivitas ringan seperti jalan santai umumnya lebih aman."}
+  else{c="g";t="Siap mulai secara bertahap";d="Tidak ada tanda yang perlu dievaluasi dari jawaban Anda. Mulailah dengan intensitas ringan dan naikkan perlahan."}
+  $("#ares").innerHTML=`<div class="res ${c}" role="status"><h3>${t}</h3><p>${d}</p></div>`;
+  $("#ares").scrollIntoView({behavior:"smooth",block:"center"});
+}
+
+/* ---------- B ---------- */
+const REG={
+"Lutut":"Nyeri lutut sering muncul saat beban lari, tangga, atau jongkok naik terlalu cepat. Kurangi aktivitas yang memicu nyeri, pilih gerak tanpa benturan (jalan, sepeda ringan), dan perkuat otot paha serta pinggul secara bertahap.",
+"Bahu":"Nyeri bahu sering terkait gerakan mengangkat di atas kepala berulang atau beban yang terlalu berat. Hindari gerakan pemicu sementara, jaga gerak sendi tetap ringan tanpa nyeri, lalu perkuat otot penstabil bahu.",
+"Tumit":"Nyeri tumit yang paling terasa pada langkah pertama di pagi hari sering berkaitan dengan beban telapak kaki berlebih. Kurangi lari dan lompat, pakai sepatu dengan bantalan baik, dan lakukan peregangan betis serta telapak kaki.",
+"Pergelangan kaki":"Untuk keseleo ringan: istirahatkan relatif, kompres dingin 15–20 menit beberapa kali sehari, balut elastis tidak terlalu kencang, dan tinggikan kaki. Jika tidak mampu melangkah 4 langkah setelah cedera, kaki perlu diperiksa.",
+"Punggung":"Nyeri punggung akibat otot biasanya membaik dengan tetap bergerak ringan. Hindari tirah baring total dan angkat beban berat sementara waktu. Nyeri menjalar ke tungkai atau disertai kelemahan perlu diperiksa.",
+"Lainnya":"Kurangi aktivitas yang memicu nyeri, tetap bergerak ringan tanpa nyeri, dan tingkatkan latihan lagi secara bertahap saat keluhan membaik."};
+const BF=[
+[3,"Nyeri dada, sesak napas berat, atau pingsan saat/ setelah olahraga"],
+[3,"Bentuk sendi atau tulang tampak berubah (deformitas) atau tulang terlihat"],
+[3,"Mati rasa, lemah mendadak, atau tidak bisa menggerakkan anggota tubuh"],
+[2,"Tidak bisa menumpu beban atau berjalan setelah cedera"],
+[2,"Terdengar bunyi “pop” saat cedera, disertai bengkak cepat"],
+[2,"Sendi merah, panas, bengkak, dan disertai demam"],
+[2,"Sendi terkunci atau tidak bisa diluruskan"],
+[2,"Nyeri terus menerus saat istirahat atau membangunkan dari tidur"],
+[2,"Kesemutan atau nyeri menjalar ke lengan/tungkai"],
+[1,"Nyeri sudah lebih dari 2 minggu"],
+[1,"Nyeri kambuh setiap kali berlatih"],
+[1,"Bengkak ringan atau kaku sendi, terutama pagi hari"]];
+$("#bregion").innerHTML=Object.keys(REG).map((r,i)=>`<label class="chip"><input type="radio" name="reg" value="${r}"${i?"":" checked"}><span>${r}</span></label>`).join("");
+$("#bchk").innerHTML=BF.map((f,i)=>`<label class="chk"><input type="checkbox" value="${f[0]}" data-i="${i}"><span>${esc(f[1])}</span></label>`).join("");
+let lastB="";
+function resB(){
+  const reg=document.querySelector("input[name=reg]:checked").value,pain=+$("#pain").value;
+  const on=[...document.querySelectorAll("#bchk input:checked")];
+  const lv=Math.max(0,...on.map(x=>+x.value));
+  let c,t,d,e;
+  if(lv===3){c="r";t="Darurat — segera ke IGD";d="Gejala yang Anda pilih bisa menandakan kondisi serius. Hentikan aktivitas dan segera ke IGD terdekat atau hubungi 112. Jangan menyetir sendiri bila merasa pusing atau lemah.";e=1}
+  else if(lv===2||pain>=8){c="o";t="Perlu diperiksa segera (1–3 hari)";d="Sebaiknya Anda diperiksa dokter dalam 1–3 hari. Hentikan aktivitas yang memicu nyeri sampai diperiksa. Jika gejala memburuk, datang ke IGD.";e=1}
+  else if(lv===1||pain>=4){c="y";t="Jadwalkan pemeriksaan (1–2 minggu)";d="Keluhan yang menetap atau berulang layak dievaluasi agar penyebabnya jelas dan latihan bisa disesuaikan. Sambil menunggu, kurangi beban pada bagian yang nyeri.";e=1}
+  else{c="g";t="Perawatan mandiri dan pantau";d="Tidak ada tanda bahaya dari jawaban Anda. Kurangi aktivitas pemicu 3–7 hari, lalu kembali bertahap. Periksakan diri bila nyeri tidak membaik dalam 2 minggu atau muncul tanda bahaya.";e=0}
+  const sum=`Halo ${DOKTER.nama}, saya ingin konsultasi keluhan olahraga.\nBagian: ${reg}\nNyeri: ${pain}/10\nGejala: ${on.length?on.map(x=>BF[x.dataset.i][1]).join("; "):"tidak ada tanda bahaya yang dipilih"}\nHasil skrining SportSmart: ${t}`;
+  const wa="https://wa.me/"+DOKTER.wa+"?text="+encodeURIComponent(sum);
+  $("#bres").innerHTML=`<div class="res ${c}" role="status"><h3>${t}</h3><p>${d}</p></div>
+  <div class="card"><h3>Edukasi umum: ${esc(reg)}</h3><p>${REG[reg]}</p><p class="mut">Tetap bergerak dengan nyeri ≤3/10 umumnya masih dapat diterima. Bila nyeri bertambah, hentikan.</p></div>
+  <div class="card"><h3>Hubungi dokter</h3><p class="mut">Ringkasan jawaban Anda akan terisi otomatis di pesan.</p>
+  <div class="row"><a class="btn b" href="${wa}" target="_blank" rel="noopener">Kirim via WhatsApp</a>${DOKTER.tel?`<a class="btn g" href="tel:${esc(DOKTER.tel)}">Telepon</a>`:""}${c==="r"?`<a class="btn g" href="tel:112">Telepon 112</a>`:""}</div></div>`;
+  $("#bres").scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+/* ---------- C ---------- */
+function tab(n){[0,1,2].forEach(i=>{$("#t"+i).hidden=i!==n;document.querySelectorAll(".tabs button")[i].setAttribute("aria-selected",i===n)});if(n===1)renderLog();if(n===2)renderProf()}
+const fmt=s=>{s=Math.round(s);const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60,p=n=>String(n).padStart(2,"0");return h?`${h}:${p(m)}:${p(x)}`:`${m}:${p(x)}`};
+function preds(d,t){if(d<1||d>60)return"";const rows=[[5,"5K"],[10,"10K"],[21.0975,"Half marathon"],[42.195,"Marathon"]].map(r=>`<tr><td>${r[1]}</td><td>${fmt(t*Math.pow(r[0]/d,1.06))}</td></tr>`).join("");return`<p class="mut" style="margin-top:12px">Prediksi waktu (rumus Riegel, perkiraan kasar):</p><div class="tbl"><table>${rows}</table></div>`}
+function calcPace(){
+  const d=+$("#pd").value,t=(+$("#th").value||0)*3600+(+$("#tm").value||0)*60+(+$("#ts").value||0);
+  if(!(d>0)||!(t>0)){$("#pres").innerHTML='<p class="mut">Isi jarak dan waktu terlebih dahulu.</p>';return}
+  $("#pres").innerHTML=`<div class="res"><div class="big-n">${fmt(t/d)} <small style="font-size:1rem;font-weight:400">/km</small></div><p class="mut" style="margin:6px 0 0">Kecepatan ${(d/(t/3600)).toFixed(2)} km/jam</p>${preds(d,t)}</div>`}
+function calcTime(){
+  const d=+$("#pd").value,p=(+$("#pm").value||0)*60+(+$("#ps").value||0);
+  if(!(d>0)||!(p>0)){$("#pres").innerHTML='<p class="mut">Isi jarak dan pace terlebih dahulu.</p>';return}
+  $("#pres").innerHTML=`<div class="res"><div class="big-n">${fmt(p*d)}</div><p class="mut" style="margin:6px 0 0">untuk ${d} km pada pace ${fmt(p)}/km (${(3600/p).toFixed(2)} km/jam)</p>${preds(d,p*d)}</div>`}
+
+let mem=[];
+const KEY="sportsmart_log_v1";
+function getLog(){try{const v=JSON.parse(localStorage.getItem(KEY)||"null");if(Array.isArray(v))mem=v}catch(e){}return mem}
+function setLog(a){mem=a;try{localStorage.setItem(KEY,JSON.stringify(a))}catch(e){}}
+const today=()=>{const d=new Date();return new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10)};
+$("#ld").value=today();
+function addLog(){
+  const m=+$("#lm").value;
+  if(!(m>0)){$("#lmsg").textContent="Isi durasi latihan dalam menit.";return}
+  const a=getLog().slice();
+  a.push({id:Date.now(),d:$("#ld").value||today(),t:$("#lt").value,k:+$("#lk").value||0,m:m,r:+$("#lr").value,n:$("#ln").value.trim()});
+  setLog(a);$("#lm").value="";$("#lk").value="";$("#ln").value="";$("#lmsg").textContent="Tersimpan.";renderLog();
+}
+function delLog(id){setLog(getLog().filter(x=>x.id!==id));renderLog()}
+function renderLog(){
+  const a=getLog().slice().sort((x,y)=>y.d.localeCompare(x.d)||y.id-x.id).slice(0,30);
+  $("#llist").innerHTML=a.length?a.map(x=>`<div class="log"><div><b>${esc(x.t)}</b> · ${x.d}<br><span class="mut">${x.k?x.k+" km · ":""}${x.m} menit${x.k&&x.t!=="Gym"?" · pace "+fmt(x.m*60/x.k)+"/km":""} · berat ${x.r}/10</span>${x.n?`<br><span class="mut">${esc(x.n)}</span>`:""}</div><button onclick="delLog(${x.id})" aria-label="Hapus catatan">✕</button></div>`).join(""):'<p class="mut">Belum ada catatan. Simpan latihan pertama Anda di atas.</p>';
+}
+const mon=s=>{const d=new Date(s+"T00:00:00"),w=(d.getDay()+6)%7;d.setDate(d.getDate()-w);return new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10)};
+function renderProf(){
+  const a=getLog();
+  if(!a.length){$("#pstat").innerHTML="";$("#pnote").textContent="Profil akan muncul setelah Anda menyimpan catatan latihan.";$("#pbars").innerHTML="";$("#ptype").innerHTML="";return}
+  const wk=mon(today()),by={};
+  a.forEach(x=>{const k=mon(x.d);(by[k]=by[k]||[]).push(x)});
+  const cur=by[wk]||[],sum=(l,f)=>l.reduce((s,x)=>s+f(x),0);
+  const mins=sum(cur,x=>x.m),km=sum(cur,x=>x.k),rpe=cur.length?sum(cur,x=>x.r)/cur.length:0;
+  $("#pstat").innerHTML=`<div><b>${mins}</b>menit (target 150)</div><div><b>${cur.length}</b>sesi</div><div><b>${km.toFixed(1)}</b>km</div><div><b>${rpe?rpe.toFixed(1):"–"}</b>rata-rata beratnya</div>`;
+  const pw=new Date(wk+"T00:00:00");pw.setDate(pw.getDate()-7);const pk=new Date(pw-pw.getTimezoneOffset()*6e4).toISOString().slice(0,10);
+  const pm=sum(by[pk]||[],x=>x.m);let note=mins>=150?"Anda sudah mencapai 150 menit minggu ini, sesuai anjuran aktivitas fisik minimum untuk dewasa.":"Anjuran umum untuk dewasa: minimal 150 menit aktivitas sedang per minggu.";
+  if(pm>0&&mins>pm*1.3)note+=" Beban minggu ini naik lebih dari 30% dari minggu lalu. Kenaikan tajam meningkatkan risiko cedera, pertimbangkan memberi ruang pemulihan.";
+  $("#pnote").textContent=note;
+  const ws=[];for(let i=5;i>=0;i--){const d=new Date(wk+"T00:00:00");d.setDate(d.getDate()-7*i);const k=new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);ws.push([k.slice(5),sum(by[k]||[],x=>x.m)])}
+  const mx=Math.max(1,...ws.map(w=>w[1]));
+  $("#pbars").innerHTML=ws.map(w=>`<div><span>${w[1]}</span><i style="height:${Math.max(2,w[1]/mx*100)}px"></i></div>`).join("");
+  $("#pbars").insertAdjacentHTML("afterend","");
+  const ty={};a.forEach(x=>ty[x.t]=(ty[x.t]||0)+x.m);const tot=sum(a,x=>x.m);
+  $("#ptype").innerHTML=`<p class="mut" style="margin-top:14px">Bar menunjukkan awal minggu (bulan-tanggal). Komposisi semua catatan:</p>`+Object.entries(ty).sort((x,y)=>y[1]-x[1]).map(e=>`<p style="margin:2px 0">${esc(e[0])}: <b>${Math.round(e[1]/tot*100)}%</b> <span class="mut">(${e[1]} menit)</span></p>`).join("");
+}
+</script>
+</body>
+</html>
