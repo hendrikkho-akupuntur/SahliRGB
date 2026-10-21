@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pelacak Prospek Toko</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--tx:#1a1d23;--mu:#667085;--bd:#e1e4ea;--pr:#0f766e;--prt:#fff;--a:#16a34a;--b:#ca8a04;--c:#ea580c;--d:#6b7280;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#111418;--card:#1b2027;--tx:#eceff4;--mu:#9aa3b2;--bd:#2c333d;--pr:#2dd4bf;--prt:#06231f}}
+:root[data-theme="dark"]{--bg:#111418;--card:#1b2027;--tx:#eceff4;--mu:#9aa3b2;--bd:#2c333d;--pr:#2dd4bf;--prt:#06231f}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+.w{max-width:960px;margin:0 auto;padding:14px}
+h1{font-size:20px;margin:4px 0 12px}h2{font-size:16px;margin:0 0 10px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px;margin-bottom:12px}
+.g{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+label{display:block;font-size:12px;color:var(--mu);margin-bottom:3px}
+input,select,textarea{width:100%;padding:9px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font:inherit}
+button{padding:9px 14px;border:0;border-radius:8px;background:var(--pr);color:var(--prt);font:inherit;font-weight:600;cursor:pointer}
+button.s{background:transparent;color:var(--tx);border:1px solid var(--bd)}button.x{background:transparent;color:#dc2626;border:1px solid var(--bd)}
+.ck{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:6px}
+.ck label{display:flex;gap:8px;align-items:center;color:var(--tx);font-size:14px;margin:0;padding:7px 9px;border:1px solid var(--bd);border-radius:8px}
+.ck input{width:auto}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.sc{display:flex;align-items:center;gap:10px;margin-top:10px;padding:10px;border-radius:10px;background:var(--bg)}
+.gr{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:20px;flex:none}
+.A{background:var(--a)}.B{background:var(--b)}.C{background:var(--c)}.D{background:var(--d)}
+.it{border-top:1px solid var(--bd);padding:12px 0}.it:first-child{border:0}
+.tg{display:inline-block;font-size:12px;padding:2px 8px;border-radius:99px;border:1px solid var(--bd);color:var(--mu);margin:2px 3px 0 0}
+.st{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}.st span{font-size:13px;color:var(--mu)}
+.sm{font-size:13px;color:var(--mu)}
+</style></head><body><div class="w">
+<h1>Pelacak Prospek Toko</h1>
+
+<div class="card"><h2>Tambah toko</h2>
+<div class="g">
+<div><label>Kategori bisnis</label><select id="cat"></select></div>
+<div><label>Area (kelurahan/kecamatan)</label><input id="area" list="areas" placeholder="mis. Medan Johor"><datalist id="areas"></datalist></div>
+<div><label>Nama toko</label><input id="nm"></div>
+<div><label>No. WhatsApp/telepon</label><input id="ph" inputmode="tel" placeholder="08xxxxxxxxxx"></div>
+<div><label>Link Google Maps</label><input id="mp"></div>
+<div><label>Jumlah ulasan Maps</label><input id="rv" type="number" min="0"></div>
+</div>
+<p class="sm" style="margin:12px 0 6px">Centang yang <b>sudah dimiliki</b> toko:</p>
+<div class="ck" id="ck"></div>
+<div class="sc"><div class="gr D" id="grd">–</div><div><b id="gl">Peluang</b><div class="sm" id="gs"></div></div></div>
+<div style="margin-top:10px"><label>Catatan</label><textarea id="nt" rows="2"></textarea></div>
+<div class="row" style="margin-top:10px"><button id="add">Simpan prospek</button><button class="s" id="srch">Cari di Google Maps</button><button class="s" id="clr">Kosongkan form</button></div>
+</div>
+
+<div class="card"><h2>Impor data dari Claude</h2>
+<p class="sm" style="margin:0 0 8px">Tempel hasil pencarian dari Claude di bawah. Satu toko per baris, format: <b>nama | kategori | area | telepon | link maps | ulasan | aset | catatan</b>. Kode aset: web, ig, wab, gmb, cat, fb, tt, mk, lg, kn. Toko dengan nama dan area yang sama tidak akan dobel.</p>
+<textarea id="imp" rows="5" placeholder="Salon Cantik | Salon & barbershop | Medan Johor | 0812xxxxxxx | https://maps.app.goo.gl/xxx | 87 | ig,gmb | tidak ada website"></textarea>
+<div class="row" style="margin-top:10px"><button id="impb">Impor</button><span class="sm" id="impr"></span></div></div>
+
+<div class="card"><h2>Daftar prospek</h2>
+<div class="g" style="margin-bottom:10px">
+<div><label>Cari</label><input id="q" placeholder="nama / catatan"></div>
+<div><label>Kategori</label><select id="fc"></select></div>
+<div><label>Area</label><select id="fa"></select></div>
+<div><label>Peluang</label><select id="fg"><option value="">Semua</option><option>A</option><option>B</option><option>C</option><option>D</option></select></div>
+<div><label>Status</label><select id="fs"></select></div>
+</div>
+<div class="st" id="stats"></div>
+<div id="list"></div>
+<div class="row" style="margin-top:10px"><button class="s" id="csv">Ekspor CSV</button><button class="x" id="del">Hapus semua</button></div>
+</div>
+
+<div class="card"><h2>Pengaturan pesan WhatsApp</h2>
+<div class="g"><div><label>Nama Anda</label><input id="me" placeholder="Nama Anda"></div><div><label>Paket yang ditawarkan</label><input id="pk" value="kartu nama + landing page + tombol WhatsApp"></div></div></div>
+</div>
+<script>
+const CATS=["Bengkel motor","Bengkel mobil","Cuci motor/mobil","Salon & barbershop","Spa & pijat","Klinik kecantikan","Laundry","Toko kue & bakery","Warung makan","Restoran","Kafe & kedai kopi","Katering","Toko kelontong","Toko bangunan","Toko elektronik","Konter HP & servis","Toko pakaian & butik","Toko sepatu & tas","Toko mainan","Toko buku & alat tulis","Percetakan & fotokopi","Fotografer & studio foto","Wedding organizer & dekorasi","Toko bunga","Toko hewan & petshop","Toko tanaman & nursery","Apotek & toko herbal","Klinik & praktik dokter","Klinik gigi","Optik","Gym & fitness","Toko olahraga","Bimbel & kursus","Penitipan & daycare","Penginapan & homestay","Rental mobil","Travel & tour","Ekspedisi & kargo","Toko furnitur","Toko perlengkapan bayi","Tukang & jasa renovasi","Jasa AC & elektronik","Toko oleh-oleh","Toko emas & aksesori","Agen properti","Lainnya"];
+const AREAS=["Medan Kota","Medan Baru","Medan Johor","Medan Selayang","Medan Sunggal","Medan Helvetia","Medan Petisah","Medan Timur","Medan Barat","Medan Area","Medan Denai","Medan Amplas","Medan Deli","Medan Labuhan","Medan Marelan","Medan Belawan","Medan Tuntungan","Medan Perjuangan","Medan Tembung","Medan Maimun","Medan Polonia","Medan Kota Baru","Deli Serdang","Binjai","Lainnya"];
+const STS=["Belum dihubungi","Sudah chat","Negosiasi","Deal","Ditolak"];
+const AS=[["web","Website",30],["ig","Instagram aktif",15],["wab","WhatsApp Business/katalog",10],["gmb","Google Maps terverifikasi",10],["cat","Katalog/menu online",10],["fb","Facebook",5],["tt","TikTok",5],["mk","Marketplace",5],["lg","Logo",5],["kn","Kartu nama",5]];
+const $=i=>document.getElementById(i);
+let D=[],ME={};
+const ld=()=>{try{D=JSON.parse(localStorage.getItem("prs")||"[]");ME=JSON.parse(localStorage.getItem("prm")||"{}")}catch(e){D=[];ME={}}};
+const sv=()=>{try{localStorage.setItem("prs",JSON.stringify(D));localStorage.setItem("prm",JSON.stringify(ME))}catch(e){}};
+const opts=(a,all)=>(all?'<option value="">'+all+'</option>':'')+a.map(x=>`<option>${x}</option>`).join("");
+function grade(have){let s=0;AS.forEach(a=>{if(have.includes(a[0]))s+=a[2]});
+ let g=s<30?"A":s<55?"B":s<80?"C":"D";if(have.includes("web")&&g<"C")g="C";
+ const L={A:"Peluang tinggi",B:"Peluang sedang",C:"Peluang rendah",D:"Sudah lengkap"};
+ return{s,g,l:L[g],miss:AS.filter(a=>!have.includes(a[0])).map(a=>a[1])}}
+function cur(){return[...document.querySelectorAll("#ck input:checked")].map(i=>i.value)}
+function pv(){const r=grade(cur());$("grd").textContent=r.g;$("grd").className="gr "+r.g;$("gl").textContent=r.l+" (skor digital "+r.s+"/100)";$("gs").textContent=r.miss.length?"Belum punya: "+r.miss.join(", "):"Semua aset sudah ada"}
+function wa(p){let n=(p||"").replace(/\D/g,"");if(n.startsWith("0"))n="62"+n.slice(1);return n}
+function msg(x){const r=grade(x.have),m=r.miss.slice(0,3).join(", ").toLowerCase();
+ return `Halo kak, salam kenal${ME.me?" saya "+ME.me:""}. Saya melihat ${x.nm} (${x.cat.toLowerCase()}) di Google Maps${x.rv?" dengan ulasan yang bagus":""}. Saya bantu usaha lokal di ${x.area||"Medan"} membuat ${ME.pk||"kartu nama dan landing page"}${m?", karena sepertinya "+x.nm+" belum punya "+m:""}. Boleh saya kirim contoh hasilnya, kak? Tanpa kewajiban.`}
+function render(){const q=$("q").value.toLowerCase(),fc=$("fc").value,fa=$("fa").value,fg=$("fg").value,fs=$("fs").value;
+ const L=D.filter(x=>(!q||(x.nm+x.nt).toLowerCase().includes(q))&&(!fc||x.cat==fc)&&(!fa||x.area==fa)&&(!fg||grade(x.have).g==fg)&&(!fs||x.st==fs));
+ $("stats").innerHTML=`<span><b>${L.length}</b> dari ${D.length} toko</span>`+STS.map(s=>`<span>${s}: <b>${D.filter(x=>x.st==s).length}</b></span>`).join("");
+ $("list").innerHTML=L.length?L.map(x=>{const r=grade(x.have),i=D.indexOf(x);return`<div class="it"><div class="row"><div class="gr ${r.g}" style="width:36px;height:36px;font-size:16px">${r.g}</div><div style="flex:1;min-width:150px"><b>${esc(x.nm)}</b><div class="sm">${esc(x.cat)} · ${esc(x.area||"-")}${x.rv?" · "+x.rv+" ulasan":""}</div></div><select data-st="${i}" style="width:auto">${STS.map(s=>`<option ${s==x.st?"selected":""}>${s}</option>`).join("")}</select></div>
+ <div>${r.miss.map(m=>`<span class="tg">Belum: ${m}</span>`).join("")}</div>${x.nt?`<div class="sm" style="margin-top:6px">${esc(x.nt)}</div>`:""}
+ <div class="row" style="margin-top:8px">${x.ph?`<a href="https://wa.me/${wa(x.ph)}?text=${encodeURIComponent(msg(x))}" target="_blank" rel="noopener"><button>Chat WhatsApp</button></a>`:""}${x.mp?`<a href="${esc(x.mp)}" target="_blank" rel="noopener"><button class="s">Maps</button></a>`:""}<button class="s" data-cp="${i}">Salin pesan</button><button class="x" data-rm="${i}">Hapus</button></div></div>`}).join(""):'<p class="sm">Belum ada prospek.</p>'}
+function esc(s){return String(s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function init(){ld();$("cat").innerHTML=opts(CATS);$("fc").innerHTML=opts(CATS,"Semua");$("fa").innerHTML=opts(AREAS,"Semua");$("fs").innerHTML=opts(STS,"Semua");
+ $("areas").innerHTML=AREAS.map(a=>`<option value="${a}">`).join("");
+ $("ck").innerHTML=AS.map(a=>`<label><input type="checkbox" value="${a[0]}">${a[1]}</label>`).join("");
+ $("me").value=ME.me||"";$("pk").value=ME.pk||$("pk").value;pv();render()}
+$("ck").onchange=pv;
+$("me").oninput=$("pk").oninput=()=>{ME={me:$("me").value,pk:$("pk").value};sv();render()};
+["q","fc","fa","fg","fs"].forEach(i=>$(i).oninput=render);
+$("add").onclick=()=>{const nm=$("nm").value.trim();if(!nm){alert("Isi nama toko dulu.");return}
+ D.unshift({nm,cat:$("cat").value,area:$("area").value.trim(),ph:$("ph").value,mp:$("mp").value.trim(),rv:$("rv").value,nt:$("nt").value,have:cur(),st:STS[0]});sv();clr();render()};
+function clr(){["nm","ph","mp","rv","nt"].forEach(i=>$(i).value="");document.querySelectorAll("#ck input").forEach(c=>c.checked=false);pv()}
+$("clr").onclick=clr;
+$("srch").onclick=()=>window.open("https://www.google.com/maps/search/"+encodeURIComponent($("cat").value+" di "+($("area").value||"Medan")),"_blank");
+$("list").onclick=e=>{const t=e.target,i=t.dataset.rm??t.dataset.cp;
+ if(t.dataset.rm!==undefined&&confirm("Hapus toko ini?")){D.splice(+t.dataset.rm,1);sv();render()}
+ if(t.dataset.cp!==undefined){const m=msg(D[+t.dataset.cp]);(navigator.clipboard?navigator.clipboard.writeText(m):Promise.reject()).then(()=>t.textContent="Tersalin",()=>prompt("Salin pesan:",m))}};
+$("list").onchange=e=>{if(e.target.dataset.st!==undefined){D[+e.target.dataset.st].st=e.target.value;sv();render()}};
+$("del").onclick=()=>{if(confirm("Hapus SEMUA prospek?")){D=[];sv();render()}};
+$("csv").onclick=()=>{const h=["Nama","Kategori","Area","Telepon","Maps","Ulasan","Skor","Peluang","Status","Belum punya","Catatan"];
+ const r=D.map(x=>{const g=grade(x.have);return[x.nm,x.cat,x.area,x.ph,x.mp,x.rv,g.s,g.g,x.st,g.miss.join("; "),x.nt]});
+ const c=[h,...r].map(l=>l.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(",")).join("\n");
+ const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\ufeff"+c],{type:"text/csv"}));a.download="prospek.csv";a.click()};
+$("impb").onclick=()=>{let n=0,k=0;const codes=AS.map(a=>a[0]);
+ $("imp").value.split("\n").forEach(l=>{l=l.trim();if(!l||l[0]=="#")return;const p=l.split("|").map(s=>s.trim());if(!p[0])return;
+  const cat=CATS.includes(p[1])?p[1]:"Lainnya",area=p[2]||"";
+  if(D.some(x=>x.nm.toLowerCase()==p[0].toLowerCase()&&(x.area||"").toLowerCase()==area.toLowerCase())){k++;return}
+  const have=(p[6]||"").toLowerCase().split(/[ ,;]+/).filter(c=>codes.includes(c));
+  D.push({nm:p[0],cat,area,ph:p[3]||"",mp:p[4]||"",rv:(p[5]||"").replace(/\D/g,""),nt:p[7]||"",have,st:STS[0]});n++});
+ sv();render();$("impr").textContent=n+" toko ditambahkan"+(k?", "+k+" dilewati (sudah ada)":"")+".";if(n)$("imp").value=""};
+init();
+</script></body></html>
