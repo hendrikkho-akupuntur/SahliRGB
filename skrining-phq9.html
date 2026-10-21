@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Skrining Suasana Hati (PHQ-9)</title>
+<style>
+:root{
+  --bg:#f2f6f5; --card:#fff; --ink:#14302f; --muted:#52696a; --line:#cfdcda;
+  --pri:#0e6a68; --pri-d:#094f4d; --soft:#e3efed;
+  --c0:#2f8f5b; --c1:#7f9a1f; --c2:#c48a00; --c3:#d4601c; --c4:#b3261e;
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:76px}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:17px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  -webkit-text-size-adjust:100%}
+.wrap{max-width:600px;margin:0 auto;padding:0 16px 56px}
+header{padding:28px 0 12px}
+h1{font-size:1.65rem;line-height:1.2;margin:0 0 8px;letter-spacing:-.01em}
+.lead{color:var(--muted);margin:0}
+.demo{background:#fff4d6;border:1px solid #e6cf85;border-radius:10px;padding:10px 12px;font-size:.9rem;margin:12px 0 0}
+.bar{position:sticky;top:0;z-index:5;background:var(--bg);padding:10px 0 8px;border-bottom:1px solid var(--line)}
+.bar .t{display:flex;justify-content:space-between;font-size:.88rem;color:var(--muted)}
+.track{height:6px;background:#d7e4e2;border-radius:3px;margin-top:6px;overflow:hidden}
+.fill{height:100%;width:0;background:var(--pri);transition:width .25s}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin:16px 0}
+h2{font-size:1.1rem;margin:0 0 4px}
+.hint{color:var(--muted);font-size:.9rem;margin:0 0 12px}
+.f{margin:0 0 14px}
+.f>label,.f>.lab{display:block;font-weight:600;margin-bottom:5px;font-size:.95rem}
+input[type=text],input[type=tel],input[type=number]{width:100%;font:inherit;font-size:1rem;padding:12px;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+input:focus-visible{outline:3px solid #7fc4c1;outline-offset:1px;border-color:var(--pri)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pill{display:flex;gap:8px;flex-wrap:wrap}
+.pill label{position:relative;flex:1;min-width:120px}
+.pill input,.opts input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.pill span,.opts span{display:flex;align-items:center;justify-content:center;text-align:center;min-height:48px;padding:8px 10px;border:1.5px solid var(--line);border-radius:10px;background:#fff;font-size:.97rem;line-height:1.3}
+input:checked+span{background:var(--pri);border-color:var(--pri);color:#fff;font-weight:600}
+input:focus-visible+span{outline:3px solid #7fc4c1;outline-offset:2px}
+fieldset{border:0;margin:0;padding:0;min-width:0}
+.q{padding:16px 0;border-top:1px solid var(--line)}
+.q:first-of-type{border-top:0;padding-top:4px}
+.q legend{padding:0;font-weight:600;margin-bottom:10px;display:block;width:100%}
+.q .n{display:inline-block;min-width:1.6em;color:var(--pri);margin-right:2px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.opts label{position:relative}
+.err{border-radius:10px;box-shadow:0 0 0 2px var(--c4);background:#fdf1f0}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:.95rem}
+.check input{width:22px;height:22px;margin-top:3px;flex:none;accent-color:var(--pri)}
+.btn{display:block;width:100%;font:inherit;font-weight:700;font-size:1.05rem;padding:15px;border:0;border-radius:12px;background:var(--pri);color:#fff;cursor:pointer}
+.btn:hover{background:var(--pri-d)}
+.btn:disabled{opacity:.6;cursor:wait}
+.btn.alt{background:#fff;color:var(--pri);border:1.5px solid var(--pri);margin-top:10px}
+a.btn{text-decoration:none;text-align:center}
+.msg{color:var(--c4);font-weight:600;margin:12px 0 0;min-height:1.4em}
+/* hasil */
+#res{display:none}
+.score{display:flex;align-items:baseline;gap:10px;margin:6px 0 2px}
+.score b{font-size:3.4rem;line-height:1;letter-spacing:-.03em}
+.score small{color:var(--muted)}
+.cat{font-size:1.25rem;font-weight:700;margin:0 0 14px}
+.scale{display:flex;gap:3px;height:14px;position:relative;margin:26px 0 6px}
+.scale i{flex:1;border-radius:3px}
+.scale i:nth-child(1){background:var(--c0)}.scale i:nth-child(2){background:var(--c1)}
+.scale i:nth-child(3){background:var(--c2)}.scale i:nth-child(4){background:var(--c3)}
+.scale i:nth-child(5){background:var(--c4);flex:1.6}
+.mark{position:absolute;top:-20px;transform:translateX(-50%);font-size:.8rem;font-weight:700}
+.mark::after{content:"";display:block;width:2px;height:30px;background:var(--ink);margin:0 auto}
+.ticks{display:flex;justify-content:space-between;font-size:.75rem;color:var(--muted)}
+.crisis{background:#fdecea;border:2px solid var(--c4);border-radius:12px;padding:14px 16px;margin:16px 0}
+.crisis h3{margin:0 0 6px;color:var(--c4);font-size:1.05rem}
+.crisis p{margin:6px 0}
+.note{background:var(--soft);border-radius:10px;padding:12px 14px;margin:14px 0;font-size:.95rem}
+.status{font-size:.88rem;color:var(--muted);margin:12px 0 0}
+.fine{font-size:.82rem;color:var(--muted);margin-top:14px}
+@media (max-width:380px){.row{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){.fill{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Skrining suasana hati (PHQ-9)</h1>
+  <p class="lead">Sembilan pertanyaan, sekitar 3 menit. Hasil langsung muncul di layar, dan kader atau petugas kesehatan dapat menghubungi Anda untuk tindak lanjut.</p>
+  <div class="demo" id="demo" hidden>Mode uji coba: alamat penampung data belum diisi, jadi jawaban tidak dikirim ke Google Sheet.</div>
+</header>
+
+<div class="bar" id="bar">
+  <div class="t"><span id="prog">Terjawab 0 dari 10</span><span id="pct">0%</span></div>
+  <div class="track"><div class="fill" id="fill"></div></div>
+</div>
+
+<form id="f" novalidate autocomplete="off">
+
+  <section class="card" id="sec-data">
+    <h2>Data diri</h2>
+    <p class="hint">Dipakai agar kader bisa menindaklanjuti hasil Anda.</p>
+
+    <div class="f"><label for="nama">Nama</label>
+      <input type="text" id="nama" name="nama" autocomplete="name"></div>
+
+    <div class="row">
+      <div class="f"><label for="usia">Usia (tahun)</label>
+        <input type="number" id="usia" name="usia" inputmode="numeric" min="10" max="110"></div>
+      <div class="f" id="g-jk"><span class="lab">Jenis kelamin</span>
+        <div class="pill">
+          <label><input type="radio" name="jk" value="L"><span>Laki-laki</span></label>
+          <label><input type="radio" name="jk" value="P"><span>Perempuan</span></label>
+        </div></div>
+    </div>
+
+    <div class="f"><label for="hp">Nomor HP / WhatsApp aktif</label>
+      <input type="tel" id="hp" name="hp" inputmode="tel" placeholder="contoh: 0812 3456 7890" autocomplete="tel"></div>
+
+    <div class="f"><label for="wil">Kelurahan / posyandu</label>
+      <input type="text" id="wil" name="wil" list="wil-list">
+      <datalist id="wil-list"></datalist></div>
+
+    <div class="f" id="g-pengisi"><span class="lab">Siapa yang mengisi?</span>
+      <div class="pill">
+        <label><input type="radio" name="pengisi" value="Sendiri"><span>Saya sendiri</span></label>
+        <label><input type="radio" name="pengisi" value="Dibantu kader"><span>Dibantu kader</span></label>
+      </div></div>
+
+    <div class="f"><label for="kader">Nama kader (jika dibantu)</label>
+      <input type="text" id="kader" name="kader"></div>
+  </section>
+
+  <section class="card" id="sec-q">
+    <h2>Dalam 2 minggu terakhir</h2>
+    <p class="hint">Seberapa sering Anda terganggu oleh masalah-masalah berikut? Pilih satu jawaban untuk tiap pertanyaan.</p>
+    <div id="qbox"></div>
+  </section>
+
+  <section class="card">
+    <div class="check" id="g-consent">
+      <input type="checkbox" id="consent" name="consent">
+      <label for="consent">Saya setuju jawaban dan nomor HP saya dicatat, serta dihubungi kader atau petugas kesehatan untuk tindak lanjut. Data dijaga kerahasiaannya.</label>
+    </div>
+    <p class="msg" id="msg" role="alert"></p>
+    <button class="btn" id="go" type="submit">Lihat hasil dan kirim</button>
+  </section>
+</form>
+
+<section id="res" aria-live="polite">
+  <div class="card">
+    <h2 id="r-nama"></h2>
+    <div class="score"><b id="r-skor">0</b><small>dari 27</small></div>
+    <p class="cat" id="r-kat"></p>
+    <div class="scale" id="scale"><i></i><i></i><i></i><i></i><i></i><span class="mark" id="mark"></span></div>
+    <div class="ticks"><span>0</span><span>5</span><span>10</span><span>15</span><span>20</span><span>27</span></div>
+  </div>
+
+  <div class="crisis" id="crisis" hidden>
+    <h3>Anda tidak sendirian</h3>
+    <p>Anda menjawab pernah merasa lebih baik mati atau ingin melukai diri sendiri. Terima kasih sudah jujur. Perasaan ini perlu dibicarakan dengan petugas kesehatan, dan ada pertolongan untuk Anda.</p>
+    <p><b>Hari ini juga:</b> ceritakan kepada keluarga atau orang yang Anda percaya, dan jangan menyendiri. Kader atau petugas akan segera menghubungi Anda.</p>
+    <p>Jika Anda dalam bahaya saat ini atau ingin mengakhiri hidup, segera ke IGD / Puskesmas terdekat atau hubungi <b>112</b>. Layanan kesehatan jiwa Kemenkes: <b>119 lalu tekan 8</b>.</p>
+  </div>
+
+  <div class="card">
+    <p id="r-saran" style="margin-top:0"></p>
+    <div class="note" id="r-follow"></div>
+    <a class="btn" id="wa" href="#" target="_blank" rel="noopener" hidden>Hubungi kader lewat WhatsApp</a>
+    <button class="btn alt" id="again" type="button">Isi untuk orang lain</button>
+    <p class="status" id="r-status"></p>
+    <p class="fine">Skrining ini bukan diagnosis. Hasilnya membantu menentukan perlu tidaknya pemeriksaan lebih lanjut oleh dokter atau tenaga kesehatan.</p>
+  </div>
+</section>
+
+</div>
+
+<script>
+/* ============ PENGATURAN — ubah di sini ============ */
+const CONFIG = {
+  ENDPOINT: "https://script.google.com/macros/s/AKfycbxtTjpSfD_a9d0xwEjOYbmQmkrZpcBfwNEWIi8WJOfigjVcjxvOVLfW3nFnR3KCZ5kZ/exec",   // URL Web App Google Apps Script (atau endpoint lain). Kosong = mode uji coba
+  TOKEN: "kader-damai-2026",      // harus sama dengan TOKEN di Code.gs (boleh kosong)
+  KADER_WA: "+625270410537",   // nomor WhatsApp kader/petugas, format 628xxxxxxxxxx. Kosong = tombol disembunyikan
+  KELURAHAN: ["Damai", "Damai Baru", "Damai Bahagia"]   // saran isian; pengguna tetap bisa mengetik bebas
+};
+/* ==================================================== */
+
+const QS = [
+  "Kurang berminat atau kurang merasa senang dalam melakukan sesuatu",
+  "Merasa sedih, murung, atau putus asa",
+  "Sulit tidur, sering terbangun, atau justru tidur terlalu banyak",
+  "Merasa lelah atau kurang bertenaga",
+  "Kurang nafsu makan atau makan berlebihan",
+  "Merasa buruk tentang diri sendiri, merasa gagal, atau merasa telah mengecewakan diri sendiri atau keluarga",
+  "Sulit berkonsentrasi, misalnya saat membaca atau menonton televisi",
+  "Bergerak atau berbicara sangat lambat sampai orang lain memperhatikannya, atau sebaliknya merasa gelisah dan tidak bisa diam sehingga lebih banyak bergerak dari biasanya",
+  "Merasa lebih baik mati, atau ingin melukai diri sendiri dengan cara apa pun"
+];
+const FREQ = [["Tidak sama sekali",0],["Beberapa hari",1],["Lebih dari separuh waktu",2],["Hampir setiap hari",3]];
+const FUNC = [["Tidak sulit sama sekali",0],["Agak sulit",1],["Sangat sulit",2],["Sulit sekali",3]];
+const FUNC_Q = "Jika Anda mengalami salah satu masalah di atas, seberapa sulit masalah itu membuat Anda bekerja, mengurus rumah, atau bergaul dengan orang lain?";
+const TOTAL_Q = 10;
+
+const $ = s => document.querySelector(s);
+const form = $("#f");
+
+/* --- bangun pertanyaan --- */
+function qHTML(name, num, text, opts){
+  return `<fieldset class="q" id="fs-${name}"><legend>${num ? `<span class="n">${num}.</span>` : ""}${text}</legend>
+  <div class="opts">${opts.map(([l,v]) => `<label><input type="radio" name="${name}" value="${v}"><span>${l}</span></label>`).join("")}</div></fieldset>`;
+}
+const qbox = $("#qbox");
+QS.forEach((t,i) => qbox.insertAdjacentHTML("beforeend", qHTML("q"+i, i+1, t, FREQ)));
+qbox.insertAdjacentHTML("beforeend", qHTML("q9", "", FUNC_Q, FUNC));
+$("#wil-list").innerHTML = CONFIG.KELURAHAN.map(k => `<option value="${k}">`).join("");
+if (!CONFIG.ENDPOINT) $("#demo").hidden = false;
+
+/* --- progres --- */
+function answered(){ let n = 0; for (let i = 0; i < TOTAL_Q; i++) if (form.querySelector(`input[name=q${i}]:checked`)) n++; return n; }
+function updateProg(){
+  const n = answered();
+  $("#prog").textContent = `Terjawab ${n} dari ${TOTAL_Q}`;
+  $("#pct").textContent = Math.round(n / TOTAL_Q * 100) + "%";
+  $("#fill").style.width = (n / TOTAL_Q * 100) + "%";
+}
+form.addEventListener("change", e => { updateProg(); const fs = e.target.closest(".err"); if (fs) fs.classList.remove("err"); });
+
+/* --- penilaian --- */
+function band(s){
+  if (s <= 4)  return {k:"Gejala minimal",        c:"var(--c0)"};
+  if (s <= 9)  return {k:"Gejala depresi ringan", c:"var(--c1)"};
+  if (s <= 14) return {k:"Gejala depresi sedang", c:"var(--c2)"};
+  if (s <= 19) return {k:"Gejala depresi sedang-berat", c:"var(--c3)"};
+  return             {k:"Gejala depresi berat",  c:"var(--c4)"};
+}
+function prioritas(total, i9){
+  if (i9 > 0 || total >= 20) return "SEGERA";
+  if (total >= 15) return "TINGGI";
+  if (total >= 10) return "SEDANG";
+  return "RENDAH";
+}
+const SARAN = {
+  SEGERA: "Skor dan jawaban Anda menunjukkan keluhan yang perlu segera diperiksa. Mohon datang ke Puskesmas atau dokter dalam waktu dekat, jangan menunggu keluhan membaik sendiri. Pengobatan dan pendampingan efektif untuk kondisi seperti ini.",
+  TINGGI: "Keluhan Anda cukup berat. Sebaiknya periksakan diri ke Puskesmas atau dokter dalam beberapa hari ini untuk dinilai lebih lanjut.",
+  SEDANG: "Ada gejala yang cukup mengganggu. Sebaiknya berkonsultasi dengan petugas Puskesmas atau dokter dalam 1–2 minggu ke depan. Sementara itu, jaga tidur dan makan teratur, tetap beraktivitas, dan bercerita kepada orang yang Anda percaya.",
+  RENDAH: "Gejala Anda tergolong ringan atau minimal. Tetap jaga tidur, makan, dan aktivitas fisik, serta luangkan waktu bercerita dengan keluarga atau teman. Isi ulang skrining ini bila keluhan muncul atau bertambah, dan segera berkonsultasi jika Anda merasa semakin berat."
+};
+const FOLLOW = {
+  SEGERA: "Kader atau petugas akan menghubungi nomor HP Anda secepatnya, paling lambat hari ini.",
+  TINGGI: "Kader atau petugas akan menghubungi nomor HP Anda dalam beberapa hari ke depan.",
+  SEDANG: "Kader akan menghubungi nomor HP Anda untuk menanyakan kabar dan membantu mengatur pemeriksaan.",
+  RENDAH: "Kader mungkin menghubungi Anda untuk menanyakan kabar. Anda juga bisa menghubungi kader kapan saja bila perlu."
+};
+
+/* --- nomor HP --- */
+function normHP(raw){
+  let d = String(raw).replace(/\D/g, "");
+  if (d.startsWith("0")) d = "62" + d.slice(1);
+  else if (d.startsWith("8")) d = "62" + d;
+  return d;
+}
+
+/* --- validasi --- */
+function fail(el, text, focusEl){
+  el.classList.add("err");
+  $("#msg").textContent = text;
+  el.scrollIntoView({behavior:"smooth", block:"center"});
+  (focusEl || el.querySelector("input"))?.focus({preventScroll:true});
+  return false;
+}
+function validate(d){
+  $("#msg").textContent = "";
+  document.querySelectorAll(".err").forEach(x => x.classList.remove("err"));
+  const nama = (d.get("nama") || "").trim();
+  if (nama.length < 2) return fail($("#nama").parentElement, "Isi nama Anda.", $("#nama"));
+  const usia = +d.get("usia");
+  if (!(usia >= 10 && usia <= 110)) return fail($("#usia").parentElement, "Isi usia dengan angka (10–110).", $("#usia"));
+  if (!d.get("jk")) return fail($("#g-jk"), "Pilih jenis kelamin.");
+  const hp = normHP(d.get("hp") || "");
+  if (!/^62\d{8,13}$/.test(hp)) return fail($("#hp").parentElement, "Nomor HP belum benar. Contoh: 081234567890.", $("#hp"));
+  if (!(d.get("wil") || "").trim()) return fail($("#wil").parentElement, "Isi kelurahan atau posyandu.", $("#wil"));
+  if (!d.get("pengisi")) return fail($("#g-pengisi"), "Pilih siapa yang mengisi.");
+  for (let i = 0; i < TOTAL_Q; i++){
+    if (d.get("q"+i) === null) return fail($("#fs-q"+i), `Pertanyaan ${i < 9 ? "nomor " + (i+1) : "terakhir"} belum dijawab.`);
+  }
+  if (!$("#consent").checked) return fail($("#g-consent"), "Centang persetujuan untuk melanjutkan.", $("#consent"));
+  return true;
+}
+
+/* --- kirim & antrean offline --- */
+const QKEY = "phq9_antrean";
+function loadQ(){ try { return JSON.parse(localStorage.getItem(QKEY) || "[]"); } catch(e){ return []; } }
+function saveQ(a){ try { localStorage.setItem(QKEY, JSON.stringify(a)); } catch(e){} }
+async function post(p){
+  // mode no-cors: respons Apps Script tidak bisa dibaca, jadi "ok" berarti permintaan sampai ke server
+  try {
+    await fetch(CONFIG.ENDPOINT, {method:"POST", mode:"no-cors",
+      headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body: JSON.stringify(Object.assign({token: CONFIG.TOKEN}, p))});
+    return true;
+  } catch(e){ return false; }
+}
+async function flush(){
+  if (!CONFIG.ENDPOINT) return;
+  const q = loadQ(); if (!q.length) return;
+  const rest = [];
+  for (const p of q) if (!(await post(p))) rest.push(p);
+  saveQ(rest);
+}
+window.addEventListener("online", flush);
+flush();
+
+/* --- kirim form --- */
+form.addEventListener("submit", async e => {
+  e.preventDefault();
+  const d = new FormData(form);
+  if (!validate(d)) return;
+  const btn = $("#go"); btn.disabled = true; btn.textContent = "Mengirim…";
+
+  const q = Array.from({length: TOTAL_Q}, (_, i) => +d.get("q"+i));
+  const total = q.slice(0, 9).reduce((a, b) => a + b, 0);
+  const i9 = q[8];
+  const b = band(total), pr = prioritas(total, i9);
+  const p = {
+    id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+    waktu: new Date().toISOString(),
+    nama: d.get("nama").trim(), usia: +d.get("usia"), jk: d.get("jk"),
+    hp: normHP(d.get("hp")), wilayah: d.get("wil").trim(),
+    pengisi: d.get("pengisi"), kader: (d.get("kader") || "").trim(),
+    q0:q[0], q1:q[1], q2:q[2], q3:q[3], q4:q[4], q5:q[5], q6:q[6], q7:q[7], q8:q[8], q9:q[9],
+    total, kategori: b.k, prioritas: pr
+  };
+
+  let status;
+  if (!CONFIG.ENDPOINT) status = "demo";
+  else if (await post(p)) status = "ok";
+  else { const a = loadQ(); a.push(p); saveQ(a); status = "antre"; }
+
+  tampil(p, b, status);
+  btn.disabled = false; btn.textContent = "Lihat hasil dan kirim";
+});
+
+function tampil(p, b, status){
+  $("#r-nama").textContent = p.nama;
+  $("#r-skor").textContent = p.total;
+  $("#r-skor").style.color = b.c;
+  $("#r-kat").textContent = b.k;
+  $("#r-kat").style.color = b.c;
+  $("#mark").textContent = p.total;
+  $("#mark").style.left = ((p.total + .5) / 28 * 100) + "%";
+  $("#crisis").hidden = !(p.q8 > 0);
+  $("#r-saran").textContent = SARAN[p.prioritas];
+  $("#r-follow").textContent = FOLLOW[p.prioritas];
+  $("#r-status").textContent = {
+    ok: "Hasil Anda sudah terkirim ke petugas.",
+    antre: "Belum ada sambungan internet. Hasil tersimpan di HP ini dan akan dikirim otomatis saat tersambung.",
+    demo: "Mode uji coba: hasil belum dikirim ke Google Sheet."
+  }[status];
+  const wa = $("#wa");
+  if (CONFIG.KADER_WA){
+    wa.hidden = false;
+    wa.href = "https://wa.me/" + CONFIG.KADER_WA + "?text=" +
+      encodeURIComponent(`Halo, saya ${p.nama}. Saya baru mengisi skrining PHQ-9 (skor ${p.total}).`);
+  }
+  $("#bar").hidden = true; form.hidden = true;
+  $("#res").style.display = "block";
+  window.scrollTo({top: 0, behavior: "smooth"});
+}
+
+$("#again").addEventListener("click", () => {
+  form.reset(); updateProg();
+  $("#res").style.display = "none";
+  $("#bar").hidden = false; form.hidden = false;
+  window.scrollTo({top: 0, behavior: "smooth"});
+});
+</script>
+</body>
+</html>
