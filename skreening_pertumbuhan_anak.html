@@ -1,1242 +1,162 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alat Skrining Tumbuh Kembang - Interpolasi Linear BB/TB WHO</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            margin: 0;
-            padding: 20px;
-            background-color: #f0f9ff;
-            color: #333;
-            line-height: 1.6;
-        }
-        
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-        
-        header {
-            text-align: center;
-            padding: 25px;
-            background: linear-gradient(135deg, #0369a1 0%, #0284c7 100%);
-            color: white;
-        }
-        
-        h1 {
-            margin: 0 0 10px 0;
-            font-size: 1.8rem;
-        }
-        
-        .subtitle {
-            font-size: 1rem;
-            opacity: 0.9;
-        }
-        
-        .methodology-info {
-            background-color: #dcfce7;
-            border: 2px solid #16a34a;
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 8px;
-        }
-        
-        .methodology-info h3 {
-            color: #15803d;
-            margin-top: 0;
-            display: flex;
-            align-items: center;
-        }
-        
-        .methodology-info h3 i {
-            margin-right: 10px;
-        }
-        
-        .methodology-points {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-        }
-        
-        .methodology-point {
-            background-color: white;
-            padding: 12px;
-            border-radius: 6px;
-            border-left: 4px solid #10b981;
-        }
-        
-        .methodology-point strong {
-            color: #047857;
-            display: block;
-            margin-bottom: 5px;
-        }
-        
-        .interpolation-demo {
-            background-color: #fef3c7;
-            border: 2px solid #f59e0b;
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 8px;
-        }
-        
-        .interpolation-demo h4 {
-            color: #b45309;
-            margin-top: 0;
-        }
-        
-        .interpolation-steps {
-            font-family: 'Courier New', monospace;
-            background-color: #1e293b;
-            color: #e2e8f0;
-            padding: 15px;
-            border-radius: 6px;
-            margin: 10px 0;
-            font-size: 0.9rem;
-            overflow-x: auto;
-        }
-        
-        .tab-container {
-            display: flex;
-            background-color: #e0f2fe;
-            border-bottom: 1px solid #bae6fd;
-        }
-        
-        .tab {
-            flex: 1;
-            padding: 15px;
-            text-align: center;
-            cursor: pointer;
-            font-weight: 600;
-            color: #475569;
-            transition: all 0.3s;
-            border-bottom: 3px solid transparent;
-        }
-        
-        .tab:hover {
-            background-color: #bae6fd;
-        }
-        
-        .tab.active {
-            background-color: white;
-            color: #0369a1;
-            border-bottom: 3px solid #0284c7;
-        }
-        
-        .tab-content {
-            display: none;
-            padding: 25px;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        .disclaimer {
-            background-color: #fef3c7;
-            border: 2px solid #f59e0b;
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 8px;
-        }
-        
-        .disclaimer strong {
-            color: #b45309;
-        }
-        
-        .form-section {
-            margin-bottom: 25px;
-            padding: 20px;
-            background-color: #f8fafc;
-            border-radius: 8px;
-            border: 1px solid #e2e8f0;
-        }
-        
-        .section-title {
-            color: #0c4a6e;
-            margin-top: 0;
-            margin-bottom: 20px;
-            font-size: 1.2rem;
-            display: flex;
-            align-items: center;
-        }
-        
-        .section-title i {
-            margin-right: 10px;
-            font-size: 1.3rem;
-        }
-        
-        .input-group {
-            margin-bottom: 15px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #475569;
-        }
-        
-        input, select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            font-size: 1rem;
-            transition: border-color 0.3s;
-        }
-        
-        input:focus, select:focus {
-            outline: none;
-            border-color: #0284c7;
-            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1);
-        }
-        
-        .inline-inputs {
-            display: flex;
-            gap: 20px;
-        }
-        
-        .inline-inputs > div {
-            flex: 1;
-        }
-        
-        .analyze-btn {
-            background: linear-gradient(to right, #0284c7, #0369a1);
-            color: white;
-            border: none;
-            padding: 16px 40px;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: block;
-            margin: 30px auto;
-            width: 250px;
-            box-shadow: 0 4px 6px rgba(2, 132, 199, 0.2);
-        }
-        
-        .analyze-btn:hover {
-            background: linear-gradient(to right, #0369a1, #075985);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 8px rgba(2, 132, 199, 0.3);
-        }
-        
-        .results-section {
-            display: none;
-            margin-top: 30px;
-            padding-top: 25px;
-            border-top: 2px solid #e0f2fe;
-            animation: fadeIn 0.5s ease-in-out;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .result-card {
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-        }
-        
-        .growth-card {
-            background-color: #ecfdf5;
-            border-left: 4px solid #10b981;
-        }
-        
-        .development-card {
-            background-color: #eff6ff;
-            border-left: 4px solid #3b82f6;
-        }
-        
-        .recommendation-card {
-            background-color: #fef3c7;
-            border-left: 4px solid #f59e0b;
-        }
-        
-        .result-title {
-            display: flex;
-            align-items: center;
-            margin-top: 0;
-            margin-bottom: 15px;
-            color: #0c4a6e;
-        }
-        
-        .result-title i {
-            margin-right: 10px;
-            font-size: 1.3rem;
-        }
-        
-        .parameter {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px dashed #cbd5e1;
-        }
-        
-        .parameter:last-child {
-            border-bottom: none;
-        }
-        
-        .parameter-name {
-            font-weight: 600;
-        }
-        
-        .parameter-value {
-            font-weight: 600;
-        }
-        
-        .normal {
-            color: #10b981;
-        }
-        
-        .warning {
-            color: #f59e0b;
-        }
-        
-        .danger {
-            color: #ef4444;
-        }
-        
-        .critical {
-            color: #dc2626;
-            font-weight: 700;
-        }
-        
-        .age-info {
-            background: linear-gradient(135deg, #dbeafe 0%, #e0f2fe 100%);
-            padding: 18px;
-            border-radius: 8px;
-            margin-bottom: 25px;
-            text-align: center;
-            font-weight: 600;
-            color: #1e40af;
-            border: 1px solid #bfdbfe;
-        }
-        
-        .who-reference {
-            font-size: 0.8rem;
-            color: #64748b;
-            text-align: right;
-            margin-top: 10px;
-            font-style: italic;
-        }
-        
-        .model-info {
-            background-color: #f0f9ff;
-            padding: 12px;
-            border-radius: 6px;
-            margin: 10px 0;
-            font-size: 0.9rem;
-            color: #475569;
-            border-left: 4px solid #0ea5e9;
-        }
-        
-        .interpolation-detail {
-            background-color: #f8fafc;
-            padding: 10px;
-            border-radius: 6px;
-            margin: 10px 0;
-            font-size: 0.85rem;
-            border: 1px dashed #cbd5e1;
-        }
-        
-        .data-points {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px;
-            margin-top: 5px;
-        }
-        
-        .data-point {
-            background-color: #e2e8f0;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-        }
-        
-        .data-point.active {
-            background-color: #0284c7;
-            color: white;
-        }
-        
-        @media (max-width: 768px) {
-            .inline-inputs {
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            .container {
-                margin: 0 10px;
-            }
-            
-            .analyze-btn {
-                width: 100%;
-                max-width: 250px;
-            }
-            
-            .methodology-points {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <header>
-            <h1>Alat Skrining Tumbuh Kembang Anak</h1>
-            <p class="subtitle">Dengan Interpolasi Linear BB/TB sesuai WHO Anthro</p>
-        </header>
-        
-        <div class="methodology-info">
-            <h3><i>📐</i> Metodologi Interpolasi Linear BB/TB WHO</h3>
-            <div class="methodology-points">
-                <div class="methodology-point">
-                    <strong>Interpolasi Linear WHO Anthro</strong>
-                    WHO Anthro menggunakan interpolasi linear antara titik tinggi badan terdekat untuk menghitung z-score BB/TB.
-                </div>
-                <div class="methodology-point">
-                    <strong>Data Titik WHO Lengkap</strong>
-                    WHO menyediakan tabel dengan interval 0.1 cm untuk panjang badan dan 0.5 cm untuk tinggi badan.
-                </div>
-                <div class="methodology-point">
-                    <strong>Rumus Identik WHO</strong>
-                    Menggunakan rumus LMS: Z = [(X/M)^L - 1] / (L × S) dengan interpolasi linear L, M, S.
-                </div>
-                <div class="methodology-point">
-                    <strong>Validasi dengan WHO Anthro</strong>
-                    Hasil z-score seharusnya identik dengan software WHO Anthro untuk input yang sama.
-                </div>
-            </div>
-            
-            <div class="interpolation-demo">
-                <h4><i>🔍</i> Contoh Interpolasi Linear WHO Anthro:</h4>
-                <div class="interpolation-steps">
-// Data WHO untuk tinggi 75.0 cm dan 75.5 cm (laki-laki, WFL)<br>
-Tinggi 75.0 cm: L = -0.3833, M = 9.031, S = 0.10907<br>
-Tinggi 75.5 cm: L = -0.3833, M = 9.180, S = 0.10932<br><br>
-// Interpolasi untuk tinggi 75.3 cm:<br>
-ratio = (75.3 - 75.0) / (75.5 - 75.0) = 0.6<br>
-L = -0.3833 (konstan)<br>
-M = 9.031 + 0.6 × (9.180 - 9.031) = 9.1204<br>
-S = 0.10907 + 0.6 × (0.10932 - 0.10907) = 0.10922<br><br>
-// Hitung z-score untuk berat 9.5 kg:<br>
-Z = [(9.5/9.1204)^(-0.3833) - 1] / (-0.3833 × 0.10922) = 0.15
-                </div>
-            </div>
-        </div>
-        
-        <div class="tab-container">
-            <div class="tab active" data-tab="tab1">Skrining 0-24 Bulan (Panjang Badan)</div>
-            <div class="tab" data-tab="tab2">Skrining 0-5 Tahun (Tinggi Badan)</div>
-        </div>
-        
-        <div class="tab-content active" id="tab1">
-            <div class="disclaimer">
-                <strong>METODE:</strong> Menggunakan interpolasi linear antara titik panjang badan WHO (interval 0.1 cm) untuk menghitung z-score BB/TB. Hasil seharusnya identik dengan WHO Anthro.
-            </div>
-            
-            <div class="form-section">
-                <h2 class="section-title"><i>📋</i> Data Bayi/Anak (0-24 Bulan)</h2>
-                
-                <div class="input-group">
-                    <label for="birthDate1">Tanggal Lahir</label>
-                    <input type="date" id="birthDate1" required>
-                </div>
-                
-                <div class="inline-inputs">
-                    <div class="input-group">
-                        <label for="gender1">Jenis Kelamin</label>
-                        <select id="gender1" required>
-                            <option value="">Pilih jenis kelamin</option>
-                            <option value="M">Laki-laki</option>
-                            <option value="F">Perempuan</option>
-                        </select>
-                    </div>
-                    
-                    <div class="input-group">
-                        <label for="measurementDate1">Tanggal Pengukuran</label>
-                        <input type="date" id="measurementDate1" required>
-                    </div>
-                </div>
-                
-                <div class="inline-inputs">
-                    <div class="input-group">
-                        <label for="weight1">Berat Badan (kg)</label>
-                        <input type="number" id="weight1" step="0.001" min="1.5" max="18" placeholder="Contoh: 8.750" required>
-                        <div style="font-size: 0.8rem; color: #64748b; margin-top: 5px;">Presisi: 3 desimal (gram)</div>
-                    </div>
-                    
-                    <div class="input-group">
-                        <label for="height1">Panjang Badan (cm) - telentang</label>
-                        <input type="number" id="height1" step="0.1" min="45" max="110" placeholder="Contoh: 72.3" required>
-                        <div style="font-size: 0.8rem; color: #64748b; margin-top: 5px;">Presisi: 1 desimal (mm)</div>
-                    </div>
-                </div>
-            </div>
-            
-            <button class="analyze-btn" id="analyzeBtn1">Analisis dengan Interpolasi WHO</button>
-            
-            <div class="results-section" id="resultsSection1">
-                <div class="age-info" id="ageInfo1"></div>
-                
-                <div class="result-card growth-card">
-                    <h3 class="result-title"><i>📊</i> Status Pertumbuhan (Interpolasi Linear WHO)</h3>
-                    <div class="model-info">
-                        <strong>Weight-for-Length (BB/PB):</strong> Interpolasi linear antara titik panjang badan terdekat sesuai tabel WHO.
-                    </div>
-                    <div id="growthResults1"></div>
-                    <div class="who-reference">Metode: Interpolasi linear identik WHO Anthro v3.2.2</div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="tab-content" id="tab2">
-            <div class="disclaimer">
-                <strong>METODE:</strong> Menggunakan interpolasi linear antara titik tinggi badan WHO (interval 0.5 cm) untuk menghitung z-score BB/TB. Hasil seharusnya identik dengan WHO Anthro.
-            </div>
-            
-            <div class="form-section">
-                <h2 class="section-title"><i>📋</i> Data Anak (0-5 Tahun)</h2>
-                
-                <div class="input-group">
-                    <label for="birthDate2">Tanggal Lahir</label>
-                    <input type="date" id="birthDate2" required>
-                </div>
-                
-                <div class="inline-inputs">
-                    <div class="input-group">
-                        <label for="gender2">Jenis Kelamin</label>
-                        <select id="gender2" required>
-                            <option value="">Pilih jenis kelamin</option>
-                            <option value="M">Laki-laki</option>
-                            <option value="F">Perempuan</option>
-                        </select>
-                    </div>
-                    
-                    <div class="input-group">
-                        <label for="measurementDate2">Tanggal Pengukuran</label>
-                        <input type="date" id="measurementDate2" required>
-                    </div>
-                </div>
-                
-                <div class="inline-inputs">
-                    <div class="input-group">
-                        <label for="weight2">Berat Badan (kg)</label>
-                        <input type="number" id="weight2" step="0.001" min="2" max="30" placeholder="Contoh: 14.820" required>
-                        <div style="font-size: 0.8rem; color: #64748b; margin-top: 5px;">Presisi: 3 desimal (gram)</div>
-                    </div>
-                    
-                    <div class="input-group">
-                        <label for="height2">Tinggi Badan (cm) - berdiri</label>
-                        <input type="number" id="height2" step="0.1" min="65" max="120" placeholder="Contoh: 96.7" required>
-                        <div style="font-size: 0.8rem; color: #64748b; margin-top: 5px;">Presisi: 1 desimal (mm)</div>
-                    </div>
-                </div>
-            </div>
-            
-            <button class="analyze-btn" id="analyzeBtn2">Analisis dengan Interpolasi WHO</button>
-            
-            <div class="results-section" id="resultsSection2">
-                <div class="age-info" id="ageInfo2"></div>
-                
-                <div class="result-card growth-card">
-                    <h3 class="result-title"><i>📊</i> Status Pertumbuhan (Interpolasi Linear WHO)</h3>
-                    <div class="model-info">
-                        <strong>Weight-for-Height (BB/TB):</strong> Interpolasi linear antara titik tinggi badan terdekat sesuai tabel WHO.
-                    </div>
-                    <div id="growthResults2"></div>
-                    <div class="who-reference">Metode: Interpolasi linear identik WHO Anthro v3.2.2</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // ==============================================
-        // DATA WHO UNTUK INTERPOLASI LINEAR BB/TB
-        // (Data contoh berdasarkan WHO Growth Standards)
-        // ==============================================
-
-        // Data WHO untuk Weight-for-Length (0-24 bulan, panjang badan 45-110 cm)
-        // Format: { "tinggi": {L: value, M: value, S: value} }
-        const WHO_WFL_DATA = {
-            "M": { // Laki-laki
-                "45.0": {L: -0.3521, M: 2.441, S: 0.09182},
-                "45.5": {L: -0.3521, M: 2.524, S: 0.09222},
-                "46.0": {L: -0.3521, M: 2.607, S: 0.09261},
-                "46.5": {L: -0.3521, M: 2.692, S: 0.09301},
-                "47.0": {L: -0.3521, M: 2.780, S: 0.09340},
-                "47.5": {L: -0.3521, M: 2.868, S: 0.09379},
-                "48.0": {L: -0.3521, M: 2.959, S: 0.09418},
-                "48.5": {L: -0.3521, M: 3.051, S: 0.09456},
-                "49.0": {L: -0.3521, M: 3.145, S: 0.09494},
-                "49.5": {L: -0.3521, M: 3.241, S: 0.09532},
-                "50.0": {L: -0.3521, M: 3.339, S: 0.09570},
-                "55.0": {L: -0.3521, M: 4.578, S: 0.10026},
-                "60.0": {L: -0.3521, M: 5.977, S: 0.10474},
-                "65.0": {L: -0.3521, M: 7.514, S: 0.10911},
-                "70.0": {L: -0.3833, M: 9.031, S: 0.10907},
-                "70.5": {L: -0.3833, M: 9.180, S: 0.10932},
-                "71.0": {L: -0.3833, M: 9.329, S: 0.10957},
-                "71.5": {L: -0.3833, M: 9.479, S: 0.10982},
-                "72.0": {L: -0.3833, M: 9.630, S: 0.11006},
-                "72.5": {L: -0.3833, M: 9.781, S: 0.11031},
-                "73.0": {L: -0.3833, M: 9.933, S: 0.11055},
-                "73.5": {L: -0.3833, M: 10.085, S: 0.11079},
-                "74.0": {L: -0.3833, M: 10.238, S: 0.11103},
-                "74.5": {L: -0.3833, M: 10.391, S: 0.11126},
-                "75.0": {L: -0.3833, M: 10.544, S: 0.11150},
-                "80.0": {L: -0.3833, M: 12.090, S: 0.11459},
-                "85.0": {L: -0.3833, M: 13.704, S: 0.11758},
-                "90.0": {L: -0.3833, M: 15.355, S: 0.12046},
-                "95.0": {L: -0.3833, M: 17.022, S: 0.12322},
-                "100.0": {L: -0.3833, M: 18.687, S: 0.12586},
-                "105.0": {L: -0.3833, M: 20.337, S: 0.12839},
-                "110.0": {L: -0.3833, M: 21.962, S: 0.13080}
-            },
-            "F": { // Perempuan
-                "45.0": {L: -0.3833, M: 2.305, S: 0.09556},
-                "45.5": {L: -0.3833, M: 2.386, S: 0.09599},
-                "46.0": {L: -0.3833, M: 2.467, S: 0.09642},
-                "46.5": {L: -0.3833, M: 2.550, S: 0.09684},
-                "47.0": {L: -0.3833, M: 2.635, S: 0.09726},
-                "47.5": {L: -0.3833, M: 2.721, S: 0.09767},
-                "48.0": {L: -0.3833, M: 2.808, S: 0.09808},
-                "48.5": {L: -0.3833, M: 2.897, S: 0.09848},
-                "49.0": {L: -0.3833, M: 2.987, S: 0.09888},
-                "49.5": {L: -0.3833, M: 3.079, S: 0.09927},
-                "50.0": {L: -0.3833, M: 3.172, S: 0.09966},
-                "55.0": {L: -0.3833, M: 4.324, S: 0.10414},
-                "60.0": {L: -0.3833, M: 5.618, S: 0.10848},
-                "65.0": {L: -0.3833, M: 7.038, S: 0.11266},
-                "70.0": {L: -0.3833, M: 8.540, S: 0.11669},
-                "70.5": {L: -0.3833, M: 8.684, S: 0.11703},
-                "71.0": {L: -0.3833, M: 8.829, S: 0.11738},
-                "71.5": {L: -0.3833, M: 8.975, S: 0.11772},
-                "72.0": {L: -0.3833, M: 9.121, S: 0.11806},
-                "72.5": {L: -0.3833, M: 9.268, S: 0.11840},
-                "73.0": {L: -0.3833, M: 9.416, S: 0.11873},
-                "73.5": {L: -0.3833, M: 9.565, S: 0.11907},
-                "74.0": {L: -0.3833, M: 9.714, S: 0.11940},
-                "74.5": {L: -0.3833, M: 9.864, S: 0.11973},
-                "75.0": {L: -0.3833, M: 10.014, S: 0.12005},
-                "80.0": {L: -0.3833, M: 11.551, S: 0.12482},
-                "85.0": {L: -0.3833, M: 13.144, S: 0.12939},
-                "90.0": {L: -0.3833, M: 14.764, S: 0.13377},
-                "95.0": {L: -0.3833, M: 16.389, S: 0.13796},
-                "100.0": {L: -0.3833, M: 18.003, S: 0.14196},
-                "105.0": {L: -0.3833, M: 19.595, S: 0.14579},
-                "110.0": {L: -0.3833, M: 21.157, S: 0.14945}
-            }
-        };
-
-        // Data WHO untuk Weight-for-Height (2-5 tahun, tinggi badan 65-120 cm)
-        const WHO_WFH_DATA = {
-            "M": { // Laki-laki
-                "65.0": {L: -0.3521, M: 7.514, S: 0.10911},
-                "65.5": {L: -0.3521, M: 7.683, S: 0.10967},
-                "66.0": {L: -0.3521, M: 7.854, S: 0.11023},
-                "66.5": {L: -0.3521, M: 8.026, S: 0.11079},
-                "67.0": {L: -0.3521, M: 8.200, S: 0.11134},
-                "67.5": {L: -0.3521, M: 8.376, S: 0.11188},
-                "68.0": {L: -0.3521, M: 8.553, S: 0.11242},
-                "68.5": {L: -0.3521, M: 8.732, S: 0.11296},
-                "69.0": {L: -0.3521, M: 8.912, S: 0.11349},
-                "69.5": {L: -0.3521, M: 9.094, S: 0.11401},
-                "70.0": {L: -0.3833, M: 9.031, S: 0.10907},
-                "75.0": {L: -0.3833, M: 10.544, S: 0.11150},
-                "80.0": {L: -0.3833, M: 12.090, S: 0.11459},
-                "85.0": {L: -0.3833, M: 13.704, S: 0.11758},
-                "90.0": {L: -0.3833, M: 15.355, S: 0.12046},
-                "95.0": {L: -0.3833, M: 17.022, S: 0.12322},
-                "100.0": {L: -0.3833, M: 18.687, S: 0.12586},
-                "105.0": {L: -0.3833, M: 20.337, S: 0.12839},
-                "110.0": {L: -0.3833, M: 21.962, S: 0.13080},
-                "115.0": {L: -0.3833, M: 23.557, S: 0.13310},
-                "120.0": {L: -0.3833, M: 25.119, S: 0.13530}
-            },
-            "F": { // Perempuan
-                "65.0": {L: -0.3833, M: 7.038, S: 0.11266},
-                "65.5": {L: -0.3833, M: 7.196, S: 0.11325},
-                "66.0": {L: -0.3833, M: 7.356, S: 0.11383},
-                "66.5": {L: -0.3833, M: 7.517, S: 0.11441},
-                "67.0": {L: -0.3833, M: 7.680, S: 0.11498},
-                "67.5": {L: -0.3833, M: 7.845, S: 0.11554},
-                "68.0": {L: -0.3833, M: 8.012, S: 0.11610},
-                "68.5": {L: -0.3833, M: 8.180, S: 0.11665},
-                "69.0": {L: -0.3833, M: 8.349, S: 0.11720},
-                "69.5": {L: -0.3833, M: 8.520, S: 0.11774},
-                "70.0": {L: -0.3833, M: 8.540, S: 0.11669},
-                "75.0": {L: -0.3833, M: 10.014, S: 0.12005},
-                "80.0": {L: -0.3833, M: 11.551, S: 0.12482},
-                "85.0": {L: -0.3833, M: 13.144, S: 0.12939},
-                "90.0": {L: -0.3833, M: 14.764, S: 0.13377},
-                "95.0": {L: -0.3833, M: 16.389, S: 0.13796},
-                "100.0": {L: -0.3833, M: 18.003, S: 0.14196},
-                "105.0": {L: -0.3833, M: 19.595, S: 0.14579},
-                "110.0": {L: -0.3833, M: 21.157, S: 0.14945},
-                "115.0": {L: -0.3833, M: 22.685, S: 0.15295},
-                "120.0": {L: -0.3833, M: 24.176, S: 0.15630}
-            }
-        };
-
-        // Data WHO untuk Weight-for-Age (0-60 bulan)
-        const WHO_WFA_DATA = {
-            "M": {
-                "0": {L: -0.3521, M: 3.346, S: 0.14602},
-                "1": {L: 0.0000, M: 4.470, S: 0.13395},
-                "2": {L: 0.0000, M: 5.567, S: 0.12385},
-                "3": {L: 0.0000, M: 6.376, S: 0.11727},
-                "4": {L: 0.0000, M: 7.002, S: 0.11316},
-                "5": {L: 0.0000, M: 7.511, S: 0.11080},
-                "6": {L: -0.3833, M: 7.932, S: 0.10535},
-                "7": {L: -0.3833, M: 8.251, S: 0.10412},
-                "8": {L: -0.3833, M: 8.577, S: 0.10302},
-                "9": {L: -0.3833, M: 8.909, S: 0.10203},
-                "10": {L: -0.3833, M: 9.245, S: 0.10111},
-                "11": {L: -0.3833, M: 9.585, S: 0.10026},
-                "12": {L: -0.3521, M: 9.586, S: 0.10128},
-                "18": {L: -0.3521, M: 10.743, S: 0.10122},
-                "24": {L: -0.3521, M: 11.513, S: 0.10266},
-                "30": {L: -0.3521, M: 12.387, S: 0.10544},
-                "36": {L: -0.3521, M: 13.879, S: 0.11014},
-                "42": {L: -0.3521, M: 14.813, S: 0.11333},
-                "48": {L: -0.3521, M: 15.952, S: 0.11845},
-                "54": {L: -0.3521, M: 16.881, S: 0.12267},
-                "60": {L: -0.3521, M: 17.715, S: 0.12687}
-            },
-            "F": {
-                "0": {L: -0.3833, M: 3.232, S: 0.14521},
-                "1": {L: 0.0000, M: 4.188, S: 0.13530},
-                "2": {L: 0.0000, M: 5.128, S: 0.12610},
-                "3": {L: 0.0000, M: 5.845, S: 0.11989},
-                "4": {L: 0.0000, M: 6.424, S: 0.11638},
-                "5": {L: 0.0000, M: 6.898, S: 0.11421},
-                "6": {L: -0.3833, M: 7.257, S: 0.10979},
-                "7": {L: -0.3833, M: 7.550, S: 0.10860},
-                "8": {L: -0.3833, M: 7.850, S: 0.10752},
-                "9": {L: -0.3833, M: 8.155, S: 0.10653},
-                "10": {L: -0.3833, M: 8.463, S: 0.10561},
-                "11": {L: -0.3833, M: 8.774, S: 0.10475},
-                "12": {L: -0.3521, M: 8.739, S: 0.10559},
-                "18": {L: -0.3521, M: 9.824, S: 0.10533},
-                "24": {L: -0.3521, M: 10.556, S: 0.10650},
-                "30": {L: -0.3521, M: 11.384, S: 0.10930},
-                "36": {L: -0.3521, M: 12.781, S: 0.11386},
-                "42": {L: -0.3521, M: 13.702, S: 0.11704},
-                "48": {L: -0.3521, M: 14.758, S: 0.12185},
-                "54": {L: -0.3521, M: 15.665, S: 0.12597},
-                "60": {L: -0.3521, M: 16.482, S: 0.13009}
-            }
-        };
-
-        // Data WHO untuk Height-for-Age (0-60 bulan)
-        const WHO_HFA_DATA = {
-            "M": {
-                "0": {L: 1, M: 49.884, S: 0.03795},
-                "1": {L: 1, M: 54.724, S: 0.03557},
-                "2": {L: 1, M: 58.424, S: 0.03424},
-                "3": {L: 1, M: 61.429, S: 0.03328},
-                "4": {L: 1, M: 63.886, S: 0.03257},
-                "5": {L: 1, M: 65.902, S: 0.03204},
-                "6": {L: 1, M: 67.623, S: 0.03215},
-                "7": {L: 1, M: 69.199, S: 0.03190},
-                "8": {L: 1, M: 70.644, S: 0.03168},
-                "9": {L: 1, M: 71.989, S: 0.03154},
-                "10": {L: 1, M: 73.281, S: 0.03147},
-                "11": {L: 1, M: 74.538, S: 0.03145},
-                "12": {L: 1, M: 75.670, S: 0.03103},
-                "18": {L: 1, M: 82.376, S: 0.03078},
-                "24": {L: 1, M: 87.074, S: 0.03082},
-                "30": {L: 1, M: 91.275, S: 0.03106},
-                "36": {L: 1, M: 95.250, S: 0.03135},
-                "42": {L: 1, M: 98.896, S: 0.03165},
-                "48": {L: 1, M: 102.732, S: 0.03224},
-                "54": {L: 1, M: 106.108, S: 0.03277},
-                "60": {L: 1, M: 109.415, S: 0.03333}
-            },
-            "F": {
-                "0": {L: 1, M: 49.147, S: 0.03790},
-                "1": {L: 1, M: 53.687, S: 0.03640},
-                "2": {L: 1, M: 57.067, S: 0.03568},
-                "3": {L: 1, M: 59.802, S: 0.03520},
-                "4": {L: 1, M: 62.089, S: 0.03486},
-                "5": {L: 1, M: 64.031, S: 0.03463},
-                "6": {L: 1, M: 65.710, S: 0.03446},
-                "7": {L: 1, M: 67.257, S: 0.03434},
-                "8": {L: 1, M: 68.691, S: 0.03426},
-                "9": {L: 1, M: 70.038, S: 0.03421},
-                "10": {L: 1, M: 71.321, S: 0.03420},
-                "11": {L: 1, M: 72.555, S: 0.03421},
-                "12": {L: 1, M: 73.730, S: 0.03404},
-                "18": {L: 1, M: 80.718, S: 0.03388},
-                "24": {L: 1, M: 85.597, S: 0.03388},
-                "30": {L: 1, M: 90.164, S: 0.03400},
-                "36": {L: 1, M: 94.091, S: 0.03442},
-                "42": {L: 1, M: 97.800, S: 0.03489},
-                "48": {L: 1, M: 101.581, S: 0.03525},
-                "54": {L: 1, M: 104.888, S: 0.03575},
-                "60": {L: 1, M: 108.114, S: 0.03628}
-            }
-        };
-
-        // ==============================================
-        // FUNGSI INTERPOLASI LINEAR SESUAI WHO ANTHRO
-        // ==============================================
-
-        // Fungsi untuk interpolasi linear antara dua titik
-        function linearInterpolate(x, x1, y1, x2, y2) {
-            if (Math.abs(x2 - x1) < 0.0001) return y1;
-            return y1 + ((x - x1) / (x2 - x1)) * (y2 - y1);
-        }
-
-        // Fungsi untuk mendapatkan LMS dengan interpolasi linear
-        function getInterpolatedLMS(height, gender, isWFL = true) {
-            const data = isWFL ? WHO_WFL_DATA[gender] : WHO_WFH_DATA[gender];
-            const heights = Object.keys(data).map(Number).sort((a, b) => a - b);
-            
-            // Jika tinggi tepat di titik data
-            if (data[height.toFixed(1)]) {
-                return data[height.toFixed(1)];
-            }
-            
-            // Cari dua titik terdekat
-            let lowerHeight = null;
-            let upperHeight = null;
-            
-            for (let i = 0; i < heights.length - 1; i++) {
-                if (height >= heights[i] && height <= heights[i + 1]) {
-                    lowerHeight = heights[i];
-                    upperHeight = heights[i + 1];
-                    break;
-                }
-            }
-            
-            // Jika tinggi di luar range, gunakan titik terdekat
-            if (lowerHeight === null) {
-                if (height < heights[0]) {
-                    return data[heights[0].toFixed(1)];
-                } else {
-                    return data[heights[heights.length - 1].toFixed(1)];
-                }
-            }
-            
-            const lowerLMS = data[lowerHeight.toFixed(1)];
-            const upperLMS = data[upperHeight.toFixed(1)];
-            
-            // Interpolasi linear untuk L, M, S
-            const ratio = (height - lowerHeight) / (upperHeight - lowerHeight);
-            
-            const interpolatedLMS = {
-                L: linearInterpolate(height, lowerHeight, lowerLMS.L, upperHeight, upperLMS.L),
-                M: linearInterpolate(height, lowerHeight, lowerLMS.M, upperHeight, upperLMS.M),
-                S: linearInterpolate(height, lowerHeight, lowerLMS.S, upperHeight, upperLMS.S)
-            };
-            
-            return interpolatedLMS;
-        }
-
-        // Fungsi untuk mendapatkan LMS dengan interpolasi linear untuk usia
-        function getInterpolatedLMSForAge(ageMonths, gender, indicator) {
-            const data = indicator === "WFA" ? WHO_WFA_DATA[gender] : WHO_HFA_DATA[gender];
-            const ages = Object.keys(data).map(Number).sort((a, b) => a - b);
-            
-            // Jika usia tepat di titik data
-            if (data[Math.round(ageMonths)]) {
-                return data[Math.round(ageMonths)];
-            }
-            
-            // Cari dua titik terdekat
-            let lowerAge = null;
-            let upperAge = null;
-            
-            for (let i = 0; i < ages.length - 1; i++) {
-                if (ageMonths >= ages[i] && ageMonths <= ages[i + 1]) {
-                    lowerAge = ages[i];
-                    upperAge = ages[i + 1];
-                    break;
-                }
-            }
-            
-            // Jika usia di luar range, gunakan titik terdekat
-            if (lowerAge === null) {
-                if (ageMonths < ages[0]) {
-                    return data[ages[0]];
-                } else {
-                    return data[ages[ages.length - 1]];
-                }
-            }
-            
-            const lowerLMS = data[lowerAge];
-            const upperLMS = data[upperAge];
-            
-            // Interpolasi linear untuk L, M, S
-            const ratio = (ageMonths - lowerAge) / (upperAge - lowerAge);
-            
-            const interpolatedLMS = {
-                L: linearInterpolate(ageMonths, lowerAge, lowerLMS.L, upperAge, upperLMS.L),
-                M: linearInterpolate(ageMonths, lowerAge, lowerLMS.M, upperAge, upperLMS.M),
-                S: linearInterpolate(ageMonths, lowerAge, lowerLMS.S, upperAge, upperLMS.S)
-            };
-            
-            return interpolatedLMS;
-        }
-
-        // Fungsi untuk menghitung z-score dengan rumus LMS
-        function calculateZScoreLMS(value, L, M, S) {
-            if (Math.abs(L) < 0.0001) {
-                // Jika L mendekati 0, gunakan log-normal
-                return (Math.log(value / M)) / S;
-            } else {
-                // Rumus LMS standar WHO
-                return ((Math.pow(value / M, L) - 1) / (L * S));
-            }
-        }
-
-        // Fungsi untuk interpretasi klinis
-        function interpretZScore(z, indicator) {
-            if (z < -3) {
-                if (indicator === "HFA") return { status: "Stunting berat", class: "critical", code: "Severe stunting" };
-                if (indicator === "WFA") return { status: "Underweight berat", class: "critical", code: "Severe underweight" };
-                return { status: "Wasting berat", class: "critical", code: "Severe wasting" };
-            }
-            if (z < -2) {
-                if (indicator === "HFA") return { status: "Stunting", class: "danger", code: "Stunting" };
-                if (indicator === "WFA") return { status: "Underweight", class: "danger", code: "Underweight" };
-                return { status: "Wasting", class: "danger", code: "Wasting" };
-            }
-            if (z <= 2) {
-                return { status: "Normal", class: "normal", code: "Normal" };
-            }
-            if (z <= 3) {
-                return { status: "Risiko overweight", class: "warning", code: "Risk of overweight" };
-            }
-            return { status: "Obesitas", class: "danger", code: "Obese" };
-        }
-
-        // Fungsi untuk menghitung usia dengan presisi
-        function calculateExactAge(birthDate, measurementDate) {
-            const diffMs = measurementDate - birthDate;
-            const diffDays = diffMs / (1000 * 60 * 60 * 24);
-            return diffDays / 30.436875; // Rata-rata hari per bulan
-        }
-
-        // Fungsi untuk mendapatkan titik data terdekat untuk display
-        function getNearestDataPoints(height, gender, isWFL = true) {
-            const data = isWFL ? WHO_WFL_DATA[gender] : WHO_WFH_DATA[gender];
-            const heights = Object.keys(data).map(Number).sort((a, b) => a - b);
-            
-            let lower = null;
-            let upper = null;
-            
-            for (let i = 0; i < heights.length - 1; i++) {
-                if (height >= heights[i] && height <= heights[i + 1]) {
-                    lower = heights[i];
-                    upper = heights[i + 1];
-                    break;
-                }
-            }
-            
-            if (lower === null) {
-                if (height < heights[0]) {
-                    lower = upper = heights[0];
-                } else {
-                    lower = upper = heights[heights.length - 1];
-                }
-            }
-            
-            return {
-                lower: { height: lower, lms: data[lower.toFixed(1)] },
-                upper: { height: upper, lms: data[upper.toFixed(1)] },
-                exactHeight: height
-            };
-        }
-
-        // ==============================================
-        // FUNGSI UTAMA ANALISIS
-        // ==============================================
-
-        function analyzeWithWHOInterpolation(tabNumber) {
-            // Ambil data input
-            const birthDateInput = document.getElementById(`birthDate${tabNumber}`).value;
-            const measurementDateInput = document.getElementById(`measurementDate${tabNumber}`).value;
-            const gender = document.getElementById(`gender${tabNumber}`).value;
-            const weight = parseFloat(document.getElementById(`weight${tabNumber}`).value);
-            const height = parseFloat(document.getElementById(`height${tabNumber}`).value);
-            
-            // Validasi
-            if (!birthDateInput || !measurementDateInput || !gender || !weight || !height) {
-                alert("Harap lengkapi semua data!");
-                return;
-            }
-            
-            const birthDate = new Date(birthDateInput);
-            const measurementDate = new Date(measurementDateInput);
-            
-            if (measurementDate <= birthDate) {
-                alert("Tanggal pengukuran harus setelah tanggal lahir!");
-                return;
-            }
-            
-            // Hitung usia
-            const ageMonths = calculateExactAge(birthDate, measurementDate);
-            
-            // Validasi berdasarkan tab
-            if (tabNumber === "1" && (ageMonths < 0 || ageMonths > 24)) {
-                alert(`Tab ini untuk anak 0-24 bulan. Usia anak: ${ageMonths.toFixed(1)} bulan`);
-                return;
-            }
-            
-            if (tabNumber === "2" && (ageMonths < 0 || ageMonths > 60)) {
-                alert(`Tab ini untuk anak 0-5 tahun. Usia anak: ${ageMonths.toFixed(1)} bulan`);
-                return;
-            }
-            
-            // Tampilkan info usia
-            const ageYears = Math.floor(ageMonths / 12);
-            const remainingMonths = Math.round((ageMonths % 12) * 10) / 10;
-            let ageText = `Usia: ${ageMonths.toFixed(1)} bulan`;
-            if (ageYears > 0) {
-                ageText = `Usia: ${ageYears} tahun ${remainingMonths} bulan (${ageMonths.toFixed(1)} bulan)`;
-            }
-            
-            document.getElementById(`ageInfo${tabNumber}`).innerHTML = `
-                ${ageText} | ${gender === 'M' ? 'Laki-laki' : 'Perempuan'} | 
-                Berat: ${weight.toFixed(3)} kg | Tinggi: ${height.toFixed(1)} cm
-            `;
-            
-            // Analisis dengan interpolasi WHO
-            const results = analyzeGrowthWHO(ageMonths, weight, height, gender, tabNumber === "1");
-            
-            // Tampilkan hasil
-            displayWHOResults(results, `growthResults${tabNumber}`, gender, tabNumber === "1");
-            
-            // Tampilkan section hasil
-            document.getElementById(`resultsSection${tabNumber}`).style.display = 'block';
-            
-            // Scroll ke hasil
-            document.getElementById(`resultsSection${tabNumber}`).scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function analyzeGrowthWHO(ageMonths, weight, height, gender, isUnder2Years) {
-            const results = [];
-            
-            // 1. Weight-for-Age (BB/U)
-            const wfaLMS = getInterpolatedLMSForAge(ageMonths, gender, "WFA");
-            const wfaZ = calculateZScoreLMS(weight, wfaLMS.L, wfaLMS.M, wfaLMS.S);
-            const wfaInterpretation = interpretZScore(wfaZ, "WFA");
-            
-            results.push({
-                indicator: "BB/U",
-                zScore: wfaZ,
-                interpretation: wfaInterpretation,
-                lms: wfaLMS,
-                note: `Usia: ${ageMonths.toFixed(2)} bulan`
-            });
-            
-            // 2. Height-for-Age (TB/U)
-            const hfaLMS = getInterpolatedLMSForAge(ageMonths, gender, "HFA");
-            const hfaZ = calculateZScoreLMS(height, hfaLMS.L, hfaLMS.M, hfaLMS.S);
-            const hfaInterpretation = interpretZScore(hfaZ, "HFA");
-            
-            results.push({
-                indicator: "TB/U",
-                zScore: hfaZ,
-                interpretation: hfaInterpretation,
-                lms: hfaLMS,
-                note: `Usia: ${ageMonths.toFixed(2)} bulan`
-            });
-            
-            // 3. Weight-for-Height/Length (BB/TB) - INTERPOLASI LINEAR
-            const isWFL = isUnder2Years;
-            const wfhLMS = getInterpolatedLMS(height, gender, isWFL);
-            const wfhZ = calculateZScoreLMS(weight, wfhLMS.L, wfhLMS.M, wfhLMS.S);
-            const wfhInterpretation = interpretZScore(wfhZ, "WFH");
-            
-            results.push({
-                indicator: "BB/TB",
-                zScore: wfhZ,
-                interpretation: wfhInterpretation,
-                lms: wfhLMS,
-                note: isWFL ? "Weight-for-Length" : "Weight-for-Height",
-                height: height,
-                gender: gender,
-                isWFL: isWFL
-            });
-            
-            return results;
-        }
-
-        function displayWHOResults(results, containerId, gender, isWFL) {
-            let html = '';
-            
-            results.forEach((result, index) => {
-                const indicatorName = result.indicator === "BB/U" ? "Berat Badan menurut Umur (BB/U)" :
-                                   result.indicator === "TB/U" ? "Tinggi Badan menurut Umur (TB/U)" :
-                                   "Berat Badan menurut Tinggi Badan (BB/TB)";
-                
-                html += `
-                    <div class="parameter">
-                        <div>
-                            <div class="parameter-name">${indicatorName}</div>
-                            <div style="font-size: 0.9rem; color: #64748b;">${result.note}</div>
-                `;
-                
-                // Untuk BB/TB, tampilkan detail interpolasi
-                if (result.indicator === "BB/TB" && result.height) {
-                    const dataPoints = getNearestDataPoints(result.height, gender, isWFL);
-                    
-                    html += `
-                        <div class="interpolation-detail">
-                            <strong>Interpolasi linear:</strong>
-                            <div style="margin-top: 5px;">
-                                Tinggi: ${result.height.toFixed(1)} cm (antara ${dataPoints.lower.height} cm dan ${dataPoints.upper.height} cm)
-                            </div>
-                            <div class="data-points">
-                                <div class="data-point active">${dataPoints.lower.height} cm: L=${dataPoints.lower.lms.L.toFixed(4)}, M=${dataPoints.lower.lms.M.toFixed(3)}, S=${dataPoints.lower.lms.S.toFixed(5)}</div>
-                                <div class="data-point active">${dataPoints.upper.height} cm: L=${dataPoints.upper.lms.L.toFixed(4)}, M=${dataPoints.upper.lms.M.toFixed(3)}, S=${dataPoints.upper.lms.S.toFixed(5)}</div>
-                            </div>
-                            <div style="margin-top: 5px; font-weight: 600;">
-                                Hasil interpolasi: L=${result.lms.L.toFixed(4)}, M=${result.lms.M.toFixed(3)}, S=${result.lms.S.toFixed(5)}
-                            </div>
-                        </div>
-                    `;
-                } else {
-                    html += `
-                        <div style="font-size: 0.8rem; color: #475569; margin-top: 5px;">
-                            LMS: L=${result.lms.L.toFixed(4)}, M=${result.lms.M.toFixed(3)}, S=${result.lms.S.toFixed(5)}
-                        </div>
-                    `;
-                }
-                
-                html += `
-                        </div>
-                        <div class="parameter-value ${result.interpretation.class}">
-                            ${result.interpretation.status}
-                            <div style="font-size: 0.9rem;">Z-score: ${result.zScore.toFixed(2)}</div>
-                            <div style="font-size: 0.8rem; margin-top: 3px;">${result.interpretation.code}</div>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            // Cek masalah gizi
-            const seriousIssues = results.filter(r => r.interpretation.class === "critical" || 
-                                                     (r.interpretation.class === "danger" && !r.interpretation.status.includes("Risiko")));
-            
-            if (seriousIssues.length > 0) {
-                html += `
-                    <div style="margin-top: 15px; padding: 12px; background-color: #fee2e2; border-radius: 6px; border-left: 4px solid #dc2626;">
-                        <strong style="color: #dc2626;">🚨 PERHATIAN KLINIS:</strong>
-                        <p style="margin: 5px 0;">Hasil menunjukkan masalah gizi yang memerlukan evaluasi lebih lanjut:</p>
-                        <ul style="margin: 5px 0; padding-left: 20px;">
-                            ${seriousIssues.map(issue => 
-                                `<li><strong>${issue.indicator}:</strong> ${issue.interpretation.status} (Z = ${issue.zScore.toFixed(2)})</li>`
-                            ).join('')}
-                        </ul>
-                        <p style="margin: 5px 0;"><strong>Rekomendasi:</strong> Konsultasikan dengan dokter anak atau tenaga gizi untuk evaluasi komprehensif.</p>
-                    </div>
-                `;
-            }
-            
-            // Informasi validasi
-            html += `
-                <div class="model-info">
-                    <strong>Validasi dengan WHO Anthro:</strong> 
-                    Z-score yang dihasilkan menggunakan metode interpolasi linear yang identik dengan 
-                    software WHO Anthro v3.2.2. Untuk tinggi badan antara titik data WHO, dilakukan 
-                    interpolasi linear pada L, M, dan S secara terpisah.
-                </div>
-            `;
-            
-            document.getElementById(containerId).innerHTML = html;
-        }
-
-        // ==============================================
-        // SETUP DAN EVENT LISTENERS
-        // ==============================================
-
-        function setupTabs() {
-            const tabs = document.querySelectorAll('.tab');
-            const tabContents = document.querySelectorAll('.tab-content');
-            
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    const tabId = tab.getAttribute('data-tab');
-                    
-                    tabs.forEach(t => t.classList.remove('active'));
-                    tabContents.forEach(content => content.classList.remove('active'));
-                    
-                    tab.classList.add('active');
-                    document.getElementById(tabId).classList.add('active');
-                    
-                    document.querySelectorAll('.results-section').forEach(section => {
-                        section.style.display = 'none';
-                    });
-                });
-            });
-        }
-
-        function setupExamples() {
-            const today = new Date();
-            const defaultMeasurementDate = today.toISOString().split('T')[0];
-            
-            // Contoh 1: Bayi 8.5 bulan, tinggi 72.3 cm
-            const babyDate = new Date(today.getFullYear(), today.getMonth() - 8, today.getDate() - 15);
-            document.getElementById('birthDate1').value = babyDate.toISOString().split('T')[0];
-            document.getElementById('measurementDate1').value = defaultMeasurementDate;
-            document.getElementById('gender1').value = 'M';
-            document.getElementById('weight1').value = '8.750';
-            document.getElementById('height1').value = '72.3';
-            
-            // Contoh 2: Anak 3.5 tahun, tinggi 96.7 cm
-            const childDate = new Date(today.getFullYear() - 3, today.getMonth() - 6, today.getDate() - 10);
-            document.getElementById('birthDate2').value = childDate.toISOString().split('T')[0];
-            document.getElementById('measurementDate2').value = defaultMeasurementDate;
-            document.getElementById('gender2').value = 'F';
-            document.getElementById('weight2').value = '14.820';
-            document.getElementById('height2').value = '96.7';
-        }
-
-        // Event listeners
-        document.getElementById('analyzeBtn1').addEventListener('click', () => analyzeWithWHOInterpolation("1"));
-        document.getElementById('analyzeBtn2').addEventListener('click', () => analyzeWithWHOInterpolation("2"));
-
-        // Initialize
-        setupTabs();
-        setupExamples();
-        
-        // Log info metode
-        console.log("Metode Interpolasi Linear WHO Anthro");
-        console.log("====================================");
-        console.log("• BB/TB menggunakan interpolasi linear antara titik tinggi terdekat");
-        console.log("• Data WHO: interval 0.1 cm untuk panjang, 0.5 cm untuk tinggi");
-        console.log("• Interpolasi dilakukan pada L, M, dan S secara terpisah");
-        console.log("• Rumus identik dengan WHO Anthro v3.2.2");
-        console.log("• Z-score seharusnya identik dengan software WHO resmi");
-        
-        // Demo perhitungan
-        console.log("\nDemo Perhitungan BB/TB (Laki-laki, 72.3 cm, 8.75 kg):");
-        const demoLMS = getInterpolatedLMS(72.3, "M", true);
-        const demoZ = calculateZScoreLMS(8.75, demoLMS.L, demoLMS.M, demoLMS.S);
-        console.log(`LMS interpolasi: L=${demoLMS.L.toFixed(4)}, M=${demoLMS.M.toFixed(3)}, S=${demoLMS.S.toFixed(5)}`);
-        console.log(`Z-score: ${demoZ.toFixed(2)}`);
-    </script>
-</body>
-</html>
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kalkulator Pertumbuhan Anak WHO</title>
+<style>
+:root{--ink:#1c2b33;--mut:#5d6d75;--line:#d5dee2;--bg:#f5f8f9;--card:#fff;--acc:#0b6e7a;--bad:#b3261e;--warn:#b26a00;--ok:#1e7a45}
+*{box-sizing:border-box}body{margin:0;font:16px/1.5 system-ui,Segoe UI,Roboto,sans-serif;color:var(--ink);background:var(--bg)}
+main{max-width:760px;margin:0 auto;padding:16px}
+h1{font-size:1.35rem;margin:.2rem 0 .8rem}h2{font-size:1.05rem;margin:1.2rem 0 .5rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.g{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:520px){.g{grid-template-columns:1fr}}
+label{display:block;font-size:.85rem;color:var(--mut);margin-bottom:2px}
+input,select{width:100%;padding:9px;border:1px solid var(--line);border-radius:6px;font:inherit;background:#fff}
+button{font:inherit;border:0;border-radius:6px;padding:9px 14px;background:var(--acc);color:#fff;cursor:pointer}
+button.s{background:#fff;color:var(--acc);border:1px solid var(--acc);padding:5px 10px}
+button:disabled{opacity:.4;cursor:not-allowed}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #7cc4cc}
+table{width:100%;border-collapse:collapse;font-size:.92rem}th,td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{color:var(--mut);font-weight:600}.wrap{overflow-x:auto}
+.b{font-weight:600}.bad{color:var(--bad)}.warn{color:var(--warn)}.ok{color:var(--ok)}.mut{color:var(--mut);font-size:.85rem}
+canvas{width:100%;height:auto;max-width:100%;border:1px solid var(--line);border-radius:8px;background:#fff}
+@media print{.noprint{display:none}body{background:#fff}}
+</style></head><body><main>
+<h1>Kalkulator Pertumbuhan Anak (WHO 2006, 0–5 tahun)</h1>
+<div class="card noprint"><div class="g">
+<div><label for="nm">Nama pasien</label><input id="nm" autocomplete="off"></div>
+<div><label for="jk">Jenis kelamin</label><select id="jk"><option value="L">Laki-laki</option><option value="P">Perempuan</option></select></div>
+<div><label for="lh">Tanggal lahir</label><input id="lh" type="date"></div>
+<div><label for="uk">Tanggal pengukuran</label><input id="uk" type="date"></div>
+<div><label for="tb">Tinggi/panjang badan (cm)</label><input id="tb" type="number" step="0.1" min="0" inputmode="decimal"></div>
+<div><label for="bb">Berat badan (kg)</label><input id="bb" type="number" step="0.01" min="0" inputmode="decimal"></div>
+<div><label for="lk">Lingkar kepala (cm), opsional</label><input id="lk" type="number" step="0.1" min="0" inputmode="decimal"></div>
+<div><label for="pos">Cara mengukur</label><select id="pos"><option value="">Sesuai umur (&lt;2 th berbaring, ≥2 th berdiri)</option><option value="b">Berbaring</option><option value="d">Berdiri</option></select></div>
+</div><p><button id="go">Hitung</button></p></div>
+<div id="out"></div>
+<p class="mut">Referensi: WHO Child Growth Standards. Alat bantu skrining, bukan pengganti penilaian klinis.</p>
+</main>
+<script>
+// Data LMS WHO 2006 (0-60 bln). Diverifikasi baris-per-baris terhadap tabel WHO (paket pygrowup) dengan verifikasi_data_who.py.
+// Format baris: [x, L, M, S]; x = umur (bulan) atau panjang/tinggi (cm).
+// Baris x=23.999 pada TB/U dan IMT/U = median BERBARING pada umur 24 bln; baris x=24 = median BERDIRI (WHO punya dua tabel di batas ini).
+const DATA={"tbu":{"L":[[0.0,1.0,49.8842,0.03795],[0.23,1.0,51.1152,0.03723],[0.46,1.0,52.3461,0.03652],[0.6899,1.0,53.3905,0.03609],[0.9199,1.0,54.3881,0.0357],[1.0,1.0,54.7244,0.03557],[1.1499,1.0,55.3374,0.03534],[1.3799,1.0,56.2357,0.03501],[1.6099,1.0,57.0851,0.0347],[1.8398,1.0,57.8889,0.03442],[2.0,1.0,58.4249,0.03424],[2.0698,1.0,58.6536,0.03416],[2.2998,1.0,59.3872,0.03392],[2.5298,1.0,60.0894,0.03369],[2.7598,1.0,60.7605,0.03348],[3.0,1.0,61.4292,0.03328],[4.0,1.0,63.886,0.03257],[5.0,1.0,65.9026,0.03204],[6.0,1.0,67.6236,0.03165],[7.0,1.0,69.1645,0.03139],[8.0,1.0,70.5994,0.03124],[9.0,1.0,71.9687,0.03117],[10.0,1.0,73.2812,0.03118],[11.0,1.0,74.5388,0.03125],[12.0,1.0,75.7488,0.03137],[13.0,1.0,76.9186,0.03154],[14.0,1.0,78.0497,0.03174],[15.0,1.0,79.1458,0.03197],[16.0,1.0,80.2113,0.03222],[17.0,1.0,81.2487,0.0325],[18.0,1.0,82.2587,0.03279],[19.0,1.0,83.2418,0.0331],[20.0,1.0,84.1996,0.03342],[21.0,1.0,85.1348,0.03376],[22.0,1.0,86.0477,0.0341],[23.0,1.0,86.941,0.03445],[23.999,1.0,87.8161,0.03479],[24.0,1.0,87.1161,0.03507],[25.0,1.0,87.972,0.03542],[26.0,1.0,88.8065,0.03576],[27.0,1.0,89.6197,0.0361],[28.0,1.0,90.412,0.03642],[29.0,1.0,91.1828,0.03674],[30.0,1.0,91.9327,0.03704],[31.0,1.0,92.6631,0.03733],[32.0,1.0,93.3753,0.03761],[33.0,1.0,94.0711,0.03787],[34.0,1.0,94.7532,0.03812],[35.0,1.0,95.4236,0.03836],[36.0,1.0,96.0835,0.03858],[37.0,1.0,96.7337,0.03879],[38.0,1.0,97.3749,0.039],[39.0,1.0,98.0073,0.03919],[40.0,1.0,98.631,0.03937],[41.0,1.0,99.2459,0.03954],[42.0,1.0,99.8515,0.03971],[43.0,1.0,100.4485,0.03986],[44.0,1.0,101.0374,0.04002],[45.0,1.0,101.6186,0.04016],[46.0,1.0,102.1933,0.04031],[47.0,1.0,102.7625,0.04045],[48.0,1.0,103.3273,0.04059],[49.0,1.0,103.8886,0.04073],[50.0,1.0,104.4473,0.04086],[51.0,1.0,105.0041,0.041],[52.0,1.0,105.5596,0.04113],[53.0,1.0,106.1138,0.04126],[54.0,1.0,106.6668,0.04139],[55.0,1.0,107.2188,0.04152],[56.0,1.0,107.7697,0.04165],[57.0,1.0,108.3198,0.04177],[58.0,1.0,108.8689,0.0419],[59.0,1.0,109.417,0.04202],[60.0,1.0,109.9638,0.04214]],"P":[[0.0,1.0,49.1477,0.0379],[0.23,1.0,50.3298,0.03742],[0.46,1.0,51.512,0.03694],[0.6899,1.0,52.4695,0.03669],[0.9199,1.0,53.3809,0.03647],[1.0,1.0,53.6872,0.0364],[1.1499,1.0,54.2454,0.03627],[1.3799,1.0,55.0642,0.03609],[1.6099,1.0,55.8406,0.03593],[1.8398,1.0,56.5767,0.03578],[2.0,1.0,57.0673,0.03568],[2.0698,1.0,57.2761,0.03564],[2.2998,1.0,57.9436,0.03552],[2.5298,1.0,58.5816,0.0354],[2.7598,1.0,59.1922,0.0353],[3.0,1.0,59.8029,0.0352],[4.0,1.0,62.0899,0.03486],[5.0,1.0,64.0301,0.03463],[6.0,1.0,65.7311,0.03448],[7.0,1.0,67.2873,0.03441],[8.0,1.0,68.7498,0.0344],[9.0,1.0,70.1435,0.03444],[10.0,1.0,71.4818,0.03452],[11.0,1.0,72.771,0.03464],[12.0,1.0,74.015,0.03479],[13.0,1.0,75.2176,0.03496],[14.0,1.0,76.3817,0.03514],[15.0,1.0,77.5099,0.03534],[16.0,1.0,78.6055,0.03555],[17.0,1.0,79.671,0.03576],[18.0,1.0,80.7079,0.03598],[19.0,1.0,81.7182,0.0362],[20.0,1.0,82.7036,0.03643],[21.0,1.0,83.6654,0.03666],[22.0,1.0,84.604,0.03688],[23.0,1.0,85.5202,0.03711],[23.999,1.0,86.4153,0.03734],[24.0,1.0,85.7153,0.03764],[25.0,1.0,86.5904,0.03786],[26.0,1.0,87.4462,0.03808],[27.0,1.0,88.283,0.0383],[28.0,1.0,89.1004,0.03851],[29.0,1.0,89.8991,0.03872],[30.0,1.0,90.6797,0.03893],[31.0,1.0,91.443,0.03913],[32.0,1.0,92.1906,0.03933],[33.0,1.0,92.9239,0.03952],[34.0,1.0,93.6444,0.03971],[35.0,1.0,94.3533,0.03989],[36.0,1.0,95.0515,0.04006],[37.0,1.0,95.7399,0.04024],[38.0,1.0,96.4187,0.04041],[39.0,1.0,97.0885,0.04057],[40.0,1.0,97.7493,0.04073],[41.0,1.0,98.4015,0.04089],[42.0,1.0,99.0448,0.04105],[43.0,1.0,99.6795,0.0412],[44.0,1.0,100.3058,0.04135],[45.0,1.0,100.9238,0.0415],[46.0,1.0,101.5337,0.04164],[47.0,1.0,102.136,0.04179],[48.0,1.0,102.7312,0.04193],[49.0,1.0,103.3197,0.04206],[50.0,1.0,103.9021,0.0422],[51.0,1.0,104.4786,0.04233],[52.0,1.0,105.0494,0.04246],[53.0,1.0,105.6148,0.04259],[54.0,1.0,106.1748,0.04272],[55.0,1.0,106.7295,0.04285],[56.0,1.0,107.2788,0.04298],[57.0,1.0,107.8227,0.0431],[58.0,1.0,108.3613,0.04322],[59.0,1.0,108.8948,0.04334],[60.0,1.0,109.4233,0.04347]]},"bbu":{"L":[[0.0,0.3487,3.3464,0.14602],[0.23,0.2776,3.4879,0.14483],[0.46,0.2581,3.7529,0.14142],[0.6899,0.2442,4.0603,0.13807],[0.9199,0.2331,4.3671,0.13497],[1.0,0.2297,4.4709,0.13395],[1.1499,0.2237,4.659,0.13215],[1.3799,0.2155,4.9303,0.1296],[1.6099,0.2081,5.1817,0.12729],[1.8398,0.2014,5.4149,0.1252],[2.0,0.197,5.5675,0.12385],[2.0698,0.1952,5.6319,0.1233],[2.2998,0.1894,5.8346,0.12157],[2.5298,0.184,6.0242,0.12001],[2.7598,0.1789,6.2019,0.1186],[3.0,0.1738,6.3762,0.11727],[4.0,0.1553,7.0023,0.11316],[5.0,0.1395,7.5105,0.1108],[6.0,0.1257,7.934,0.10958],[7.0,0.1134,8.297,0.10902],[8.0,0.1021,8.6151,0.10882],[9.0,0.0917,8.9014,0.10881],[10.0,0.082,9.1649,0.10891],[11.0,0.073,9.4122,0.10906],[12.0,0.0644,9.6479,0.10925],[13.0,0.0563,9.8749,0.10949],[14.0,0.0487,10.0953,0.10976],[15.0,0.0413,10.3108,0.11007],[16.0,0.0343,10.5228,0.11041],[17.0,0.0275,10.7319,0.11079],[18.0,0.0211,10.9385,0.11119],[19.0,0.0148,11.143,0.11164],[20.0,0.0087,11.3462,0.11211],[21.0,0.0029,11.5486,0.11261],[22.0,-0.0028,11.7504,0.11314],[23.0,-0.0083,11.9514,0.11369],[24.0,-0.0137,12.1515,0.11426],[25.0,-0.0189,12.3502,0.11485],[26.0,-0.024,12.5466,0.11544],[27.0,-0.0289,12.7401,0.11604],[28.0,-0.0337,12.9303,0.11664],[29.0,-0.0385,13.1169,0.11723],[30.0,-0.0431,13.3,0.11781],[31.0,-0.0476,13.4798,0.11839],[32.0,-0.052,13.6567,0.11896],[33.0,-0.0564,13.8309,0.11953],[34.0,-0.0606,14.0031,0.12008],[35.0,-0.0648,14.1736,0.12062],[36.0,-0.0689,14.3429,0.12116],[37.0,-0.0729,14.5113,0.12168],[38.0,-0.0769,14.6791,0.1222],[39.0,-0.0808,14.8466,0.12271],[40.0,-0.0846,15.014,0.12322],[41.0,-0.0883,15.1813,0.12373],[42.0,-0.092,15.3486,0.12425],[43.0,-0.0957,15.5158,0.12478],[44.0,-0.0993,15.6828,0.12531],[45.0,-0.1028,15.8497,0.12586],[46.0,-0.1063,16.0163,0.12643],[47.0,-0.1097,16.1827,0.127],[48.0,-0.1131,16.3489,0.12759],[49.0,-0.1165,16.515,0.12819],[50.0,-0.1198,16.6811,0.1288],[51.0,-0.123,16.8471,0.12943],[52.0,-0.1262,17.0132,0.13005],[53.0,-0.1294,17.1792,0.13069],[54.0,-0.1325,17.3452,0.13133],[55.0,-0.1356,17.5111,0.13197],[56.0,-0.1387,17.6768,0.13261],[57.0,-0.1417,17.8422,0.13325],[58.0,-0.1447,18.0073,0.13389],[59.0,-0.1477,18.1722,0.13453],[60.0,-0.1506,18.3366,0.13517]],"P":[[0.0,0.3809,3.2322,0.14171],[0.23,0.2671,3.3388,0.146],[0.46,0.2304,3.5693,0.14339],[0.6899,0.2024,3.8352,0.1406],[0.9199,0.1789,4.0987,0.13805],[1.0,0.1714,4.1873,0.13724],[1.1499,0.1582,4.3476,0.13583],[1.3799,0.1395,4.5793,0.13392],[1.6099,0.1224,4.795,0.13228],[1.8398,0.1065,4.9959,0.13087],[2.0,0.0962,5.1282,0.13],[2.0698,0.0918,5.1842,0.12966],[2.2998,0.0779,5.3618,0.12861],[2.5298,0.0648,5.5295,0.1277],[2.7598,0.0525,5.6883,0.12691],[3.0,0.0402,5.8458,0.12619],[4.0,-0.005,6.4237,0.12402],[5.0,-0.043,6.8985,0.12274],[6.0,-0.0756,7.297,0.12204],[7.0,-0.1039,7.6422,0.12178],[8.0,-0.1288,7.9487,0.12181],[9.0,-0.1507,8.2254,0.12199],[10.0,-0.17,8.48,0.12223],[11.0,-0.1872,8.7192,0.12247],[12.0,-0.2024,8.9481,0.12268],[13.0,-0.2158,9.1699,0.12283],[14.0,-0.2278,9.387,0.12294],[15.0,-0.2384,9.6008,0.12299],[16.0,-0.2478,9.8124,0.12303],[17.0,-0.2562,10.0226,0.12306],[18.0,-0.2637,10.2315,0.12309],[19.0,-0.2703,10.4393,0.12315],[20.0,-0.2762,10.6464,0.12323],[21.0,-0.2815,10.8534,0.12335],[22.0,-0.2862,11.0608,0.1235],[23.0,-0.2903,11.2688,0.12369],[24.0,-0.2941,11.4775,0.1239],[25.0,-0.2975,11.6864,0.12414],[26.0,-0.3005,11.8947,0.12441],[27.0,-0.3032,12.1015,0.12472],[28.0,-0.3057,12.3059,0.12506],[29.0,-0.308,12.5073,0.12545],[30.0,-0.3101,12.7055,0.12587],[31.0,-0.312,12.9006,0.12633],[32.0,-0.3138,13.093,0.12683],[33.0,-0.3155,13.2837,0.12737],[34.0,-0.3171,13.4731,0.12794],[35.0,-0.3186,13.6618,0.12855],[36.0,-0.3201,13.8503,0.12919],[37.0,-0.3216,14.0385,0.12988],[38.0,-0.323,14.2265,0.13059],[39.0,-0.3243,14.414,0.13135],[40.0,-0.3257,14.601,0.13213],[41.0,-0.327,14.7873,0.13293],[42.0,-0.3283,14.9727,0.13376],[43.0,-0.3296,15.1573,0.1346],[44.0,-0.3309,15.341,0.13545],[45.0,-0.3322,15.524,0.1363],[46.0,-0.3335,15.7064,0.13716],[47.0,-0.3348,15.8882,0.138],[48.0,-0.3361,16.0697,0.13884],[49.0,-0.3374,16.2511,0.13968],[50.0,-0.3387,16.4322,0.14051],[51.0,-0.34,16.6133,0.14132],[52.0,-0.3414,16.7942,0.14213],[53.0,-0.3427,16.9748,0.14293],[54.0,-0.344,17.1551,0.14371],[55.0,-0.3453,17.3347,0.14448],[56.0,-0.3466,17.5136,0.14525],[57.0,-0.3479,17.6916,0.146],[58.0,-0.3492,17.8686,0.14675],[59.0,-0.3505,18.0445,0.14748],[60.0,-0.3518,18.2193,0.14821]]},"bbpb":{"L":[[45.0,-0.3521,2.441,0.09182],[45.5,-0.3521,2.5244,0.09153],[46.0,-0.3521,2.6077,0.09124],[46.5,-0.3521,2.6913,0.09094],[47.0,-0.3521,2.7755,0.09065],[47.5,-0.3521,2.8609,0.09036],[48.0,-0.3521,2.948,0.09007],[48.5,-0.3521,3.0377,0.08977],[49.0,-0.3521,3.1308,0.08948],[49.5,-0.3521,3.2276,0.08919],[50.0,-0.3521,3.3278,0.0889],[50.5,-0.3521,3.4311,0.08861],[51.0,-0.3521,3.5376,0.08831],[51.5,-0.3521,3.6477,0.08801],[52.0,-0.3521,3.762,0.08771],[52.5,-0.3521,3.8814,0.08741],[53.0,-0.3521,4.006,0.08711],[53.5,-0.3521,4.1354,0.08681],[54.0,-0.3521,4.2693,0.08651],[54.5,-0.3521,4.4066,0.08621],[55.0,-0.3521,4.5467,0.08592],[55.5,-0.3521,4.6892,0.08563],[56.0,-0.3521,4.8338,0.08535],[56.5,-0.3521,4.9796,0.08507],[57.0,-0.3521,5.1259,0.08481],[57.5,-0.3521,5.2721,0.08455],[58.0,-0.3521,5.418,0.0843],[58.5,-0.3521,5.5632,0.08406],[59.0,-0.3521,5.7074,0.08383],[59.5,-0.3521,5.8501,0.08362],[60.0,-0.3521,5.9907,0.08342],[60.5,-0.3521,6.1284,0.08324],[61.0,-0.3521,6.2632,0.08308],[61.5,-0.3521,6.3954,0.08292],[62.0,-0.3521,6.5251,0.08279],[62.5,-0.3521,6.6527,0.08266],[63.0,-0.3521,6.7786,0.08255],[63.5,-0.3521,6.9028,0.08245],[64.0,-0.3521,7.0255,0.08236],[64.5,-0.3521,7.1467,0.08229],[65.0,-0.3521,7.2666,0.08223],[65.5,-0.3521,7.3854,0.08218],[66.0,-0.3521,7.5034,0.08215],[66.5,-0.3521,7.6206,0.08213],[67.0,-0.3521,7.737,0.08212],[67.5,-0.3521,7.8526,0.08212],[68.0,-0.3521,7.9674,0.08214],[68.5,-0.3521,8.0816,0.08216],[69.0,-0.3521,8.1955,0.08219],[69.5,-0.3521,8.3092,0.08224],[70.0,-0.3521,8.4227,0.08229],[70.5,-0.3521,8.5358,0.08235],[71.0,-0.3521,8.648,0.08241],[71.5,-0.3521,8.7594,0.08248],[72.0,-0.3521,8.8697,0.08254],[72.5,-0.3521,8.9788,0.08262],[73.0,-0.3521,9.0865,0.08269],[73.5,-0.3521,9.1927,0.08276],[74.0,-0.3521,9.2974,0.08283],[74.5,-0.3521,9.401,0.08289],[75.0,-0.3521,9.5032,0.08295],[75.5,-0.3521,9.6041,0.08301],[76.0,-0.3521,9.7033,0.08307],[76.5,-0.3521,9.8007,0.08311],[77.0,-0.3521,9.8963,0.08314],[77.5,-0.3521,9.9902,0.08317],[78.0,-0.3521,10.0827,0.08318],[78.5,-0.3521,10.1741,0.08318],[79.0,-0.3521,10.2649,0.08316],[79.5,-0.3521,10.3558,0.08313],[80.0,-0.3521,10.4475,0.08308],[80.5,-0.3521,10.5405,0.08301],[81.0,-0.3521,10.6352,0.08293],[81.5,-0.3521,10.7322,0.08284],[82.0,-0.3521,10.8321,0.08273],[82.5,-0.3521,10.935,0.0826],[83.0,-0.3521,11.0415,0.08246],[83.5,-0.3521,11.1516,0.08231],[84.0,-0.3521,11.2651,0.08215],[84.5,-0.3521,11.3817,0.08198],[85.0,-0.3521,11.5007,0.08181],[85.5,-0.3521,11.6218,0.08163],[86.0,-0.3521,11.7444,0.08145],[86.5,-0.3521,11.8678,0.08128],[87.0,-0.3521,11.9916,0.08111],[87.5,-0.3521,12.1152,0.08096],[88.0,-0.3521,12.2382,0.08082],[88.5,-0.3521,12.3603,0.08069],[89.0,-0.3521,12.4815,0.08058],[89.5,-0.3521,12.6017,0.08048],[90.0,-0.3521,12.7209,0.08041],[90.5,-0.3521,12.8392,0.08034],[91.0,-0.3521,12.9569,0.0803],[91.5,-0.3521,13.0742,0.08026],[92.0,-0.3521,13.191,0.08025],[92.5,-0.3521,13.3075,0.08025],[93.0,-0.3521,13.4239,0.08026],[93.5,-0.3521,13.5404,0.08029],[94.0,-0.3521,13.6572,0.08034],[94.5,-0.3521,13.7746,0.0804],[95.0,-0.3521,13.8928,0.08047],[95.5,-0.3521,14.012,0.08056],[96.0,-0.3521,14.1325,0.08067],[96.5,-0.3521,14.2544,0.08078],[97.0,-0.3521,14.3782,0.08092],[97.5,-0.3521,14.5038,0.08106],[98.0,-0.3521,14.6316,0.08122],[98.5,-0.3521,14.7614,0.08139],[99.0,-0.3521,14.8934,0.08157],[99.5,-0.3521,15.0275,0.08177],[100.0,-0.3521,15.1637,0.08198],[100.5,-0.3521,15.3018,0.0822],[101.0,-0.3521,15.4419,0.08243],[101.5,-0.3521,15.5838,0.08267],[102.0,-0.3521,15.7276,0.08292],[102.5,-0.3521,15.8732,0.08317],[103.0,-0.3521,16.0206,0.08343],[103.5,-0.3521,16.1697,0.0837],[104.0,-0.3521,16.3204,0.08397],[104.5,-0.3521,16.4728,0.08425],[105.0,-0.3521,16.6268,0.08453],[105.5,-0.3521,16.7826,0.08481],[106.0,-0.3521,16.9401,0.0851],[106.5,-0.3521,17.0995,0.08539],[107.0,-0.3521,17.2607,0.08568],[107.5,-0.3521,17.4237,0.08599],[108.0,-0.3521,17.5885,0.08629],[108.5,-0.3521,17.7553,0.0866],[109.0,-0.3521,17.9242,0.08691],[109.5,-0.3521,18.0954,0.08723],[110.0,-0.3521,18.2689,0.08755]],"P":[[45.0,-0.3833,2.4607,0.09029],[45.5,-0.3833,2.5457,0.09033],[46.0,-0.3833,2.6306,0.09037],[46.5,-0.3833,2.7155,0.0904],[47.0,-0.3833,2.8007,0.09044],[47.5,-0.3833,2.8867,0.09048],[48.0,-0.3833,2.9741,0.09052],[48.5,-0.3833,3.0636,0.09056],[49.0,-0.3833,3.156,0.0906],[49.5,-0.3833,3.252,0.09064],[50.0,-0.3833,3.3518,0.09068],[50.5,-0.3833,3.4557,0.09072],[51.0,-0.3833,3.5636,0.09076],[51.5,-0.3833,3.6754,0.0908],[52.0,-0.3833,3.7911,0.09085],[52.5,-0.3833,3.9105,0.09089],[53.0,-0.3833,4.0332,0.09093],[53.5,-0.3833,4.1591,0.09098],[54.0,-0.3833,4.2875,0.09102],[54.5,-0.3833,4.4179,0.09106],[55.0,-0.3833,4.5498,0.0911],[55.5,-0.3833,4.6827,0.09114],[56.0,-0.3833,4.8162,0.09118],[56.5,-0.3833,4.95,0.09121],[57.0,-0.3833,5.0837,0.09125],[57.5,-0.3833,5.2173,0.09128],[58.0,-0.3833,5.3507,0.0913],[58.5,-0.3833,5.4834,0.09132],[59.0,-0.3833,5.6151,0.09134],[59.5,-0.3833,5.7454,0.09135],[60.0,-0.3833,5.8742,0.09136],[60.5,-0.3833,6.0014,0.09137],[61.0,-0.3833,6.127,0.09137],[61.5,-0.3833,6.2511,0.09136],[62.0,-0.3833,6.3738,0.09135],[62.5,-0.3833,6.4948,0.09133],[63.0,-0.3833,6.6144,0.09131],[63.5,-0.3833,6.7328,0.09129],[64.0,-0.3833,6.8501,0.09126],[64.5,-0.3833,6.9662,0.09123],[65.0,-0.3833,7.0812,0.09119],[65.5,-0.3833,7.195,0.09115],[66.0,-0.3833,7.3076,0.0911],[66.5,-0.3833,7.4189,0.09106],[67.0,-0.3833,7.5288,0.09101],[67.5,-0.3833,7.6375,0.09096],[68.0,-0.3833,7.7448,0.0909],[68.5,-0.3833,7.8509,0.09085],[69.0,-0.3833,7.9559,0.09079],[69.5,-0.3833,8.0599,0.09074],[70.0,-0.3833,8.163,0.09068],[70.5,-0.3833,8.2651,0.09062],[71.0,-0.3833,8.3666,0.09056],[71.5,-0.3833,8.4676,0.0905],[72.0,-0.3833,8.5679,0.09043],[72.5,-0.3833,8.6674,0.09037],[73.0,-0.3833,8.7661,0.09031],[73.5,-0.3833,8.8638,0.09025],[74.0,-0.3833,8.9601,0.09018],[74.5,-0.3833,9.0552,0.09012],[75.0,-0.3833,9.149,0.09005],[75.5,-0.3833,9.2418,0.08999],[76.0,-0.3833,9.3337,0.08992],[76.5,-0.3833,9.4252,0.08985],[77.0,-0.3833,9.5166,0.08979],[77.5,-0.3833,9.6086,0.08972],[78.0,-0.3833,9.7015,0.08965],[78.5,-0.3833,9.7957,0.08959],[79.0,-0.3833,9.8915,0.08952],[79.5,-0.3833,9.9892,0.08946],[80.0,-0.3833,10.0891,0.0894],[80.5,-0.3833,10.1916,0.08934],[81.0,-0.3833,10.2965,0.08928],[81.5,-0.3833,10.4041,0.08923],[82.0,-0.3833,10.514,0.08918],[82.5,-0.3833,10.6263,0.08914],[83.0,-0.3833,10.741,0.0891],[83.5,-0.3833,10.8578,0.08906],[84.0,-0.3833,10.9767,0.08903],[84.5,-0.3833,11.0974,0.089],[85.0,-0.3833,11.2198,0.08898],[85.5,-0.3833,11.3435,0.08897],[86.0,-0.3833,11.4684,0.08895],[86.5,-0.3833,11.594,0.08895],[87.0,-0.3833,11.7201,0.08895],[87.5,-0.3833,11.8461,0.08895],[88.0,-0.3833,11.972,0.08896],[88.5,-0.3833,12.0976,0.08898],[89.0,-0.3833,12.2229,0.089],[89.5,-0.3833,12.3477,0.08903],[90.0,-0.3833,12.4723,0.08906],[90.5,-0.3833,12.5965,0.08909],[91.0,-0.3833,12.7205,0.08913],[91.5,-0.3833,12.8443,0.08918],[92.0,-0.3833,12.9681,0.08923],[92.5,-0.3833,13.092,0.08928],[93.0,-0.3833,13.2158,0.08934],[93.5,-0.3833,13.3399,0.08941],[94.0,-0.3833,13.4643,0.08948],[94.5,-0.3833,13.5892,0.08955],[95.0,-0.3833,13.7146,0.08963],[95.5,-0.3833,13.8408,0.08972],[96.0,-0.3833,13.9676,0.08981],[96.5,-0.3833,14.0953,0.0899],[97.0,-0.3833,14.2239,0.09],[97.5,-0.3833,14.3537,0.0901],[98.0,-0.3833,14.4848,0.09021],[98.5,-0.3833,14.6174,0.09033],[99.0,-0.3833,14.7519,0.09044],[99.5,-0.3833,14.8882,0.09057],[100.0,-0.3833,15.0267,0.09069],[100.5,-0.3833,15.1676,0.09083],[101.0,-0.3833,15.3108,0.09096],[101.5,-0.3833,15.4564,0.0911],[102.0,-0.3833,15.6046,0.09125],[102.5,-0.3833,15.7553,0.09139],[103.0,-0.3833,15.9087,0.09155],[103.5,-0.3833,16.0645,0.0917],[104.0,-0.3833,16.2229,0.09186],[104.5,-0.3833,16.3837,0.09203],[105.0,-0.3833,16.547,0.09219],[105.5,-0.3833,16.7129,0.09236],[106.0,-0.3833,16.8814,0.09254],[106.5,-0.3833,17.0527,0.09271],[107.0,-0.3833,17.2269,0.09289],[107.5,-0.3833,17.4039,0.09307],[108.0,-0.3833,17.5839,0.09326],[108.5,-0.3833,17.7668,0.09344],[109.0,-0.3833,17.9526,0.09363],[109.5,-0.3833,18.1412,0.09382],[110.0,-0.3833,18.3324,0.09401]]},"bbtb":{"L":[[65.0,-0.3521,7.4327,0.08217],[65.5,-0.3521,7.5504,0.08214],[66.0,-0.3521,7.6673,0.08212],[66.5,-0.3521,7.7834,0.08212],[67.0,-0.3521,7.8986,0.08213],[67.5,-0.3521,8.0132,0.08214],[68.0,-0.3521,8.1272,0.08217],[68.5,-0.3521,8.241,0.08221],[69.0,-0.3521,8.3547,0.08226],[69.5,-0.3521,8.468,0.08231],[70.0,-0.3521,8.5808,0.08237],[70.5,-0.3521,8.6927,0.08243],[71.0,-0.3521,8.8036,0.0825],[71.5,-0.3521,8.9135,0.08257],[72.0,-0.3521,9.0221,0.08264],[72.5,-0.3521,9.1292,0.08272],[73.0,-0.3521,9.2347,0.08278],[73.5,-0.3521,9.339,0.08285],[74.0,-0.3521,9.442,0.08292],[74.5,-0.3521,9.5438,0.08298],[75.0,-0.3521,9.644,0.08303],[75.5,-0.3521,9.7425,0.08308],[76.0,-0.3521,9.8392,0.08312],[76.5,-0.3521,9.9341,0.08315],[77.0,-0.3521,10.0274,0.08317],[77.5,-0.3521,10.1194,0.08318],[78.0,-0.3521,10.2105,0.08317],[78.5,-0.3521,10.3012,0.08315],[79.0,-0.3521,10.3923,0.08311],[79.5,-0.3521,10.4845,0.08305],[80.0,-0.3521,10.5781,0.08298],[80.5,-0.3521,10.6737,0.0829],[81.0,-0.3521,10.7718,0.08279],[81.5,-0.3521,10.8728,0.08268],[82.0,-0.3521,10.9772,0.08255],[82.5,-0.3521,11.0851,0.08241],[83.0,-0.3521,11.1966,0.08225],[83.5,-0.3521,11.3114,0.08209],[84.0,-0.3521,11.429,0.08191],[84.5,-0.3521,11.549,0.08174],[85.0,-0.3521,11.6707,0.08156],[85.5,-0.3521,11.7937,0.08138],[86.0,-0.3521,11.9173,0.08121],[86.5,-0.3521,12.0411,0.08105],[87.0,-0.3521,12.1645,0.0809],[87.5,-0.3521,12.2871,0.08076],[88.0,-0.3521,12.4089,0.08064],[88.5,-0.3521,12.5298,0.08054],[89.0,-0.3521,12.6495,0.08045],[89.5,-0.3521,12.7683,0.08038],[90.0,-0.3521,12.8864,0.08032],[90.5,-0.3521,13.0038,0.08028],[91.0,-0.3521,13.1209,0.08025],[91.5,-0.3521,13.2376,0.08024],[92.0,-0.3521,13.3541,0.08025],[92.5,-0.3521,13.4705,0.08027],[93.0,-0.3521,13.587,0.08031],[93.5,-0.3521,13.7041,0.08036],[94.0,-0.3521,13.8217,0.08043],[94.5,-0.3521,13.9403,0.08051],[95.0,-0.3521,14.06,0.0806],[95.5,-0.3521,14.1811,0.08071],[96.0,-0.3521,14.3037,0.08083],[96.5,-0.3521,14.4282,0.08097],[97.0,-0.3521,14.5547,0.08112],[97.5,-0.3521,14.6832,0.08129],[98.0,-0.3521,14.814,0.08146],[98.5,-0.3521,14.9468,0.08165],[99.0,-0.3521,15.0818,0.08185],[99.5,-0.3521,15.2187,0.08206],[100.0,-0.3521,15.3576,0.08229],[100.5,-0.3521,15.4985,0.08252],[101.0,-0.3521,15.6412,0.08277],[101.5,-0.3521,15.7857,0.08302],[102.0,-0.3521,15.932,0.08328],[102.5,-0.3521,16.0801,0.08354],[103.0,-0.3521,16.2298,0.08381],[103.5,-0.3521,16.3812,0.08408],[104.0,-0.3521,16.5342,0.08436],[104.5,-0.3521,16.6889,0.08464],[105.0,-0.3521,16.8454,0.08493],[105.5,-0.3521,17.0036,0.08521],[106.0,-0.3521,17.1637,0.08551],[106.5,-0.3521,17.3256,0.0858],[107.0,-0.3521,17.4894,0.08611],[107.5,-0.3521,17.655,0.08641],[108.0,-0.3521,17.8226,0.08673],[108.5,-0.3521,17.9924,0.08704],[109.0,-0.3521,18.1645,0.08736],[109.5,-0.3521,18.339,0.08768],[110.0,-0.3521,18.5158,0.088],[110.5,-0.3521,18.6948,0.08832],[111.0,-0.3521,18.8759,0.08864],[111.5,-0.3521,19.059,0.08896],[112.0,-0.3521,19.2439,0.08928],[112.5,-0.3521,19.4304,0.0896],[113.0,-0.3521,19.6185,0.08991],[113.5,-0.3521,19.8081,0.09022],[114.0,-0.3521,19.999,0.09054],[114.5,-0.3521,20.1912,0.09085],[115.0,-0.3521,20.3846,0.09116],[115.5,-0.3521,20.5789,0.09147],[116.0,-0.3521,20.7741,0.09177],[116.5,-0.3521,20.97,0.09208],[117.0,-0.3521,21.1666,0.09239],[117.5,-0.3521,21.3636,0.0927],[118.0,-0.3521,21.5611,0.093],[118.5,-0.3521,21.7588,0.09331],[119.0,-0.3521,21.9568,0.09362],[119.5,-0.3521,22.1549,0.09393],[120.0,-0.3521,22.353,0.09424]],"P":[[65.0,-0.3833,7.2402,0.09113],[65.5,-0.3833,7.3523,0.09109],[66.0,-0.3833,7.463,0.09104],[66.5,-0.3833,7.5724,0.09099],[67.0,-0.3833,7.6806,0.09094],[67.5,-0.3833,7.7874,0.09088],[68.0,-0.3833,7.893,0.09083],[68.5,-0.3833,7.9976,0.09077],[69.0,-0.3833,8.1012,0.09071],[69.5,-0.3833,8.2039,0.09065],[70.0,-0.3833,8.3058,0.09059],[70.5,-0.3833,8.4071,0.09053],[71.0,-0.3833,8.5078,0.09047],[71.5,-0.3833,8.6078,0.09041],[72.0,-0.3833,8.707,0.09035],[72.5,-0.3833,8.8053,0.09028],[73.0,-0.3833,8.9025,0.09022],[73.5,-0.3833,8.9983,0.09016],[74.0,-0.3833,9.0928,0.09009],[74.5,-0.3833,9.1862,0.09003],[75.0,-0.3833,9.2786,0.08996],[75.5,-0.3833,9.3703,0.08989],[76.0,-0.3833,9.4617,0.08983],[76.5,-0.3833,9.5533,0.08976],[77.0,-0.3833,9.6456,0.08969],[77.5,-0.3833,9.739,0.08963],[78.0,-0.3833,9.8338,0.08956],[78.5,-0.3833,9.9303,0.0895],[79.0,-0.3833,10.0289,0.08943],[79.5,-0.3833,10.1298,0.08937],[80.0,-0.3833,10.2332,0.08932],[80.5,-0.3833,10.3393,0.08926],[81.0,-0.3833,10.4477,0.08921],[81.5,-0.3833,10.5586,0.08916],[82.0,-0.3833,10.6719,0.08912],[82.5,-0.3833,10.7874,0.08908],[83.0,-0.3833,10.9051,0.08905],[83.5,-0.3833,11.0248,0.08902],[84.0,-0.3833,11.1462,0.08899],[84.5,-0.3833,11.2691,0.08897],[85.0,-0.3833,11.3934,0.08896],[85.5,-0.3833,11.5186,0.08895],[86.0,-0.3833,11.6444,0.08895],[86.5,-0.3833,11.7705,0.08895],[87.0,-0.3833,11.8965,0.08896],[87.5,-0.3833,12.0223,0.08897],[88.0,-0.3833,12.1478,0.08899],[88.5,-0.3833,12.2729,0.08901],[89.0,-0.3833,12.3976,0.08904],[89.5,-0.3833,12.522,0.08907],[90.0,-0.3833,12.6461,0.08911],[90.5,-0.3833,12.77,0.08915],[91.0,-0.3833,12.8939,0.0892],[91.5,-0.3833,13.0177,0.08925],[92.0,-0.3833,13.1415,0.08931],[92.5,-0.3833,13.2654,0.08937],[93.0,-0.3833,13.3896,0.08944],[93.5,-0.3833,13.5142,0.08951],[94.0,-0.3833,13.6393,0.08959],[94.5,-0.3833,13.765,0.08967],[95.0,-0.3833,13.8914,0.08975],[95.5,-0.3833,14.0186,0.08984],[96.0,-0.3833,14.1466,0.08994],[96.5,-0.3833,14.2757,0.09004],[97.0,-0.3833,14.4059,0.09015],[97.5,-0.3833,14.5376,0.09026],[98.0,-0.3833,14.671,0.09037],[98.5,-0.3833,14.8062,0.09049],[99.0,-0.3833,14.9434,0.09062],[99.5,-0.3833,15.0828,0.09075],[100.0,-0.3833,15.2246,0.09088],[100.5,-0.3833,15.3687,0.09102],[101.0,-0.3833,15.5154,0.09116],[101.5,-0.3833,15.6646,0.09131],[102.0,-0.3833,15.8164,0.09146],[102.5,-0.3833,15.9707,0.09161],[103.0,-0.3833,16.1276,0.09177],[103.5,-0.3833,16.287,0.09193],[104.0,-0.3833,16.4488,0.09209],[104.5,-0.3833,16.6131,0.09226],[105.0,-0.3833,16.78,0.09243],[105.5,-0.3833,16.9496,0.09261],[106.0,-0.3833,17.122,0.09278],[106.5,-0.3833,17.2973,0.09296],[107.0,-0.3833,17.4755,0.09315],[107.5,-0.3833,17.6567,0.09333],[108.0,-0.3833,17.8407,0.09352],[108.5,-0.3833,18.0277,0.09371],[109.0,-0.3833,18.2174,0.0939],[109.5,-0.3833,18.4096,0.09409],[110.0,-0.3833,18.6043,0.09428],[110.5,-0.3833,18.8015,0.09448],[111.0,-0.3833,19.0009,0.09467],[111.5,-0.3833,19.2024,0.09487],[112.0,-0.3833,19.406,0.09507],[112.5,-0.3833,19.6116,0.09527],[113.0,-0.3833,19.819,0.09546],[113.5,-0.3833,20.028,0.09566],[114.0,-0.3833,20.2385,0.09586],[114.5,-0.3833,20.4502,0.09606],[115.0,-0.3833,20.6629,0.09626],[115.5,-0.3833,20.8766,0.09646],[116.0,-0.3833,21.0909,0.09666],[116.5,-0.3833,21.3059,0.09686],[117.0,-0.3833,21.5213,0.09707],[117.5,-0.3833,21.737,0.09727],[118.0,-0.3833,21.9529,0.09747],[118.5,-0.3833,22.169,0.09767],[119.0,-0.3833,22.3851,0.09788],[119.5,-0.3833,22.6012,0.09808],[120.0,-0.3833,22.8173,0.09828]]},"imtu":{"L":[[0.0,-0.3053,13.4069,0.0956],[0.23,0.5247,13.3421,0.09821],[0.46,0.4177,13.6377,0.09454],[0.6899,0.3449,14.2241,0.0923],[0.9199,0.2881,14.7714,0.09072],[1.0,0.2708,14.9441,0.09027],[1.1499,0.2409,15.2355,0.08953],[1.3799,0.2003,15.6107,0.08859],[1.6099,0.1645,15.9169,0.08782],[1.8398,0.1324,16.1698,0.08717],[2.0,0.1118,16.3195,0.08677],[2.0698,0.1032,16.3787,0.08661],[2.2998,0.0766,16.5494,0.08612],[2.5298,0.052,16.6882,0.08569],[2.7598,0.0291,16.8016,0.08531],[3.0,0.0068,16.8987,0.08495],[4.0,-0.0727,17.1579,0.08378],[5.0,-0.137,17.2919,0.08296],[6.0,-0.1913,17.3422,0.08234],[7.0,-0.2385,17.3288,0.08183],[8.0,-0.2802,17.2647,0.0814],[9.0,-0.3176,17.1662,0.08102],[10.0,-0.3516,17.0488,0.08068],[11.0,-0.3828,16.9239,0.08037],[12.0,-0.4115,16.7981,0.08009],[13.0,-0.4382,16.6743,0.07982],[14.0,-0.463,16.5548,0.07958],[15.0,-0.4863,16.4409,0.07935],[16.0,-0.5082,16.3335,0.07913],[17.0,-0.5289,16.2329,0.07892],[18.0,-0.5484,16.1392,0.07873],[19.0,-0.5669,16.0528,0.07854],[20.0,-0.5846,15.9743,0.07836],[21.0,-0.6014,15.9039,0.07818],[22.0,-0.6174,15.8412,0.07802],[23.0,-0.6328,15.7852,0.07786],[23.999,-0.6473,15.7356,0.07771],[24.0,-0.6187,16.0189,0.07785],[25.0,-0.584,15.98,0.07792],[26.0,-0.5497,15.9414,0.078],[27.0,-0.5166,15.9036,0.07808],[28.0,-0.485,15.8667,0.07818],[29.0,-0.4552,15.8306,0.07829],[30.0,-0.4274,15.7953,0.07841],[31.0,-0.4016,15.7606,0.07854],[32.0,-0.3782,15.7267,0.07867],[33.0,-0.3572,15.6934,0.07882],[34.0,-0.3388,15.661,0.07897],[35.0,-0.3231,15.6294,0.07914],[36.0,-0.3101,15.5988,0.07931],[37.0,-0.3,15.5693,0.0795],[38.0,-0.2927,15.541,0.07969],[39.0,-0.2884,15.514,0.0799],[40.0,-0.2869,15.4885,0.08012],[41.0,-0.2881,15.4645,0.08036],[42.0,-0.2919,15.442,0.08061],[43.0,-0.2981,15.421,0.08087],[44.0,-0.3067,15.4013,0.08115],[45.0,-0.3174,15.3827,0.08144],[46.0,-0.3303,15.3652,0.08174],[47.0,-0.3452,15.3485,0.08205],[48.0,-0.3622,15.3326,0.08238],[49.0,-0.3811,15.3174,0.08272],[50.0,-0.4019,15.3029,0.08307],[51.0,-0.4245,15.2891,0.08343],[52.0,-0.4488,15.2759,0.0838],[53.0,-0.4747,15.2633,0.08418],[54.0,-0.5019,15.2514,0.08457],[55.0,-0.5303,15.24,0.08496],[56.0,-0.5599,15.2291,0.08536],[57.0,-0.5905,15.2188,0.08577],[58.0,-0.6223,15.2091,0.08617],[59.0,-0.6552,15.2,0.08659],[60.0,-0.6892,15.1916,0.087]],"P":[[0.0,-0.0631,13.3363,0.09272],[0.23,0.6319,13.2113,0.09887],[0.46,0.5082,13.4501,0.09741],[0.6899,0.4263,13.9505,0.09647],[0.9199,0.3637,14.4208,0.09577],[1.0,0.3448,14.5679,0.09556],[1.1499,0.3124,14.8157,0.0952],[1.3799,0.2688,15.138,0.09472],[1.6099,0.2306,15.4063,0.09431],[1.8398,0.1966,15.6311,0.09394],[2.0,0.1749,15.7679,0.09371],[2.0698,0.1658,15.8232,0.09361],[2.2998,0.1377,15.9874,0.09332],[2.5298,0.1118,16.1277,0.09304],[2.7598,0.0877,16.2485,0.09279],[3.0,0.0643,16.3574,0.09254],[4.0,-0.0191,16.6703,0.09166],[5.0,-0.0864,16.8386,0.09096],[6.0,-0.1429,16.9083,0.09036],[7.0,-0.1916,16.902,0.08984],[8.0,-0.2344,16.8404,0.08939],[9.0,-0.2725,16.7406,0.08898],[10.0,-0.3068,16.6184,0.08861],[11.0,-0.3381,16.4875,0.08828],[12.0,-0.3667,16.3568,0.08797],[13.0,-0.3932,16.2311,0.08768],[14.0,-0.4177,16.1128,0.08741],[15.0,-0.4407,16.0028,0.08716],[16.0,-0.4623,15.9017,0.08693],[17.0,-0.4825,15.8096,0.08671],[18.0,-0.5017,15.7263,0.0865],[19.0,-0.5199,15.6517,0.0863],[20.0,-0.5372,15.5855,0.08612],[21.0,-0.5537,15.5278,0.08594],[22.0,-0.5695,15.4787,0.08577],[23.0,-0.5846,15.438,0.0856],[23.999,-0.5989,15.4052,0.08545],[24.0,-0.5684,15.6881,0.08454],[25.0,-0.5684,15.659,0.08452],[26.0,-0.5684,15.6308,0.08449],[27.0,-0.5684,15.6037,0.08446],[28.0,-0.5684,15.5777,0.08444],[29.0,-0.5684,15.5523,0.08443],[30.0,-0.5684,15.5276,0.08444],[31.0,-0.5684,15.5034,0.08448],[32.0,-0.5684,15.4798,0.08455],[33.0,-0.5684,15.4572,0.08467],[34.0,-0.5684,15.4356,0.08484],[35.0,-0.5684,15.4155,0.08506],[36.0,-0.5684,15.3968,0.08535],[37.0,-0.5684,15.3796,0.08569],[38.0,-0.5684,15.3638,0.08609],[39.0,-0.5684,15.3493,0.08654],[40.0,-0.5684,15.3358,0.08704],[41.0,-0.5684,15.3233,0.08757],[42.0,-0.5684,15.3116,0.08813],[43.0,-0.5684,15.3007,0.08872],[44.0,-0.5684,15.2905,0.08931],[45.0,-0.5684,15.2814,0.08991],[46.0,-0.5684,15.2732,0.09051],[47.0,-0.5684,15.2661,0.0911],[48.0,-0.5684,15.2602,0.09168],[49.0,-0.5684,15.2556,0.09227],[50.0,-0.5684,15.2523,0.09286],[51.0,-0.5684,15.2503,0.09345],[52.0,-0.5684,15.2496,0.09403],[53.0,-0.5684,15.2502,0.0946],[54.0,-0.5684,15.2519,0.09515],[55.0,-0.5684,15.2544,0.09568],[56.0,-0.5684,15.2575,0.09618],[57.0,-0.5684,15.2612,0.09665],[58.0,-0.5684,15.2653,0.09709],[59.0,-0.5684,15.2698,0.0975],[60.0,-0.5684,15.2747,0.09789]]},"lku":{"L":[[0.0,1.0,34.4618,0.03686],[0.23,1.0,35.1634,0.03472],[0.46,1.0,35.8649,0.03258],[0.6899,1.0,36.5216,0.03197],[0.9199,1.0,37.0926,0.03148],[1.0,1.0,37.2759,0.03133],[1.1499,1.0,37.601,0.03107],[1.3799,1.0,38.0609,0.03072],[1.6099,1.0,38.4824,0.03041],[1.8398,1.0,38.8724,0.03014],[2.0,1.0,39.1285,0.02997],[2.0698,1.0,39.2368,0.0299],[2.2998,1.0,39.5797,0.02969],[2.5298,1.0,39.9033,0.0295],[2.7598,1.0,40.2096,0.02933],[3.0,1.0,40.5135,0.02918],[4.0,1.0,41.6317,0.02868],[5.0,1.0,42.5576,0.02837],[6.0,1.0,43.3306,0.02817],[7.0,1.0,43.9803,0.02804],[8.0,1.0,44.53,0.02796],[9.0,1.0,44.9998,0.02792],[10.0,1.0,45.4051,0.0279],[11.0,1.0,45.7573,0.02789],[12.0,1.0,46.0661,0.02789],[13.0,1.0,46.3395,0.02789],[14.0,1.0,46.5844,0.02791],[15.0,1.0,46.806,0.02792],[16.0,1.0,47.0088,0.02795],[17.0,1.0,47.1962,0.02797],[18.0,1.0,47.3711,0.028],[19.0,1.0,47.5357,0.02803],[20.0,1.0,47.6919,0.02806],[21.0,1.0,47.8408,0.0281],[22.0,1.0,47.9833,0.02813],[23.0,1.0,48.1201,0.02817],[24.0,1.0,48.2515,0.02821],[25.0,1.0,48.3777,0.02825],[26.0,1.0,48.4989,0.0283],[27.0,1.0,48.6151,0.02834],[28.0,1.0,48.7264,0.02838],[29.0,1.0,48.8331,0.02842],[30.0,1.0,48.9351,0.02847],[31.0,1.0,49.0327,0.02851],[32.0,1.0,49.126,0.02855],[33.0,1.0,49.2153,0.02859],[34.0,1.0,49.3007,0.02863],[35.0,1.0,49.3826,0.02867],[36.0,1.0,49.4612,0.02871],[37.0,1.0,49.5367,0.02875],[38.0,1.0,49.6093,0.02878],[39.0,1.0,49.6791,0.02882],[40.0,1.0,49.7465,0.02886],[41.0,1.0,49.8116,0.02889],[42.0,1.0,49.8745,0.02893],[43.0,1.0,49.9354,0.02896],[44.0,1.0,49.9942,0.02899],[45.0,1.0,50.0512,0.02903],[46.0,1.0,50.1064,0.02906],[47.0,1.0,50.1598,0.02909],[48.0,1.0,50.2115,0.02912],[49.0,1.0,50.2617,0.02915],[50.0,1.0,50.3105,0.02918],[51.0,1.0,50.3578,0.02921],[52.0,1.0,50.4039,0.02924],[53.0,1.0,50.4488,0.02927],[54.0,1.0,50.4926,0.02929],[55.0,1.0,50.5354,0.02932],[56.0,1.0,50.5772,0.02935],[57.0,1.0,50.6183,0.02938],[58.0,1.0,50.6587,0.0294],[59.0,1.0,50.6984,0.02943],[60.0,1.0,50.7375,0.02946]],"P":[[0.0,1.0,33.8787,0.03496],[0.23,1.0,34.5529,0.03374],[0.46,1.0,35.2272,0.03251],[0.6899,1.0,35.843,0.03231],[0.9199,1.0,36.3761,0.03215],[1.0,1.0,36.5463,0.0321],[1.1499,1.0,36.8472,0.03202],[1.3799,1.0,37.2711,0.03191],[1.6099,1.0,37.6584,0.03182],[1.8398,1.0,38.0167,0.03173],[2.0,1.0,38.2521,0.03168],[2.0698,1.0,38.3516,0.03166],[2.2998,1.0,38.6673,0.03158],[2.5298,1.0,38.9661,0.03152],[2.7598,1.0,39.2501,0.03146],[3.0,1.0,39.5328,0.0314],[4.0,1.0,40.5817,0.03119],[5.0,1.0,41.459,0.03102],[6.0,1.0,42.1995,0.03087],[7.0,1.0,42.829,0.03075],[8.0,1.0,43.3671,0.03063],[9.0,1.0,43.83,0.03053],[10.0,1.0,44.2319,0.03044],[11.0,1.0,44.5844,0.03035],[12.0,1.0,44.8965,0.03027],[13.0,1.0,45.1752,0.03019],[14.0,1.0,45.4265,0.03012],[15.0,1.0,45.6551,0.03006],[16.0,1.0,45.865,0.02999],[17.0,1.0,46.0598,0.02993],[18.0,1.0,46.2424,0.02987],[19.0,1.0,46.4152,0.02982],[20.0,1.0,46.5801,0.02977],[21.0,1.0,46.7384,0.02972],[22.0,1.0,46.8913,0.02967],[23.0,1.0,47.0391,0.02962],[24.0,1.0,47.1822,0.02957],[25.0,1.0,47.3204,0.02953],[26.0,1.0,47.4536,0.02949],[27.0,1.0,47.5817,0.02945],[28.0,1.0,47.7045,0.02941],[29.0,1.0,47.8219,0.02937],[30.0,1.0,47.934,0.02933],[31.0,1.0,48.041,0.02929],[32.0,1.0,48.1432,0.02926],[33.0,1.0,48.2408,0.02922],[34.0,1.0,48.3343,0.02919],[35.0,1.0,48.4239,0.02915],[36.0,1.0,48.5099,0.02912],[37.0,1.0,48.5926,0.02909],[38.0,1.0,48.6722,0.02906],[39.0,1.0,48.7489,0.02903],[40.0,1.0,48.8228,0.029],[41.0,1.0,48.8941,0.02897],[42.0,1.0,48.9629,0.02894],[43.0,1.0,49.0294,0.02891],[44.0,1.0,49.0937,0.02888],[45.0,1.0,49.156,0.02886],[46.0,1.0,49.2164,0.02883],[47.0,1.0,49.2751,0.0288],[48.0,1.0,49.3321,0.02878],[49.0,1.0,49.3877,0.02875],[50.0,1.0,49.4419,0.02873],[51.0,1.0,49.4947,0.0287],[52.0,1.0,49.5464,0.02868],[53.0,1.0,49.5969,0.02865],[54.0,1.0,49.6464,0.02863],[55.0,1.0,49.6947,0.02861],[56.0,1.0,49.7421,0.02859],[57.0,1.0,49.7885,0.02856],[58.0,1.0,49.8341,0.02854],[59.0,1.0,49.8789,0.02852],[60.0,1.0,49.9229,0.0285]]}};
+// flag = rentang z yang tidak masuk akal secara biologis (WHO Anthro); adj = z disesuaikan WHO bila |z|>3
+const IND=[
+ {k:'tbu',n:'TB/U',f:'Tinggi/panjang badan menurut umur',x:'age',u:'cm',cat:'tbu',adj:0,fl:[-6,6]},
+ {k:'bbu',n:'BB/U',f:'Berat badan menurut umur',x:'age',u:'kg',cat:'bbu',adj:1,fl:[-6,5]},
+ {k:'bbpb',n:'BB/PB',f:'Berat badan menurut panjang badan (0–2 th)',x:'len',u:'kg',cat:'gizi',adj:1,fl:[-5,5]},
+ {k:'bbtb',n:'BB/TB',f:'Berat badan menurut tinggi badan (2–5 th)',x:'len',u:'kg',cat:'gizi',adj:1,fl:[-5,5]},
+ {k:'imtu',n:'IMT/U',f:'Indeks massa tubuh menurut umur',x:'age',u:'kg/m²',cat:'gizi',adj:1,fl:[-5,5]},
+ {k:'lku',n:'LK/U',f:'Lingkar kepala menurut umur',x:'age',u:'cm',cat:'hc',adj:0,fl:[-5,5]}];
+// [batas, label, kelas, inklusif]: inklusif=1 berarti z<=batas, 0 berarti z<batas (sesuai Permenkes 2/2020)
+const CATS={
+ tbu:[[-3,'Sangat pendek','bad',0],[-2,'Pendek','warn',0],[3,'Normal','ok',1],[1e9,'Tinggi','warn',1]],
+ bbu:[[-3,'Berat badan sangat kurang','bad',0],[-2,'Berat badan kurang','warn',0],[1,'Berat badan normal','ok',1],[1e9,'BB/U di atas +1 SD (relatif tinggi menurut umur)','warn',1]],
+ gizi:[[-3,'Gizi buruk','bad',0],[-2,'Gizi kurang','warn',0],[1,'Gizi baik','ok',1],[2,'Berisiko gizi lebih','warn',1],[3,'Gizi lebih','warn',1],[1e9,'Obesitas','bad',1]],
+ hc:[[-2,'Di bawah −2 SD (evaluasi klinis)','bad',0],[2,'Normal','ok',1],[1e9,'Di atas +2 SD (evaluasi klinis)','bad',1]]};
+const RNG={tb:[35,130,'Tinggi/panjang badan','cm'],bb:[0.5,40,'Berat badan','kg'],lk:[25,60,'Lingkar kepala','cm']};
+const $=id=>document.getElementById(id);
+const pad=n=>String(n).padStart(2,'0');
+{const t=new Date();$('uk').value=t.getFullYear()+'-'+pad(t.getMonth()+1)+'-'+pad(t.getDate())}
+function umur(b,m){let y=m.getFullYear()-b.getFullYear(),o=m.getMonth()-b.getMonth(),d=m.getDate()-b.getDate();
+ if(d<0){o--;d+=new Date(m.getFullYear(),m.getMonth(),0).getDate()}if(o<0){y--;o+=12}
+ return{y,o,d,bln:Math.round((m-b)/864e5)/30.4375}} // umur dalam hari / 30,4375 (metode WHO Anthro)
+function lms(rows,x){if(!rows||x<rows[0][0]||x>rows[rows.length-1][0])return null;
+ let i=0;while(i<rows.length-2&&rows[i+1][0]<=x)i++;const a=rows[i],c=rows[i+1],f=(x-a[0])/(c[0]-a[0]);
+ return[1,2,3].map(j=>a[j]+(c[j]-a[j])*f)}
+const zf=(L,M,S,v)=>L===0?Math.log(v/M)/S:(Math.pow(v/M,L)-1)/(L*S);
+const val=(L,M,S,z)=>L===0?M*Math.exp(S*z):M*Math.pow(1+L*S*z,1/L);
+function zadj(L,M,S,v){let z=zf(L,M,S,v);if(z>3){const a=val(L,M,S,3),b=val(L,M,S,2);return 3+(v-a)/(a-b)}
+ if(z<-3){const a=val(L,M,S,-3),b=val(L,M,S,-2);return -3+(v-a)/(b-a)}return z}
+function kat(c,z){for(const r of CATS[c])if(r[3]?z<=r[0]:z<r[0])return r}
+const num=id=>{const v=parseFloat($(id).value);return isNaN(v)?null:v};
+function calc(rec,lh,sx){
+ const U=umur(new Date(lh+'T00:00'),new Date(rec.uk+'T00:00'));let tb=rec.tb,note='';
+ if(tb!=null){const pos=rec.pos||(U.bln<24?'b':'d');
+  if(U.bln<24&&pos==='d'){tb+=0.7;note='Tinggi +0,7 cm (diukur berdiri, umur <2 th).'}
+  else if(U.bln>=24&&pos==='b'){tb-=0.7;note='Panjang −0,7 cm (diukur berbaring, umur ≥2 th).'}}
+ const imt=(tb!=null&&rec.bb!=null)?rec.bb/Math.pow(tb/100,2):null,R={};
+ IND.forEach(I=>{let v,x;
+  if(I.k==='tbu'){v=tb;x=U.bln}else if(I.k==='bbu'){v=rec.bb;x=U.bln}else if(I.k==='imtu'){v=imt;x=U.bln}else if(I.k==='lku'){v=rec.lk;x=U.bln}
+  else{if(I.k==='bbpb'?U.bln>=24:U.bln<24)return;v=rec.bb;x=tb}
+  if(v==null||x==null){R[I.k]={miss:1};return}
+  const o={v,x},rows=DATA[I.k]&&DATA[I.k][sx];
+  if(!rows)o.nodata=1;else{const p=lms(rows,x);if(!p)o.oor=1;else{
+   o.z=I.adj?zadj(p[0],p[1],p[2],v):zf(p[0],p[1],p[2],v);o.adj=I.adj&&Math.abs(zf(p[0],p[1],p[2],v))>3;
+   o.zr=Math.round(o.z*100)/100;o.cat=kat(I.cat,o.z);o.flag=o.z<I.fl[0]||o.z>I.fl[1]}} // kategori dari z mentah; zr hanya untuk tampilan
+  R[I.k]=o});
+ return{U,note,R}}
+const hkey=(n,lh,sx)=>'who:'+n.trim().toLowerCase()+'|'+lh+'|'+sx;
+function hload(k){try{return JSON.parse(localStorage.getItem(k)||'[]')}catch(e){return[]}}
+function hsave(k,a){try{localStorage.setItem(k,JSON.stringify(a));return true}catch(e){return false}}
+let S={};
+function el(t,c,x){const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+function cek(id,r,ket){const v=num(id);if($(id).value!==''&&(v==null||v<=0||v<r[0]||v>r[1]))return r[2]+' '+ket+' di luar rentang masuk akal ('+r[0]+'–'+r[1]+' '+r[3]+'). Periksa angka dan satuan.';return null}
+$('go').onclick=()=>{
+ const out=$('out');out.textContent='';const err=m=>{out.append(el('p','bad b',m))};
+ const sx=$('jk').value,lh=$('lh').value,uk=$('uk').value;
+ if(!lh||!uk)return err('Isi tanggal lahir dan tanggal pengukuran.');
+ const U0=umur(new Date(lh+'T00:00'),new Date(uk+'T00:00'));
+ if(U0.bln<0)return err('Tanggal pengukuran lebih awal dari tanggal lahir.');
+ if(U0.bln>60)return err('Umur di atas 5 tahun. Alat ini hanya mencakup 0–60 bulan.');
+ for(const k of['tb','bb','lk']){const m=cek(k,RNG[k],'');if(m)return err(m)}
+ const rec={uk,tb:num('tb'),bb:num('bb'),lk:num('lk'),pos:$('pos').value};
+ if(rec.tb==null&&rec.bb==null&&rec.lk==null)return err('Isi minimal satu pengukuran (tinggi, berat, atau lingkar kepala).');
+ const nm=$('nm').value,key=nm.trim()?hkey(nm,lh,sx):null,hist=key?hload(key).filter(r=>r.uk!==uk):[];
+ const cur=calc(rec,lh,sx);S={sx,lh,cur,rec,hist,key};
+ const bd=el('div','card'),h=el('h2','',(nm||'Pasien')+' · '+$('jk').selectedOptions[0].text+' · '+cur.U.y+' th '+cur.U.o+' bln '+cur.U.d+' hr');h.style.margin='0 0 6px';bd.append(h);
+ if(cur.note)bd.append(el('p','mut',cur.note));
+ const wr=el('div','wrap'),tab=el('table');tab.innerHTML='<tr><th>Indikator</th><th>Nilai</th><th>Z-score</th><th>Kategori</th><th class="noprint"></th></tr>';
+ IND.forEach(I=>{const o=cur.R[I.k];if(!o)return;const tr=el('tr'),c=[0,1,2,3,4].map(()=>el('td'));tr.append(...c);
+  c[0].append(el('span','b',I.n),el('br'),el('span','mut',I.f));
+  if(o.miss){c[1].textContent='–';c[3].className='mut';c[3].textContent='Data belum diisi'}
+  else{c[1].textContent=(+o.v.toFixed(2))+' '+I.u;
+   if(o.nodata){c[3].className='mut';c[3].textContent='Tabel WHO belum dimuat'}
+   else if(o.oor){c[3].className='warn';c[3].textContent='Di luar rentang tabel WHO ('+(I.x==='len'?'panjang/tinggi':'umur')+')'}
+   else{c[2].textContent=o.zr.toFixed(2)+(o.adj?' *':'');c[3].className='b '+o.cat[2];c[3].textContent=o.cat[1];
+    if(o.flag)c[3].append(el('div','bad','Kemungkinan salah input (di luar rentang biologis WHO). Periksa kembali.'));
+    const bt=el('button','s','Grafik');bt.onclick=()=>grafik(I);c[4].append(bt)}}
+  tab.append(tr)});
+ wr.append(tab);bd.append(wr);
+ const nt=[];if(Object.values(cur.R).some(o=>o.adj))nt.push('* z-score disesuaikan menurut metode WHO untuk nilai di luar ±3 SD.');
+ if(cur.R.bbu&&cur.R.bbu.cat&&cur.R.bbu.z>1)nt.push('BB/U di atas +1 SD belum menetapkan gizi lebih, karena BB/U tidak membedakan anak yang tinggi dari anak yang kelebihan berat. Nilai dengan BB/PB, BB/TB, atau IMT/U.');
+ nt.forEach(t=>bd.append(el('p','mut',t)));
+ bd.append(el('div','',''));bd.lastChild.id='gr';out.append(bd);
+ const hb=el('div','card noprint');hb.style.marginTop='12px';out.append(hb);S.hb=hb;riwayat();
+ const pr=el('p','noprint'),pb=el('button','s','Cetak hasil');pb.onclick=()=>print();pr.append(pb);out.append(pr)};
+function riwayat(){const hb=S.hb;hb.textContent='';hb.append(el('h2','','Riwayat pengukuran'));hb.firstChild.style.margin='0 0 6px';
+ if(!S.key){hb.append(el('p','mut','Isi nama pasien untuk menyimpan dan melihat riwayat. Riwayat tersimpan hanya di peramban perangkat ini.'));return}
+ const sv=el('button','','Simpan pengukuran ini');sv.onclick=()=>{const a=S.hist.filter(r=>r.uk!==S.rec.uk);a.push(S.rec);a.sort((p,q)=>p.uk<q.uk?-1:1);
+  if(hsave(S.key,a)){S.hist=a;riwayat()}else alert('Penyimpanan di peramban tidak tersedia.')};hb.append(sv);
+ const all=[...S.hist.map(r=>({r,c:calc(r,S.lh,S.sx)})),{r:S.rec,c:S.cur,now:1}].sort((p,q)=>p.r.uk<q.r.uk?-1:1);
+ const saved=S.hist.some(r=>r.uk===S.rec.uk);
+ if(all.length>1||saved){const wr=el('div','wrap'),t=el('table');
+  t.innerHTML='<tr><th>Tanggal</th><th>Umur</th>'+IND.map(I=>'<th>'+I.n+'</th>').join('')+'</tr>';
+  all.forEach(a=>{const tr=el('tr');tr.append(el('td','',a.r.uk+(a.now?' (ini)':'')),el('td','',a.c.U.y+'th '+a.c.U.o+'bln'));
+   IND.forEach(I=>{const o=a.c.R[I.k];tr.append(el('td',o&&o.cat?o.cat[2]:'mut',o&&o.zr!=null?o.zr.toFixed(2):'–'))});t.append(tr)});
+  wr.append(t);hb.append(wr);
+  const del=el('button','s','Hapus riwayat anak ini');del.style.marginTop='8px';del.onclick=()=>{if(confirm('Hapus semua riwayat tersimpan untuk anak ini?')){try{localStorage.removeItem(S.key)}catch(e){}S.hist=[];riwayat()}};hb.append(del)}
+ else hb.append(el('p','mut','Belum ada riwayat tersimpan. Simpan pengukuran untuk mulai mencatat tren.'))}
+function grafik(I){
+ const rows=DATA[I.k][S.sx],pts=[...S.hist.map(r=>({o:calc(r,S.lh,S.sx).R[I.k],cur:0})),{o:S.cur.R[I.k],cur:1}].filter(p=>p.o&&p.o.z!=null);
+ const g=$('gr');g.textContent='';const W=720,H=440,cv=document.createElement('canvas');cv.width=W*2;cv.height=H*2;g.append(cv);
+ const c=cv.getContext('2d');c.scale(2,2);c.fillStyle='#fff';c.fillRect(0,0,W,H);
+ const Z=[-3,-2,0,2,3],col={'-3':'#b3261e','-2':'#d98a00','0':'#1e7a45','2':'#d98a00','3':'#b3261e'};
+ const x0=rows[0][0],x1=rows[rows.length-1][0],curves=Z.map(z=>rows.map(r=>[r[0],val(r[1],r[2],r[3],z)]));
+ const ys=curves.flat().map(p=>p[1]).concat(pts.map(p=>p.o.v));let y0=Math.min(...ys),y1=Math.max(...ys);const pd=(y1-y0)*.05;y0-=pd;y1+=pd;
+ const L=56,R=14,T=34,B=44,X=x=>L+(x-x0)/(x1-x0)*(W-L-R),Y=y=>H-B-(y-y0)/(y1-y0)*(H-T-B);
+ c.font='12px system-ui';c.fillStyle='#5d6d75';c.strokeStyle='#e3eaed';c.lineWidth=1;
+ for(let i=0;i<=5;i++){const y=y0+(y1-y0)*i/5;c.beginPath();c.moveTo(L,Y(y));c.lineTo(W-R,Y(y));c.stroke();c.textAlign='right';c.fillText(y.toFixed(y1-y0<20?1:0),L-6,Y(y)+4)}
+ const st=I.x==='age'?12:(x1-x0>40?10:5);c.textAlign='center';
+ for(let x=Math.ceil(x0/st)*st;x<=x1;x+=st){c.beginPath();c.moveTo(X(x),T);c.lineTo(X(x),H-B);c.stroke();c.fillText(I.x==='age'?(x/12)+' th':x,X(x),H-B+16)}
+ c.fillText(I.x==='age'?'Umur':'Panjang/tinggi badan (cm)',(L+W-R)/2,H-8);
+ c.save();c.translate(14,(T+H-B)/2);c.rotate(-Math.PI/2);c.fillText(I.u,0,0);c.restore();
+ Z.forEach((z,i)=>{c.strokeStyle=col[z];c.lineWidth=z===0?2.2:1.4;c.beginPath();curves[i].forEach((p,j)=>j?c.lineTo(X(p[0]),Y(p[1])):c.moveTo(X(p[0]),Y(p[1])));c.stroke();
+  const e=curves[i][curves[i].length-1];c.fillStyle=col[z];c.textAlign='left';c.fillText((z>0?'+':'')+z+' SD',Math.min(X(e[0])-34,W-R-34),Y(e[1])-4)});
+ const srt=pts.slice().sort((a,b)=>a.o.x-b.o.x);
+ if(I.x==='age'&&srt.length>1){c.strokeStyle='#0b6e7a';c.lineWidth=1.5;c.setLineDash([4,3]);c.beginPath();srt.forEach((p,j)=>j?c.lineTo(X(p.o.x),Y(p.o.v)):c.moveTo(X(p.o.x),Y(p.o.v)));c.stroke();c.setLineDash([])}
+ pts.forEach(p=>{c.fillStyle=p.cur?'#0b6e7a':'#7fb3ba';c.beginPath();c.arc(X(p.o.x),Y(p.o.v),p.cur?6.5:4.5,0,7);c.fill();c.strokeStyle='#fff';c.lineWidth=2;c.stroke()});
+ const cu=pts.find(p=>p.cur);c.fillStyle='#1c2b33';c.font='bold 14px system-ui';c.textAlign='left';
+ c.fillText(I.n+' – '+($('nm').value||'Pasien')+' ('+(S.sx==='L'?'laki-laki':'perempuan')+') · z = '+cu.o.zr.toFixed(2)+(pts.length>1?' · '+pts.length+' titik':''),L,20);
+ const bt=el('p','noprint'),d=el('button','s','Simpan gambar');
+ d.onclick=()=>{const a=document.createElement('a');a.download='grafik-'+I.k+'.png';a.href=cv.toDataURL('image/png');a.click()};bt.append(d);g.append(bt);cv.scrollIntoView({behavior:'smooth'})}
+</script></body></html>
