@@ -1,0 +1,162 @@
+<!DOCTYPE html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NutriKalk – Kalkulator Kebutuhan Gizi & Konversi Makanan</title>
+<style>
+:root{--g:#0f766e;--g2:#14b8a6;--bg:#f0fdfa;--c:#fff;--t:#0f172a;--m:#64748b;--l:#e2e8f0;--o:#f97316;--r:16px}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--t)}
+header{background:linear-gradient(135deg,#0f766e,#14b8a6 60%,#84cc16);color:#fff;padding:28px 16px 70px;text-align:center}
+header h1{margin:0;font-size:28px}header p{margin:6px 0 0;opacity:.9}
+main{max-width:1050px;margin:-48px auto 40px;padding:0 14px}
+.card{background:var(--c);border-radius:var(--r);box-shadow:0 4px 18px #0f172a14;padding:18px;margin-bottom:16px}
+.card h2{margin:0 0 12px;font-size:18px;color:var(--g);display:flex;gap:8px;align-items:center}
+.step{background:var(--g);color:#fff;border-radius:50%;width:26px;height:26px;display:inline-grid;place-items:center;font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+label{font-size:12px;color:var(--m);font-weight:600;display:block;margin-bottom:4px}
+input,select{width:100%;padding:9px 10px;border:1.5px solid var(--l);border-radius:10px;font-size:15px;background:#fff}
+input:focus,select:focus{outline:none;border-color:var(--g2);box-shadow:0 0 0 3px #14b8a633}
+.seg{display:flex;gap:8px}.seg button{flex:1;padding:10px;border:1.5px solid var(--l);background:#fff;border-radius:10px;font-size:15px;cursor:pointer}
+.seg button.on{background:var(--g);color:#fff;border-color:var(--g)}
+.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:12px}
+.k{background:var(--bg);border-radius:12px;padding:12px;text-align:center}.k b{display:block;font-size:22px;color:var(--g)}.k span{font-size:12px;color:var(--m)}
+.badge{display:inline-block;padding:3px 10px;border-radius:99px;font-size:13px;font-weight:700;color:#fff}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:7px 8px;border-bottom:1px solid var(--l);text-align:right}th:first-child,td:first-child{text-align:left}th{background:var(--bg);color:var(--g);font-size:12px}
+.act{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}.act div{display:flex;align-items:center;gap:8px;background:var(--bg);padding:6px 10px;border-radius:10px}.act span{flex:1;font-size:13px}.act input{width:70px;padding:5px}
+.bar{display:flex;height:22px;border-radius:99px;overflow:hidden;margin:10px 0;font-size:11px;color:#fff;font-weight:700}.bar div{display:grid;place-items:center}
+.meals{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.meal{border:1.5px solid var(--l);border-radius:var(--r);overflow:hidden}.meal>h3{margin:0;padding:10px 14px;background:linear-gradient(90deg,var(--g),var(--g2));color:#fff;font-size:16px;display:flex;justify-content:space-between}
+.meal .in{padding:10px 14px}.row{display:flex;gap:10px;align-items:center;margin:10px 0}
+.pic{width:64px;height:64px;border-radius:12px;background:#ecfccb;display:grid;place-items:center;font-size:34px;position:relative;overflow:hidden;flex:none}
+.pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.row .f{flex:1;min-width:0}.row .f small{display:block;color:var(--m);font-size:12px;margin-top:3px}.amt{font-size:18px;font-weight:800;color:var(--o)}
+.note{font-size:12.5px;color:var(--m);line-height:1.5}.tip{background:#fff7ed;border-left:4px solid var(--o);padding:10px 12px;border-radius:8px;font-size:13.5px;margin-top:10px}
+.btn{background:var(--o);color:#fff;border:0;padding:10px 18px;border-radius:10px;font-weight:700;cursor:pointer;font-size:14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}.chips button{padding:9px 14px;border:1.5px solid var(--l);background:#fff;border-radius:99px;cursor:pointer;font-size:14px}.chips button.on{background:var(--o);border-color:var(--o);color:#fff;font-weight:700}.pn{border:1.5px solid var(--l);border-radius:var(--r);padding:14px;margin-top:14px}.pn h3{margin:0 0 8px;color:var(--g);font-size:16px}.pn li{margin:5px 0;font-size:14px;line-height:1.45}tr.hl td{background:#fff7ed;font-weight:700;color:var(--o)}.sc{overflow-x:auto}@media print{header,.noprint{display:none}main{margin:0}.card{box-shadow:none}}
+</style></head><body>
+<header><h1>🥗 NutriKalk</h1><p>Kalkulator kebutuhan gizi &amp; konversi ke makanan — untuk Dokter Gizi &amp; Dokter Keluarga</p></header>
+<main>
+<div class="card"><h2><span class="step">1</span>Data Pasien &amp; Status Gizi (IMT)</h2>
+<div class="grid">
+<div><label>Nama pasien</label><input id="nm" placeholder="Opsional"></div>
+<div><label>Jenis kelamin</label><div class="seg"><button id="sP" class="on">👨 Pria</button><button id="sW">👩 Wanita</button></div></div>
+<div><label>Usia (tahun)</label><input id="age" type="number" value="38"></div>
+<div><label>Berat badan (kg)</label><input id="bb" type="number" step="0.1" value="66.7"></div>
+<div><label>Tinggi badan (cm)</label><input id="tb" type="number" value="166"></div></div>
+<div class="kpi" id="imt"></div></div>
+
+<div class="card"><h2><span class="step">2</span>BMR, RMR &amp; Aktivitas Harian (TEE)</h2>
+<div class="grid"><div><label>Faktor penggali BMR (Tabel 1, otomatis – bisa diubah)</label><input id="fk" type="number" step="0.1"></div></div>
+<p class="note" id="fkn"></p>
+<label style="margin-top:10px">Durasi kegiatan (jam) — total 24 jam, sisanya otomatis masuk “Lainnya”</label>
+<div class="act" id="act"></div>
+<div class="kpi" id="tee"></div></div>
+
+<div class="card"><h2><span class="step">3</span>Kondisi Klinis &amp; Kebutuhan Nutrien</h2>
+<label>Pilih kondisi / tab diet (sesuai sheet Excel)</label><div class="chips" id="chips"></div><input type="hidden" id="cond" value="n"><div class="grid" style="margin-top:12px">
+<div id="ckw" style="display:none"><label>Kreatinin serum (mg/dL)</label><input id="cr" type="number" step="0.1" value="1"></div>
+<div><label>Kelompok usia (sayur-buah)</label><select id="grp"><option value="a">Dewasa/remaja (400–600 g)</option><option value="k">Balita/sekolah (300–400 g)</option></select></div></div>
+<div id="nut"></div><div id="pnl"></div></div>
+
+<div class="card"><h2><span class="step">4</span>Pembagian Porsi per Waktu Makan</h2><div class="sc" id="por"></div></div>
+
+<div class="card"><h2><span class="step">5</span>Konversi ke Makanan <small class="note">— pilih jenis makanan, takaran otomatis menyesuaikan</small></h2>
+<div class="meals" id="meals"></div>
+<div id="sb" class="grid" style="margin-top:14px"></div></div>
+
+<div class="card"><h2>📌 Batas Harian Anjuran</h2><div class="kpi">
+<div class="k"><b>&lt; 50 g</b><span>Gula (4 sdm; 1 sdm = 10 g)</span></div><div class="k"><b>&lt; 2300 mg</b><span>Garam (1 sdt)</span></div><div class="k"><b>&lt; 67 g</b><span>Minyak (5 sdm)</span></div><div class="k"><b>SFA &lt;7%</b><span>MUFA 10% · PUFA 8%</span></div></div>
+<p class="note">Lemak tak jenuh (zaitun, canola, jagung, biji matahari) sebaiknya ditambahkan setelah makanan matang. Batasi lemak trans (gorengan, kue, mentega), santan dan daging berkulit.</p>
+<div class="noprint"><button class="btn" onclick="print()">🖨️ Cetak / Simpan PDF</button> <button class="btn" style="background:#16a34a" onclick="rekap()">💬 Rekap untuk WhatsApp</button></div>
+<div id="wa" class="noprint" style="display:none;margin-top:14px"><label>Teks rekap (bisa diedit sebelum dikirim)</label><textarea id="wat" style="width:100%;height:380px;padding:12px;border:1.5px solid var(--l);border-radius:12px;font:14px/1.5 system-ui"></textarea>
+<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn" style="background:#16a34a" onclick="sendWA()">📲 Kirim ke WhatsApp</button><button class="btn" onclick="copyWA()" id="cpb">📋 Salin teks</button></div>
+<p class="note">Tombol WhatsApp membuka WhatsApp dengan teks siap kirim; pilih kontak pasien di sana.</p></div></div>
+</main>
+<script>
+const $=id=>document.getElementById(id),f1=(x,d=1)=>(+x).toLocaleString('id-ID',{maximumFractionDigits:d,minimumFractionDigits:d});
+let sex='P';
+const T={P:{a:[[50,29],[55,27.5],[60,26.5],[65,26],[70,25],[75,24.5],[80,24]],b:[[50,29],[55,27.5],[60,26],[65,25],[70,24],[75,23.5],[80,22.5]],c:[[50,23],[55,22.5],[60,21.5],[65,21],[70,20.5],[75,20],[80,19.5]]},
+W:{a:[[40,27],[45,25.5],[50,24.5],[55,23.5],[60,23],[65,22.5],[70,22],[75,21.5]],b:[[40,29.5],[45,27.5],[50,25.5],[55,24],[60,22.5],[65,21.5],[70,20.5],[75,20]],c:[[40,25.5],[45,23.5],[50,22.5],[55,21.5],[60,20.5],[65,19.5],[70,19],[75,18.5]]}};
+function factor(){const a=+$('age').value,w=+$('bb').value,t=T[sex][a<=30?'a':a<60?'b':'c'];if(w<=t[0][0])return t[0][1];for(let i=1;i<t.length;i++)if(w<=t[i][0]){const[x0,y0]=t[i-1],[x1,y1]=t[i];return y0+(y1-y0)*(w-x0)/(x1-x0)}return t[t.length-1][1]}
+const ACT=[['😴 Tidur',1,7],['🚿 Kegiatan dasar',1.4,2],['💼 Bekerja ringan',1.7,5],['🔨 Bekerja sedang',2.2,0],['🏗️ Bekerja berat',2.8,0],['🧍 Berdiri',1.5,2],['🚶 Berjalan',3.4,1],['🪑 Duduk',1.4,5],['🧹 Tugas rumah tangga',2.5,1],['🧘 Olahraga ringan',3.1,0],['🏃 Olahraga sedang',5.2,0],['🏋️ Olahraga berat',6.3,0]];
+$('act').innerHTML=ACT.map((a,i)=>`<div><span>${a[0]} <small class="note">×${a[1]}</small></span><input type="number" min="0" max="24" step="0.5" id="a${i}" value="${a[2]}"></div>`).join('')+`<div><span>⏳ Lainnya <small class="note">×1,4 (otomatis)</small></span><input id="aL" readonly></div>`;
+const MEALS=[['🌅 Sarapan',.25],['🍎 Selingan 1',.075],['☀️ Makan Siang',.35],['🥜 Selingan 2',.075],['🌙 Makan Malam',.25]];
+// food db: [nama, emoji, kkal/100g, satuan, gram/satuan, wiki file]
+const KH=[['Nasi putih','🍚',349,'centong',50,'Steamed_rice.jpg'],['Nasi merah','🍛',353,'centong',50,'Brown_rice.jpg'],['Roti tawar','🍞',243,'potong',37.5,'White_bread.jpg'],['Oat / havermout','🥣',398,'sdm',10,'Oatmeal.jpg'],['Mie kering','🍜',338,'porsi (50 g)',50,'Noodles.jpg'],['Jagung','🌽',371,'porsi (50 g)',50,'Corn.jpg'],['Makaroni','🍝',353,'porsi (50 g)',50,'Macaroni.jpg']];
+const HW=[['Ayam','🍗',95,'potong dada',55,'Fried_chicken.jpg'],['Daging sapi tdk berlemak','🥩',168,'potong',55,'Beef.jpg'],['Daging sapi berlemak','🥩',268,'potong',55,'Beef.jpg'],['Telur ayam','🥚',158,'butir',50,'Chicken_egg.jpg'],['Telur bebek','🥚',184,'butir',65,'Duck_egg.jpg'],['Ikan bandeng','🐟',123,'potong',50,'Milkfish.jpg'],['Ikan bawal','🐟',91,'potong',50,'Pomfret.jpg'],['Ikan kakap','🐟',86,'potong',50,'Snapper.jpg'],['Ikan kembung','🐟',97,'ekor besar',100,'Mackerel.jpg'],['Ikan lele','🐟',107,'ekor sedang',50,'Catfish.jpg'],['Udang','🦐',86,'5 ekor sedang',50,'Shrimp.jpg'],['Kepiting','🦀',146,'porsi (100 g)',100,'Crab.jpg'],['Bebek','🦆',160,'potong',55,'Roast_duck.jpg'],['Kambing','🐐',149,'potong',55,'Goat_meat.jpg']];
+const NB=[['Tempe','🟫',160,'potong besar',50,'Tempeh.jpg'],['Tahu','⬜',79,'potong besar',50,'Tofu.jpg'],['Kacang kedelai rebus','🫘',141,'sdm',15,'Soybean.jpg'],['Kacang hijau rebus','🫛',105,'sdm',15,'Mung_bean.jpg'],['Kacang merah rebus','🫘',127,'sdm',15,'Kidney_beans.jpg'],['Kacang tanah rebus','🥜',318,'sdm',15,'Peanuts.jpg'],['Oncom','🟧',187,'potong',50,'Oncom.jpg'],['Susu kedelai','🥛',54,'gelas (200 ml)',200,'Soy_milk.jpg']];
+const sel=(arr,id,v)=>`<select id="${id}" onchange="conv()">${arr.map((x,i)=>`<option value="${i}" ${i==v?'selected':''}>${x[1]} ${x[0]}</option>`).join('')}</select>`;
+$('meals').innerHTML=MEALS.map((m,i)=>i==1||i==3?`<div class="meal"><h3><span>${m[0]}</span><span id="mk${i}"></span></h3><div class="in"><div class="row"><div class="pic">🍪</div><div class="f"><b>Target kalori selingan</b><small>Pilih camilan sehat sesuai kalori ini</small></div><div class="amt" id="sk${i}"></div></div></div></div>`:`<div class="meal"><h3><span>${m[0]}</span><span id="mk${i}"></span></h3><div class="in">
+<label>Karbohidrat</label>${sel(KH,'kh'+i,i==1?2:0)}<div class="row" id="rk${i}"></div>
+<label>Protein hewani</label>${sel(HW,'hw'+i,i==1?3:i==2?1:0)}<div class="row" id="rh${i}"></div>
+<label>Protein nabati</label>${sel(NB,'nb'+i,0)}<div class="row" id="rn${i}"></div>
+<label>Proporsi protein hewani: <b id="pv${i}">50</b>%</label><input type="range" id="pp${i}" min="0" max="100" step="10" value="50" oninput="conv()">
+<div class="row" id="rl${i}"></div></div></div>`).join('');
+function pic(x){return `<div class="pic">${x[1]}<img src="https://commons.wikimedia.org/wiki/Special:FilePath/${x[5]}?width=160" loading="lazy" alt="" onerror="this.remove()"></div>`}
+function line(x,kcal,fixedG){const g=kcal/(x[2]/100),u=g/x[4];return `${pic(x)}<div class="f"><b>${x[0]}</b><small>${f1(kcal,0)} kkal · ${f1(g,0)} g</small></div><div class="amt">${f1(u,1)}<br><small class="note">${x[3]}</small></div>`}
+let R={},LF=0,S={};
+const li=a=>'<ul>'+a.map(x=>`<li>${x}</li>`).join('')+'</ul>';
+function panel(c,kcal,tee,m){
+ if(c=='n')return '';
+ const lem=`SFA &lt;7% = ${f1(kcal*.07/9,0)} g · MUFA 10% = ${f1(kcal*.10/9,0)} g · PUFA 8% = ${f1(kcal*.08/9,0)} g`;
+ const kh=MEALS.map((x,i)=>i==1||i==3?'':`${x[0]}: <b>${f1(m.k*x[1]/4,0)} g</b>`).filter(Boolean).join(' · ');
+ const P={
+ ob:()=>`<h3>🏋️ Obesitas — kebutuhan kalori dikurangi 500 kkal/hari</h3><div class="kpi"><div class="k"><b>${f1(tee,0)}</b><span>TEE normal</span></div><div class="k"><b>${f1(kcal,0)}</b><span>TEE obesitas</span></div><div class="k"><b>${f1(tee-kcal,0)} kkal</b><span>Kebutuhan − asupan</span></div><div class="k"><b>${f1(tee-kcal,0)} g</b><span>Penurunan BB/minggu (rumus Excel)</span></div></div>${kcal<1000?'<div class="tip">⚠️ Target di bawah 1000 kkal/hari — pertimbangkan defisit lebih kecil / pengawasan ketat.</div>':''}<p class="note">${lem}</p>`,
+ dm:()=>`<h3>🩸 Diabetes Melitus</h3><p><b>KH per waktu makan (KH counting):</b> ${kh}</p>${li(['<b>Indeks glikemik:</b> pilih IG rendah (nasi merah, oat, ubi, jagung); batasi gula (&lt;50 g/hari).','<b>KH kompleks:</b> utamakan karbohidrat berserat; hindari minuman manis &amp; tepung olahan.','Jadwal makan teratur: 3 makan utama + 2 selingan agar glukosa stabil.'])}<p class="note">${lem}</p>`,
+ dl:()=>`<h3>🧈 Dislipidemia</h3>${li(['<b>Serat:</b> 25–30 g/hari (sayur, buah, oat, kacang-kacangan).','<b>Jenis lemak:</b> '+lem+'. Hindari lemak trans (gorengan, kue, mentega) &amp; santan.','<b>Natrium:</b> &lt;2300 mg/hari (±1 sdt garam).','Utamakan ikan (PUFA/omega-3), alpukat, minyak zaitun/canola.'])}`,
+ ht:()=>`<h3>❤️ Hipertensi</h3>${li(['<b>Batasi garam</b> &lt;2300 mg (1 sdt)/hari; kurangi makanan olahan, asin &amp; awetan.','<b>Tingkatkan serat</b> (sayur, buah, biji-bijian).','<b>Tinggi kalium:</b> pisang, jeruk, sayur hijau, ubi.','<b>Tinggi magnesium:</b> kacang-kacangan, biji-bijian utuh.','<b>Tinggi kalsium:</b> susu rendah lemak, ikan teri, tempe/tahu.'])}<p class="note">${lem}</p>`,
+ hu:()=>`<h3>🦶 Hiperurisemia</h3>${li(['<b>Rendah purin:</b> batasi jeroan, sarden, kerang, emping, daging merah; pilih protein nabati &amp; susu rendah lemak.','<b>Rendah fruktosa:</b> kurangi minuman manis, sirup &amp; jus kemasan.','<b>Tingkatkan asupan air</b> putih (±2–3 L/hari) bila tidak ada kontraindikasi.'])}<p class="note">${lem}</p>`,
+ an:()=>`<h3>🩹 Anemia</h3>${li(['Utamakan <b>zat besi heme</b>: hati, daging merah, ikan, telur.','Padukan dengan <b>vitamin C</b> (jeruk, jambu) untuk menaikkan penyerapan.','Hindari teh/kopi saat makan; tambah sayur hijau &amp; kacang-kacangan.'])}<p class="note">${lem}</p>`,
+ ck:()=>{const r=[['LFG &gt; 55','0,8 g/kgBB/hari',LF>55],['LFG 25 – 55','0,6 g/kgBB/hari',LF>=25&&LF<=55],['LFG &lt; 25','0,3 g/kgBB/hari + asam amino',LF<25],['LFG &lt; 5','diet + dialisis',LF<5]];return `<h3>🫘 CKD — penentuan derajat berdasarkan LFG</h3><p>LFG = <b>${f1(LF,0)} ml/menit</b></p><table><tr><th>LFG (ml/menit)</th><th>Protein</th></tr>${r.map(x=>`<tr class="${x[2]?'hl':''}"><td>${x[0]}</td><td>${x[1]}</td></tr>`).join('')}</table><p class="note">${lem}</p>`}};
+ return `<div class="pn">${P[c]()}</div><p class="note">Poin edukasi di atas adalah panduan umum yang saya tambahkan dari judul topik di sheet Excel; silakan sesuaikan dengan protokol Anda.</p>`}
+function calc(){
+ const bb=+$('bb').value,tb=+$('tb').value,age=+$('age').value;
+ const imt=bb/((tb/100)**2),st=imt<18.5?['Underweight','#3b82f6']:imt<23?['Normal','#16a34a']:imt<25?['Overweight','#f59e0b']:imt<30?['Obesitas I','#ea580c']:['Obesitas II','#dc2626'];
+ $('imt').innerHTML=`<div class="k"><b>${f1(imt)}</b><span>IMT (kg/m²)</span></div><div class="k"><span class="badge" style="background:${st[1]}">${st[0]}</span><br><span>WHO Asia Pasifik</span></div><div class="k"><b>${f1(22.9*(tb/100)**2,0)} kg</b><span>BB maksimal normal (IMT 22,9)</span></div>`;
+ const fk=+$('fk').value||factor(),bmrD=bb*fk,bmrH=bmrD/24;
+ const rmr=sex=='P'?66.5+13.7*bb+5*tb-6.8*age:655.1+9.56*bb+1.85*tb-4.7*age;
+ let tot=0,tee=0;ACT.forEach((a,i)=>{const h=+$('a'+i).value||0;tot+=h;tee+=h*a[1]*bmrH});const rest=24-tot;$('aL').value=f1(rest,1);tee+=Math.max(rest,0)*1.4*bmrH;
+ const pal=tee/24/bmrH,lv=pal<=1.6?'Ringan':pal<=1.8?'Sedang':'Berat';
+ $('tee').innerHTML=`<div class="k"><b>${f1(bmrD,0)}</b><span>BMR kkal/hari</span></div><div class="k"><b>${f1(rmr,0)}</b><span>RMR (Harris-Benedict)</span></div><div class="k"><b>${f1(tee,0)}</b><span>TEE kkal/hari</span></div><div class="k"><b>${f1(pal,2)}</b><span>Tingkat aktivitas (${lv})</span></div>`+(rest<0?`<div class="tip" style="grid-column:1/-1">⚠️ Total durasi melebihi 24 jam (${f1(tot,1)} jam).</div>`:'');
+ $('fkn').textContent=`Rekomendasi tabel untuk usia ${age} th, BB ${bb} kg: ${f1(factor(),2)} kkal/kg/hari (interpolasi). Kosongkan kolom untuk memakai nilai tabel.`;
+ const c=$('cond').value;$('ckw').style.display=c=='ck'?'block':'none';
+ let kcal=c=='ob'?tee-500:tee,pP=.2,pL=.25,pK=.55,extra='';
+ if(c=='ck'){const lfg=LF=(140-age)*bb/(72*(+$('cr').value||1));const gk=lfg>55?.8:lfg>=25?.6:.3;pP=gk*bb*4/kcal;pL=.25;pK=1-pP-pL;
+  extra=`<div class="tip">LFG ≈ <b>${f1(lfg,0)} ml/menit</b> → protein <b>${gk} g/kgBB/hari</b>${lfg<25?' + asam amino':''}${lfg<5?' · diet + dialisis':''}. (rumus Excel: (140−usia)×BB/(72×kreatinin))</div>`}
+ const hl='';
+ const m={p:kcal*pP,l:kcal*pL,k:kcal*pK};R={kcal,m};S={imt,st:st[0],tee,c,bb,tb,age,pP,pL,pK,lfg:LF};
+ $('pnl').innerHTML=panel(c,kcal,tee,m);
+ $('nut').innerHTML=`<div class="kpi"><div class="k"><b>${f1(kcal,0)}</b><span>Kalori target/hari</span></div><div class="k"><b>${f1(m.k/4,0)} g</b><span>Karbohidrat ${f1(pK*100,0)}% · ${f1(m.k,0)} kkal</span></div><div class="k"><b>${f1(m.p/4,0)} g</b><span>Protein ${f1(pP*100,0)}% · ${f1(m.p,0)} kkal</span></div><div class="k"><b>${f1(m.l/9,0)} g</b><span>Lemak ${f1(pL*100,0)}% · ${f1(m.l,0)} kkal</span></div></div>
+ <div class="bar"><div style="width:${pK*100}%;background:#f59e0b">KH ${f1(pK*100,0)}%</div><div style="width:${pP*100}%;background:#ef4444">P ${f1(pP*100,0)}%</div><div style="width:${pL*100}%;background:#3b82f6">L ${f1(pL*100,0)}%</div></div>
+ <p class="note">Lemak: SFA 7% = ${f1(kcal*.07/9,0)} g · MUFA 10% = ${f1(kcal*.10/9,0)} g · PUFA 8% = ${f1(kcal*.08/9,0)} g</p>${extra}`;
+ $('por').innerHTML=`<table><tr><th>Waktu</th><th>Porsi</th><th>kkal</th><th>KH (g)</th><th>Protein (g)</th><th>Lemak (g)</th></tr>`+MEALS.map((x,i)=>i==1||i==3?`<tr><td>${x[0]}</td><td>${x[1]*100}%</td><td>${f1(kcal*x[1],0)}</td><td>–</td><td>–</td><td>–</td></tr>`:`<tr><td>${x[0]}</td><td>${x[1]*100}%</td><td>${f1(kcal*x[1],0)}</td><td>${f1(m.k*x[1]/4,1)}</td><td>${f1(m.p*x[1]/4,1)}</td><td>${f1(m.l*x[1]/9,1)}</td></tr>`).join('')+`<tr><th>Total harian</th><th>100%</th><th>${f1(kcal,0)}</th><th>${f1(m.k/4,1)}</th><th>${f1(m.p/4,1)}</th><th>${f1(m.l/9,1)}</th></tr></table>`;
+ conv()}
+function conv(){if(!R.m)return;const{kcal,m}=R;
+ MEALS.forEach((x,i)=>{if(i==1||i==3){$('mk'+i).textContent='';$('sk'+i).innerHTML=f1(kcal*x[1],0)+'<br><small class="note">kkal</small>';return}const p=+$('pp'+i).value;$('pv'+i).textContent=p;$('mk'+i).textContent=f1(kcal*x[1],0)+' kkal';
+  $('rk'+i).innerHTML=line(KH[$('kh'+i).value],m.k*x[1]);$('rh'+i).innerHTML=line(HW[$('hw'+i).value],m.p*x[1]*p/100);$('rn'+i).innerHTML=line(NB[$('nb'+i).value],m.p*x[1]*(100-p)/100);
+  const oil=m.l*x[1];$('rl'+i).innerHTML=`<div class="pic">🫒</div><div class="f"><b>Lemak / minyak</b><small>${f1(oil,0)} kkal · ${f1(oil/9,1)} g</small></div><div class="amt">${f1(oil/45,1)}<br><small class="note">sdt minyak</small></div>`});
+ const g=$('grp').value=='a';$('sb').innerHTML=`<div class="k"><div style="font-size:38px">🥦</div><b>250 g</b><span>Sayur/hari ≈ 2½–3 gelas setelah ditiriskan (±80 g/waktu makan utama)</span></div><div class="k"><div style="font-size:38px">🍌</div><b>150 g</b><span>Buah/hari ≈ 3 pisang ambon / 1½ potong pepaya / 3 jeruk sedang</span></div><div class="k"><div style="font-size:38px">⚖️</div><b>${g?'400–600':'300–400'} g</b><span>Total sayur + buah anjuran/hari</span></div>`}
+const CD=[['n','⚖️ Gizi Seimbang'],['ob','🏋️ Obesitas'],['dm','🩸 Diabetes Melitus'],['dl','🧈 Dislipidemia'],['ht','❤️ Hipertensi'],['hu','🦶 Hiperurisemia'],['an','🩹 Anemia'],['ck','🫘 CKD']];
+$('chips').innerHTML=CD.map(c=>`<button data-c="${c[0]}" class="${c[0]=='n'?'on':''}">${c[1]}</button>`).join('');
+$('chips').onclick=e=>{const b=e.target.closest('button');if(!b)return;$('cond').value=b.dataset.c;document.querySelectorAll('#chips button').forEach(x=>x.classList.toggle('on',x===b));calc()};
+document.querySelectorAll('input:not([type=range]),select#grp').forEach(e=>e.addEventListener('input',calc));
+function setSex(s){sex=s;$('sP').classList.toggle('on',s=='P');$('sW').classList.toggle('on',s=='W');$('fk').value='';calc()}
+$('sP').onclick=()=>setSex('P');$('sW').onclick=()=>setSex('W');
+['age','bb'].forEach(i=>$(i).addEventListener('input',()=>{$('fk').value=''}));
+const CT={n:'',ob:'Kalori dikurangi 500 kkal/hari untuk menurunkan BB bertahap.',dm:'Pilih karbohidrat kompleks/IG rendah, batasi gula, makan teratur.',dl:'Perbanyak serat 25–30 g/hari, hindari gorengan, santan & lemak trans.',ht:'Batasi garam (<1 sdt/hari); perbanyak sayur, buah, kacang-kacangan.',hu:'Hindari jeroan, sarden, kerang, emping; kurangi minuman manis; banyak minum air putih.',an:'Perbanyak sumber zat besi (hati, daging, ikan, telur) bersama vitamin C.',ck:'Asupan protein diatur sesuai fungsi ginjal (LFG).'};
+function amt(x,kcal){const g=kcal/(x[2]/100);return `${x[0]} ±${f1(g,0)} g (${f1(g/x[4],1)} ${x[3]})`}
+function rekap(){const{kcal,m}=R;if(!kcal)return;const nm=$('nm').value.trim(),cn=CD.find(x=>x[0]==S.c)[1].replace(/^\S+\s/,'');
+ let t=`*🥗 RENCANA DIET${nm?' – '+nm:''}*\n`+`${sex=='P'?'Pria':'Wanita'}, ${S.age} th · BB ${f1(S.bb,1)} kg · TB ${S.tb} cm\nIMT ${f1(S.imt)} (${S.st})\n${S.c=='n'?'':'Program: *'+cn+'*\n'}\n`+
+ `*🎯 Kebutuhan per hari*\nKalori: *${f1(kcal,0)} kkal*\nKarbohidrat ${f1(S.pK*100,0)}%: ${f1(m.k/4,0)} g\nProtein ${f1(S.pP*100,0)}%: ${f1(m.p/4,0)} g\nLemak ${f1(S.pL*100,0)}%: ${f1(m.l/9,0)} g\n\n*🍽️ Menu & takaran*\n`;
+ MEALS.forEach((x,i)=>{const nmx=x[0];t+=`\n*${nmx} (${f1(kcal*x[1],0)} kkal)*\n`;
+  if(i==1||i==3){t+=`• Target kalori selingan ±${f1(kcal*x[1],0)} kkal\n`;return}
+  const p=+$('pp'+i).value;t+=`• Karbohidrat: ${amt(KH[$('kh'+i).value],m.k*x[1])}\n`;
+  if(p>0)t+=`• Lauk hewani: ${amt(HW[$('hw'+i).value],m.p*x[1]*p/100)}\n`;
+  if(p<100)t+=`• Lauk nabati: ${amt(NB[$('nb'+i).value],m.p*x[1]*(100-p)/100)}\n`;
+  t+=`• Minyak/lemak: ±${f1(m.l*x[1]/45,1)} sdt\n`});
+ t+=`\n*🥦 Sayur & buah*\n• Sayur 250 g/hari (2½–3 gelas)\n• Buah 150 g/hari (3 pisang ambon / 1½ pepaya / 3 jeruk)\n\n*⚠️ Batas harian*\n• Gula <50 g (4 sdm)\n• Garam <1 sdt (2300 mg)\n• Minyak <5 sdm (67 g)\n`;
+ if(CT[S.c])t+=`\n*💡 Catatan*\n${CT[S.c]}\n`;
+ t+=`\nTetap minum air putih cukup & kontrol sesuai jadwal. Semoga sehat selalu 🙏`;
+ $('wat').value=t;$('wa').style.display='block';$('wa').scrollIntoView({behavior:'smooth'})}
+function sendWA(){window.open('https://wa.me/?text='+encodeURIComponent($('wat').value),'_blank')}
+function copyWA(){const b=$('cpb');const ok=()=>{b.textContent='✅ Tersalin';setTimeout(()=>b.textContent='📋 Salin teks',1800)};if(navigator.clipboard)navigator.clipboard.writeText($('wat').value).then(ok,()=>{$('wat').select();document.execCommand('copy');ok()});else{$('wat').select();document.execCommand('copy');ok()}}
+
+calc();
+</script></body></html>
