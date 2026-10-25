@@ -12,6 +12,7 @@
             --secondary: #43a047;
             --secondary-light: #e8f5e9;
             --accent: #ff9800;
+            --accent-light: #fff3e0;
             --light: #f9f9f9;
             --dark: #333;
             --gray: #777;
@@ -20,14 +21,14 @@
             --border-radius: 12px;
             --transition: all 0.3s ease;
         }
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
         body {
             background-color: #f8fafc;
             color: var(--dark);
@@ -36,15 +37,15 @@
             display: flex;
             flex-direction: column;
         }
-        
+
         .container {
             width: 100%;
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
         }
-        
-        /* Header Styles */
+
+        /* Header */
         header {
             background-color: white;
             box-shadow: var(--shadow);
@@ -53,48 +54,48 @@
             top: 0;
             z-index: 1000;
         }
-        
+
         .header-content {
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
         }
-        
+
         .logo-section {
             display: flex;
             align-items: center;
             gap: 20px;
         }
-        
+
         .logo {
             height: 70px;
             width: auto;
             object-fit: contain;
         }
-        
+
         .title-section {
             flex: 1;
             text-align: center;
         }
-        
+
         .title-section h1 {
             color: var(--primary);
             font-size: 1.8rem;
             margin-bottom: 5px;
         }
-        
+
         .title-section p {
             color: var(--gray);
             font-size: 1rem;
         }
-        
-        /* Main Content */
+
+        /* Main */
         .main-content {
             flex: 1;
             padding: 40px 0;
         }
-        
+
         .intro-section {
             text-align: center;
             margin-bottom: 50px;
@@ -103,28 +104,28 @@
             border-radius: var(--border-radius);
             box-shadow: var(--shadow);
         }
-        
+
         .intro-section h2 {
             color: var(--primary);
             margin-bottom: 15px;
             font-size: 2rem;
         }
-        
+
         .intro-section p {
             color: var(--gray);
             max-width: 800px;
             margin: 0 auto;
             font-size: 1.1rem;
         }
-        
-        /* Tools Section */
+
+        /* Tools */
         .tools-section {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 30px;
             margin-bottom: 50px;
         }
-        
+
         .tool-card {
             background-color: white;
             border-radius: var(--border-radius);
@@ -135,31 +136,56 @@
             display: flex;
             flex-direction: column;
             height: 100%;
+            border-top: 4px solid transparent;
         }
-        
+
         .tool-card:hover {
             transform: translateY(-10px);
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
         }
-        
+
+        .tool-card.card-primary { border-top-color: var(--primary); }
+        .tool-card.card-secondary { border-top-color: var(--secondary); }
+        .tool-card.card-accent { border-top-color: var(--accent); }
+
         .tool-icon {
             font-size: 3.5rem;
-            color: var(--primary);
             margin-bottom: 20px;
+            transition: transform 0.3s ease;
         }
-        
+
+        .card-primary .tool-icon { color: var(--primary); }
+        .card-secondary .tool-icon { color: var(--secondary); }
+        .card-accent .tool-icon { color: var(--accent); }
+
         .tool-card h3 {
             color: var(--dark);
             margin-bottom: 15px;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
         }
-        
+
         .tool-card p {
             color: var(--gray);
             margin-bottom: 25px;
             flex: 1;
+            font-size: 0.98rem;
         }
-        
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        .card-primary .badge { background: var(--primary-light); color: var(--primary); }
+        .card-secondary .badge { background: var(--secondary-light); color: var(--secondary); }
+        .card-accent .badge { background: var(--accent-light); color: #e65100; }
+
         .btn {
             display: inline-block;
             padding: 14px 28px;
@@ -173,22 +199,19 @@
             cursor: pointer;
             font-size: 1rem;
         }
-        
+
         .btn:hover {
             background-color: #3a7bc8;
             transform: translateY(-3px);
             box-shadow: 0 7px 14px rgba(58, 123, 200, 0.2);
         }
-        
-        .btn-secondary {
-            background-color: var(--secondary);
-        }
-        
-        .btn-secondary:hover {
-            background-color: #388e3c;
-            box-shadow: 0 7px 14px rgba(56, 142, 60, 0.2);
-        }
-        
+
+        .btn-secondary { background-color: var(--secondary); }
+        .btn-secondary:hover { background-color: #388e3c; box-shadow: 0 7px 14px rgba(56, 142, 60, 0.2); }
+
+        .btn-accent { background-color: var(--accent); }
+        .btn-accent:hover { background-color: #f57c00; box-shadow: 0 7px 14px rgba(245, 124, 0, 0.2); }
+
         /* Footer */
         footer {
             background-color: var(--dark);
@@ -196,18 +219,15 @@
             padding: 40px 0 20px;
             margin-top: auto;
         }
-        
+
         .footer-content {
             text-align: center;
             max-width: 800px;
             margin: 0 auto;
         }
-        
-        .footer-content p {
-            margin-bottom: 10px;
-            color: #ddd;
-        }
-        
+
+        .footer-content p { margin-bottom: 10px; color: #ddd; }
+
         .footer-content .copyright {
             margin-top: 30px;
             padding-top: 20px;
@@ -215,55 +235,28 @@
             color: #aaa;
             font-size: 0.9rem;
         }
-        
+
         .developer-info {
             background-color: rgba(255, 255, 255, 0.1);
             padding: 20px;
             border-radius: var(--border-radius);
             margin: 20px 0;
         }
-        
+
         /* Responsive */
         @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
-                gap: 20px;
-            }
-            
-            .logo-section {
-                justify-content: center;
-            }
-            
-            .title-section h1 {
-                font-size: 1.5rem;
-            }
-            
-            .tools-section {
-                grid-template-columns: 1fr;
-            }
-            
-            .intro-section {
-                padding: 20px;
-            }
-            
-            .intro-section h2 {
-                font-size: 1.7rem;
-            }
+            .header-content { flex-direction: column; gap: 20px; }
+            .logo-section { justify-content: center; }
+            .title-section h1 { font-size: 1.5rem; }
+            .tools-section { grid-template-columns: 1fr; }
+            .intro-section { padding: 20px; }
+            .intro-section h2 { font-size: 1.7rem; }
         }
-        
+
         @media (max-width: 480px) {
-            .tool-card {
-                padding: 20px;
-            }
-            
-            .btn {
-                padding: 12px 24px;
-                width: 100%;
-            }
-            
-            .logo {
-                height: 60px;
-            }
+            .tool-card { padding: 20px; }
+            .btn { padding: 12px 24px; width: 100%; }
+            .logo { height: 60px; }
         }
     </style>
 </head>
@@ -281,7 +274,7 @@
             </div>
         </div>
     </header>
-    
+
     <!-- Main Content -->
     <main class="main-content">
         <div class="container">
@@ -290,32 +283,45 @@
                 <h2>Platform Pemeriksaan Kesehatan Anak</h2>
                 <p>Alat ini dirancang untuk membantu tenaga kesehatan dan orang tua dalam melakukan skrining pertumbuhan dan perkembangan anak dengan standar WHO dan KTSP/SIDTK. Gunakan alat di bawah ini untuk memantau kesehatan anak secara berkala.</p>
             </section>
-            
-            <!-- Tools Section -->
+
+            <!-- Tools Section: 3 Items -->
             <section class="tools-section">
-                <!-- Tool 1 -->
-                <div class="tool-card">
+                <!-- Tool 1: Pertumbuhan WHO -->
+                <div class="tool-card card-primary">
                     <div class="tool-icon">
                         <i class="fas fa-child"></i>
                     </div>
-                    <h3>Alat Skrining Pertumbuhan Anak (WHO)</h3>
+                    <span class="badge">WHO</span>
+                    <h3>Alat Skrining Pertumbuhan Anak</h3>
                     <p>Alat ini menggunakan standar Organisasi Kesehatan Dunia (WHO) untuk memantau pertumbuhan anak berdasarkan parameter tinggi badan, berat badan, dan lingkar kepala sesuai usia dan jenis kelamin.</p>
                     <a href="https://hendrikkho-akupuntur.github.io/SahliRGB/skreening_pertumbuhan_anak.html" target="_blank" class="btn">Buka Alat Skrining</a>
                 </div>
-                
-                <!-- Tool 2 -->
-                <div class="tool-card">
+
+                <!-- Tool 2: Perkembangan KTSP/SIDTK -->
+                <div class="tool-card card-secondary">
                     <div class="tool-icon">
                         <i class="fas fa-brain"></i>
                     </div>
-                    <h3>Alat Skrining Perkembangan Anak (KTSP/SIDTK)</h3>
+                    <span class="badge">KTSP / SIDTK</span>
+                    <h3>Alat Skrining Perkembangan Anak</h3>
                     <p>Alat skrining perkembangan anak berdasarkan Kuisioner Pra Skrining Perkembangan (KPSP) dan Standar Internasional Deteksi Tumbuh Kembang untuk menilai pencapaian perkembangan anak sesuai usianya.</p>
                     <a href="https://hendrikkho-akupuntur.github.io/SahliRGB/SIDTK.html" target="_blank" class="btn btn-secondary">Buka Alat Skrining</a>
+                </div>
+
+                <!-- Tool 3: Gabungan Tumbuh Kembang (BARU) -->
+                <div class="tool-card card-accent">
+                    <div class="tool-icon">
+                        <i class="fas fa-baby"></i>
+                    </div>
+                    <span class="badge">Gabungan · Hemat Waktu</span>
+                    <h3>Tumbuh Kembang Anak (Gabungan)</h3>
+                    <p>Gabungan pemeriksaan pertumbuhan dan perkembangan dalam satu alur. Cocok untuk pemeriksaan cepat ketika dokter tidak perlu memeriksa kedua aspek secara terpisah — lebih efisien dan menghemat waktu.</p>
+                    <a href="https://hendrikkho-akupuntur.github.io/SahliRGB/tumbuh-kembang.html" target="_blank" class="btn btn-accent">Buka Alat Gabungan</a>
                 </div>
             </section>
         </div>
     </main>
-    
+
     <!-- Footer -->
     <footer>
         <div class="container">
@@ -329,30 +335,22 @@
             </div>
         </div>
     </footer>
-    
+
     <script>
-        // Menambahkan efek interaktif sederhana
         document.addEventListener('DOMContentLoaded', function() {
             const toolCards = document.querySelectorAll('.tool-card');
-            
+
             toolCards.forEach(card => {
                 card.addEventListener('mouseenter', function() {
-                    const icon = this.querySelector('.tool-icon i');
-                    icon.style.transform = 'scale(1.1)';
-                    icon.style.transition = 'transform 0.3s ease';
+                    const icon = this.querySelector('.tool-icon');
+                    icon.style.transform = 'scale(1.15) rotate(-5deg)';
                 });
-                
+
                 card.addEventListener('mouseleave', function() {
-                    const icon = this.querySelector('.tool-icon i');
-                    icon.style.transform = 'scale(1)';
+                    const icon = this.querySelector('.tool-icon');
+                    icon.style.transform = 'scale(1) rotate(0deg)';
                 });
             });
-            
-            // Menambahkan tahun saat ini di copyright jika diperlukan
-            const yearSpan = document.getElementById('current-year');
-            if (yearSpan) {
-                yearSpan.textContent = new Date().getFullYear();
-            }
         });
     </script>
 </body>
