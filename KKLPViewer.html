@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dicom viewer KKLP Teams</title>
+<style>
+:root{color-scheme:dark;--bg:#111418;--pn:#1b2027;--tx:#e6e9ee;--mu:#8b95a3;--ac:#4aa3ff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:13px system-ui,sans-serif}
+.ttl{padding:8px 14px;font-size:18px;font-weight:700;background:#0c0f13;border-bottom:1px solid #262d37}
+.app{display:flex}
+.side{width:170px;flex:none;background:var(--pn);border-right:1px solid #262d37;overflow-y:auto;height:calc(100vh - 38px);position:sticky;top:0}
+.side .hd{padding:8px 10px;color:var(--mu);font-size:12px;text-transform:uppercase}
+.it{padding:6px 8px;cursor:pointer;border-left:3px solid transparent;font-size:11px;color:var(--mu)}
+.it canvas{width:100%;display:block;background:#000;margin-bottom:3px;border-radius:3px}
+.it.sel{background:#263040;border-color:var(--ac);color:var(--tx)}
+main{flex:1;min-width:0}
+.bar{padding:6px 10px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:var(--pn);border-bottom:1px solid #262d37}
+button,select,input[type=number]{background:#2a323d;color:var(--tx);border:1px solid #3a4452;border-radius:6px;padding:5px 9px;font:inherit}
+button.p{background:var(--ac);color:#04121f;border:0;font-weight:600}
+input[type=number]{width:68px}
+#pbar,#sbw{display:none}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;padding:5px}
+.grid.one{grid-template-columns:1fr}
+.v{background:#000;border-radius:5px;position:relative;overflow:hidden;height:calc(100vh - 215px);min-height:260px}
+.grid.m .v{height:calc((100vh - 215px)/2)}
+.v canvas{width:100%;height:100%;display:block;touch-action:none;cursor:crosshair}
+.v>span{position:absolute;left:6px;top:4px;font-size:12px;color:var(--ac);pointer-events:none}
+#info{color:var(--mu);font-size:12px;padding:4px 10px;min-height:22px}
+#bar3{position:absolute;left:0;right:0;bottom:0;background:#1b2027dd;border:0}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:100;align-items:center;justify-content:center}
+.modal.show{display:flex}
+.modal .box{background:var(--pn);border:1px solid #3a4452;border-radius:10px;padding:16px 18px;width:min(640px,94vw);max-height:90vh;overflow:auto;box-shadow:0 12px 40px #000a}
+.modal h3{margin:0 0 12px;font-size:16px}
+.modal .row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;align-items:center}
+.modal label{min-width:90px;color:var(--mu);font-size:12px}
+.modal input[type=text],.modal input[type=password],.modal input[type=date]{flex:1;min-width:140px;background:#2a323d;color:var(--tx);border:1px solid #3a4452;border-radius:6px;padding:5px 9px}
+.modal table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
+.modal th,.modal td{padding:5px 6px;border-bottom:1px solid #2a323d;text-align:left}
+.modal tr:hover{background:#263040;cursor:pointer}
+.modal .acts{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
+#measList{max-height:120px;overflow:auto;font-size:11px;color:var(--mu);padding:4px 0}
+@media(max-width:760px){.app{flex-direction:column}.side{width:auto;height:auto;position:static;display:flex;overflow-x:auto}.side .hd{display:none}.it{width:110px;flex:none}.grid{grid-template-columns:1fr}}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head><body>
+<div class="ttl">Dicom viewer KKLP teams</div>
+<div class="app">
+<aside class="side"><div class="hd">Sequence</div><div id="list" style="display:contents"></div></aside>
+<main>
+<div class="bar">
+<input type="file" id="fd" webkitdirectory hidden><input type="file" id="fcd" webkitdirectory hidden><input type="file" id="ff" multiple hidden>
+<button class="p" onclick="fd.click()">Buka folder</button><button onclick="openCD()">Buka CD</button><button onclick="ff.click()">Buka file</button><button onclick="openSrv()">Buka dari server</button><button onclick="openPacs()">PACS / DICOMweb</button><select id="srv" style="display:none" onchange="loadSrv(this.value)"></select>
+<select id="pre" title="Preset window"></select>
+<span title="Window Width = lebar rentang HU (kontras)">W</span><input type="number" id="w" value="400">
+<span title="Window Level = HU pusat (kecerahan)">L</span><input type="number" id="l" value="40">
+<label><input type="checkbox" id="inv"> Negatif</label><button onclick="resetView()">Reset zoom</button>
+</div>
+<div class="bar"><b>Tampilan</b>
+<button class="p" id="b1" onclick="setMode('1')">Potongan</button><button id="b2" onclick="setMode('2')">2 Jendela</button><button id="bmpr" onclick="setMode('mpr')">MPR</button><label style="font-size:12px;white-space:nowrap"><input type="checkbox" id="anon" onchange="draw()"> Samarkan data pasien</label><select id="mo" onchange="draw()" title="Orientasi MPR"><option value="an">MPR anatomis (LPS)</option><option value="aq">MPR akuisisi</option></select><select id="q3" title="Kualitas 3D" onchange="render3D()"><option value="1">3D tinggi</option><option value="2" selected>3D sedang</option><option value="3">3D rendah (PC lemah)</option></select><select id="ip" onchange="draw()" title="Interpolasi MPR"><option value="t">Trilinear</option><option value="n">Terdekat</option></select><button id="b3d" onclick="setMode('3d')">3D</button>
+<button id="bfu" onclick="toggleFuse()">Fusi</button>
+<span id="sbw">Jendela 2: <select id="sB"></select></span>
+<select id="tool" title="Alat tetikus kiri"><option value="probe">Nilai HU / crosshair</option><option value="len">Panjang</option><option value="ang">Sudut</option><option value="ell">ROI elips</option><option value="poly">ROI poligon (volume)</option></select>
+<button onclick="clearZ()">Hapus irisan</button><button onclick="clearAll()">Hapus semua</button>
+<button onclick="saveMeas()" title="Simpan pengukuran ke browser">Simpan ukur</button>
+<button onclick="loadMeas()" title="Muat pengukuran tersimpan">Muat ukur</button>
+<button onclick="exportMeasJson()">Export JSON</button>
+<button onclick="exportPdf()" title="Buat laporan PDF">Laporan PDF</button>
+<button id="bpl" onclick="togglePlay()">Putar</button>
+<span id="sb" style="display:flex;gap:6px;align-items:center;flex:1;min-width:160px"><input type="range" id="sl" min="0" max="0" value="0" style="flex:1"><span id="zt">0/0</span></span></div>
+<div class="bar" id="pbar"><b>Fusi PET</b><select id="fs"></select>
+Warna <select id="cm"><option value="hot">Hot</option><option value="rb">Rainbow</option><option value="ig">Abu terbalik</option></select>
+Maks <input type="range" id="pm" min="2" max="100" value="40">
+Ambang <input type="range" id="th" min="0" max="90" value="15">
+Opasitas <input type="range" id="op" min="0" max="100" value="60"></div>
+<div id="info">Klik "Buka folder", "Buka CD", atau "PACS / DICOMweb". Ctrl+scroll = zoom, klik kanan + seret = W/L, Spasi = putar. Pengukuran otomatis tersimpan. Data diproses lokal di browser.</div>
+<div class="grid one" id="g">
+<div class="v" id="pa"><span id="la">Potongan</span><canvas id="ca"></canvas></div>
+<div class="v" id="pb" style="display:none"><span>Jendela 2</span><canvas id="cb"></canvas></div>
+<div class="v" id="pc" style="display:none"><span>Coronal</span><canvas id="cc"></canvas></div>
+<div class="v" id="ps" style="display:none"><span>Sagittal</span><canvas id="cs"></canvas></div>
+<div class="v" id="p3" style="display:none"><span>3D — seret untuk memutar, scroll untuk zoom</span><canvas id="c3"></canvas>
+<div class="bar" id="bar3"><select id="m3">
+<option value="skin">Kulit</option><option value="soft">Jaringan lunak</option><option value="bone">Tulang</option><option value="vasc">Vaskular (kontras)</option>
+<option value="bv">Tulang + vaskular</option><option value="lung">Paru</option><option value="mip">MIP</option><option value="pet">PET MIP</option></select>
+Putar <input type="range" id="ang" min="0" max="359" value="0" style="width:90px">
+Ambang HU <input type="range" id="hm" min="-1024" max="1500" value="-300" style="width:110px"><span id="hmv">-300</span>
+Kupas depan <input type="range" id="dp" min="0" max="90" value="0" style="width:90px"></div></div>
+</div></main></div>
+
+<!-- Modal PACS / DICOMweb -->
+<div class="modal" id="pacsModal">
+  <div class="box">
+    <h3>Integrasi PACS (DICOMweb)</h3>
+    <div class="row"><label>Base URL</label><input type="text" id="pacsUrl" placeholder="https://pacs.contoh.id/dicom-web" style="flex:2"></div>
+    <div class="row"><label>Token (opsional)</label><input type="password" id="pacsTok" placeholder="Bearer token jika diperlukan"></div>
+    <div class="row"><label>Patient ID</label><input type="text" id="qPid"><label>Nama</label><input type="text" id="qPn" placeholder="Doe*"></div>
+    <div class="row"><label>Accession</label><input type="text" id="qAcc"><label>Modalitas</label><input type="text" id="qMod" placeholder="CT" style="max-width:80px"><label>Tgl studi</label><input type="date" id="qSd"></div>
+    <div class="acts">
+      <button onclick="pacsSearch()">Cari studi</button>
+      <button onclick="closePacs()">Tutup</button>
+    </div>
+    <div id="pacsStatus" style="color:var(--mu);font-size:12px;margin-top:6px"></div>
+    <table id="pacsTbl"><thead><tr><th>Pasien</th><th>ID</th><th>Tgl</th><th>Deskripsi</th><th>Mod</th><th></th></tr></thead><tbody></tbody></table>
+  </div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const PRE={"Soft tissue":[400,40],"Lung":[1500,-600],"Bone":[1800,400],"Mediastinum":[350,50],"Brain":[80,40],"Liver":[150,60],"Abdomen":[400,50]};
+for(const k in PRE){const o=document.createElement('option');o.textContent=k;$('pre').appendChild(o)}
+$('pre').onchange=()=>{const p=PRE[$('pre').value];$('w').value=p[0];$('l').value=p[1];wl()};
+const wl=()=>{draw();if(mode==='3d'&&$('m3').value=='mip')req3D()};
+['w','l','inv'].forEach(i=>$(i).oninput=wl);
+['cm','pm','th','op'].forEach(i=>$(i).oninput=()=>{draw();if(mode==='3d')req3D()});
+const PD={skin:-300,soft:-100,bone:250,vasc:120,bv:120,lung:-950,mip:-1024,pet:-1024};
+$('m3').onchange=()=>{$('hm').value=PD[$('m3').value];req3D()};
+['ang','hm','dp'].forEach(i=>$(i).oninput=req3D);
+$('fs').onchange=applyFusion;$('sB').onchange=()=>{setB(+$('sB').value);draw()};
+$('sl').oninput=()=>goZ(+$('sl').value);
+let SER=[],ct=null,pet=null,cur={x:0,y:0,z:0},curSer=-1,mi,mj,mk,mode='1',fuseOn=false,B=null,MS={},cm=null,play=null,L3=null;
+const OFF={},T={},VW={};
+const oc=id=>OFF[id]||(OFF[id]=document.createElement('canvas'));
+const cl=(v,m)=>Math.max(0,Math.min(m-1,v));
+
+/* ---- Pembaca DICOM: Implicit/Explicit LE, Big Endian, Deflated, sequence bersarang, RLE, JPEG baseline ---- */
+const TS0='1.2.840.10008.1.2',TSBE='1.2.840.10008.1.2.2',TSDEF='1.2.840.10008.1.2.1.99',TSRLE='1.2.840.10008.1.2.5',TSJPG='1.2.840.10008.1.2.4.50';
+const STR={0x00020010:'ts',0x00080060:'mod',0x0008103e:'desc',0x0020000e:'uid',0x00200052:'frame',0x00200013:'inst',0x00200011:'num',0x00200032:'ipp',0x00200037:'iop',0x00201041:'loc',0x00280030:'ps',0x00100010:'pn',0x00100020:'pid',0x00100030:'pbd',0x00100040:'psx',0x00080020:'sd',0x00081030:'std',0x00181164:'ips',0x00281052:'ic',0x00281053:'sl',0x00280004:'ph',0x00280008:'nf',0x00180050:'thk',0x00180088:'sbs'};
+const USN={0x00280010:'h',0x00280011:'w',0x00280100:'ba',0x00280101:'bs',0x00280103:'pr',0x00280002:'spp'};
+const LONGVR=new Set(['OB','OW','OF','SQ','UT','UN','OD','OL','UC','UR','OV','SV','UV']);
+const dt=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2],cr=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]],sb=(a,b)=>a.map((v,i)=>v-b[i]),dist=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1],a[2]-b[2]),mv=(M,v)=>M.map(r=>dt(r,v)),UN=v=>{const l=Math.hypot(v[0],v[1],v[2])||1;return v.map(q=>q/l)};
+function parseDicom(buf,nodef){
+  const dv=new DataView(buf),n=buf.byteLength,o={frags:[]};let p=0,le=true,ex=true,meta=true;
+  if(n>132&&dv.getUint32(128)===0x4449434d)p=132;
+  const u16=q=>dv.getUint16(q,le),u32=q=>dv.getUint32(q,le);
+  const txt=(s,l)=>{let t='';for(let i=0;i<l;i++){const c=dv.getUint8(s+i);if(c)t+=String.fromCharCode(c)}return t.trim()};
+  const hdr=q=>{const g=u16(q),e=u16(q+2);if(g===0xFFFE)return{g,e,len:u32(q+4),hs:8};
+    if(g===2||ex){const vr=String.fromCharCode(dv.getUint8(q+4),dv.getUint8(q+5));return LONGVR.has(vr)?{g,e,len:u32(q+8),hs:12}:{g,e,len:u16(q+6),hs:8}}
+    return{g,e,len:u32(q+4),hs:8}};
+  let skipSeq;
+  const skipItem=q=>{while(q+8<=n){const h=hdr(q);if(h.g===0xFFFE&&h.e===0xE00D)return q+8;q+=h.hs;if(h.len===0xFFFFFFFF)q=skipSeq(q);else q+=h.len}return n};
+  skipSeq=q=>{while(q+8<=n){const g=u16(q),e=u16(q+2),l=u32(q+4);q+=8;if(g===0xFFFE&&e===0xE0DD)return q;if(l===0xFFFFFFFF)q=skipItem(q);else q+=l}return n};
+  while(p+8<=n){
+    if(meta&&u16(p)!==2){meta=false;o.ds=p;const t=o.ts;
+      ex=t?t!==TS0:/[A-Z]{2}/.test(String.fromCharCode(dv.getUint8(p+4),dv.getUint8(p+5)));le=t!==TSBE;
+      if(t===TSDEF&&!nodef){o.defl=true;return o}}
+    const h=hdr(p),tag=((h.g<<16)|h.e)>>>0;p+=h.hs;
+    if(h.g===0xFFFE)continue;
+    if(tag===0x7fe00010){
+      if(h.len===0xFFFFFFFF){while(p+8<=n){const e=u16(p+2),l=u32(p+4);p+=8;if(e===0xE0DD)break;if(e===0xE000){o.frags.push([p,l]);p+=l}}o.frags.shift()}
+      else{o.px=p;o.pxl=h.len}
+      break}
+    if(h.len===0xFFFFFFFF){p=skipSeq(p);continue}
+    if(p+h.len>n)break;
+    if(STR[tag])o[STR[tag]]=txt(p,h.len);else if(USN[tag])o[USN[tag]]=u16(p);
+    p+=h.len;
+  }
+  return o;
+}
+const cat=(buf,fr)=>{const u=new Uint8Array(fr.reduce((a,f)=>a+f[1],0));let q=0;for(const[s,l]of fr){u.set(new Uint8Array(buf,s,Math.min(l,buf.byteLength-s)),q);q+=l}return u};
+function rleDec(u8,w,h,ba){
+  const dv=new DataView(u8.buffer,u8.byteOffset,u8.byteLength),ns=dv.getUint32(0,true),A=w*h,out=new Uint16Array(A);
+  for(let s=0;s<ns;s++){const st=dv.getUint32(4+4*s,true),en=s+1<ns?dv.getUint32(8+4*s,true):u8.length,sh=ba===16&&s===0?8:0;let q=st,k=0;
+    while(q<en&&k<A){const c=dv.getInt8(q++);if(c>=0){for(let i=0;i<=c&&k<A;i++)out[k++]|=u8[q++]<<sh}else if(c!==-128){const v=u8[q++];for(let i=0;i<1-c&&k<A;i++)out[k++]|=v<<sh}}}
+  return out}
+async function jpgDec(u8,w,h){
+  const bm=await createImageBitmap(new Blob([u8],{type:'image/jpeg'}));if(bm.width!==w||bm.height!==h)throw 0;
+  const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(bm,0,0);
+  const d=x.getImageData(0,0,w,h).data,out=new Uint16Array(w*h);for(let i=0;i<out.length;i++)out[i]=d[i*4];return out}
+function jlsDec(u,w,h){
+  let p=2,P=16,ri=0,ss=1,pt=0,td=0,sx=0,sy=0;const T={};
+  while(p+4<u.length){
+    if(u[p]!==0xFF){p++;continue}const m=u[p+1];if(m===0xFF){p++;continue}
+    const L=(u[p+2]<<8)|u[p+3],q=p+4;
+    if(m===0xC4){let k=q;while(k<p+2+L){const th=u[k]&15,cnt=u.subarray(k+1,k+17);let n=0;for(const c of cnt)n+=c;
+        const mn=[0],vp=[0];let code=0,v=0;for(let l=1;l<=16;l++){mn[l]=code;vp[l]=v;code=(code+cnt[l-1])<<1;v+=cnt[l-1]}
+        T[th]={cnt,mn,vp,vals:u.subarray(k+17,k+17+n)};k+=17+n}}
+    else if(m===0xC3){P=u[q];sy=(u[q+1]<<8)|u[q+2];sx=(u[q+3]<<8)|u[q+4];if(u[q+5]!==1)throw 0}
+    else if(m===0xDD)ri=(u[q]<<8)|u[q+1];
+    else if(m===0xDA){td=u[q+2]>>4;ss=u[q+3];pt=u[q+5]&15;p+=2+L;break}
+    p+=2+L}
+  const ht=T[td],A=w*h;if(!ht||sx!==w||sy!==h||ss<1||ss>7)throw 0;
+  const out=new Uint16Array(A),def=1<<(P-pt-1);let bp=p,bb=0,bc=0;
+  const bit=()=>{if(!bc){let b=u[bp];if(b===0xFF){if(u[bp+1]===0)bp+=2;else b=0}else bp++;bb=b;bc=8}bc--;return(bb>>bc)&1};
+  for(let i=0;i<A;i++){
+    const i0=ri?i-i%ri:0,rel=i-i0;
+    if(ri&&rel===0&&i){bc=0;while(bp<u.length-1&&!(u[bp]===0xFF&&u[bp+1]>=0xD0&&u[bp+1]<=0xD7))bp++;bp+=2}
+    let code=0,sym=-1;
+    for(let l=1;l<=16;l++){code=(code<<1)|bit();const c=ht.cnt[l-1];if(c&&code>=ht.mn[l]&&code-ht.mn[l]<c){sym=ht.vals[ht.vp[l]+code-ht.mn[l]];break}}
+    if(sym<0)throw 0;
+    let d=0;if(sym===16)d=32768;else if(sym){for(let k=0;k<sym;k++)d=(d<<1)|bit();if(d<(1<<(sym-1)))d-=(1<<sym)-1}
+    let px;const x=i%w;
+    if(rel===0)px=def;else if(rel<w)px=out[i-1];else if(x===0)px=out[i-w];
+    else{const a=out[i-1],b=out[i-w],c=out[i-w-1];
+      px=ss===1?a:ss===2?b:ss===3?c:ss===4?a+b-c:ss===5?a+((b-c)>>1):ss===6?b+((a-c)>>1):(a+b)>>1}
+    out[i]=(px+d)&65535}
+  if(pt)for(let i=0;i<A;i++)out[i]<<=pt;
+  return out}
+async function pixels(o,buf){
+  const{w,h,ba,pr,ts}=o,A=w*h,bs=o.bs||ba;let r;
+  if(o.frags.length){const u=cat(buf,o.frags);
+    if(ts===TSRLE)r=rleDec(u,w,h,ba);else if(ts===TSJPG&&ba===8)r=await jpgDec(u,w,h);else if(ts==='1.2.840.10008.1.2.4.57'||ts==='1.2.840.10008.1.2.4.70')r=jlsDec(u,w,h);else throw 0}
+  else{if(o.px+A*ba/8>buf.byteLength)throw 0;
+    if(ba===8)r=Uint16Array.from(new Uint8Array(buf,o.px,A));
+    else if(ts!==TSBE&&!(o.px&1))r=new Uint16Array(buf,o.px,A);
+    else{const dv=new DataView(buf,o.px);r=new Uint16Array(A);for(let i=0;i<A;i++)r[i]=dv.getUint16(i*2,ts!==TSBE)}}
+  const m=bs<16?(1<<bs)-1:0xffff,mono1=o.ph==='MONOCHROME1',raw=pr===1?new Int16Array(A):new Uint16Array(A);
+  for(let i=0;i<A;i++){let v=r[i]&m;
+    if(pr===1){if(bs<16&&(v&(1<<(bs-1))))v-=1<<bs;else if(bs>=16&&v>32767)v-=65536;if(mono1)v=-v-1}else if(mono1)v=m-v;
+    raw[i]=v}
+  return raw}
+function uniSl(g){const d=g.length;if(d<3||!g[0].hasIpp)return g;const df=[];for(let k=1;k<d;k++)df.push(g[k].proj-g[k-1].proj);
+  const med=[...df].sort((a,b)=>a-b)[d>>1];if(!(med>0)||Math.max(...df.map(x=>Math.abs(x-med)/med))<=.05)return g;
+  const out=[],n=Math.round((g[d-1].proj-g[0].proj)/med)+1;let k=0;
+  for(let t=0;t<n;t++){const z=g[0].proj+t*med;while(k<d-2&&g[k+1].proj<z)k++;
+    const a=g[k],b=g[k+1],f=Math.min(1,Math.max(0,(z-a.proj)/(b.proj-a.proj))),A=a.w*a.h,r=new Float32Array(A);
+    for(let i=0;i<A;i++)r[i]=(a.raw[i]*a.sl+a.ic)*(1-f)+(b.raw[i]*b.sl+b.ic)*f;
+    out.push({...a,raw:r,sl:1,ic:0,proj:z,ipp:a.ipp.map((v,i)=>v+(b.ipp[i]-v)*f),interp:1})}
+  return out}
+async function openFiles(files){
+  files=[...files];const groups={},bad={};let k=0;
+  for(const f of files){
+    if(++k%15==0){$('info').textContent='Membaca '+k+'/'+files.length+'...';await new Promise(r=>setTimeout(r))}
+    try{
+      let buf=await f.arrayBuffer(),o=parseDicom(buf);
+      if(o.defl){const ds=await new Response(new Blob([buf.slice(o.ds)]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer(),b2=new Uint8Array(o.ds+ds.byteLength);
+        b2.set(new Uint8Array(buf,0,o.ds));b2.set(new Uint8Array(ds),o.ds);buf=b2.buffer;o=parseDicom(buf,1)}
+      const w=o.w,h=o.h;if((o.px==null&&!o.frags.length)||!w||!h)continue;
+      if((o.spp||1)!==1||(o.ba!==8&&o.ba!==16)||+o.nf>1){bad['RGB/multiframe/bit-depth lain']=(bad['RGB/multiframe/bit-depth lain']||0)+1;continue}
+      let raw;try{raw=await pixels(o,buf)}catch(e){const t=o.ts||'?';bad[t]=(bad[t]||0)+1;continue}
+      const num=s=>(s||'').split('\\').map(Number);
+      let ipp=num(o.ipp),iop=num(o.iop),ps=num(o.ps||o.ips);
+      const hasIpp=ipp.length===3&&ipp.every(isFinite),hasIop=iop.length===6&&iop.every(isFinite),uncal=!(ps.length===2&&ps.every(v=>v>0));
+      if(!hasIop)iop=[1,0,0,0,1,0];if(uncal)ps=[1,1];
+      const r=UN(iop.slice(0,3)),c=UN(iop.slice(3)),nv=cr(r,c),inst=parseInt(o.inst||0),loc=parseFloat(o.loc),sl=parseFloat(o.sl),ic=parseFloat(o.ic);
+      const key=(o.uid||'x')+'|'+iop.map(v=>v.toFixed(3)).join(',')+'|'+w+'x'+h;
+      (groups[key]=groups[key]||[]).push({w,h,raw,sl:isNaN(sl)?1:sl,ic:isNaN(ic)?0:ic,ipp:hasIpp?ipp:[0,0,0],hasIpp,r,c,psr:ps[0],psc:ps[1],uncal,
+        thk:parseFloat(o.sbs)||parseFloat(o.thk)||1,proj:hasIpp?dt(ipp,nv):(isNaN(loc)?inst:loc),inst,
+        pat:[o.pn,o.pid,o.pbd,o.psx,o.sd,o.std],mod:o.mod||'?',desc:o.desc||'',num:parseInt(o.num||0),frame:o.frame||''});
+    }catch(e){}
+  }
+  SER=Object.values(groups).map(g=>{g.sort((a,b)=>a.proj-b.proj||a.inst-b.inst);g=uniSl(g.filter((q,i)=>!i||Math.abs(q.proj-g[i-1].proj)>1e-3));
+    const a=g[0];return{pat:a.pat,mod:a.mod,desc:a.desc,num:a.num,frame:a.frame,sl:g,w:a.w,h:a.h,n:g.length}}).sort((a,b)=>a.num-b.num);
+  const bm=Object.entries(bad).map(([t,c])=>t+': '+c+' file').join('; ');
+  if(!SER.length){$('info').textContent='Tidak ada DICOM terbaca.'+(bm?' Tidak didukung -> '+bm+' (didukung: tanpa kompresi, RLE, Deflate, JPEG baseline 8-bit, JPEG Lossless).':'');return}
+  sidebar();
+  let b=0;SER.forEach((s,i)=>{const sc=(s.mod==='CT'?1e6:0)+s.n,bs=(SER[b].mod==='CT'?1e6:0)+SER[b].n;if(sc>bs)b=i});
+  selectSeries(b);
+  if(bm)$('info').textContent+='  (dilewati -> '+bm+')';
+}
+$('fd').onchange=e=>openFiles(e.target.files);$('fcd').onchange=e=>openFiles(e.target.files);$('ff').onchange=e=>openFiles(e.target.files);
+async function openSrv(){
+  try{const L=await(await fetch('/api/studies')).json();if(!L.length){$('info').textContent='Server tidak punya folder DICOM.';return}
+    const s=$('srv');s.innerHTML='<option value="">-- pilih studi di server --</option>'+L.map(x=>'<option value="'+encodeURIComponent(x.dir)+'">'+(x.dir||'(root)')+' ('+x.n+' file)</option>').join('');s.style.display='';$('info').textContent='Pilih studi dari daftar.'}
+  catch(e){$('info').textContent='Tidak terhubung ke server. Jalankan server.py lalu buka viewer lewat http://alamat-server:8080 (bukan file langsung).'}}
+async function loadSrv(d){
+  if(d==='')return;const F=await(await fetch('/api/files?dir='+d)).json(),out=[];let i=0;
+  async function w(){while(i<F.length){const k=i++;out[k]=await(await fetch('/dicom/'+F[k].split('/').map(encodeURIComponent).join('/'))).blob();if(k%10===0)$('info').textContent='Mengunduh dari server '+Math.round(i*100/F.length)+'%'}}
+  await Promise.all(Array.from({length:6},w));openFiles(out)}
+function openCD(){$('info').textContent='Pada jendela yang muncul pilih drive CD/DVD (mis. D:) atau folder DICOM di dalamnya.';$('fcd').click()}
+
+function buildVol(s,isPet){
+  const w=s.w,h=s.h,d=s.sl.length,A=w*h,data=isPet?new Float32Array(A*d):new Int16Array(A*d);
+  s.sl.forEach((q,k)=>{const b=k*A;for(let i=0;i<A;i++){const v=q.raw[i]*q.sl+q.ic;data[b+i]=isPet?v:v>32767?32767:v<-32768?-32768:v}});
+  const r={data};if(isPet){let m=0;for(let i=0;i<data.length;i++)if(data[i]>m)m=data[i];r.max=m||1}
+  return r;
+}
+function meta(s){
+  const g=s.sl,a=g[0],d=g.length,r=a.r,c=a.c,nv=cr(r,c);
+  let S=d>1&&a.hasIpp?g[d-1].ipp.map((v,i)=>(v-a.ipp[i])/(d-1)):nv.map(v=>v*a.thk);
+  const dz=Math.abs(dt(S,nv))||1;let dev=0;if(a.hasIpp)for(let k=1;k<d;k++)dev=Math.max(dev,Math.abs(g[k].proj-g[k-1].proj-dz)/dz);
+  const X=r.map(v=>v*a.psc),Y=c.map(v=>v*a.psr),yz=cr(Y,S),zx=cr(S,X),xy=cr(X,Y),det=dt(X,yz)||1;
+  const ang=v=>Math.acos(Math.min(1,Math.max(Math.abs(v[0]),Math.abs(v[1]),Math.abs(v[2]))))*180/Math.PI;
+  return{w:s.w,h:s.h,d,r,c,nv,S,O:a.ipp,X,Y,Mi:[yz,zx,xy].map(v=>v.map(q=>q/det)),psx:a.psc,psy:a.psr,dz,dev,
+    tilt:Math.acos(Math.min(1,dz/(Math.hypot(S[0],S[1],S[2])||1)))*180/Math.PI,obl:Math.max(ang(r),ang(c),ang(nv)),
+    uncal:a.uncal,geo:a.hasIpp,data:null,s,mod:s.mod,pt:s.mod==='PT'||s.mod==='NM'}}
+const V2P=(m,i,j,k)=>[0,1,2].map(q=>m.O[q]+m.X[q]*i+m.Y[q]*j+m.S[q]*k),P2V=(m,p)=>mv(m.Mi,sb(p,m.O));
+function geo(){const m=ct;let t=' | '+m.w+'×'+m.h+'×'+m.d+' · '+m.psx.toFixed(2)+'×'+m.psy.toFixed(2)+'×'+m.dz.toFixed(2)+' mm';
+  if(m.obl>.5)t+=' · miring '+m.obl.toFixed(1)+'°';if(m.tilt>.5)t+=' · gantry tilt '+m.tilt.toFixed(1)+'°';
+  if(m.uncal)t+=' · ⚠ Pixel Spacing tidak ada (ukuran * tidak terkalibrasi)';if(!m.geo)t+=' · ⚠ Image Position tidak ada, urutan memakai nomor instance';
+  if(m.s.sl[0].interp)t+=' · irisan diresampel ke jarak seragam';if(m.dev>.05)t+=' · ⚠ jarak irisan tidak seragam ('+(m.dev*100|0)+'%)';return t}
+function sliceGet(m,z){if(m.data){const o=z*m.w*m.h;return k=>m.data[o+k]}const q=m.s.sl[z];return k=>q.raw[k]*q.sl+q.ic}
+function sidebar(){
+  const L=$('list');L.innerHTML='';
+  SER.forEach((s,i)=>{
+    const d=document.createElement('div');d.className='it';
+    const c=document.createElement('canvas');c.width=c.height=64;
+    const q=s.sl[s.sl.length>>1],x=c.getContext('2d'),im=x.createImageData(64,64),val=new Float32Array(4096);let mn=1e9,mx=-1e9;
+    for(let y=0;y<64;y++)for(let xx=0;xx<64;xx++){const v=q.raw[(y*s.h/64|0)*s.w+(xx*s.w/64|0)]*q.sl+q.ic;val[y*64+xx]=v;if(v<mn)mn=v;if(v>mx)mx=v}
+    if(s.mod==='CT'){mn=-160;mx=240}
+    for(let k=0;k<4096;k++){const t=Math.max(0,Math.min(255,(val[k]-mn)/((mx-mn)||1)*255));im.data[k*4]=im.data[k*4+1]=im.data[k*4+2]=t;im.data[k*4+3]=255}
+    x.putImageData(im,0,0);
+    const t=document.createElement('div');t.textContent=s.mod+' #'+s.num+' · '+(s.desc||'-')+' · '+s.n+' citra';
+    d.append(c,t);d.onclick=()=>selectSeries(i);L.appendChild(d);
+  });
+}
+function selectSeries(i){
+  curSer=i;const s=SER[i];ct=meta(s);pet=null;MS={};cm=null;
+  if(s.mod==='CT'){const p=PRE[$('pre').value];$('w').value=p[0];$('l').value=p[1]}
+  else{const g=sliceGet(ct,ct.d>>1);let mn=1e9,mx=-1e9;for(let k=0;k<ct.w*ct.h;k+=7){const v=g(k);if(v<mn)mn=v;if(v>mx)mx=v}
+    $('w').value=Math.round(mx-mn)||1;$('l').value=Math.round((mx+mn)/2)}
+  document.querySelectorAll('.it').forEach((e,k)=>e.classList.toggle('sel',k===i));
+  fillFusion();fillSB();
+  cur={x:ct.w>>1,y:ct.h>>1,z:ct.d>>1};cp=V2P(ct,cur.x,cur.y,cur.z);maps();setMode(mode);
+}
+function updFuseUI(){$('bfu').classList.toggle('p',fuseOn);$('pbar').style.display=fuseOn?'flex':'none'}
+function fillFusion(){
+  const s=$('fs');s.innerHTML='';
+  const c=SER.map((x,i)=>i).filter(i=>i!==curSer&&(SER[i].mod==='PT'||SER[i].mod==='NM')&&SER[curSer].mod!=='PT');
+  c.sort((a,b)=>(SER[b].frame===SER[curSer].frame)-(SER[a].frame===SER[curSer].frame));
+  c.forEach(i=>{const o=document.createElement('option');o.value=i;o.textContent='#'+SER[i].num+' '+SER[i].mod+' '+(SER[i].desc||'');s.appendChild(o)});
+  pet=null;if(c.length){const m=meta(SER[c[0]]),v=buildVol(SER[c[0]],true);m.data=v.data;m.max=v.max;pet=m}
+  if(!pet)fuseOn=false;updFuseUI();
+}
+function applyFusion(){const i=+$('fs').value,m=meta(SER[i]),v=buildVol(SER[i],true);m.data=v.data;m.max=v.max;pet=m;maps();draw();req3D()}
+function toggleFuse(){
+  if(!pet){$('info').textContent='Tidak ada seri PET yang cocok di folder ini (pilih CT sebagai sequence utama).';return}
+  fuseOn=!fuseOn;updFuseUI();draw();req3D();
+}
+function fillSB(){
+  const s=$('sB');s.innerHTML='';SER.forEach((x,i)=>{const o=document.createElement('option');o.value=i;o.textContent='#'+x.num+' '+x.mod+' '+(x.desc||'');s.appendChild(o)});
+  const pi=SER.findIndex((x,i)=>i!==curSer&&(x.mod==='PT'||x.mod==='NM'));s.value=pi>=0?pi:curSer;setB(+s.value);
+}
+function setB(i){
+  const s=SER[i],m=meta(s);B={s,m,win:null};
+  if(m.pt){const v=buildVol(s,true);m.data=v.data;m.max=v.max;const hi=m.max*.5;B.win=[hi,hi/2]}
+  else if(s.mod!=='CT'){const g=sliceGet(m,m.d>>1);let mn=1e9,mx=-1e9;for(let k=0;k<m.w*m.h;k+=7){const v=g(k);if(v<mn)mn=v;if(v>mx)mx=v}B.win=[mx-mn||1,(mx+mn)/2]}
+}
+
+/* ---- PET -> CT lewat koordinat pasien (IPP + IOP) ---- */
+let PC={},PL={},cp=[0,0,0];
+function maps(){PC={}}
+function petAt(p){const v=P2V(pet,p),i=Math.round(v[0]),j=Math.round(v[1]),k=Math.round(v[2]);if(i<0||j<0||k<0||i>=pet.w||j>=pet.h||k>=pet.d)return 0;return pet.data[k*pet.w*pet.h+j*pet.w+i]}
+const P=(x,y,z)=>petAt(V2P(ct,x,y,z));
+function petSlice(k){
+  if(PC[k])return PC[k];const W=ct.w,H=ct.h,o=new Float32Array(W*H),v0=P2V(pet,V2P(ct,0,0,k)),dx=mv(pet.Mi,ct.X),dy=mv(pet.Mi,ct.Y),A=pet.w*pet.h;
+  for(let j=0;j<H;j++)for(let i=0;i<W;i++){const x=Math.round(v0[0]+dx[0]*i+dy[0]*j),y=Math.round(v0[1]+dx[1]*i+dy[1]*j),z=Math.round(v0[2]+dx[2]*i+dy[2]*j);
+    o[j*W+i]=x<0||y<0||z<0||x>=pet.w||y>=pet.h||z>=pet.d?0:pet.data[z*A+y*pet.w+x]}
+  return PC[k]=o}
+function setCP(p){const v=P2V(ct,p),c=[cl(Math.round(v[0]),ct.w),cl(Math.round(v[1]),ct.h),cl(Math.round(v[2]),ct.d)];
+  const inr=v[0]>=-.5&&v[1]>=-.5&&v[2]>=-.5&&v[0]<=ct.w-.5&&v[1]<=ct.h-.5&&v[2]<=ct.d-.5;cp=inr?p:V2P(ct,c[0],c[1],c[2]);cur={x:c[0],y:c[1],z:c[2]}}
+function goZ(z){cur.z=cl(z,ct.d);cp=V2P(ct,cur.x,cur.y,cur.z);draw()}
+/* resampling volume ke bidang sembarang (trilinear / terdekat) */
+function rsmp(m,data,P0,a,b,Wp,Hp,tri,fill){
+  const o=new Float32Array(Wp*Hp),w=m.w,h=m.h,d=m.d,A=w*h,v0=P2V(m,P0),da=mv(m.Mi,a),db=mv(m.Mi,b);
+  for(let j=0;j<Hp;j++)for(let i=0;i<Wp;i++){
+    const u=i+.5,t=j+.5,x=v0[0]+da[0]*u+db[0]*t,y=v0[1]+da[1]*u+db[1]*t,z=v0[2]+da[2]*u+db[2]*t;let val=fill;
+    if(x>-.5&&y>-.5&&z>-.5&&x<w-.5&&y<h-.5&&z<d-.5){
+      if(!tri)val=data[Math.round(z)*A+Math.round(y)*w+Math.round(x)];
+      else{const x0=Math.floor(x),y0=Math.floor(y),z0=Math.floor(z),fx=x-x0,fy=y-y0,fz=z-z0,xa=cl(x0,w),xb=cl(x0+1,w),ya=cl(y0,h),yb=cl(y0+1,h),za=cl(z0,d)*A,zb=cl(z0+1,d)*A;
+        const c00=data[za+ya*w+xa]*(1-fx)+data[za+ya*w+xb]*fx,c10=data[za+yb*w+xa]*(1-fx)+data[za+yb*w+xb]*fx,c01=data[zb+ya*w+xa]*(1-fx)+data[zb+ya*w+xb]*fx,c11=data[zb+yb*w+xa]*(1-fx)+data[zb+yb*w+xb]*fx;
+        val=(c00*(1-fy)+c10*fy)*(1-fz)+(c01*(1-fy)+c11*fy)*fz}}
+    o[j*Wp+i]=val}
+  return o}
+/* ---- Render 2D dengan zoom/pan ---- */
+function lut(v,win){const w=win?win[0]:(+$('w').value||1),l=win?win[1]:+$('l').value;let g=(v-(l-w/2))/w*255;g=g<0?0:g>255?255:g;return $('inv').checked?255-g:g}
+function cmap(t,m){
+  if(m=='ig'){const g=255*(1-t);return[g,g,g]}
+  if(m=='rb'){const h=(1-t)*4,i=Math.floor(h),f=h-i;
+    const c=[[1,f,0],[1-f,1,0],[0,1,f],[0,1-f,1],[0,0,1]][Math.min(i,4)];return[c[0]*255,c[1]*255,c[2]*255]}
+  const c=v=>v<0?0:v>1?1:v;return[255*c(3*t),255*c(3*t-1),255*c(3*t-2)];
+}
+function blit(id,src,w,h,asp){
+  const c=$(id),r=c.getBoundingClientRect(),cw=c.width=Math.max(60,r.width|0),ch=c.height=Math.max(60,r.height|0);
+  const v=VW[id==='cb'?'ca':id]||(VW[id==='cb'?'ca':id]={z:1,px:0,py:0});
+  const base=Math.min(cw/w,ch/(h*asp)),S=base*v.z,ox=(cw-w*S)/2+v.px,oy=(ch-h*S*asp)/2+v.py;
+  const x=c.getContext('2d');x.fillStyle='#000';x.fillRect(0,0,cw,ch);x.imageSmoothingEnabled=S<3;
+  x.drawImage(src,ox,oy,w*S,h*S*asp);T[id]={S,ox,oy,asp,w,h,base};return x;
+}
+function plane(id,w,h,get,gp,asp,cx,cy,xh,win){
+  const o=oc(id);o.width=w;o.height=h;const c0=o.getContext('2d'),im=c0.createImageData(w,h),d=im.data;
+  const fuse=gp&&pet&&fuseOn,a=+$('op').value/100,th=+$('th').value/100,pm=pet?pet.max*$('pm').value/100:1,cmp=$('cm').value;
+  for(let j=0;j<h;j++)for(let i=0;i<w;i++){
+    const g=lut(get(i,j),win);let r=g,gr=g,b=g;
+    if(fuse){const t=gp(i,j)/pm;if(t>0&&t>=th){const q=cmap(t>1?1:t,cmp);r=g*(1-a)+q[0]*a;gr=g*(1-a)+q[1]*a;b=g*(1-a)+q[2]*a}}
+    const p=(j*w+i)*4;d[p]=r;d[p+1]=gr;d[p+2]=b;d[p+3]=255}
+  c0.putImageData(im,0,0);
+  const x=blit(id,o,w,h,asp);
+  if(xh){x.strokeStyle='rgba(74,163,255,.8)';x.lineWidth=1;const t=T[id],X=t.ox+(cx+.5)*t.S,Y=t.oy+(cy+.5)*t.S*asp;
+    x.beginPath();x.moveTo(X,0);x.lineTo(X,x.canvas.height);x.moveTo(0,Y);x.lineTo(x.canvas.width,Y);x.stroke()}
+  return x;
+}
+const dl=v=>{const L=[['L','R'],['P','A'],['S','I']],a=[0,1,2].map(i=>[Math.abs(v[i]),v[i]>0?L[i][0]:L[i][1]]).sort((x,y)=>y[0]-x[0]);return a[0][1]+(a[1][0]>.25?a[1][1]:'')};
+function lbl(x,H,V){const c=x.canvas,ng=v=>v.map(q=>-q);x.font='bold 13px system-ui';x.fillStyle='#ffd54a';x.textAlign='center';
+  x.fillText(dl(H),c.width-14,c.height/2);x.fillText(dl(ng(H)),14,c.height/2);x.fillText(dl(ng(V)),c.width/2,16);x.fillText(dl(V),c.width/2,c.height-6);x.textAlign='left'}
+function axes(k){const X=[1,0,0],Y=[0,1,0],Z=[0,0,1],ng=v=>v.map(q=>-q);
+  if($('mo').value==='an')return[[X,Y],[X,ng(Z)],[Y,ng(Z)]][k];
+  const u=UN(ct.S[2]<0?ng(ct.S):ct.S);return[[ct.r,ct.c],[ct.r,ng(u)],[ct.c,ng(u)]][k]}
+function natAx(){return mode!=='mpr'||$('mo').value==='aq'||(dt(ct.r,[1,0,0])>.9999&&dt(ct.c,[0,1,0])>.9999&&Math.abs(ct.nv[2])>.9999)}
+function mprPlane(id,k){
+  const m=ct,ax=axes(k),Hh=ax[0],V=ax[1],N=cr(Hh,V);let a0=1e9,a1=-1e9,b0=1e9,b1=-1e9;
+  for(const i of[-.5,m.w-.5])for(const j of[-.5,m.h-.5])for(const q of[-.5,m.d-.5]){const p=V2P(m,i,j,q),a=dt(p,Hh),b=dt(p,V);a0=Math.min(a0,a);a1=Math.max(a1,a);b0=Math.min(b0,b);b1=Math.max(b1,b)}
+  const h=Math.max(Math.min(m.psx,m.psy,m.dz),(a1-a0)/900,(b1-b0)/900),Wp=Math.ceil((a1-a0)/h),Hp=Math.ceil((b1-b0)/h),cH=dt(cp,Hh),cV=dt(cp,V);
+  const P0=cp.map((q,i)=>q-cH*Hh[i]-cV*V[i]+a0*Hh[i]+b0*V[i]),a=Hh.map(q=>q*h),b=V.map(q=>q*h);
+  const vals=rsmp(m,m.data,P0,a,b,Wp,Hp,$('ip').value==='t',m.mod==='CT'?-1024:0);
+  const pv=pet&&fuseOn?rsmp(pet,pet.data,P0,a,b,Wp,Hp,false,0):null;
+  PL[id]={Hh,V,N,h,mnH:a0,mnV:b0,Wp,Hp};
+  const x=plane(id,Wp,Hp,(i,j)=>vals[j*Wp+i],pv&&((i,j)=>pv[j*Wp+i]),1,(cH-a0)/h-.5,(cV-b0)/h-.5,true);lbl(x,Hh,V);return x}
+function scrollPl(id,d){const L=PL[id];if(!L)return;const st=id==='ca'?ct.dz:Math.min(ct.psx,ct.psy),sg=id==='cs'?-1:1;setCP(cp.map((c,i)=>c+d*sg*st*L.N[i]));draw()}
+function draw(){
+  if(!ct||mode==='3d')return;
+  const W=ct.w,H=ct.h,D=ct.d,g=sliceGet(ct,cur.z),mp=mode==='mpr',nat=natAx();
+  $('sl').max=D-1;$('sl').value=cur.z;$('zt').textContent=(cur.z+1)+'/'+D;
+  let x;
+  if(nat){const ps=mode!=='2'&&pet&&fuseOn?petSlice(cur.z):null,v=mp?P2V(ct,cp):[cur.x,cur.y];
+    x=plane('ca',W,H,(i,j)=>g(j*W+i),ps&&((i,j)=>ps[j*W+i]),ct.psy/ct.psx,v[0],v[1],mp);ov(x);lbl(x,ct.r,ct.c)}
+  else x=mprPlane('ca',0);
+  x.font='12px system-ui';x.fillStyle='#e6e9ee';x.fillText('Im: '+(cur.z+1)+'/'+D+'   pos '+dt(V2P(ct,cur.x,cur.y,cur.z),ct.nv).toFixed(1)+' mm',8,x.canvas.height-24);x.fillText('W: '+$('w').value+'  L: '+$('l').value,8,x.canvas.height-8);
+  patInfo(x);
+  if(mode==='2')drawB();
+  if(!mp)return;
+  mprPlane('cc',1);mprPlane('cs',2);
+}
+const fmtD=v=>/^\d{8}$/.test(v||'')?v.slice(6)+'/'+v.slice(4,6)+'/'+v.slice(0,4):(v||'');
+function patInfo(x){
+  const p=ct.s.pat;if(!p)return;x.font='12px system-ui';x.fillStyle='#e6e9ee';let L;
+  if($('anon').checked)L=['Data pasien disamarkan',fmtD(p[4])];
+  else L=[(p[0]||'(tanpa nama)').replace(/\^+/g,' ').trim(),'ID: '+(p[1]||'-')+(p[3]?'  '+p[3]:''),'Lahir: '+(fmtD(p[2])||'-'),'Studi: '+(fmtD(p[4])||'-')+(p[5]?'  '+p[5]:'')];
+  L.forEach((t,i)=>x.fillText(t,8,38+i*15))}
+function drawB(){
+  if(fuseOn&&pet){const g=sliceGet(ct,cur.z),W=ct.w,ps=petSlice(cur.z);plane('cb',W,ct.h,(i,j)=>g(j*W+i),(i,j)=>ps[j*W+i],ct.psy/ct.psx,0,0,false);return}
+  if(!B)return;const m=B.m,v=P2V(m,V2P(ct,cur.x,cur.y,cur.z)),g=sliceGet(m,cl(Math.round(v[2]),m.d));
+  plane('cb',m.w,m.h,(i,j)=>g(j*m.w+i),null,m.psy/m.psx,0,0,false,B.win);
+}
+
+/* ---- Alat ukur ---- */
+function calc(m){
+  const p=m.p,sx=ct.psx,sy=ct.psy,pm=q=>V2P(ct,q[0]-.5,q[1]-.5,m.z),u=ct.uncal?'*':'';
+  if(m.t==='len'){m.txt=dist(pm(p[0]),pm(p[1])).toFixed(1)+' mm'+u;return}
+  if(m.t==='ang'){if(p.length<3)return;const B=pm(p[1]),a=sb(pm(p[0]),B),b=sb(pm(p[2]),B);m.txt=(Math.acos(Math.max(-1,Math.min(1,dt(a,b)/(Math.hypot(...a)*Math.hypot(...b)||1))))*180/Math.PI).toFixed(1)+'°';return}
+  let inside,bb;
+  if(m.t==='ell'){const cx=(p[0][0]+p[1][0])/2,cy=(p[0][1]+p[1][1])/2,rx=Math.abs(p[1][0]-p[0][0])/2||.5,ry=Math.abs(p[1][1]-p[0][1])/2||.5;
+    inside=(x,y)=>((x-cx)/rx)**2+((y-cy)/ry)**2<=1;bb=[cx-rx,cy-ry,cx+rx,cy+ry]}
+  else{inside=(x,y)=>{let c=false;for(let i=0,j=p.length-1;i<p.length;j=i++)if((p[i][1]>y)!==(p[j][1]>y)&&x<(p[j][0]-p[i][0])*(y-p[i][1])/(p[j][1]-p[i][1])+p[i][0])c=!c;return c};
+    const xs=p.map(q=>q[0]),ys=p.map(q=>q[1]);bb=[Math.min(...xs),Math.min(...ys),Math.max(...xs),Math.max(...ys)]}
+  const g=sliceGet(ct,m.z),W=ct.w;let n=0,s=0,s2=0,mn=1e9,mx=-1e9;
+  for(let y=Math.max(0,bb[1]|0);y<=Math.min(ct.h-1,bb[3]|0);y++)for(let x=Math.max(0,bb[0]|0);x<=Math.min(W-1,bb[2]|0);x++){
+    if(!inside(x+.5,y+.5))continue;const v=g(y*W+x);n++;s+=v;s2+=v*v;if(v<mn)mn=v;if(v>mx)mx=v}
+  const mean=n?s/n:0;m.area=n*sx*sy;
+  m.lines=[(m.area/100).toFixed(2)+' cm² ('+m.area.toFixed(0)+' mm²)'+u,'Rata² '+mean.toFixed(1)+' ± '+(n?Math.sqrt(Math.max(0,s2/n-mean*mean)):0).toFixed(1),'Min/Maks '+(n?mn+' / '+mx:'-')];
+}
+function addM(m){calc(m);(MS[m.z]=MS[m.z]||[]).push(m);cm=null;const t=m.txt||m.lines.join(' | ');$('info').textContent=t+(volInfo()?'   |   '+volInfo():'');draw()}
+function volInfo(){let a=0,n=0;for(const z in MS)for(const m of MS[z])if(m.area){a+=m.area;n++}return n?'Volume ROI: '+(a*ct.dz/1000).toFixed(2)+' mL ('+n+' ROI)':''}
+function clearZ(){MS[cur.z]=[];cm=null;draw();$('info').textContent=volInfo()}
+function clearAll(){MS={};cm=null;draw();$('info').textContent='Semua ukuran dihapus.'}
+function closePoly(){if(cm&&cm.t==='poly'&&cm.p.length>=4){cm.p.pop();cm.done=true;addM(cm)}}
+function ov(x){
+  const t=T.ca;if(!t)return;const X=p=>t.ox+p[0]*t.S,Y=p=>t.oy+p[1]*t.S*t.asp;
+  const all=(MS[cur.z]||[]).concat(cm&&cm.z===cur.z?[cm]:[]);x.lineWidth=1.5;x.font='12px system-ui';
+  for(const m of all){
+    x.strokeStyle=x.fillStyle='#ffd54a';const p=m.p;x.beginPath();
+    if(m.t==='ell'){x.ellipse((X(p[0])+X(p[1]))/2,(Y(p[0])+Y(p[1]))/2,Math.abs(X(p[1])-X(p[0]))/2,Math.abs(Y(p[1])-Y(p[0]))/2,0,0,7)}
+    else{x.moveTo(X(p[0]),Y(p[0]));for(let i=1;i<p.length;i++)x.lineTo(X(p[i]),Y(p[i]));if(m.done)x.closePath()}
+    x.stroke();const q=p[p.length-1];(m.lines||(m.txt?[m.txt]:[])).forEach((s,i)=>x.fillText(s,X(q)+8,Y(q)+14*i))}
+}
+const toImg=(id,e)=>{const c=$(id),r=c.getBoundingClientRect(),t=T[id];return[((e.clientX-r.left)*c.width/r.width-t.ox)/t.S,((e.clientY-r.top)*c.height/r.height-t.oy)/(t.S*t.asp)]};
+function probe(id,e){
+  const t=T[id];if(!t)return;const p=toImg(id,e),ix=Math.floor(p[0]),iy=Math.floor(p[1]);let q;
+  if(id==='ca'&&natAx())q=V2P(ct,cl(ix,t.w),cl(iy,t.h),cur.z);
+  else{const L=PL[id];if(!L)return;const u=L.mnH+(cl(ix,L.Wp)+.5)*L.h,w=L.mnV+(cl(iy,L.Hp)+.5)*L.h;q=cp.map((c,i)=>c+(u-dt(cp,L.Hh))*L.Hh[i]+(w-dt(cp,L.V))*L.V[i])}
+  setCP(q);draw();let s='voxel '+cur.x+','+cur.y+','+cur.z+'  |  LPS '+cp.map(v=>v.toFixed(1)).join(', ')+' mm  |  nilai '+sliceGet(ct,cur.z)(cur.y*ct.w+cur.x).toFixed(0);
+  if(pet&&fuseOn)s+='  |  PET '+petAt(cp).toFixed(1);$('info').textContent=s;
+}
+function toolDown(id,e){
+  const tl=$('tool').value;
+  if(tl==='probe'||id!=='ca'||!natAx()){probe(id,e);return}
+  const pt=toImg('ca',e);
+  if(tl==='len'||tl==='ell')cm={t:tl,p:[pt,pt.slice()],z:cur.z};
+  else if(tl==='ang'){if(!cm||cm.t!=='ang')cm={t:'ang',p:[pt,pt.slice()],z:cur.z};
+    else if(cm.p.length===2){cm.p[1]=pt;cm.p.push(pt.slice())}else{cm.p[2]=pt;addM(cm);return}}
+  else{const t=T.ca;
+    if(!cm||cm.t!=='poly')cm={t:'poly',p:[pt,pt.slice()],z:cur.z};
+    else if(cm.p.length>=4&&Math.hypot((pt[0]-cm.p[0][0])*t.S,(pt[1]-cm.p[0][1])*t.S*t.asp)<10){closePoly();return}
+    else{cm.p[cm.p.length-1]=pt;cm.p.push(pt.slice())}}
+  draw();
+}
+function toolMove(id,e){
+  const tl=$('tool').value;
+  if(tl==='probe'||id!=='ca'||!natAx()){probe(id,e);return}
+  if(!cm)return;cm.p[cm.p.length-1]=toImg('ca',e);if(cm.t==='len'||cm.t==='ang')calc(cm);draw();
+}
+function toolUp(id){if(cm&&(cm.t==='len'||cm.t==='ell')){const p=cm.p;if(Math.hypot(p[1][0]-p[0][0],p[1][1]-p[0][1])>1)addM(cm);else{cm=null;draw()}}}
+
+/* ---- Interaksi tetikus ---- */
+function re3(){if(mode==='3d')render3D()}
+function redraw(id){id==='c3'?re3():draw()}
+function attach(id){
+  const c=$(id);let drag=null;
+  c.oncontextmenu=e=>e.preventDefault();
+  c.addEventListener('mousedown',e=>{if(e.button===1)e.preventDefault()});
+  c.addEventListener('pointerdown',e=>{
+    if(!ct)return;c.setPointerCapture(e.pointerId);
+    const m=e.button===2?'wl':(e.button===1||e.altKey)?'pan':'tool';drag={m,lx:e.clientX,ly:e.clientY};
+    if(m==='tool'&&id!=='c3'&&id!=='cb')toolDown(id,e);e.preventDefault()});
+  c.addEventListener('pointermove',e=>{
+    if(!drag)return;const dx=e.clientX-drag.lx,dy=e.clientY-drag.ly;drag.lx=e.clientX;drag.ly=e.clientY;
+    if(drag.m==='wl'){const f=Math.max(1,(+$('w').value)/250)*2;$('w').value=Math.max(1,Math.round(+$('w').value+dx*f));$('l').value=Math.round(+$('l').value+dy*f);wl()}
+    else if(drag.m==='pan'){const k=id==='cb'?'ca':id,v=VW[k]||(VW[k]={z:1,px:0,py:0});v.px+=dx;v.py+=dy;redraw(id)}
+    else if(id==='c3'){$('ang').value=((+$('ang').value+dx*.7)%360+360)%360;req3D()}
+    else if(id!=='cb')toolMove(id,e)});
+  c.addEventListener('pointerup',e=>{if(drag&&drag.m==='tool')toolUp(id);drag=null});
+  c.addEventListener('wheel',e=>{
+    e.preventDefault();if(!ct)return;
+    if(id==='c3'){const v=VW.c3||(VW.c3={z:1,px:0,py:0});v.z=Math.min(12,Math.max(.3,v.z*(e.deltaY<0?1.15:1/1.15)));render3D();return}
+    if(e.ctrlKey){const k=id==='cb'?'ca':id,v=VW[k]||(VW[k]={z:1,px:0,py:0}),t=T[id];if(!t)return;
+      const r=c.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top,nz=Math.min(25,Math.max(.3,v.z*(e.deltaY<0?1.15:1/1.15))),S2=t.base*nz;
+      const u=(mx-t.ox)/t.S,w2=(my-t.oy)/(t.S*t.asp);
+      v.z=nz;v.px=mx-u*S2-(c.width-t.w*S2)/2;v.py=my-w2*S2*t.asp-(c.height-t.h*S2*t.asp)/2;redraw(id)}
+    else{const d=e.deltaY>0?1:-1;
+      if((id==='ca'||id==='cb')&&natAx())goZ(cur.z+d);else scrollPl(id,d)}
+  },{passive:false});
+}
+['ca','cb','cc','cs','c3'].forEach(attach);
+function resetView(){for(const k in VW)delete VW[k];draw();re3()}
+addEventListener('resize',()=>{draw();re3()});
+
+/* ---- Mode tampilan, putar otomatis, keyboard ---- */
+function setMode(m){
+  mode=m;if(play)togglePlay();
+  ['1','2','mpr','3d'].forEach(k=>$('b'+k).classList.toggle('p',k===m));
+  const go=()=>{
+    if((m==='mpr'||m==='3d')&&!ct.data)ct.data=buildVol(ct.s,false).data;
+    $('pa').style.display=m==='3d'?'none':'';$('pb').style.display=m==='2'?'':'none';
+    $('pc').style.display=$('ps').style.display=m==='mpr'?'':'none';$('p3').style.display=m==='3d'?'':'none';
+    $('g').className='grid'+(m==='1'||m==='3d'?' one':m==='mpr'?' m':'');
+    $('sb').style.display=m==='3d'?'none':'flex';$('sbw').style.display=m==='2'?'inline':'none';
+    $('la').textContent=m==='mpr'?'Axial':m==='2'?'Jendela 1':'Potongan';
+    $('info').textContent={'1':'Scroll = ganti potongan, Ctrl+scroll = zoom, klik kanan + seret = W/L, Spasi = putar. Pilih MPR / 3D / Fusi di atas.',
+      '2':'2 Jendela: kiri = sequence utama, kanan = sequence lain (pilih di "Jendela 2"). Tekan Fusi untuk menampilkan fusi warna di kanan.',
+      'mpr':'MPR: klik gambar untuk memindahkan crosshair, scroll untuk ganti potongan.',
+      '3d':'3D: seret memutar, scroll zoom. Naikkan "Ambang HU" untuk mengupas dari kulit, jaringan lunak, sampai tulang. "Kupas depan" memotong lapisan terdepan.'}[m]+geo();
+    draw();if(m==='3d')render3D();
+  };
+  if((m==='mpr'||m==='3d')&&!ct.data){$('info').textContent='Membangun volume...';setTimeout(go,30)}else go();
+}
+function togglePlay(){
+  if(!ct)return;
+  if(play){clearInterval(play);play=null}
+  else play=setInterval(()=>{if(mode==='3d'){$('ang').value=(+$('ang').value+4)%360;req3D()}else{goZ((cur.z+1)%ct.d)}},mode==='3d'?100:70);
+  $('bpl').classList.toggle('p',!!play);$('bpl').textContent=play?'Stop':'Putar';
+}
+addEventListener('keydown',e=>{
+  const t=e.target,tp=t.type;if(t.tagName==='SELECT'||tp==='number'||tp==='text')return;
+  if(e.code==='Space'){e.preventDefault();togglePlay()}
+  else if(e.key==='Enter')closePoly();
+  else if(e.key==='Escape'){cm=null;draw()}
+  else if(ct&&mode!=='3d'&&['ArrowUp','ArrowDown','PageUp','PageDown'].includes(e.key)){e.preventDefault();goZ(cur.z+(e.key=='ArrowUp'||e.key=='PageUp'?-1:1))}
+});
+addEventListener('keyup',e=>{if(e.code==='Space'&&e.target.tagName!=='INPUT')e.preventDefault()});
+addEventListener('click',e=>{if(e.target.tagName==='BUTTON')e.target.blur()});
+
+/* ---- 3D: volume rendering + pengupasan lapisan ---- */
+const TF={
+ skin:[[-1024,0,0,0,0],[-350,0,0,0,0],[-200,225,175,150,.9],[3071,225,175,150,.9]],
+ soft:[[-1024,0,0,0,0],[-100,0,0,0,0],[-40,205,140,110,.12],[60,215,120,100,.35],[200,235,205,185,.6],[3071,255,255,255,.9]],
+ bone:[[-1024,0,0,0,0],[150,0,0,0,0],[250,240,230,200,.5],[400,245,240,220,.9],[3071,255,255,240,1]],
+ vasc:[[-1024,0,0,0,0],[100,0,0,0,0],[150,200,40,40,.3],[300,235,60,50,.8],[500,240,200,180,.15],[3071,255,255,255,.15]],
+ bv:[[-1024,0,0,0,0],[100,0,0,0,0],[150,200,40,40,.3],[300,235,60,50,.8],[500,245,235,210,.6],[3071,255,255,240,1]],
+ lung:[[-1024,0,0,0,0],[-950,0,0,0,0],[-850,120,170,255,.08],[-500,200,210,255,.3],[-200,255,255,255,.7],[3071,255,255,255,.9]]};
+function lutFor(k){
+  const pts=TF[k],L=new Float32Array(4096*4);let j=0;
+  for(let i=0;i<4096;i++){const hu=i-1024;while(j<pts.length-2&&hu>pts[j+1][0])j++;
+    const a=pts[j],b=pts[j+1],f=Math.min(1,Math.max(0,(hu-a[0])/(b[0]-a[0])));
+    for(let c=0;c<4;c++)L[i*4+c]=a[c+1]+(b[c+1]-a[c+1])*f}
+  return L;
+}
+let busy=0;function req3D(){if(mode!=='3d'||busy)return;busy=1;requestAnimationFrame(()=>{busy=0;LQ=1;render3D();clearTimeout(LT);LT=setTimeout(()=>{LQ=0;render3D()},200)})}
+/* ---- 3D: WebGL2 ray marching di ruang koordinat pasien (mendukung volume miring / tilt) ---- */
+const VS='#version 300 es\nin vec2 a;out vec2 uv;void main(){uv=a*.5+.5;gl_Position=vec4(a,0,1);}';
+const FS=`#version 300 es
+precision highp float;precision highp sampler3D;
+uniform sampler3D vol;uniform sampler2D tf;
+uniform vec3 O,M0,M1,M2,dims,C,Rv,Zv,D,gs,Rr,Rc,Rs;
+uniform vec2 hw,pan;uniform float ds,R,stp,hm,dp,W,L,inv,pmx;uniform int md,cm;
+in vec2 uv;out vec4 o;
+vec3 tc(vec3 p){vec3 q=p-O;return(vec3(dot(M0,q),dot(M1,q),dot(M2,q))+.5)/dims;}
+vec3 cmap(float t){if(cm==2)return vec3(1.-t);
+ if(cm==1){float h=(1.-t)*4.;int i=int(min(floor(h),4.));float f=h-float(i);
+  if(i==0)return vec3(1,f,0);if(i==1)return vec3(1.-f,1,0);if(i==2)return vec3(0,1,f);if(i==3)return vec3(0,1.-f,1);return vec3(0,0,1);}
+ return clamp(vec3(3.*t,3.*t-1.,3.*t-2.),0.,1.);}
+void main(){
+ vec2 n=(uv*2.-1.)-pan;vec3 p0=C+Rv*(n.x*hw.x)+Zv*(n.y*hw.y)-D*R;
+ vec3 oc=tc(p0),dc=vec3(dot(M0,D),dot(M1,D),dot(M2,D))/dims;
+ vec3 ta=(vec3(0.)-oc)/dc,tb=(vec3(1.)-oc)/dc,lo=min(ta,tb),hi=max(ta,tb);
+ float t0=max(max(max(lo.x,lo.y),lo.z),0.),t1=min(min(hi.x,hi.y),hi.z);
+ vec3 col=vec3(0.);float al=0.,mx=-1e9;
+ if(t1>t0){float s=t0+dp*(t1-t0);vec3 e=ds/dims;
+  for(int i=0;i<1000;i++){float t=s+(float(i)+.5)*stp;if(t>t1)break;vec3 ps=oc+dc*t;float v=textureLod(vol,ps,0.).r;if(v<hm)continue;
+   if(md==0){vec4 f=textureLod(tf,vec2((clamp(v,-1024.,3071.)+1024.)/4095.,.5),0.);float a=1.-pow(1.-f.a,stp/1.8);
+    if(a>.01){vec3 g=vec3(textureLod(vol,ps+vec3(e.x,0,0),0.).r-textureLod(vol,ps-vec3(e.x,0,0),0.).r,
+      textureLod(vol,ps+vec3(0,e.y,0),0.).r-textureLod(vol,ps-vec3(0,e.y,0),0.).r,textureLod(vol,ps+vec3(0,0,e.z),0.).r-textureLod(vol,ps-vec3(0,0,e.z),0.).r);
+     vec3 nn=Rr*g.x/gs.x+Rc*g.y/gs.y+Rs*g.z/gs.z;float sh=.3+.7*abs(dot(nn,D)/max(length(nn),1e-4));
+     float w=(1.-al)*a*sh;col+=w*f.rgb;al+=(1.-al)*a;if(al>.96)break;}}
+   else if(v>mx)mx=v;}}
+ if(md==0)o=vec4(col,1);
+ else if(md==1){float g=clamp((mx-(L-W*.5))/W,0.,1.);if(inv>.5)g=1.-g;o=vec4(vec3(g),1);}
+ else o=vec4(mx>0.?cmap(min(1.,mx/pmx)):vec3(0.),1);}`;
+let G=null,HT=null;
+const f2h=(()=>{const f=new Float32Array(1),u=new Uint32Array(f.buffer);return v=>{f[0]=v;const x=u[0],sg=(x>>16)&0x8000,e=((x>>23)&255)-112;if(e<=0)return sg;if(e>=31)return sg|0x7bff;return sg|(e<<10)|((x&0x7fffff)>>13)}})();
+function gInit(){
+  if(G!==null)return G||null;
+  try{const gl=$('c3').getContext('webgl2');if(!gl)throw 0;
+    const sh=(t,c)=>{const x=gl.createShader(t);gl.shaderSource(x,c);gl.compileShader(x);if(!gl.getShaderParameter(x,gl.COMPILE_STATUS))throw gl.getShaderInfoLog(x);return x};
+    const pr=gl.createProgram();gl.attachShader(pr,sh(gl.VERTEX_SHADER,VS));gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,FS));gl.linkProgram(pr);
+    if(!gl.getProgramParameter(pr,gl.LINK_STATUS))throw gl.getProgramInfoLog(pr);
+    gl.useProgram(pr);gl.bindBuffer(gl.ARRAY_BUFFER,gl.createBuffer());gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+    const a=gl.getAttribLocation(pr,'a');gl.enableVertexAttribArray(a);gl.vertexAttribPointer(a,2,gl.FLOAT,false,0,0);
+    const di=gl.getExtension('WEBGL_debug_renderer_info'),rn=di?String(gl.getParameter(di.UNMASKED_RENDERER_WEBGL)):'';G={gl,pr,tf:gl.createTexture(),tk:'',rn,sw:/swiftshader|llvmpipe|software|basic render/i.test(rn)}}catch(e){console.error(e);G=false}
+  return G||null}
+const S3=()=>+$('q3').value;
+async function texFor(slot,m,sc,st){
+  const gl=G.gl,c=G[slot];if(c&&c.k===m.data&&c.s===st)return c.t;if(c)gl.deleteTexture(c.t);
+  const t=gl.createTexture();gl.bindTexture(gl.TEXTURE_3D,t);gl.pixelStorei(gl.UNPACK_ALIGNMENT,1);const tw=Math.ceil(m.w/st),th=Math.ceil(m.h/st),td=Math.ceil(m.d/st);gl.texStorage3D(gl.TEXTURE_3D,1,gl.R16F,tw,th,td);
+  gl.texParameteri(gl.TEXTURE_3D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_3D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+  for(const k of['R','S','T'])gl.texParameteri(gl.TEXTURE_3D,gl['TEXTURE_WRAP_'+k],gl.CLAMP_TO_EDGE);
+  const A=m.w*m.h,u=new Uint16Array(tw*th),d=m.data,i16=d instanceof Int16Array;
+  if(i16&&!HT){HT=new Uint16Array(65536);for(let v=0;v<65536;v++)HT[v]=f2h(v-32768)}
+  for(let k=0;k<td;k++){if(k%8===0){$('info').textContent='Menyiapkan tekstur GPU... '+Math.round(k*100/td)+'%';await new Promise(r=>setTimeout(r))}
+    const b=Math.min(k*st,m.d-1)*A;
+    for(let y=0;y<th;y++){const row=b+Math.min(y*st,m.h-1)*m.w;for(let x=0;x<tw;x++){const v=d[row+Math.min(x*st,m.w-1)];u[y*tw+x]=i16?HT[v+32768]:f2h(v*sc)}}
+    gl.texSubImage3D(gl.TEXTURE_3D,0,0,0,k,tw,th,1,gl.RED,gl.HALF_FLOAT,u)}
+  G[slot]={k:m.data,s:st,t};return t}
+let R3b=0,R3p=0,LQ=0,LT=0;
+async function render3D(){if(R3b){R3p=1;return}R3b=1;try{await draw3D()}catch(e){console.error(e);$('info').textContent='Render 3D gagal: '+e}finally{R3b=0;if(R3p){R3p=0;render3D()}}}
+async function draw3D(){
+  if(!ct||!ct.data)return;const g=gInit();
+  if(!g){$('info').textContent='WebGL2 tidak tersedia/gagal diinisialisasi; rendering 3D membutuhkan WebGL2.';return}
+  if(g.sw&&!g.w){g.w=1;$('q3').value='3'}
+  const up0=$('m3').value==='pet'&&pet;await texFor(up0?'pt':'ct',up0?pet:ct,up0?1/pet.max:1,S3());
+  const gl=g.gl,c=$('c3'),r=c.getBoundingClientRect(),q=LQ?.5:1,cw=c.width=Math.max(60,Math.min([0,900,640,420][S3()],r.width|0)*q|0),ch=c.height=Math.max(60,Math.min([0,900,640,420][S3()],r.height|0)*q|0);
+  const md=$('m3').value,usePet=md==='pet'&&pet,m=usePet?pet:ct,mo=TF[md]?0:usePet?2:1;$('hmv').textContent=$('hm').value;
+  gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_3D,await texFor(usePet?'pt':'ct',m,usePet?1/m.max:1,S3()));
+  if(mo===0){gl.activeTexture(gl.TEXTURE1);gl.bindTexture(gl.TEXTURE_2D,g.tf);
+    if(g.tk!==md){const L=lutFor(md),b=new Uint8Array(2048*4);for(let i=0;i<2048;i++)for(let q=0;q<4;q++)b[i*4+q]=Math.round(L[Math.min(4095,i*2)*4+q]*(q<3?1:255));
+      gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA8,2048,1,0,gl.RGBA,gl.UNSIGNED_BYTE,b);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);g.tk=md}}
+  const ang=+$('ang').value*Math.PI/180,sa=Math.sin(ang),ca=Math.cos(ang),D=[sa,ca,0],Rv=[ca,-sa,0],Zv=[0,0,1];
+  const cs=[];for(const i of[-.5,m.w-.5])for(const j of[-.5,m.h-.5])for(const k of[-.5,m.d-.5])cs.push(V2P(m,i,j,k));
+  const C=[0,1,2].map(q=>cs.reduce((a,p)=>a+p[q],0)/8);let ex=0,ey=0,R=0;
+  for(const p of cs){const d=sb(p,C);ex=Math.max(ex,Math.abs(dt(d,Rv)));ey=Math.max(ey,Math.abs(dt(d,Zv)));R=Math.max(R,Math.hypot(...d))}
+  const hH=Math.max(ey,ex*ch/cw)*1.04,hW=hH*cw/ch,v=VW.c3||{z:1,px:0,py:0},sp=[Math.hypot(...m.X),Math.hypot(...m.Y),Math.hypot(...m.S)],pr=g.pr;
+  const u3=(n,a)=>gl.uniform3f(gl.getUniformLocation(pr,n),a[0],a[1],a[2]),u1=(n,x)=>gl.uniform1f(gl.getUniformLocation(pr,n),x),ui=(n,x)=>gl.uniform1i(gl.getUniformLocation(pr,n),x);
+  ui('vol',0);ui('tf',1);ui('md',mo);ui('cm',{hot:0,rb:1,ig:2}[$('cm').value]);
+  u3('O',m.O);u3('M0',m.Mi[0]);u3('M1',m.Mi[1]);u3('M2',m.Mi[2]);u3('dims',[m.w,m.h,m.d]);u3('C',C);u3('Rv',Rv);u3('Zv',Zv);u3('D',D);u3('gs',sp);u3('Rr',m.r);u3('Rc',m.c);u3('Rs',UN(m.S));
+  gl.uniform2f(gl.getUniformLocation(pr,'hw'),hW/v.z,hH/v.z);gl.uniform2f(gl.getUniformLocation(pr,'pan'),v.px/cw*2,-v.py/ch*2);
+  u1('R',R);u1('stp',Math.max(Math.min(...sp),2*R/[0,700,450,300][S3()]));u1('hm',mo===2?-1e9:+$('hm').value);u1('ds',S3());u1('dp',+$('dp').value/100);
+  u1('W',+$('w').value||1);u1('L',+$('l').value);u1('inv',$('inv').checked?1:0);u1('pmx',Math.max(.01,$('pm').value/100));
+  gl.viewport(0,0,cw,ch);gl.clearColor(0,0,0,1);gl.clear(gl.COLOR_BUFFER_BIT);gl.drawArrays(gl.TRIANGLES,0,3);
+  if(g.sw)$('info').textContent='⚠ WebGL berjalan tanpa GPU ('+g.rn+'): 3D akan lambat. Pakai MIP/Tulang dan kualitas rendah, dan aktifkan akselerasi perangkat keras di browser.';
+  else if(!LQ)$('info').textContent='3D: '+(g.rn||'GPU')+' · kualitas '+['','tinggi','sedang','rendah'][S3()]+' (volume '+Math.ceil(m.w/S3())+'×'+Math.ceil(m.h/S3())+'×'+Math.ceil(m.d/S3())+')';
+}
+
+/* ========== Penyimpanan hasil pengukuran ========== */
+function measKey(){
+  if(!ct)return null;
+  const s=ct.s, uid=s.frame||s.sl[0]?.frame||'', num=s.num||0, mod=s.mod||'';
+  return 'mm_meas_'+mod+'_'+num+'_'+uid.slice(-24);
+}
+function serializeMeas(){
+  const out={};for(const z in MS)out[z]=MS[z].map(m=>({t:m.t,p:m.p,z:m.z,txt:m.txt,lines:m.lines,area:m.area,done:m.done}));
+  return {v:1,key:measKey(),pat:ct?ct.s.pat:null,mod:ct?ct.mod:null,n:ct?ct.d:0,ts:Date.now(),data:out};
+}
+function saveMeas(){
+  if(!ct){$('info').textContent='Tidak ada seri aktif.';return}
+  const k=measKey(),obj=serializeMeas();
+  try{localStorage.setItem(k,JSON.stringify(obj));localStorage.setItem('mm_last_meas',k);
+    $('info').textContent='Pengukuran disimpan ('+Object.keys(obj.data).length+' irisan). Key: '+k.slice(0,40)+'…'}
+  catch(e){$('info').textContent='Gagal simpan: '+e.message}
+}
+function applyMeasObj(obj){
+  if(!obj||!obj.data)return false;MS={};for(const z in obj.data)MS[z]=obj.data[z];
+  cm=null;draw();$('info').textContent='Pengukuran dimuat: '+Object.keys(MS).length+' irisan'+(volInfo()?' · '+volInfo():'');return true;
+}
+function loadMeas(){
+  if(!ct){$('info').textContent='Buka seri dulu.';return}
+  const k=measKey();let raw=localStorage.getItem(k);
+  if(!raw){const last=localStorage.getItem('mm_last_meas');if(last)raw=localStorage.getItem(last)}
+  if(!raw){$('info').textContent='Tidak ada pengukuran tersimpan untuk seri ini.';return}
+  try{applyMeasObj(JSON.parse(raw))}catch(e){$('info').textContent='Data corrupt: '+e.message}
+}
+function exportMeasJson(){
+  if(!ct){$('info').textContent='Tidak ada data.';return}
+  const blob=new Blob([JSON.stringify(serializeMeas(),null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='pengukuran_'+(ct.s.pat?.[1]||'anon')+'_'+Date.now()+'.json';a.click();URL.revokeObjectURL(a.href);
+}
+function importMeasJson(file){
+  const r=new FileReader();r.onload=()=>{try{applyMeasObj(JSON.parse(r.result))}catch(e){alert('JSON tidak valid')}};r.readAsText(file);
+}
+/* auto-save after measurement change */
+const _addM=addM;addM=function(m){_addM(m);try{if(ct)localStorage.setItem(measKey(),JSON.stringify(serializeMeas()))}catch(e){}};
+const _clearAll=clearAll;clearAll=function(){_clearAll();try{if(ct)localStorage.removeItem(measKey())}catch(e){}};
+
+/* ========== Integrasi PACS / DICOMweb ========== */
+function openPacs(){
+  const u=localStorage.getItem('mm_pacs_url')||'';$('pacsUrl').value=u;
+  $('pacsTok').value=localStorage.getItem('mm_pacs_tok')||'';
+  $('pacsModal').classList.add('show');$('pacsStatus').textContent='Masukkan URL DICOMweb (QIDO-RS/WADO-RS), lalu cari.';
+}
+function closePacs(){$('pacsModal').classList.remove('show')}
+function pacsHdr(){
+  const h={'Accept':'application/dicom+json'};
+  const t=$('pacsTok').value.trim();if(t)h['Authorization']=t.startsWith('Bearer')?t:'Bearer '+t;
+  return h;
+}
+function pacsBase(){let u=$('pacsUrl').value.trim().replace(/\/+$/,'');if(!u)throw new Error('URL kosong');localStorage.setItem('mm_pacs_url',u);localStorage.setItem('mm_pacs_tok',$('pacsTok').value);return u}
+async function pacsSearch(){
+  const st=$('pacsStatus'),tb=$('pacsTbl').querySelector('tbody');tb.innerHTML='';st.textContent='Mencari…';
+  try{
+    const base=pacsBase();
+    const q=new URLSearchParams();
+    if($('qPid').value.trim())q.set('PatientID',$('qPid').value.trim());
+    if($('qPn').value.trim())q.set('PatientName',$('qPn').value.trim());
+    if($('qAcc').value.trim())q.set('AccessionNumber',$('qAcc').value.trim());
+    if($('qMod').value.trim())q.set('ModalitiesInStudy',$('qMod').value.trim());
+    if($('qSd').value){const d=$('qSd').value.replace(/-/g,'');q.set('StudyDate',d)}
+    q.set('includefield','all');q.set('limit','50');
+    const url=base+'/studies?'+q.toString();
+    const res=await fetch(url,{headers:pacsHdr()});
+    if(!res.ok)throw new Error('HTTP '+res.status+' '+res.statusText);
+    const studies=await res.json();
+    st.textContent=studies.length+' studi ditemukan. Klik "Muat" untuk mengunduh.';
+    studies.forEach(s=>{
+      const g=t=> (s[t]&&s[t].Value)?(Array.isArray(s[t].Value)?s[t].Value[0]:s[t].Value):'';
+      const pn=(g('00100010')||'').replace(/\^+/g,' ').trim()||'-';
+      const pid=g('00100020')||'-',sd=g('00080020')||'',desc=g('00081030')||'',mod=g('00080061')||g('00080060')||'';
+      const suid=g('0020000D');
+      const tr=document.createElement('tr');
+      tr.innerHTML='<td>'+pn+'</td><td>'+pid+'</td><td>'+sd+'</td><td>'+desc+'</td><td>'+mod+'</td><td><button class="p">Muat</button></td>';
+      tr.querySelector('button').onclick=e=>{e.stopPropagation();pacsLoadStudy(suid,pn)};
+      tb.appendChild(tr);
+    });
+  }catch(e){st.textContent='Gagal: '+e.message+'. Pastikan CORS diaktifkan di server PACS atau gunakan proxy.';console.error(e)}
+}
+async function pacsLoadStudy(studyUID,label){
+  const st=$('pacsStatus');st.textContent='Mengambil daftar seri…';
+  try{
+    const base=pacsBase();
+    const rSer=await fetch(base+'/studies/'+encodeURIComponent(studyUID)+'/series',{headers:pacsHdr()});
+    if(!rSer.ok)throw new Error('Series HTTP '+rSer.status);
+    const series=await rSer.json();
+    st.textContent=series.length+' seri. Mengunduh instance…';
+    const files=[];
+    for(let si=0;si<series.length;si++){
+      const ser=series[si], suid=(ser['0020000E']&&ser['0020000E'].Value)?ser['0020000E'].Value[0]:null;
+      if(!suid)continue;
+      const rInst=await fetch(base+'/studies/'+encodeURIComponent(studyUID)+'/series/'+encodeURIComponent(suid)+'/instances',{headers:pacsHdr()});
+      if(!rInst.ok)continue;
+      const insts=await rInst.json();
+      for(let ii=0;ii<insts.length;ii++){
+        const inst=insts[ii], iuid=(inst['00080018']&&inst['00080018'].Value)?inst['00080018'].Value[0]:null;
+        if(!iuid)continue;
+        st.textContent='Unduh '+(files.length+1)+' · seri '+(si+1)+'/'+series.length;
+        const rObj=await fetch(base+'/studies/'+encodeURIComponent(studyUID)+'/series/'+encodeURIComponent(suid)+'/instances/'+encodeURIComponent(iuid),{
+          headers:{...pacsHdr(),'Accept':'application/dicom'}
+        });
+        if(!rObj.ok){
+          /* fallback: multipart or rendered not supported — try bulkdata-style */
+          continue;
+        }
+        const buf=await rObj.arrayBuffer();
+        files.push(new File([buf],iuid+'.dcm',{type:'application/dicom'}));
+      }
+    }
+    if(!files.length){st.textContent='Tidak ada instance yang berhasil diunduh (periksa Accept: application/dicom / CORS).';return}
+    st.textContent='Membuka '+files.length+' file…';
+    closePacs();
+    await openFiles(files);
+    $('info').textContent='Studi PACS dimuat: '+(label||studyUID)+' · '+files.length+' instance';
+  }catch(e){st.textContent='Gagal muat: '+e.message;console.error(e)}
+}
+
+/* ========== Export laporan PDF ========== */
+async function exportPdf(){
+  if(!ct){$('info').textContent='Buka studi dulu.';return}
+  if(typeof jspdf==='undefined'&&!(window.jspdf&&window.jspdf.jsPDF)){$('info').textContent='jsPDF belum termuat. Cek koneksi CDN.';return}
+  const {jsPDF}=window.jspdf||jspdf;
+  const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+  const W=210,M=14,y0=16;let y=y0;
+  const line=(t,sz=11,bold=false)=>{doc.setFont('helvetica',bold?'bold':'normal');doc.setFontSize(sz);doc.text(String(t),M,y);y+=sz*0.45+2};
+  const hr=()=>{doc.setDrawColor(180);doc.line(M,y,W-M,y);y+=4};
+
+  /* Header */
+  doc.setFillColor(12,15,19);doc.rect(0,0,W,22,'F');
+  doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(14);
+  doc.text('kklp teams — Laporan Pemeriksaan DICOM',M,14);
+  doc.setTextColor(30);y=28;
+
+  line('Tanggal laporan: '+new Date().toLocaleString('id-ID'),10);
+  hr();
+
+  /* Patient */
+  const p=ct.s.pat||[];
+  const anon=$('anon').checked;
+  line('DATA PASIEN',12,true);
+  if(anon){
+    line('Nama / ID: (disamarkan)');
+    line('Tanggal studi: '+(fmtD(p[4])||'-'));
+  }else{
+    line('Nama: '+((p[0]||'-').replace(/\^+/g,' ').trim()));
+    line('Patient ID: '+(p[1]||'-')+(p[3]?'  · Sex: '+p[3]:''));
+    line('Tgl lahir: '+(fmtD(p[2])||'-'));
+    line('Studi: '+(fmtD(p[4])||'-')+(p[5]?'  · '+p[5]:''));
+  }
+  line('Modalitas / Seri: '+ct.mod+'  ·  #'+(ct.s.num||'')+'  ·  '+(ct.s.desc||''));
+  line('Dimensi: '+ct.w+' × '+ct.h+' × '+ct.d+'  ·  Spacing: '+ct.psx.toFixed(2)+'×'+ct.psy.toFixed(2)+'×'+ct.dz.toFixed(2)+' mm');
+  line('Window: W='+$('w').value+'  L='+$('l').value+(fuseOn?'  · Fusi PET aktif':''));
+  hr();
+
+  /* Measurements */
+  line('HASIL PENGUKURAN',12,true);
+  let count=0;
+  const rows=[];
+  for(const z in MS){
+    for(const m of MS[z]){
+      count++;
+      const lab=m.t==='len'?'Panjang':m.t==='ang'?'Sudut':m.t==='ell'?'ROI elips':'ROI poligon';
+      const val=m.txt||(m.lines?m.lines.join(' | '):'-');
+      rows.push('Irisan '+(+z+1)+' · '+lab+': '+val);
+    }
+  }
+  if(!count)line('(Belum ada pengukuran)',10);
+  else{
+    rows.forEach(r=>{if(y>270){doc.addPage();y=16}line(r,9)});
+    const vi=volInfo();if(vi)line(vi,10,true);
+  }
+  hr();
+
+  /* Capture current view(s) */
+  line('CUPLIKAN TAMPILAN',12,true);
+  const canvases=[];
+  if(mode==='mpr'){['ca','cc','cs'].forEach(id=>{const c=$(id);if(c&&c.width)canvases.push(c)})}
+  else if(mode==='3d'){const c=$('c3');if(c&&c.width)canvases.push(c)}
+  else{const c=$('ca');if(c&&c.width)canvases.push(c);if(mode==='2'){const c2=$('cb');if(c2&&c2.width)canvases.push(c2)}}
+
+  for(const c of canvases){
+    if(y>200){doc.addPage();y=16}
+    try{
+      const data=c.toDataURL('image/jpeg',0.82);
+      const aspect=c.height/c.width;
+      const iw=W-2*M, ih=Math.min(70,iw*aspect);
+      doc.addImage(data,'JPEG',M,y,iw,ih);
+      y+=ih+6;
+    }catch(e){line('[Gagal ambil gambar canvas]',9)}
+  }
+
+  y+=4;if(y>270){doc.addPage();y=16}
+  doc.setFontSize(8);doc.setTextColor(120);
+  doc.text('Dibuat oleh Dicom viewer KKLP Temas · Data diproses lokal di browser · Bukan untuk diagnosis primer tanpa verifikasi klinis.',M,y);
+
+  const fname='Laporan_'+(anon?'anon':(p[1]||'pasien'))+'_'+Date.now()+'.pdf';
+  doc.save(fname);
+  $('info').textContent='Laporan PDF diunduh: '+fname;
+}
+
+/* load saved measurements when series changes */
+const _selectSeries=selectSeries;
+selectSeries=function(i){_selectSeries(i);setTimeout(()=>{try{const k=measKey();const raw=localStorage.getItem(k);if(raw)applyMeasObj(JSON.parse(raw))}catch(e){}},50)};
+</script></body></html>
