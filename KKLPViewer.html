@@ -25,6 +25,8 @@ input[type=number]{width:68px}
 .grid.m .v{height:calc((100vh - 215px)/2)}
 .v canvas{width:100%;height:100%;display:block;touch-action:none;cursor:crosshair}
 .v>span{position:absolute;left:6px;top:4px;font-size:12px;color:var(--ac);pointer-events:none}
+.v.dz{outline:3px dashed var(--ac);outline-offset:-3px}
+.it[draggable=true]{cursor:grab}
 #info{color:var(--mu);font-size:12px;padding:4px 10px;min-height:22px}
 #bar3{position:absolute;left:0;right:0;bottom:0;background:#1b2027dd;border:0}
 .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:100;align-items:center;justify-content:center}
@@ -75,7 +77,7 @@ Opasitas <input type="range" id="op" min="0" max="100" value="60"></div>
 <div id="info">Klik "Buka folder", "Buka CD", atau "PACS / DICOMweb". Ctrl+scroll = zoom, klik kanan + seret = W/L, Spasi = putar. Pengukuran otomatis tersimpan. Data diproses lokal di browser.</div>
 <div class="grid one" id="g">
 <div class="v" id="pa"><span id="la">Potongan</span><canvas id="ca"></canvas></div>
-<div class="v" id="pb" style="display:none"><span>Jendela 2</span><canvas id="cb"></canvas></div>
+<div class="v" id="pb" style="display:none"><span id="lb">Jendela 2</span><canvas id="cb"></canvas></div>
 <div class="v" id="pc" style="display:none"><span>Coronal</span><canvas id="cc"></canvas></div>
 <div class="v" id="ps" style="display:none"><span>Sagittal</span><canvas id="cs"></canvas></div>
 <div class="v" id="p3" style="display:none"><span>3D — seret untuk memutar, scroll untuk zoom</span><canvas id="c3"></canvas>
@@ -115,7 +117,7 @@ const wl=()=>{draw();if(mode==='3d'&&$('m3').value=='mip')req3D()};
 const PD={skin:-300,soft:-100,bone:250,vasc:120,bv:120,lung:-950,mip:-1024,pet:-1024};
 $('m3').onchange=()=>{$('hm').value=PD[$('m3').value];req3D()};
 ['ang','hm','dp'].forEach(i=>$(i).oninput=req3D);
-$('fs').onchange=applyFusion;$('sB').onchange=()=>{setB(+$('sB').value);draw()};
+$('fs').onchange=applyFusion;$('sB').onchange=()=>{setB(+$('sB').value);draw();updLabels()};
 $('sl').oninput=()=>goZ(+$('sl').value);
 let SER=[],ct=null,pet=null,cur={x:0,y:0,z:0},curSer=-1,mi,mj,mk,mode='1',fuseOn=false,B=null,MS={},cm=null,play=null,L3=null;
 const OFF={},T={},VW={};
@@ -290,7 +292,9 @@ function sidebar(){
     for(let k=0;k<4096;k++){const t=Math.max(0,Math.min(255,(val[k]-mn)/((mx-mn)||1)*255));im.data[k*4]=im.data[k*4+1]=im.data[k*4+2]=t;im.data[k*4+3]=255}
     x.putImageData(im,0,0);
     const t=document.createElement('div');t.textContent=s.mod+' #'+s.num+' · '+(s.desc||'-')+' · '+s.n+' citra';
-    d.append(c,t);d.onclick=()=>selectSeries(i);L.appendChild(d);
+    d.append(c,t);d.onclick=()=>selectSeries(i);
+    d.draggable=true;d.ondragstart=e=>{dragSer=i;e.dataTransfer.effectAllowed='copy';e.dataTransfer.setData('text/plain','seri '+i)};d.ondragend=()=>{dragSer=-1;clearDZ()};
+    L.appendChild(d);
   });
 }
 function selectSeries(i){
@@ -314,7 +318,7 @@ function fillFusion(){
 function applyFusion(){const i=+$('fs').value,m=meta(SER[i]),v=buildVol(SER[i],true);m.data=v.data;m.max=v.max;pet=m;maps();draw();req3D()}
 function toggleFuse(){
   if(!pet){$('info').textContent='Tidak ada seri PET yang cocok di folder ini (pilih CT sebagai sequence utama).';return}
-  fuseOn=!fuseOn;updFuseUI();draw();req3D();
+  fuseOn=!fuseOn;updFuseUI();updLabels();draw();req3D();
 }
 function fillSB(){
   const s=$('sB');s.innerHTML='';SER.forEach((x,i)=>{const o=document.createElement('option');o.value=i;o.textContent='#'+x.num+' '+x.mod+' '+(x.desc||'');s.appendChild(o)});
@@ -510,6 +514,36 @@ function attach(id){
   },{passive:false});
 }
 ['ca','cb','cc','cs','c3'].forEach(attach);
+
+/* ---- Drag & drop thumbnail sequence ke Jendela 1 / Jendela 2 ---- */
+let dragSer=-1;
+const clearDZ=()=>{$('pa').classList.remove('dz');$('pb').classList.remove('dz')};
+function updLabels(){
+  if(mode!=='2'||!ct||!B)return;
+  const nm=q=>'#'+q.num+' '+q.mod+(q.desc?' · '+q.desc:'');
+  $('la').textContent='Jendela 1 — '+nm(SER[curSer]);
+  $('lb').textContent='Jendela 2 — '+(fuseOn&&pet?'Fusi PET':nm(B.s));
+}
+function dropSer(which,i){
+  if(!SER[i])return;
+  if(which==='b'){
+    if(mode!=='2')return;
+    if(fuseOn){fuseOn=false;updFuseUI()}   /* fusi menimpa Jendela 2, matikan agar gambar yang di-drop tampil */
+    $('sB').value=i;setB(i);
+  }else{
+    if(i===curSer)return;
+    const pb=+$('sB').value;
+    selectSeries(i);                         /* selectSeries mengatur ulang Jendela 2, kembalikan pilihan sebelumnya */
+    if(mode==='2'&&SER[pb]){$('sB').value=pb;setB(pb)}
+  }
+  updLabels();draw();
+}
+[['pa','a'],['pb','b']].forEach(([id,which])=>{
+  const el=$(id);
+  el.addEventListener('dragover',e=>{if(dragSer<0||!ct)return;e.preventDefault();e.dataTransfer.dropEffect='copy';el.classList.add('dz')});
+  el.addEventListener('dragleave',e=>{if(!el.contains(e.relatedTarget))el.classList.remove('dz')});
+  el.addEventListener('drop',e=>{if(dragSer<0)return;e.preventDefault();const i=dragSer;dragSer=-1;clearDZ();dropSer(which,i)});
+});
 function resetView(){for(const k in VW)delete VW[k];draw();re3()}
 addEventListener('resize',()=>{draw();re3()});
 
@@ -525,10 +559,10 @@ function setMode(m){
     $('sb').style.display=m==='3d'?'none':'flex';$('sbw').style.display=m==='2'?'inline':'none';
     $('la').textContent=m==='mpr'?'Axial':m==='2'?'Jendela 1':'Potongan';
     $('info').textContent={'1':'Scroll = ganti potongan, Ctrl+scroll = zoom, klik kanan + seret = W/L, Spasi = putar. Pilih MPR / 3D / Fusi di atas.',
-      '2':'2 Jendela: kiri = sequence utama, kanan = sequence lain (pilih di "Jendela 2"). Tekan Fusi untuk menampilkan fusi warna di kanan.',
+      '2':'2 Jendela: seret thumbnail dari daftar Sequence ke Jendela 1 (kiri) atau Jendela 2 (kanan) untuk membandingkan. Bisa juga pilih lewat "Jendela 2". Tekan Fusi untuk fusi warna di kanan.',
       'mpr':'MPR: klik gambar untuk memindahkan crosshair, scroll untuk ganti potongan.',
       '3d':'3D: seret memutar, scroll zoom. Naikkan "Ambang HU" untuk mengupas dari kulit, jaringan lunak, sampai tulang. "Kupas depan" memotong lapisan terdepan.'}[m]+geo();
-    draw();if(m==='3d')render3D();
+    updLabels();draw();if(m==='3d')render3D();
   };
   if((m==='mpr'||m==='3d')&&!ct.data){$('info').textContent='Membangun volume...';setTimeout(go,30)}else go();
 }
