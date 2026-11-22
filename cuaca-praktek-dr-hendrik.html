@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#123c36">
+<title>Cuaca Praktek dr. Hendrik | Perkiraan per Titik</title>
+<meta name="description" content="Perkiraan cuaca dan kualitas udara untuk satu titik: Praktek dr. Hendrik, Medan Tembung.">
+<style>
+:root{--ink:#17332f;--muted:#5e716d;--green:#176b58;--pale:#edf7f2;--line:#d8e5df;--amberbg:#fff6df;--white:#fff;--shadow:0 10px 30px rgba(20,55,45,.08)}
+*{box-sizing:border-box}body{margin:0;background:#f5f8f6;color:var(--ink);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.55}
+.wrap{max-width:850px;margin:auto;padding:18px}
+.hero{background:linear-gradient(135deg,#123c36,#24765f);color:#fff;border-radius:22px;padding:28px 24px;margin:8px 0 18px;box-shadow:var(--shadow)}
+.hero h1{font-size:clamp(1.8rem,5vw,2.6rem);line-height:1.12;margin:.5rem 0}.hero p{margin:.65rem 0 0;max-width:650px;color:#e8f4ef}
+.eyebrow{font-size:.85rem;font-weight:700;opacity:.9}
+.card{background:var(--white);border:1px solid var(--line);border-radius:18px;padding:20px;margin:14px 0;box-shadow:var(--shadow)}
+.head{display:flex;justify-content:space-between;align-items:center;gap:10px}.head h2{margin:0;font-size:1.15rem}.time{margin:2px 0 0;font-size:.8rem;color:var(--muted)}
+.btn{border:0;border-radius:12px;padding:12px 16px;font:inherit;font-weight:750;cursor:pointer;text-decoration:none;display:inline-block}.secondary{background:#eaf2ee;color:var(--ink);border:1px solid var(--line)}.primary{background:var(--green);color:#fff}.btn:disabled{opacity:.45;cursor:not-allowed}.btn:focus-visible{outline:3px solid #a7d7c6;outline-offset:2px}
+.now{display:flex;gap:16px;align-items:center;margin-top:14px;background:var(--pale);border:2px solid #a8d5be;border-radius:16px;padding:14px}
+.now .ic{font-size:3rem;line-height:1}.now .t{font-size:2.6rem;font-weight:800;line-height:1}.now .l{font-weight:800;font-size:1.15rem}.now .s{font-size:.9rem;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.chip{background:#f5f8f6;border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:.88rem}
+.sum{margin:12px 0 0;font-size:.95rem}
+.hours{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 10px;margin-top:10px;scroll-snap-type:x proximity}
+.h{flex:none;width:68px;text-align:center;border:1px solid var(--line);border-radius:14px;padding:8px 4px;background:#fbfdfc;scroll-snap-align:start}
+.h b{display:block;font-size:.8rem;color:var(--muted)}.h .e{font-size:1.5rem}.h .d{font-weight:700}.h .r{font-size:.78rem;color:#194f8a}
+.day{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line)}.day:first-of-type{border-top:0}
+.day .n{flex:0 0 96px;font-weight:700;font-size:.92rem}.day .n small{display:block;font-weight:400;color:var(--muted);font-size:.76rem}
+.day .w{flex:1;min-width:0;font-size:.9rem}.day .w small{display:block;color:#194f8a}
+.day .tt{flex:none;font-weight:700;font-size:.92rem;white-space:nowrap}.day .tt small{color:var(--muted);font-weight:400}
+.pill{flex:none;min-width:48px;text-align:center;border:1.5px solid;border-radius:999px;padding:3px 8px;font-weight:800;font-size:.85rem}
+.aq-0{background:#e8f6ec;border-color:#9fd3ae;color:#14532d}.aq-1{background:#fff8d6;border-color:#e6cf62;color:#5c4a00}.aq-2{background:#ffeccf;border-color:#efb46a;color:#7a3e00}.aq-3{background:#ffe1de;border-color:#e59a94;color:#8a1c1c}.aq-4{background:#f1e3f7;border-color:#c79ad8;color:#5b1f73}.aq-5{background:#f3dde3;border-color:#c98a9c;color:#5f1230}
+.aqhero{display:flex;gap:14px;align-items:center;border:2px solid;border-radius:16px;padding:14px;margin-top:12px}.aqhero .sc{min-width:84px;text-align:center;font-size:2.6rem;font-weight:800;line-height:1}.aqhero .sc small{display:block;font-size:.7rem;font-weight:700;margin-top:4px;opacity:.8}.aqhero .lb{font-size:1.2rem;font-weight:800;line-height:1.2}.aqhero p{margin:4px 0 0;font-size:.9rem}
+.warn{background:var(--amberbg);border:1px solid #e8ca80;border-radius:10px;padding:8px 12px;color:#614b18;font-size:.85rem;margin-top:12px}
+.src,.foot{font-size:.8rem;color:var(--muted);margin:12px 0 0}.foot{padding:6px 4px 30px}
+h3{font-size:.95rem;margin:18px 0 0}
+a{color:var(--green)}
+@media(max-width:420px){.now .t{font-size:2.1rem}.day .n{flex-basis:80px}.aqhero .sc{min-width:70px;font-size:2.2rem}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="hero">
+    <div class="eyebrow">Perkiraan cuaca per titik</div>
+    <h1>Cuaca di Praktek dr. Hendrik</h1>
+    <p id="place">Jl. Sosro No.104B, Bantan, Kec. Medan Tembung, Kota Medan</p>
+  </header>
+
+  <section class="card" aria-label="Cuaca saat ini">
+    <div class="head">
+      <div><h2>Cuaca saat ini</h2><p class="time" id="wxTime">Memuat…</p></div>
+      <button class="btn secondary" id="refresh" type="button">Perbarui</button>
+    </div>
+    <div id="wxNow" aria-live="polite"></div>
+    <h3>24 jam ke depan</h3>
+    <div class="hours" id="hours" tabindex="0" aria-label="Perkiraan per jam"></div>
+  </section>
+
+  <section class="card" aria-label="Kualitas udara">
+    <div class="head"><div><h2>Kualitas udara di titik ini</h2><p class="time" id="aqTime"></p></div></div>
+    <div id="aqNow" aria-live="polite"></div>
+  </section>
+
+  <section class="card" aria-label="Perkiraan 7 hari">
+    <div class="head"><h2>7 hari ke depan</h2></div>
+    <div id="days"></div>
+    <p class="src">Kolom kanan = skor kualitas udara tertinggi pada hari itu (tersedia sekitar 5 hari ke depan).</p>
+  </section>
+
+  <p class="src" style="padding:0 4px">Sumber: <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a> (cuaca) dan model <a href="https://atmosphere.copernicus.eu" target="_blank" rel="noopener">Copernicus CAMS</a> (kualitas udara, CC BY 4.0). Perkiraan model untuk titik ini, bukan hasil alat ukur. Peringatan resmi: <a href="https://www.bmkg.go.id" target="_blank" rel="noopener">BMKG</a>.</p>
+  <p class="foot">Halaman ini hanya mengirim koordinat titik praktek ke Open-Meteo. Tanpa data pribadi, analitik, atau cookie.</p>
+</main>
+
+<script>
+const P = {lat: 3.5948158, lon: 98.722152};
+const WX = 'https://api.open-meteo.com/v1/forecast?latitude=' + P.lat + '&longitude=' + P.lon +
+  '&current=temperature_2m,apparent_temperature,relative_humidity_2m,precipitation,weather_code,wind_speed_10m' +
+  '&hourly=temperature_2m,precipitation_probability,weather_code' +
+  '&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,uv_index_max' +
+  '&timezone=Asia%2FJakarta&forecast_days=7';
+const AQ = 'https://air-quality-api.open-meteo.com/v1/air-quality?latitude=' + P.lat + '&longitude=' + P.lon +
+  '&current=us_aqi,pm2_5&hourly=us_aqi&timezone=Asia%2FJakarta&forecast_days=5';
+const AQ_LEVELS = [
+  {max:50, cls:'aq-0', label:'Baik', tip:'Aman beraktivitas di luar ruangan.'},
+  {max:100, cls:'aq-1', label:'Sedang', tip:'Umumnya aman; yang mudah sesak sebaiknya kurangi aktivitas berat di luar.'},
+  {max:150, cls:'aq-2', label:'Kurang sehat bagi yang rentan', tip:'Anak, lansia, ibu hamil, dan penderita asma/PPOK/jantung sebaiknya kurangi aktivitas di luar ruangan.'},
+  {max:200, cls:'aq-3', label:'Tidak sehat', tip:'Kurangi aktivitas di luar ruangan; pakai masker N95/KN95 bila harus keluar.'},
+  {max:300, cls:'aq-4', label:'Sangat tidak sehat', tip:'Sebaiknya tetap di dalam ruangan; pakai N95/KN95 bila harus keluar.'},
+  {max:Infinity, cls:'aq-5', label:'Berbahaya', tip:'Tetap di dalam ruangan dan ikuti arahan pemerintah.'}
+];
+const aqLevel = v => AQ_LEVELS.find(l => v <= l.max);
+
+function wc(c) {
+  if (c === 0) return ['☀️', 'Cerah'];
+  if (c === 1) return ['🌤️', 'Cerah berawan'];
+  if (c === 2) return ['⛅', 'Berawan sebagian'];
+  if (c === 3) return ['☁️', 'Mendung'];
+  if (c === 45 || c === 48) return ['🌫️', 'Berkabut'];
+  if (c >= 51 && c <= 57) return ['🌦️', 'Gerimis'];
+  if (c >= 61 && c <= 67) return ['🌧️', 'Hujan'];
+  if (c >= 80 && c <= 82) return ['🌧️', 'Hujan deras sesaat'];
+  if (c >= 95) return ['⛈️', 'Badai petir'];
+  return ['🌡️', 'Cuaca tidak diketahui'];
+}
+function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; }
+function hhmm(s) { return s.slice(11, 16).replace(':', '.'); }
+function warn(box, msg) { box.textContent = ''; box.appendChild(el('div', 'warn', msg)); }
+
+function renderWeather(d) {
+  const c = d.current, [ic, lab] = wc(c.weather_code);
+  const box = document.getElementById('wxNow'); box.textContent = '';
+  const now = el('div', 'now');
+  now.appendChild(el('div', 'ic', ic));
+  const t = el('div'); t.appendChild(el('div', 't', Math.round(c.temperature_2m) + '°C'));
+  now.appendChild(t);
+  const x = el('div'); x.appendChild(el('div', 'l', lab));
+  x.appendChild(el('div', 's', 'Terasa seperti ' + Math.round(c.apparent_temperature) + '°C'));
+  now.appendChild(x); box.appendChild(now);
+
+  const chips = el('div', 'chips');
+  chips.appendChild(el('span', 'chip', 'Kelembapan ' + Math.round(c.relative_humidity_2m) + '%'));
+  chips.appendChild(el('span', 'chip', 'Angin ' + Math.round(c.wind_speed_10m) + ' km/j'));
+  chips.appendChild(el('span', 'chip', 'Hujan saat ini ' + c.precipitation + ' mm'));
+  if (d.daily.uv_index_max) chips.appendChild(el('span', 'chip', 'Indeks UV hari ini ' + Math.round(d.daily.uv_index_max[0])));
+  box.appendChild(chips);
+
+  const key = c.time.slice(0, 13) + ':00';
+  let i0 = d.hourly.time.indexOf(key); if (i0 < 0) i0 = 0;
+  const hours = document.getElementById('hours'); hours.textContent = '';
+  let best = {p: -1, t: ''};
+  for (let i = i0; i < Math.min(i0 + 24, d.hourly.time.length); i++) {
+    const h = el('div', 'h');
+    h.appendChild(el('b', '', i === i0 ? 'Sekarang' : hhmm(d.hourly.time[i])));
+    h.appendChild(el('div', 'e', wc(d.hourly.weather_code[i])[0]));
+    h.appendChild(el('div', 'd', Math.round(d.hourly.temperature_2m[i]) + '°'));
+    const p = d.hourly.precipitation_probability[i];
+    h.appendChild(el('div', 'r', typeof p === 'number' ? p + '%' : '–'));
+    hours.appendChild(h);
+    if (typeof p === 'number' && p > best.p) best = {p: p, t: hhmm(d.hourly.time[i])};
+  }
+  let msg;
+  if (best.p >= 40) msg = 'Peluang hujan tertinggi ' + best.p + '% sekitar pukul ' + best.t + ' WIB. Siapkan payung bila berangkat saat itu.';
+  else if (best.p >= 0) msg = 'Peluang hujan 24 jam ke depan rendah (tertinggi ' + best.p + '%).';
+  if (msg) box.appendChild(el('p', 'sum', msg));
+  document.getElementById('wxTime').textContent = 'Data jam ' + hhmm(c.time) + ' WIB';
+
+  const days = document.getElementById('days'); days.textContent = '';
+  const D = d.daily;
+  D.time.forEach((date, i) => {
+    const row = el('div', 'day');
+    const nm = el('div', 'n', i === 0 ? 'Hari ini' : i === 1 ? 'Besok' : new Date(date + 'T12:00:00').toLocaleDateString('id-ID', {weekday: 'long', timeZone: 'Asia/Jakarta'}));
+    nm.appendChild(el('small', '', new Date(date + 'T12:00:00').toLocaleDateString('id-ID', {day: 'numeric', month: 'short', timeZone: 'Asia/Jakarta'})));
+    row.appendChild(nm);
+    const [e, l] = wc(D.weather_code[i]);
+    const w = el('div', 'w', e + ' ' + l);
+    w.appendChild(el('small', '', 'Hujan ' + (D.precipitation_probability_max[i] ?? '–') + '% · ' + Math.round(D.precipitation_sum[i]) + ' mm'));
+    row.appendChild(w);
+    const tt = el('div', 'tt', Math.round(D.temperature_2m_max[i]) + '° ');
+    tt.appendChild(el('small', '', '/ ' + Math.round(D.temperature_2m_min[i]) + '°'));
+    row.appendChild(tt);
+    const slot = el('span', 'pill', '–'); slot.dataset.date = date; slot.title = 'Skor kualitas udara tertinggi';
+    row.appendChild(slot);
+    days.appendChild(row);
+  });
+}
+
+function renderAir(d) {
+  const c = d.current, aqi = Math.round(c.us_aqi), lv = aqLevel(aqi);
+  const box = document.getElementById('aqNow'); box.textContent = '';
+  const hero = el('div', 'aqhero ' + lv.cls);
+  const sc = el('div', 'sc', String(aqi)); sc.appendChild(el('small', '', 'dari 500'));
+  hero.appendChild(sc);
+  const tx = el('div'); tx.appendChild(el('div', 'lb', lv.label)); tx.appendChild(el('p', '', lv.tip));
+  hero.appendChild(tx); box.appendChild(hero);
+  const chips = el('div', 'chips');
+  if (typeof c.pm2_5 === 'number') chips.appendChild(el('span', 'chip', 'Debu halus PM2.5: ' + c.pm2_5.toFixed(1) + ' µg/m³'));
+  box.appendChild(chips);
+  document.getElementById('aqTime').textContent = 'Data jam ' + hhmm(c.time) + ' WIB';
+
+  const mx = {};
+  d.hourly.time.forEach((t, i) => {
+    const v = d.hourly.us_aqi[i];
+    if (typeof v === 'number') { const k = t.slice(0, 10); if (!(k in mx) || v > mx[k]) mx[k] = v; }
+  });
+  document.querySelectorAll('.pill[data-date]').forEach(p => {
+    const v = mx[p.dataset.date];
+    if (v !== undefined) { v !== null && (p.textContent = String(Math.round(v)), p.className = 'pill ' + aqLevel(v).cls); }
+  });
+}
+
+async function get(url) {
+  const ctrl = new AbortController(), timer = setTimeout(() => ctrl.abort(), 12000);
+  try {
+    const r = await fetch(url, {signal: ctrl.signal});
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return await r.json();
+  } finally { clearTimeout(timer); }
+}
+
+async function load() {
+  const btn = document.getElementById('refresh'); btn.disabled = true;
+  document.getElementById('wxNow').textContent = 'Memuat cuaca…';
+  document.getElementById('aqNow').textContent = 'Memuat kualitas udara…';
+  const [w, a] = await Promise.allSettled([get(WX), get(AQ)]);
+  if (w.status === 'fulfilled') { try { renderWeather(w.value); } catch (e) { warn(document.getElementById('wxNow'), 'Data cuaca tidak dapat ditampilkan. Tekan "Perbarui".'); } }
+  else { warn(document.getElementById('wxNow'), 'Data cuaca belum dapat dimuat. Periksa koneksi internet lalu tekan "Perbarui".'); document.getElementById('wxTime').textContent = ''; }
+  if (a.status === 'fulfilled') { try { renderAir(a.value); } catch (e) { warn(document.getElementById('aqNow'), 'Data kualitas udara tidak dapat ditampilkan.'); } }
+  else { warn(document.getElementById('aqNow'), 'Data kualitas udara belum dapat dimuat. Tekan "Perbarui" untuk mencoba lagi.'); }
+  btn.disabled = false;
+}
+document.getElementById('refresh').addEventListener('click', load);
+load();
+</script>
+</body>
+</html>
