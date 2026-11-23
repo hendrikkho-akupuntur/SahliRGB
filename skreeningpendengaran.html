@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
+<!-- saved from url=(0073)https://hendrikkho-akupuntur.github.io/SahliRGB/skreeningpendengaran.html -->
+<html lang="id"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tes Pendengaran Mandiri</title>
     <style>
@@ -229,10 +229,84 @@
         .footer p { margin: 4px 0; }
         .copyright { font-style: italic; color: #4a6fa5; font-weight: 600; margin-top: 8px; }
 
+
+        .guide {
+            background: #e7f3ff; border-left: 5px solid #4a6fa5;
+            padding: 20px; border-radius: 10px; margin-bottom: 20px;
+            font-size: 0.95rem; line-height: 1.6; text-align: left;
+        }
+        .guide h3 { color: #2c3e50; margin-bottom: 8px; font-size: 1.15rem; }
+        .guide h4 { color: #2c3e50; margin-bottom: 8px; font-size: 1rem; }
+        .guide-lead { color: #495057; margin-bottom: 16px; }
+        .guide-block {
+            background: white; border-radius: 12px; padding: 14px 16px;
+            margin-bottom: 12px; border: 1px solid #cfe2f7;
+        }
+        .guide-list { padding-left: 20px; }
+        .guide-list li { margin-bottom: 6px; }
+        .guide-steps { list-style: none; counter-reset: step; }
+        .guide-steps > li {
+            counter-increment: step; position: relative;
+            padding-left: 38px; margin-bottom: 12px;
+        }
+        .guide-steps > li::before {
+            content: counter(step); position: absolute; left: 0; top: 1px;
+            width: 26px; height: 26px; border-radius: 50%;
+            background: #4a6fa5; color: white; font-weight: 700;
+            font-size: 0.85rem; display: flex; align-items: center; justify-content: center;
+        }
+        .guide-answers { margin-top: 8px; display: grid; gap: 8px; }
+        .ga { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 0.9rem; color: #495057; }
+        .chip {
+            color: white; font-weight: 700; font-size: 0.85rem;
+            padding: 6px 12px; border-radius: 8px; white-space: nowrap;
+        }
+        .chip.yes { background: linear-gradient(135deg, #28a745, #1e7e34); }
+        .chip.no { background: linear-gradient(135deg, #dc3545, #a71d2a); }
+
+        .guide-more {
+            background: white; border-radius: 12px; border: 1px solid #cfe2f7;
+            margin-bottom: 12px; overflow: hidden;
+        }
+        .guide-more summary, .help-inline summary {
+            cursor: pointer; font-weight: 700; color: #2c3e50;
+            padding: 13px 16px; list-style: none;
+        }
+        .guide-more summary::-webkit-details-marker, .help-inline summary::-webkit-details-marker { display: none; }
+        .guide-more summary::before, .help-inline summary::before {
+            content: "▸"; display: inline-block; margin-right: 8px; transition: transform 0.2s;
+        }
+        .guide-more[open] summary::before, .help-inline[open] summary::before { transform: rotate(90deg); }
+        .guide-more summary:focus-visible, .help-inline summary:focus-visible { outline: 3px solid #667eea; outline-offset: -3px; }
+        .guide-more-body { padding: 0 16px 14px; color: #495057; }
+        .guide-more-body p { margin-top: 10px; }
+        .result-key {
+            display: flex; flex-direction: column; gap: 2px;
+            padding: 10px 12px; border-radius: 10px; margin-top: 10px; border-left: 4px solid;
+        }
+        .result-key.ok { background: #d4edda; border-color: #28a745; }
+        .result-key.warn { background: #fff3cd; border-color: #ffc107; }
+        .result-key.bad { background: #f8d7da; border-color: #dc3545; }
+        .result-key span { font-size: 0.9rem; }
+
+        .guide-alert {
+            background: #f8d7da; border-left: 4px solid #dc3545;
+            border-radius: 8px; padding: 12px 14px; font-size: 0.9rem; color: #5c1a22;
+        }
+
+        .help-inline {
+            margin-top: 14px; background: #f8f9fa; border: 1px solid #dee2e6;
+            border-radius: 10px; font-size: 0.9rem; color: #495057;
+        }
+        .help-inline ul { padding: 0 16px 12px 36px; }
+        .help-inline li { margin-bottom: 5px; }
+
         @media (max-width: 500px) {
             .patient-buttons { grid-template-columns: 1fr; }
             .ear-summary { grid-template-columns: 1fr; }
             .header h1 { font-size: 1.2rem; }
+            .guide { padding: 14px; }
+            .guide-block { padding: 12px; }
         }
     </style>
 </head>
@@ -253,16 +327,61 @@
                     Tes ini <strong>bukan pengganti pemeriksaan dokter</strong>. Hasil hanya untuk skrining awal.
                 </div>
 
-                <div class="intro-box">
-                    <h3>📋 Cara Menggunakan:</h3>
-                    <ol>
-                        <li>Pakai <strong>headset/earphone</strong> yang nyaman.</li>
-                        <li>Cari tempat yang <strong>tenang</strong>, tanpa suara bising.</li>
-                        <li>Tes akan berjalan otomatis: <strong>telinga kiri dulu</strong>, lalu <strong>telinga kanan</strong>.</li>
-                        <li>Setiap kali mendengar suara, tekan <strong>"DENGAR"</strong>.</li>
-                        <li>Jika tidak mendengar, tekan <strong>"TIDAK DENGAR"</strong>.</li>
-                        <li>Tes selesai dalam ±3–5 menit. Hasil akan muncul otomatis.</li>
-                    </ol>
+                <div class="guide">
+                    <h3>📋 Panduan Penggunaan</h3>
+                    <p class="guide-lead">Tes ini memutar nada pendek di telinga kiri, lalu telinga kanan. Tugas Anda hanya satu: menjawab apakah nada itu terdengar. Waktunya sekitar 3–5 menit.</p>
+
+                    <div class="guide-block">
+                        <h4>Sebelum mulai</h4>
+                        <ul class="guide-list">
+                            <li>Pakai <strong>headset atau earphone</strong>, bukan speaker. Sisi <strong>L</strong> di telinga kiri, sisi <strong>R</strong> di telinga kanan.</li>
+                            <li>Duduk di tempat yang <strong>sunyi</strong>. Matikan TV, kipas, dan musik.</li>
+                            <li>Atur volume perangkat satu kali, lalu <strong>jangan diubah</strong> sampai tes selesai.</li>
+                            <li>Tutup aplikasi lain yang bisa mengeluarkan bunyi, dan pastikan perangkat tidak dalam mode senyap.</li>
+                        </ul>
+                    </div>
+
+                    <div class="guide-block">
+                        <h4>Selama tes</h4>
+                        <ol class="guide-steps">
+                            <li><strong>Tekan "Mulai Tes Pendengaran".</strong> Nada pertama berbunyi sekitar 1 detik kemudian.</li>
+                            <li><strong>Dengarkan sampai nada berhenti</strong> (±2,5 detik). Tombol jawaban baru bisa ditekan setelah itu. Nada pertama sangat pelan, dan itu memang disengaja.</li>
+                            <li><strong>Jawab sesuai yang Anda dengar:</strong>
+                                <div class="guide-answers">
+                                    <div class="ga"><span class="chip yes">✓ DENGAR</span><span>Nada terdengar, sepelan apa pun.</span></div>
+                                    <div class="ga"><span class="chip no">✗ TIDAK DENGAR</span><span>Tidak ada suara. Jika ragu, tekan <em>Putar Ulang Suara</em> dulu, lalu jawab.</span></div>
+                                </div>
+                            </li>
+                            <li><strong>Jika Anda menjawab tidak dengar,</strong> nada diulang dengan volume sedikit lebih keras. Teruskan menjawab dengan jujur dan jangan menebak, karena tebakan membuat hasil tidak akurat.</li>
+                            <li><strong>Ikuti bar kemajuan.</strong> Ada 8 langkah: 4 nada untuk telinga kiri, lalu 4 nada untuk telinga kanan.</li>
+                            <li><strong>Saat telinga kiri selesai,</strong> layar jeda akan muncul. Pasang headset sesuai petunjuk di layar (jika hanya memakai satu earphone, pindahkan ke telinga kanan), lalu tekan <em>Lanjutkan</em>.</li>
+                        </ol>
+                    </div>
+
+                    <details class="guide-more">
+                        <summary>Cara membaca hasil</summary>
+                        <div class="guide-more-body">
+                            <div class="result-key ok"><strong>✅ Pendengaran Normal</strong><span>Tidak ditemukan tanda gangguan pada kedua telinga.</span></div>
+                            <div class="result-key warn"><strong>⚠️ Perlu Perhatian</strong><span>Kedua telinga masih dalam batas normal, tetapi pendengaran kiri dan kanan berbeda. Sebaiknya dikonsultasikan.</span></div>
+                            <div class="result-key bad"><strong>🔴 Perlu Pemeriksaan Lanjutan</strong><span>Ada nada yang baru terdengar setelah volume dinaikkan cukup tinggi. Segera periksakan ke dokter.</span></div>
+                            <p>Di halaman hasil, <strong>Simpan Hasil</strong> mengunduh laporan berupa file teks, dan tombol <strong>WhatsApp</strong> membuka chat dengan dokter yang sudah berisi ringkasan hasil Anda.</p>
+                        </div>
+                    </details>
+
+                    <details class="guide-more">
+                        <summary>Pertanyaan yang sering muncul</summary>
+                        <div class="guide-more-body">
+                            <p><strong>Tidak ada suara sama sekali.</strong> Periksa volume perangkat, pastikan headset terhubung (untuk Bluetooth, cek sambungannya), lalu gunakan Chrome atau Edge terbaru.</p>
+                            <p><strong>Nada terdengar di telinga yang salah.</strong> Cek kembali sisi L dan R pada headset. Lalu muat ulang halaman dan mulai dari awal.</p>
+                            <p><strong>Boleh memutar ulang nada?</strong> Boleh. Tombol <em>Putar Ulang Suara</em> aktif setelah nada selesai.</p>
+                            <p><strong>Apakah hasilnya sama dengan pemeriksaan di klinik?</strong> Tidak. Hasil dipengaruhi jenis headset, volume, dan suasana sekitar, jadi tes ini hanya untuk skrining awal.</p>
+                            <p><strong>Apakah data saya dikirim ke mana-mana?</strong> Tidak. Tes berjalan di perangkat Anda. Data baru terkirim bila Anda sendiri menekan tombol WhatsApp.</p>
+                        </div>
+                    </details>
+
+                    <div class="guide-alert">
+                        <strong>Jangan menunggu hasil tes</strong> bila telinga mendadak tidak bisa mendengar, berdenging keras secara tiba-tiba, terasa nyeri, mengeluarkan cairan, atau disertai pusing berputar. Segera ke dokter atau IGD.
+                    </div>
                 </div>
 
                 <button class="start-btn" id="startBtn">▶️ Mulai Tes Pendengaran</button>
@@ -291,17 +410,27 @@
                 </div>
 
                 <div class="patient-buttons">
-                    <button class="patient-btn yes" id="yesBtn" disabled>
+                    <button class="patient-btn yes" id="yesBtn" disabled="">
                         <span class="emoji">✓</span>
                         <span>DENGAR</span>
                     </button>
-                    <button class="patient-btn no" id="noBtn" disabled>
+                    <button class="patient-btn no" id="noBtn" disabled="">
                         <span class="emoji">✗</span>
                         <span>TIDAK DENGAR</span>
                     </button>
                 </div>
 
-                <button class="replay-btn" id="replayBtn" disabled>🔁 Putar Ulang Suara</button>
+                <button class="replay-btn" id="replayBtn" disabled="">🔁 Putar Ulang Suara</button>
+
+                <details class="help-inline">
+                    <summary>Butuh bantuan?</summary>
+                    <ul>
+                        <li>Tekan <strong>DENGAR</strong> bila Anda mendengar nada, sepelan apa pun. Tekan <strong>TIDAK DENGAR</strong> bila hening.</li>
+                        <li>Tombol aktif setelah nada selesai (±2,5 detik). Mohon tunggu.</li>
+                        <li>Ragu atau terganggu bunyi lain? Tekan <strong>Putar Ulang Suara</strong>.</li>
+                        <li>Jangan mengubah volume di tengah tes.</li>
+                    </ul>
+                </details>
             </div>
 
             <!-- ===== HALAMAN HASIL ===== -->
@@ -329,12 +458,12 @@
                 <div class="consult-box" id="consultBox">
                     <h4>💬 Konsultasi dengan Dokter</h4>
                     <p id="consultText">Jika Anda memiliki keluhan pendengaran atau ingin memastikan hasil, silakan hubungi:</p>
-                    <a class="wa-btn" id="waBtn" href="#" target="_blank">
+                    <a class="wa-btn" id="waBtn" href="https://hendrikkho-akupuntur.github.io/SahliRGB/skreeningpendengaran.html#" target="_blank">
                         <span style="font-size:1.3rem;">📱</span>
                         <span>Chat dr. Hendrik Sp.KKLP via WhatsApp</span>
                     </a>
                     <p style="text-align:center;margin-top:10px;font-size:0.85rem;color:#6c757d;">
-                        Nomor: 085270410547
+                        Nomor: 085270410537
                     </p>
                 </div>
 
@@ -375,6 +504,7 @@
                 this.autoPlayTimeout = null;
 
                 this.initDOM();
+                this.startHTML = this.startSection.innerHTML;
                 this.bindEvents();
             }
 
@@ -715,7 +845,7 @@
                 this.rightStatus.textContent = rightState === 'ok' ? '✓ Normal' : rightState === 'warn' ? '⚠ Perlu Perhatian' : '✗ Perlu Pemeriksaan';
 
                 const waMessage = this.buildWhatsAppMessage(analysis);
-                const waNumber = '085270410547'.replace(/^0/, '62');
+                const waNumber = '085270410537'.replace(/^0/, '62');
                 this.waBtn.href = `https://wa.me/${waNumber}?text=${encodeURIComponent(waMessage)}`;
             }
 
@@ -767,7 +897,7 @@
                 } else {
                     report += `Disarankan konsultasi dengan:\n`;
                     report += `dr. Hendrik Sp.KKLP\n`;
-                    report += `WhatsApp: 085270410547\n`;
+                    report += `WhatsApp: 085270410537\n`;
                 }
 
                 report += `\n=====================================\n`;
@@ -799,23 +929,7 @@
                 this.testPanel.classList.remove('active');
                 this.startSection.style.display = 'block';
 
-                this.startSection.innerHTML = `
-                    <div class="warning-box">
-                        Tes ini <strong>bukan pengganti pemeriksaan dokter</strong>. Hasil hanya untuk skrining awal.
-                    </div>
-                    <div class="intro-box">
-                        <h3>📋 Cara Menggunakan:</h3>
-                        <ol>
-                            <li>Pakai <strong>headset/earphone</strong> yang nyaman.</li>
-                            <li>Cari tempat yang <strong>tenang</strong>, tanpa suara bising.</li>
-                            <li>Tes akan berjalan otomatis: <strong>telinga kiri dulu</strong>, lalu <strong>telinga kanan</strong>.</li>
-                            <li>Setiap kali mendengar suara, tekan <strong>"DENGAR"</strong>.</li>
-                            <li>Jika tidak mendengar, tekan <strong>"TIDAK DENGAR"</strong>.</li>
-                            <li>Tes selesai dalam ±3–5 menit. Hasil akan muncul otomatis.</li>
-                        </ol>
-                    </div>
-                    <button class="start-btn" id="startBtn">▶️ Mulai Tes Pendengaran</button>
-                `;
+                this.startSection.innerHTML = this.startHTML;
                 document.getElementById('startBtn').addEventListener('click', () => this.startTest());
             }
         }
@@ -824,5 +938,5 @@
             new PatientAudiometry();
         });
     </script>
-</body>
-</html>
+
+</body></html>
