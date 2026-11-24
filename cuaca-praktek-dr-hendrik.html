@@ -23,6 +23,7 @@
 .hours{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 10px;margin-top:10px;scroll-snap-type:x proximity}
 .h{flex:none;width:68px;text-align:center;border:1px solid var(--line);border-radius:14px;padding:8px 4px;background:#fbfdfc;scroll-snap-align:start}
 .h b{display:block;font-size:.8rem;color:var(--muted)}.h .e{font-size:1.5rem}.h .d{font-weight:700}.h .r{font-size:.78rem;color:#194f8a}
+.hb{width:96px}.hb img{width:38px;height:38px;display:block;margin:4px auto}.hb .ds{font-size:.74rem;line-height:1.25;color:var(--ink);min-height:2.5em}.hb .r{color:var(--muted)}
 .day{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line)}.day:first-of-type{border-top:0}
 .day .n{flex:0 0 96px;font-weight:700;font-size:.92rem}.day .n small{display:block;font-weight:400;color:var(--muted);font-size:.76rem}
 .day .w{flex:1;min-width:0;font-size:.9rem}.day .w small{display:block;color:#194f8a}
@@ -55,6 +56,12 @@ a{color:var(--green)}
     <div class="hours" id="hours" tabindex="0" aria-label="Perkiraan per jam"></div>
   </section>
 
+  <section class="card" aria-label="Prakiraan BMKG">
+    <div class="head"><div><h2>Prakiraan resmi BMKG</h2><p class="time" id="bmkgLoc">Memuat…</p></div></div>
+    <div id="bmkg" aria-live="polite"></div>
+    <p class="src">Sumber: BMKG (Badan Meteorologi, Klimatologi, dan Geofisika). Prakiraan 3 hari, per 3 jam, untuk satu kelurahan, jadi mewakili area sekitar klinik, bukan titik persis.</p>
+  </section>
+
   <section class="card" aria-label="Kualitas udara">
     <div class="head"><div><h2>Kualitas udara di titik ini</h2><p class="time" id="aqTime"></p></div></div>
     <div id="aqNow" aria-live="polite"></div>
@@ -66,8 +73,8 @@ a{color:var(--green)}
     <p class="src">Kolom kanan = skor kualitas udara tertinggi pada hari itu (tersedia sekitar 5 hari ke depan).</p>
   </section>
 
-  <p class="src" style="padding:0 4px">Sumber: <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a> (cuaca) dan model <a href="https://atmosphere.copernicus.eu" target="_blank" rel="noopener">Copernicus CAMS</a> (kualitas udara, CC BY 4.0). Perkiraan model untuk titik ini, bukan hasil alat ukur. Peringatan resmi: <a href="https://www.bmkg.go.id" target="_blank" rel="noopener">BMKG</a>.</p>
-  <p class="foot">Halaman ini hanya mengirim koordinat titik praktek ke Open-Meteo. Tanpa data pribadi, analitik, atau cookie.</p>
+  <p class="src" style="padding:0 4px">Sumber: <a href="https://data.bmkg.go.id/prakiraan-cuaca/" target="_blank" rel="noopener">BMKG</a> (prakiraan per kelurahan), <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a> (cuaca saat ini dan 7 hari) dan model <a href="https://atmosphere.copernicus.eu" target="_blank" rel="noopener">Copernicus CAMS</a> (kualitas udara, CC BY 4.0). Perkiraan model untuk titik ini, bukan hasil alat ukur. Peringatan resmi: <a href="https://www.bmkg.go.id" target="_blank" rel="noopener">BMKG</a>.</p>
+  <p class="foot">Halaman ini hanya mengirim koordinat titik praktek ke Open-Meteo dan kode kelurahan ke BMKG. Tanpa data pribadi, analitik, atau cookie.</p>
 </main>
 
 <script>
@@ -187,6 +194,42 @@ function renderAir(d) {
   });
 }
 
+const BMKG = 'https://api.bmkg.go.id/publik/prakiraan-cuaca?adm4=12.71.14.1004';
+
+function renderBmkg(d) {
+  const slots = [];
+  ((d.data && d.data[0] && d.data[0].cuaca) || []).forEach(day => day.forEach(s => slots.push(s)));
+  if (!slots.length) throw new Error('kosong');
+  const nowS = new Date().toLocaleString('sv-SE', {timeZone: 'Asia/Jakarta'});
+  let i = slots.findIndex(s => s.local_datetime > nowS);
+  if (i < 0) i = slots.length;
+  i = Math.max(0, i - 1);
+  const loc = d.lokasi || {};
+  const place = [loc.desa && 'Kel. ' + loc.desa, loc.kecamatan && 'Kec. ' + loc.kecamatan].filter(Boolean).join(', ');
+  document.getElementById('bmkgLoc').textContent = place || 'Kelurahan Bantan';
+  const box = document.getElementById('bmkg'); box.textContent = '';
+  const cur = slots[i];
+  const chips = el('div', 'chips');
+  chips.appendChild(el('span', 'chip', cur.weather_desc + ', ' + cur.t + '°C'));
+  chips.appendChild(el('span', 'chip', 'Kelembapan ' + cur.hu + '%'));
+  chips.appendChild(el('span', 'chip', 'Angin ' + cur.ws + ' km/j'));
+  if (cur.vs_text) chips.appendChild(el('span', 'chip', 'Jarak pandang ' + cur.vs_text));
+  box.appendChild(chips);
+  const strip = el('div', 'hours'); strip.tabIndex = 0; strip.setAttribute('aria-label', 'Prakiraan BMKG per 3 jam');
+  slots.slice(i, i + 16).forEach((s, k) => {
+    const when = new Date(s.local_datetime.replace(' ', 'T') + '+07:00');
+    const h = el('div', 'h hb');
+    h.appendChild(el('b', '', when.toLocaleDateString('id-ID', {weekday: 'short', day: 'numeric', timeZone: 'Asia/Jakarta'})));
+    h.appendChild(el('b', '', k === 0 ? 'Sekarang' : hhmm(s.local_datetime.replace(' ', 'T'))));
+    if (s.image) { const im = el('img'); im.src = s.image; im.alt = ''; im.loading = 'lazy'; im.onerror = () => im.remove(); h.appendChild(im); }
+    h.appendChild(el('div', 'd', s.t + '°'));
+    h.appendChild(el('div', 'ds', s.weather_desc));
+    h.appendChild(el('div', 'r', 'RH ' + s.hu + '%'));
+    strip.appendChild(h);
+  });
+  box.appendChild(strip);
+}
+
 async function get(url) {
   const ctrl = new AbortController(), timer = setTimeout(() => ctrl.abort(), 12000);
   try {
@@ -200,7 +243,10 @@ async function load() {
   const btn = document.getElementById('refresh'); btn.disabled = true;
   document.getElementById('wxNow').textContent = 'Memuat cuaca…';
   document.getElementById('aqNow').textContent = 'Memuat kualitas udara…';
-  const [w, a] = await Promise.allSettled([get(WX), get(AQ)]);
+  document.getElementById('bmkg').textContent = 'Memuat prakiraan BMKG…';
+  const [w, a, b] = await Promise.allSettled([get(WX), get(AQ), get(BMKG)]);
+  if (b.status === 'fulfilled') { try { renderBmkg(b.value); } catch (e) { warn(document.getElementById('bmkg'), 'Data BMKG diterima tetapi tidak dapat ditampilkan.'); } }
+  else { document.getElementById('bmkgLoc').textContent = ''; warn(document.getElementById('bmkg'), 'Prakiraan BMKG belum dapat dimuat. Bagian lain tetap berjalan; tekan "Perbarui" untuk mencoba lagi.'); }
   if (w.status === 'fulfilled') { try { renderWeather(w.value); } catch (e) { warn(document.getElementById('wxNow'), 'Data cuaca tidak dapat ditampilkan. Tekan "Perbarui".'); } }
   else { warn(document.getElementById('wxNow'), 'Data cuaca belum dapat dimuat. Periksa koneksi internet lalu tekan "Perbarui".'); document.getElementById('wxTime').textContent = ''; }
   if (a.status === 'fulfilled') { try { renderAir(a.value); } catch (e) { warn(document.getElementById('aqNow'), 'Data kualitas udara tidak dapat ditampilkan.'); } }
